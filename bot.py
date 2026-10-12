@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import json
 import os
+import random
 import time
 import requests
 
@@ -49,22 +50,24 @@ def send_telegram(msg):
       "disable_web_page_preview": True,
   }
   try:
-    r = requests.post(url, json=data, timeout=20)
+    r = requests.post(url, json=data, timeout=15)
     return r.status_code == 200
   except Exception as e:
     print(f"Telegram error: {e}")
   return False
 
 
-def get_all_futures_contracts():
+def get_randomized_contracts():
+  """Gate.io 모든 USDT 선물 종목을 가져와서 매번 무작위로 섞음"""
   try:
     r = requests.get(GATE_FUTURES_CONTRACTS, timeout=10)
     if r.status_code == 200:
       data = r.json()
-      # 상장폐지 종목 제외하고 이름 추출
       contracts = [
           item["name"] for item in data if not item.get("in_delisting", False)
       ]
+      # 매번 실행될 때마다 순서를 무작위로 섞음 (공평한 기회 부여)
+      random.shuffle(contracts)
       return contracts
   except Exception as e:
     print(f"Error fetching contracts: {e}")
@@ -74,7 +77,7 @@ def get_all_futures_contracts():
 def fetch_candles(contract, interval="1h", limit=50):
   url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval={interval}&limit={limit}"
   try:
-    r = requests.get(url, timeout=5)  # 타임아웃을 짧게 주어 멈춤 방지
+    r = requests.get(url, timeout=5)
     if r.status_code == 200:
       return r.json()
   except Exception:
@@ -214,22 +217,17 @@ def analyze_market():
     return
 
   slots_available = MAX_ACTIVE_POSITIONS - current_active_count
-  contracts = get_all_futures_contracts()
+
+  # 매번 무작위로 섞인 전체 코인 리스트 가져오기
+  contracts = get_randomized_contracts()
   if not contracts:
     return
-
-  # 거래량이 터지는 주요 코인들이 먼저 스캔되도록 정렬 (또는 무작위 지연 방지)
-  # 비트코인, 이더리움 등 주요 종목 우선순위 부여 후 나머지 스캔
-  priority = ["BTC_USDT", "ETH_USDT", "SOL_USDT", "XRP_USDT", "DOGE_USDT"]
-  sorted_contracts = [c for c in priority if c in contracts] + [
-      c for c in contracts if c not in priority
-  ]
 
   last_signals = state.get("signals", {})
   current_time = time.time()
   new_signals_found = 0
 
-  for contract in sorted_contracts:
+  for contract in contracts:
     if new_signals_found >= slots_available:
       break
     if contract in active_positions:
@@ -247,9 +245,9 @@ def analyze_market():
 
     current_price = closes[-1]
 
-    # 잡코인 필터 강화 (거래대금 기준)
+    # 최소 거래대금 필터 (노이즈 방지 및 속도 최적화)
     avg_vol = sum(volumes[-20:]) / 20
-    if avg_vol * current_price < 100000:  # 기준을 살짝 높여 노이즈 차단 및 속도 향상
+    if avg_vol * current_price < 50000:
       continue
 
     ema20 = sum(closes[-20:]) / 20
@@ -320,6 +318,10 @@ def analyze_market():
             "hit": [],
         }
         new_signals_found += 1
+
+      # 깃허브 액션 타임아웃 방지를 위해 최대 탐색 중 신호가 몇 개 잡히면 조기에 끊거나 가볍게 처리
+      if new_signals_found >= slots_available:
+        break
 
   state["signals"] = last_signals
   state["active_positions"] = active_positions
