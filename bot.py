@@ -203,6 +203,7 @@ def analyze_market():
   if not contracts:
     return
 
+  # 스캔 범위를 상위 150개로 넉넉하게 유지
   contracts = contracts[:150]
 
   last_signals = state.get("signals", {})
@@ -212,25 +213,23 @@ def analyze_market():
   for contract in contracts:
     if contract in active_positions:
       continue
-    if current_time - last_signals.get(contract, {}).get("time", 0) < 14400:
+    # 동일 종목 중복 쿨다운을 1시간(3600초)으로 완화하여 기회 확대
+    if current_time - last_signals.get(contract, {}).get("time", 0) < 3600:
       continue
 
     candles = fetch_candles(contract, interval="1h", limit=50)
-    if not candles or len(candles) < 50:
+    if not candles or len(candles) < 30:
       continue
 
     closes, highs, lows, volumes = parse_candles(candles)
-    if len(closes) < 50:
+    if len(closes) < 30:
       continue
 
     current_price = closes[-1]
-
     avg_vol = sum(volumes[-20:]) / 20
-    if avg_vol * current_price < 50000:
-      continue
 
     ema20 = sum(closes[-20:]) / 20
-    ema50 = sum(closes[-50:]) / 50
+    ema50 = sum(closes[-50:]) / min(50, len(closes))
     rsi = calculate_rsi(closes, 14)
 
     sma20 = ema20
@@ -238,30 +237,22 @@ def analyze_market():
     upper_band = sma20 + (2 * std_dev)
     lower_band = sma20 - (2 * std_dev)
 
-    is_high_volume = volumes[-1] > (avg_vol * 1.2)
-
     signal_type = None
     strategy_name = ""
 
-    if ema20 > ema50 and current_price > ema20 and is_high_volume:
+    # 조건 대폭 완화 (추세 및 모멘텀 포착 확률 극대화)
+    if current_price > ema20 and rsi > 50:
       signal_type = "LONG"
-      strategy_name = "추세 추종 (EMA 정배열 & 거래량 돌파)"
-    elif ema20 < ema50 and current_price < ema20 and is_high_volume:
+      strategy_name = "유연한 상승 모멘텀 (EMA 돌파 & RSI 강세)"
+    elif current_price < ema20 and rsi < 50:
       signal_type = "SHORT"
-      strategy_name = "추세 추종 (EMA 역배열 & 거래량 돌파)"
-    elif current_price <= lower_band and rsi < 40:
+      strategy_name = "유연한 하락 압력 (EMA 이탈 & RSI 약세)"
+    elif current_price <= lower_band * 1.01:
       signal_type = "LONG"
-      strategy_name = "볼린저 밴드 하단 반등 (과매도 역추세)"
-    elif current_price >= upper_band and rsi > 60:
+      strategy_name = "볼린저 밴드 근접 하단 반등"
+    elif current_price >= upper_band * 0.99:
       signal_type = "SHORT"
-      strategy_name = "볼린저 밴드 상단 저항 (과매수 역추세)"
-    elif 45 <= rsi <= 55 and volumes[-1] > avg_vol * 1.3:
-      signal_type = "LONG" if closes[-1] > closes[-2] else "SHORT"
-      strategy_name = (
-          "RSI 중심선 모멘텀 (변동성 확장)"
-          if signal_type == "LONG"
-          else "RSI 중심선 모멘텀 (하방 압력)"
-      )
+      strategy_name = "볼린저 밴드 근접 상단 저항"
 
     if signal_type:
       atr = sum([highs[i] - lows[i] for i in range(-14, 0)]) / 14
@@ -294,7 +285,7 @@ def analyze_market():
           f"  • *TP2*: `{tp2:,.4f}` (2차 익절)\n"
           f"  • *TP3*: `{tp3:,.4f}` (최종 익절)\n\n"
           f"🛡️ *손절가(SL)*: `{sl:,.4f}`\n"
-          f"📈 *보조지표*: RSI `({rsi:.1f})`, 거래량 동반\n"
+          f"📈 *보조지표*: RSI `({rsi:.1f})`\n"
           f"⏱️ *시간*: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
       )
 
@@ -311,7 +302,7 @@ def analyze_market():
         }
         break
 
-      time.sleep(0.3)
+      time.sleep(0.2)
 
   state["signals"] = last_signals
   state["active_positions"] = active_positions
