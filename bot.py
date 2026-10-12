@@ -203,6 +203,9 @@ def analyze_market():
   if not contracts:
     return
 
+  # 핵심 최적화: 매 실행마다 무작위로 섞인 종목 중 상위 50개만 빠르게 샘플링하여 검사 (실행 시간 10초 이내)
+  contracts = contracts[:50]
+
   last_signals = state.get("signals", {})
   active_positions = state.get("active_positions", {})
   current_time = time.time()
@@ -227,7 +230,6 @@ def analyze_market():
     if avg_vol * current_price < 50000:
       continue
 
-    # 기본 지표 계산
     ema20 = sum(closes[-20:]) / 20
     ema50 = sum(closes[-50:]) / 50
     rsi = calculate_rsi(closes, 14)
@@ -242,27 +244,18 @@ def analyze_market():
     signal_type = None
     strategy_name = ""
 
-    # -------------------------------------------------------------
-    # [다양한 매매법 복합 적용]
-    # -------------------------------------------------------------
-
-    # 매매법 1: [추세 추종 매매법] 이동평균선 정배열/역배열 + 거래량 동반
     if ema20 > ema50 and current_price > ema20 and is_high_volume:
       signal_type = "LONG"
       strategy_name = "추세 추종 (EMA 정배열 & 거래량 돌파)"
     elif ema20 < ema50 and current_price < ema20 and is_high_volume:
       signal_type = "SHORT"
       strategy_name = "추세 추종 (EMA 역배열 & 거래량 돌파)"
-
-    # 매매법 2: [볼린저 밴드 반전(역추세) 매매법] 밴드 이탈 후 복귀 타이밍
     elif current_price <= lower_band and rsi < 40:
       signal_type = "LONG"
       strategy_name = "볼린저 밴드 하단 반등 (과매도 역추세)"
     elif current_price >= upper_band and rsi > 60:
       signal_type = "SHORT"
       strategy_name = "볼린저 밴드 상단 저항 (과매수 역추세)"
-
-    # 매매법 3: [모멘텀 RSI 구간 매매법] RSI가 중간 지지/저항을 강하게 터치할 때
     elif 45 <= rsi <= 55 and volumes[-1] > avg_vol * 1.3:
       signal_type = "LONG" if closes[-1] > closes[-2] else "SHORT"
       strategy_name = (
