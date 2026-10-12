@@ -16,22 +16,19 @@ def get_chat_id():
     data = r.json()
     if data.get("ok"):
       results = data.get("result", [])
-      if not results:
-        print(
-            "⚠️ 봇이 메시지를 수신하지 못했습니다. 채널에 아무 메시지나 먼저"
-            " 보내주세요!"
-        )
       for update in results:
-        # 채널 메시지인 경우
         if "channel_post" in update:
           chat = update["channel_post"]["chat"]
           print(
-              f"👉 채널 이름: {chat.get('title')} / 채널 ID: {chat.get('id')}"
+              f"👉 [찾았다!] 채널 이름: {chat.get('title')} / 채널 ID:"
+              f" {chat.get('id')}"
           )
-        # 일반 메시지나 그룹 메시지인 경우
         elif "message" in update:
           chat = update["message"]["chat"]
-          print(f"👉 유저/그룹 이름: {chat.get('title', chat.get('username'))} / ID: {chat.get('id')}")
+          print(
+              f"👉 [찾았다!] 유저/그룹 이름: {chat.get('title', chat.get('username'))}"
+              f" / ID: {chat.get('id')}"
+          )
     else:
       print("Telegram API Error:", data)
   except Exception as e:
