@@ -17,8 +17,6 @@ GATE_FUTURES_CONTRACTS = (
 )
 GATE_FUTURES_CANDLES = "https://fx-api.gateio.ws/api/v4/futures/usdt/candlesticks"
 
-MAX_ACTIVE_POSITIONS = 8  # 최대 유지할 시그널 개수
-
 
 def now():
   return datetime.now(KST)
@@ -58,7 +56,6 @@ def send_telegram(msg):
 
 
 def get_randomized_contracts():
-  """Gate.io 모든 USDT 선물 종목을 가져와서 매번 무작위로 섞음"""
   try:
     r = requests.get(GATE_FUTURES_CONTRACTS, timeout=10)
     if r.status_code == 200:
@@ -66,7 +63,6 @@ def get_randomized_contracts():
       contracts = [
           item["name"] for item in data if not item.get("in_delisting", False)
       ]
-      # 매번 실행될 때마다 순서를 무작위로 섞음 (공평한 기회 부여)
       random.shuffle(contracts)
       return contracts
   except Exception as e:
@@ -140,14 +136,14 @@ def track_positions(state):
       if low <= sl:
         send_telegram(
             f"🛡️ *[손절 알림]* `{coin_name}/USDT` (LONG)\n\n손절가"
-            f" `{sl:,.4f}` 도달로 포지션 종료 (슬롯 확보)"
+            f" `{sl:,.4f}` 도달로 포지션 종료"
         )
         to_remove.append(contract)
         continue
       if high >= tp3 and "TP3" not in hit:
         send_telegram(
             f"🎉 *[TP3 최종 익절]* `{coin_name}/USDT` (LONG)\n\n최종 목표가"
-            f" `{tp3:,.4f}` 달성완료! 포지션 종료 (슬롯 확보)"
+            f" `{tp3:,.4f}` 달성완료! 포지션 종료"
         )
         to_remove.append(contract)
         continue
@@ -169,14 +165,14 @@ def track_positions(state):
       if high >= sl:
         send_telegram(
             f"🛡️ *[손절 알림]* `{coin_name}/USDT` (SHORT)\n\n손절가"
-            f" `{sl:,.4f}` 도달로 포지션 종료 (슬롯 확보)"
+            f" `{sl:,.4f}` 도달로 포지션 종료"
         )
         to_remove.append(contract)
         continue
       if low <= tp3 and "TP3" not in hit:
         send_telegram(
             f"🎉 *[TP3 최종 익절]* `{coin_name}/USDT` (SHORT)\n\n최종 목표가"
-            f" `{tp3:,.4f}` 달성완료! 포지션 종료 (슬롯 확보)"
+            f" `{tp3:,.4f}` 달성완료! 포지션 종료"
         )
         to_remove.append(contract)
         continue
@@ -203,33 +199,15 @@ def analyze_market():
   state = load_state()
   track_positions(state)
 
-  active_positions = state.get("active_positions", {})
-  current_active_count = len(active_positions)
-
-  print(
-      f"Current active positions: {current_active_count} /"
-      f" {MAX_ACTIVE_POSITIONS}"
-  )
-
-  if current_active_count >= MAX_ACTIVE_POSITIONS:
-    print("Max active signals (8) reached. Waiting for slots to open.")
-    save_state(state)
-    return
-
-  slots_available = MAX_ACTIVE_POSITIONS - current_active_count
-
-  # 매번 무작위로 섞인 전체 코인 리스트 가져오기
   contracts = get_randomized_contracts()
   if not contracts:
     return
 
   last_signals = state.get("signals", {})
+  active_positions = state.get("active_positions", {})
   current_time = time.time()
-  new_signals_found = 0
 
   for contract in contracts:
-    if new_signals_found >= slots_available:
-      break
     if contract in active_positions:
       continue
     if current_time - last_signals.get(contract, {}).get("time", 0) < 14400:
@@ -245,7 +223,6 @@ def analyze_market():
 
     current_price = closes[-1]
 
-    # 최소 거래대금 필터 (노이즈 방지 및 속도 최적화)
     avg_vol = sum(volumes[-20:]) / 20
     if avg_vol * current_price < 50000:
       continue
@@ -293,10 +270,13 @@ def analyze_market():
 
       coin_name = contract.replace("_USDT", "")
       msg = (
-          f"🚨 *Gate.io Futures Signal (Slot {current_active_count + new_signals_found + 1}/{MAX_ACTIVE_POSITIONS})* 🚨\n\n"
+          f"🚨 *Gate.io Futures Signal* 🚨\n\n"
           f"📌 *종목*: `{coin_name}/USDT` (1시간봉)\n"
           f"📊 *방향*: **{signal_type}** {'🟢' if signal_type == 'LONG' else '🔴'}\n"
           f"💰 *진입가*: `{current_price:,.4f}`\n\n"
+          f"📌 *단일 포지션 권장 가이드*\n"
+          f"  • *추천 레버리지*: `5x ~ 10x` (격리 마진)\n"
+          f"  • *자금 비중*: `총 자산의 5%`\n\n"
           f"🎯 *익절 라인*\n"
           f"  • *TP1*: `{tp1:,.4f}` (1차 익절 & 본전스탑)\n"
           f"  • *TP2*: `{tp2:,.4f}` (2차 익절)\n"
@@ -317,11 +297,7 @@ def analyze_market():
             "sl": sl,
             "hit": [],
         }
-        new_signals_found += 1
-
-      # 깃허브 액션 타임아웃 방지를 위해 최대 탐색 중 신호가 몇 개 잡히면 조기에 끊거나 가볍게 처리
-      if new_signals_found >= slots_available:
-        break
+      time.sleep(0.3)
 
   state["signals"] = last_signals
   state["active_positions"] = active_positions
