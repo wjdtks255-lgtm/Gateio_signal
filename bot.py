@@ -223,8 +223,9 @@ def analyze_market():
 
     current_price = closes[-1]
 
+    # 최소 거래대금 필터 완화
     avg_vol = sum(volumes[-20:]) / 20
-    if avg_vol * current_price < 50000:
+    if avg_vol * current_price < 30000:
       continue
 
     ema20 = sum(closes[-20:]) / 20
@@ -236,20 +237,21 @@ def analyze_market():
     upper_band = sma20 + (2 * std_dev)
     lower_band = sma20 - (2 * std_dev)
 
-    is_high_volume = volumes[-1] > (avg_vol * 1.3)
+    # 거래량 돌파 조건 완화 (1.3배 -> 1.1배)
+    is_high_volume = volumes[-1] > (avg_vol * 1.1)
 
     signal_type = None
+    # 롱 조건 완화 (RSI 범위 넓힘, 볼린저 밴드 조건 유연화)
     if (
-        current_price > ema50
-        and ema20 > ema50
-        and (35 <= rsi <= 55 or current_price <= lower_band * 1.01)
+        current_price >= ema50 * 0.98
+        and (30 <= rsi <= 60 or current_price <= lower_band * 1.02)
         and is_high_volume
     ):
       signal_type = "LONG"
+    # 숏 조건 완화
     elif (
-        current_price < ema50
-        and ema20 < ema50
-        and (45 <= rsi <= 65 or current_price >= upper_band * 0.99)
+        current_price <= ema50 * 1.02
+        and (40 <= rsi <= 70 or current_price >= upper_band * 0.98)
         and is_high_volume
     ):
       signal_type = "SHORT"
