@@ -203,106 +203,86 @@ def analyze_market():
   if not contracts:
     return
 
-  # 스캔 범위를 상위 150개로 넉넉하게 유지
   contracts = contracts[:150]
-
   last_signals = state.get("signals", {})
   active_positions = state.get("active_positions", {})
   current_time = time.time()
+  signals_sent = 0
 
   for contract in contracts:
+    if signals_sent >= 8:
+      break
+
     if contract in active_positions:
       continue
-    # 동일 종목 중복 쿨다운을 1시간(3600초)으로 완화하여 기회 확대
-    if current_time - last_signals.get(contract, {}).get("time", 0) < 3600:
+    if current_time - last_signals.get(contract, {}).get("time", 0) < 60:
       continue
 
     candles = fetch_candles(contract, interval="1h", limit=50)
-    if not candles or len(candles) < 30:
+    if not candles or len(candles) < 20:
       continue
 
     closes, highs, lows, volumes = parse_candles(candles)
-    if len(closes) < 30:
+    if len(closes) < 20:
       continue
 
     current_price = closes[-1]
-    avg_vol = sum(volumes[-20:]) / 20
-
-    ema20 = sum(closes[-20:]) / 20
-    ema50 = sum(closes[-50:]) / min(50, len(closes))
     rsi = calculate_rsi(closes, 14)
+    ema20 = sum(closes[-20:]) / 20
 
-    sma20 = ema20
-    std_dev = (sum((x - sma20) ** 2 for x in closes[-20:]) / 20) ** 0.5
-    upper_band = sma20 + (2 * std_dev)
-    lower_band = sma20 - (2 * std_dev)
+    signal_type = "LONG" if current_price >= ema20 else "SHORT"
+    strategy_name = (
+        f"다이나믹 모멘텀 {'롱' if signal_type == 'LONG' else '숏'}"
+    )
 
-    signal_type = None
-    strategy_name = ""
+    atr = sum([highs[i] - lows[i] for i in range(-14, 0)]) / 14
+    if atr == 0:
+      atr = current_price * 0.01
 
-    # 조건 대폭 완화 (추세 및 모멘텀 포착 확률 극대화)
-    if current_price > ema20 and rsi > 50:
-      signal_type = "LONG"
-      strategy_name = "유연한 상승 모멘텀 (EMA 돌파 & RSI 강세)"
-    elif current_price < ema20 and rsi < 50:
-      signal_type = "SHORT"
-      strategy_name = "유연한 하락 압력 (EMA 이탈 & RSI 약세)"
-    elif current_price <= lower_band * 1.01:
-      signal_type = "LONG"
-      strategy_name = "볼린저 밴드 근접 하단 반등"
-    elif current_price >= upper_band * 0.99:
-      signal_type = "SHORT"
-      strategy_name = "볼린저 밴드 근접 상단 저항"
+    if signal_type == "LONG":
+      sl = current_price - (atr * 1.5)
+      tp1 = current_price + (atr * 1.5)
+      tp2 = current_price + (atr * 2.8)
+      tp3 = current_price + (atr * 4.5)
+    else:
+      sl = current_price + (atr * 1.5)
+      tp1 = current_price - (atr * 1.5)
+      tp2 = current_price - (atr * 2.8)
+      tp3 = current_price - (atr * 4.5)
 
-    if signal_type:
-      atr = sum([highs[i] - lows[i] for i in range(-14, 0)]) / 14
-      if atr == 0:
-        atr = current_price * 0.01
+    signals_sent += 1
+    coin_name = contract.replace("_USDT", "")
+    msg = (
+        f"🚨 *Gate.io Futures Signal (Slot {signals_sent}/8)* 🚨\n\n"
+        f"📌 *종목*: `{coin_name}/USDT` (1시간봉)\n"
+        f"📊 *방향*: **{signal_type}** {'🟢' if signal_type == 'LONG' else '🔴'}\n"
+        f"♟️ *적용된 매매법*: `{strategy_name}`\n"
+        f"💰 *진입가*: `{current_price:,.4f}`\n\n"
+        f"📌 *단일 포지션 권장 가이드*\n"
+        f"  • *추천 레버리지*: `5x ~ 10x` (격리 마진)\n"
+        f"  • *자금 비중*: `총 자산의 5%`\n\n"
+        f"🎯 *익절 라인*\n"
+        f"  • *TP1*: `{tp1:,.4f}` (1차 익절 & 본전스탑)\n"
+        f"  • *TP2*: `{tp2:,.4f}` (2차 익절)\n"
+        f"  • *TP3*: `{tp3:,.4f}` (최종 익절)\n\n"
+        f"🛡️ *손절가(SL)*: `{sl:,.4f}`\n"
+        f"📈 *보조지표*: RSI `({rsi:.1f})`\n"
+        f"⏱️ *시간*: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
+    )
 
-      if signal_type == "LONG":
-        sl = current_price - (atr * 1.5)
-        tp1 = current_price + (atr * 1.5)
-        tp2 = current_price + (atr * 2.8)
-        tp3 = current_price + (atr * 4.5)
-      else:
-        sl = current_price + (atr * 1.5)
-        tp1 = current_price - (atr * 1.5)
-        tp2 = current_price - (atr * 2.8)
-        tp3 = current_price - (atr * 4.5)
+    if send_telegram(msg):
+      last_signals[contract] = {"time": current_time, "type": signal_type}
+      active_positions[contract] = {
+          "type": signal_type,
+          "entry": current_price,
+          "tp1": tp1,
+          "tp2": tp2,
+          "tp3": tp3,
+          "sl": sl,
+          "hit": [],
+      }
 
-      coin_name = contract.replace("_USDT", "")
-      msg = (
-          f"🚨 *Gate.io Multi-Strategy Signal* 🚨\n\n"
-          f"📌 *종목*: `{coin_name}/USDT` (1시간봉)\n"
-          f"📊 *방향*: **{signal_type}** {'🟢' if signal_type == 'LONG' else '🔴'}\n"
-          f"♟️ *적용된 매매법*: `{strategy_name}`\n"
-          f"💰 *진입가*: `{current_price:,.4f}`\n\n"
-          f"📌 *단일 포지션 권장 가이드*\n"
-          f"  • *추천 레버리지*: `5x ~ 10x` (격리 마진)\n"
-          f"  • *자금 비중*: `총 자산의 5%`\n\n"
-          f"🎯 *익절 라인*\n"
-          f"  • *TP1*: `{tp1:,.4f}` (1차 익절 & 본전스탑)\n"
-          f"  • *TP2*: `{tp2:,.4f}` (2차 익절)\n"
-          f"  • *TP3*: `{tp3:,.4f}` (최종 익절)\n\n"
-          f"🛡️ *손절가(SL)*: `{sl:,.4f}`\n"
-          f"📈 *보조지표*: RSI `({rsi:.1f})`\n"
-          f"⏱️ *시간*: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
-      )
-
-      if send_telegram(msg):
-        last_signals[contract] = {"time": current_time, "type": signal_type}
-        active_positions[contract] = {
-            "type": signal_type,
-            "entry": current_price,
-            "tp1": tp1,
-            "tp2": tp2,
-            "tp3": tp3,
-            "sl": sl,
-            "hit": [],
-        }
-        break
-
-      time.sleep(0.2)
+    time.sleep(0.3)
 
   state["signals"] = last_signals
   state["active_positions"] = active_positions
