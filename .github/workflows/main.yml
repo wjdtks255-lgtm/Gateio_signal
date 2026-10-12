@@ -1,0 +1,34 @@
+name: Gate.io Signal Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gate-signal
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Telegram ID Check
+        env:
+          GATE_TELEGRAM_TOKEN: ${{ secrets.GATE_TELEGRAM_TOKEN }}
+        run: python bot.py
