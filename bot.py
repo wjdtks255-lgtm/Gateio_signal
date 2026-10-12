@@ -61,9 +61,11 @@ def get_all_futures_contracts():
     r = requests.get(GATE_FUTURES_CONTRACTS, timeout=10)
     if r.status_code == 200:
       data = r.json()
-      return [
+      # 상장폐지 종목 제외하고 이름 추출
+      contracts = [
           item["name"] for item in data if not item.get("in_delisting", False)
       ]
+      return contracts
   except Exception as e:
     print(f"Error fetching contracts: {e}")
   return []
@@ -72,35 +74,19 @@ def get_all_futures_contracts():
 def fetch_candles(contract, interval="1h", limit=50):
   url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval={interval}&limit={limit}"
   try:
-    r = requests.get(url, timeout=10)
+    r = requests.get(url, timeout=5)  # 타임아웃을 짧게 주어 멈춤 방지
     if r.status_code == 200:
       return r.json()
-  except Exception as e:
-    print(f"Candle fetch error ({contract}): {e}")
+  except Exception:
+    pass
   return []
 
 
 def parse_candles(candles):
-  """Gate.io 캔들 리스트 구조 파싱
-
-  Gate.io 선물 캔들 응답 포맷 예시: [t, v, c, high, low, o, ...] 또는 딕셔너리 형태
-  안전하게 처리하기 위해 딕셔너리나 리스트 모두 대응하도록 구현
-  """
   closes, highs, lows, volumes = [], [], [], []
   for c in candles:
-    if isinstance(c, dict):
-      closes.append(
-          float(c.get("close", c.get("c", c.get("t", 0))))
-      )  # Fallback
-      highs.append(float(c.get("high", c.get("h", 0))))
-      lows.append(float(c.get("low", c.get("l", 0))))
-      volumes.append(float(c.get("size", c.get("volume", c.get("v", 0)))))
-    elif isinstance(c, list):
-      # 일반적인 Gate.io 리스트 포맷: [t, sum, close, high, low, open, ...]
-      # 인덱스 위치: 2: close, 3: high, 4: low, 1: volume (또는 API 버전에 따라 다를 수 있음)
-      # 안전하게 키워드 인덱스 매핑 확인
+    if isinstance(c, list) and len(c) >= 5:
       try:
-        # 딕셔너리 키로 안 오고 리스트로 올 때의 표준 구조 대응
         closes.append(float(c[2]))
         highs.append(float(c[3]))
         lows.append(float(c[4]))
@@ -232,11 +218,18 @@ def analyze_market():
   if not contracts:
     return
 
+  # 거래량이 터지는 주요 코인들이 먼저 스캔되도록 정렬 (또는 무작위 지연 방지)
+  # 비트코인, 이더리움 등 주요 종목 우선순위 부여 후 나머지 스캔
+  priority = ["BTC_USDT", "ETH_USDT", "SOL_USDT", "XRP_USDT", "DOGE_USDT"]
+  sorted_contracts = [c for c in priority if c in contracts] + [
+      c for c in contracts if c not in priority
+  ]
+
   last_signals = state.get("signals", {})
   current_time = time.time()
   new_signals_found = 0
 
-  for contract in contracts:
+  for contract in sorted_contracts:
     if new_signals_found >= slots_available:
       break
     if contract in active_positions:
@@ -254,8 +247,9 @@ def analyze_market():
 
     current_price = closes[-1]
 
+    # 잡코인 필터 강화 (거래대금 기준)
     avg_vol = sum(volumes[-20:]) / 20
-    if avg_vol * current_price < 50000:
+    if avg_vol * current_price < 100000:  # 기준을 살짝 높여 노이즈 차단 및 속도 향상
       continue
 
     ema20 = sum(closes[-20:]) / 20
@@ -326,7 +320,6 @@ def analyze_market():
             "hit": [],
         }
         new_signals_found += 1
-      time.sleep(0.5)
 
   state["signals"] = last_signals
   state["active_positions"] = active_positions
