@@ -214,22 +214,22 @@ def analyze_market():
       continue
 
     candles = fetch_candles(contract, interval="1h", limit=50)
-    if not candles or len(candles) < 30:
+    if not candles or len(candles) < 50:
       continue
 
     closes, highs, lows, volumes = parse_candles(candles)
-    if len(closes) < 30:
+    if len(closes) < 50:
       continue
 
     current_price = closes[-1]
 
-    # 최소 거래대금 필터 완화
     avg_vol = sum(volumes[-20:]) / 20
-    if avg_vol * current_price < 30000:
+    if avg_vol * current_price < 50000:
       continue
 
+    # 기본 지표 계산
     ema20 = sum(closes[-20:]) / 20
-    ema50 = sum(closes[-50:]) / 50 if len(closes) >= 50 else ema20
+    ema50 = sum(closes[-50:]) / 50
     rsi = calculate_rsi(closes, 14)
 
     sma20 = ema20
@@ -237,27 +237,44 @@ def analyze_market():
     upper_band = sma20 + (2 * std_dev)
     lower_band = sma20 - (2 * std_dev)
 
-    # 거래량 돌파 조건 완화 (1.3배 -> 1.1배)
-    is_high_volume = volumes[-1] > (avg_vol * 1.1)
+    is_high_volume = volumes[-1] > (avg_vol * 1.2)
 
     signal_type = None
-    # 롱 조건 완화 (RSI 범위 넓힘, 볼린저 밴드 조건 유연화)
-    if (
-        current_price >= ema50 * 0.98
-        and (30 <= rsi <= 60 or current_price <= lower_band * 1.02)
-        and is_high_volume
-    ):
+    strategy_name = ""
+
+    # -------------------------------------------------------------
+    # [다양한 매매법 복합 적용]
+    # -------------------------------------------------------------
+
+    # 매매법 1: [추세 추종 매매법] 이동평균선 정배열/역배열 + 거래량 동반
+    if ema20 > ema50 and current_price > ema20 and is_high_volume:
       signal_type = "LONG"
-    # 숏 조건 완화
-    elif (
-        current_price <= ema50 * 1.02
-        and (40 <= rsi <= 70 or current_price >= upper_band * 0.98)
-        and is_high_volume
-    ):
+      strategy_name = "추세 추종 (EMA 정배열 & 거래량 돌파)"
+    elif ema20 < ema50 and current_price < ema20 and is_high_volume:
       signal_type = "SHORT"
+      strategy_name = "추세 추종 (EMA 역배열 & 거래량 돌파)"
+
+    # 매매법 2: [볼린저 밴드 반전(역추세) 매매법] 밴드 이탈 후 복귀 타이밍
+    elif current_price <= lower_band and rsi < 40:
+      signal_type = "LONG"
+      strategy_name = "볼린저 밴드 하단 반등 (과매도 역추세)"
+    elif current_price >= upper_band and rsi > 60:
+      signal_type = "SHORT"
+      strategy_name = "볼린저 밴드 상단 저항 (과매수 역추세)"
+
+    # 매매법 3: [모멘텀 RSI 구간 매매법] RSI가 중간 지지/저항을 강하게 터치할 때
+    elif 45 <= rsi <= 55 and volumes[-1] > avg_vol * 1.3:
+      signal_type = "LONG" if closes[-1] > closes[-2] else "SHORT"
+      strategy_name = (
+          "RSI 중심선 모멘텀 (변동성 확장)"
+          if signal_type == "LONG"
+          else "RSI 중심선 모멘텀 (하방 압력)"
+      )
 
     if signal_type:
       atr = sum([highs[i] - lows[i] for i in range(-14, 0)]) / 14
+      if atr == 0:
+        atr = current_price * 0.01
 
       if signal_type == "LONG":
         sl = current_price - (atr * 1.5)
@@ -272,9 +289,10 @@ def analyze_market():
 
       coin_name = contract.replace("_USDT", "")
       msg = (
-          f"🚨 *Gate.io Futures Signal* 🚨\n\n"
+          f"🚨 *Gate.io Multi-Strategy Signal* 🚨\n\n"
           f"📌 *종목*: `{coin_name}/USDT` (1시간봉)\n"
           f"📊 *방향*: **{signal_type}** {'🟢' if signal_type == 'LONG' else '🔴'}\n"
+          f"♟️ *적용된 매매법*: `{strategy_name}`\n"
           f"💰 *진입가*: `{current_price:,.4f}`\n\n"
           f"📌 *단일 포지션 권장 가이드*\n"
           f"  • *추천 레버리지*: `5x ~ 10x` (격리 마진)\n"
@@ -284,7 +302,7 @@ def analyze_market():
           f"  • *TP2*: `{tp2:,.4f}` (2차 익절)\n"
           f"  • *TP3*: `{tp3:,.4f}` (최종 익절)\n\n"
           f"🛡️ *손절가(SL)*: `{sl:,.4f}`\n"
-          f"📈 *보조지표*: RSI `({rsi:.1f})`, 거래량 돌파\n"
+          f"📈 *보조지표*: RSI `({rsi:.1f})`, 거래량 동반\n"
           f"⏱️ *시간*: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
       )
 
@@ -299,6 +317,8 @@ def analyze_market():
             "sl": sl,
             "hit": [],
         }
+        break
+
       time.sleep(0.3)
 
   state["signals"] = last_signals
