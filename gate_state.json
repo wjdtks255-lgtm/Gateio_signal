@@ -91,6 +91,18 @@
     "XRP_USDT": {
       "time": 1791859667.5016036,
       "type": "SHORT"
+    },
+    "SUI_USDT": {
+      "time": 1791859815.3467433,
+      "type": "LONG"
+    },
+    "MATIC_USDT": {
+      "time": 1791859815.3467433,
+      "type": "SHORT"
+    },
+    "NEAR_USDT": {
+      "time": 1791859815.3467433,
+      "type": "LONG"
     }
   },
   "active_positions": {
@@ -164,6 +176,33 @@
       "tp2": 0.5664,
       "tp3": 0.5459999999999999,
       "sl": 0.618,
+      "hit": []
+    },
+    "SUI_USDT": {
+      "type": "LONG",
+      "entry": 1.8,
+      "tp1": 1.854,
+      "tp2": 1.9008,
+      "tp3": 1.9620000000000002,
+      "sl": 1.746,
+      "hit": []
+    },
+    "MATIC_USDT": {
+      "type": "SHORT",
+      "entry": 0.5,
+      "tp1": 0.485,
+      "tp2": 0.472,
+      "tp3": 0.455,
+      "sl": 0.515,
+      "hit": []
+    },
+    "NEAR_USDT": {
+      "type": "LONG",
+      "entry": 5.5,
+      "tp1": 5.665,
+      "tp2": 5.808,
+      "tp3": 5.995,
+      "sl": 5.335,
       "hit": []
     }
   }
