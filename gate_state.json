@@ -17,7 +17,7 @@
       "type": "SHORT"
     },
     "DOGE_USDT": {
-      "time": 1791851116.012103,
+      "time": 1791859667.5016036,
       "type": "LONG"
     },
     "SNXX_USDT": {
@@ -63,7 +63,108 @@
     "ORDI_USDT": {
       "time": 1791856297.905256,
       "type": "SHORT"
+    },
+    "ETH_USDT": {
+      "time": 1791859667.5016036,
+      "type": "LONG"
+    },
+    "LINK_USDT": {
+      "time": 1791859667.5016036,
+      "type": "SHORT"
+    },
+    "BTC_USDT": {
+      "time": 1791859667.5016036,
+      "type": "LONG"
+    },
+    "AVAX_USDT": {
+      "time": 1791859667.5016036,
+      "type": "SHORT"
+    },
+    "ADA_USDT": {
+      "time": 1791859667.5016036,
+      "type": "LONG"
+    },
+    "SOL_USDT": {
+      "time": 1791859667.5016036,
+      "type": "SHORT"
+    },
+    "XRP_USDT": {
+      "time": 1791859667.5016036,
+      "type": "SHORT"
     }
   },
-  "active_positions": {}
+  "active_positions": {
+    "ETH_USDT": {
+      "type": "LONG",
+      "entry": 3200.0,
+      "tp1": 3296.0,
+      "tp2": 3379.2,
+      "tp3": 3488.0,
+      "sl": 3104.0,
+      "hit": []
+    },
+    "LINK_USDT": {
+      "type": "SHORT",
+      "entry": 14.0,
+      "tp1": 13.58,
+      "tp2": 13.216,
+      "tp3": 12.74,
+      "sl": 14.42,
+      "hit": []
+    },
+    "BTC_USDT": {
+      "type": "LONG",
+      "entry": 65000.0,
+      "tp1": 66950.0,
+      "tp2": 68640.0,
+      "tp3": 70850.0,
+      "sl": 63050.0,
+      "hit": []
+    },
+    "AVAX_USDT": {
+      "type": "SHORT",
+      "entry": 25.0,
+      "tp1": 24.25,
+      "tp2": 23.6,
+      "tp3": 22.75,
+      "sl": 25.75,
+      "hit": []
+    },
+    "ADA_USDT": {
+      "type": "LONG",
+      "entry": 0.45,
+      "tp1": 0.4635,
+      "tp2": 0.4752,
+      "tp3": 0.49050000000000005,
+      "sl": 0.4365,
+      "hit": []
+    },
+    "SOL_USDT": {
+      "type": "SHORT",
+      "entry": 150.0,
+      "tp1": 145.5,
+      "tp2": 141.6,
+      "tp3": 136.5,
+      "sl": 154.5,
+      "hit": []
+    },
+    "DOGE_USDT": {
+      "type": "LONG",
+      "entry": 0.12,
+      "tp1": 0.1236,
+      "tp2": 0.12672,
+      "tp3": 0.1308,
+      "sl": 0.11639999999999999,
+      "hit": []
+    },
+    "XRP_USDT": {
+      "type": "SHORT",
+      "entry": 0.6,
+      "tp1": 0.582,
+      "tp2": 0.5664,
+      "tp3": 0.5459999999999999,
+      "sl": 0.618,
+      "hit": []
+    }
+  }
 }
