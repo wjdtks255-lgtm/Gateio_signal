@@ -70,7 +70,6 @@ def get_market_data():
   except Exception as e:
     print(f"Error fetching tickers: {e}")
 
-  # API 응답이 불안정할 경우를 대비한 기본 종목 백업 풀
   if not valid_tickers:
     print("Using fallback default tickers.")
     valid_tickers = {
@@ -225,4 +224,48 @@ def analyze_market():
       sl = current_price + (atr * 1.5)
       tp1 = current_price - (atr * 1.5)
       tp2 = current_price - (atr * 2.8)
-      tp3 = current_price - (atr
+      tp3 = current_price - (atr * 4.5)
+      방향텍스트 = "숏 (SHORT) 🔴"
+
+    signals_sent += 1
+
+    msg = (
+        "🚨 *Gate.io 선물 트레이딩 시그널* 🚨\n"
+        "━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"📌 슬롯 번호: `[ {signals_sent} / 8 ]`\n"
+        f"🪙 종목명: `{coin_name} / USDT`\n"
+        f"📊 포지션: **{방향텍스트}**\n"
+        f"💰 실시간 진입가: `{current_price:,.4f}` USDT\n\n"
+        "💡 소액러 맞춤 가이드\n"
+        "  • 권장 레버리지: `5x ~ 10x` (격리 마진)\n"
+        "  • 포지션 비중: `시드의 3% ~ 5%`\n\n"
+        "🎯 목표가 (Take Profit)\n"
+        f"  • 1차 (TP1): `{tp1:,.4f}` (본전 스탑)\n"
+        f"  • 2차 (TP2): `{tp2:,.4f}`\n"
+        f"  • 3차 (TP3): `{tp3:,.4f}` (최종 익절)\n\n"
+        f"🛡️ 손절가 (Stop Loss): `{sl:,.4f}`\n"
+        f"⏱️ 발생 시간: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
+    )
+
+    if send_telegram(msg):
+      print(f"Successfully sent slot {signals_sent} for {coin_name}")
+      last_signals[contract] = {"time": current_time, "type": signal_type}
+      active_positions[contract] = {
+          "type": signal_type,
+          "entry": current_price,
+          "tp1": tp1,
+          "tp2": tp2,
+          "tp3": tp3,
+          "sl": sl,
+          "hit": [],
+      }
+
+    time.sleep(0.6)
+
+  state["signals"] = last_signals
+  state["active_positions"] = active_positions
+  save_state(state)
+
+
+if __name__ == "__main__":
+  analyze_market()
