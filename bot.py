@@ -17,6 +17,15 @@ def now():
   return datetime.now(KST)
 
 
+def fmt_price(p):
+  if p < 0.0001:
+    return f"{p:,.8f}"
+  elif p < 1.0:
+    return f"{p:,.6f}"
+  else:
+    return f"{p:,.4f}"
+
+
 def load_state():
   try:
     with open(STATE_FILE, encoding="utf-8") as f:
@@ -75,21 +84,24 @@ def get_market_data():
     r = requests.get(GATE_FUTURES_TICKERS, timeout=15)
     if r.status_code == 200:
       data = r.json()
+      # 🌟 데이터를 무작위로 섞어서 특정 코인만 편식하는 현상 원천 차단
+      random.shuffle(data)
       for item in data:
         contract = item.get("name")
         if not contract or item.get("in_delisting", False):
           continue
+        if "MATIC" in contract:
+          continue
         try:
           last_price = float(item.get("last", 0))
-          # 100 USDT 이하의 소액 종목들을 다양하게 수집
-          if 0.00001 < last_price <= 100.0:
+          # 100 USDT 이하의 소액 알트코인 선별
+          if 0.000001 < last_price <= 100.0:
             valid_tickers[contract] = last_price
         except Exception:
           pass
   except Exception as e:
     print(f"Error fetching tickers: {e}")
 
-  # API 통신 실패 시 사용할 풍부한 백업 풀
   if not valid_tickers:
     valid_tickers = {
         "DOGE_USDT": 0.12,
@@ -98,10 +110,10 @@ def get_market_data():
         "LINK_USDT": 14.0,
         "NEAR_USDT": 5.5,
         "SUI_USDT": 1.8,
-        "PEPE_USDT": 0.00001,
-        "SHIB_USDT": 0.00002,
-        "MATIC_USDT": 0.5,
+        "POL_USDT": 0.38,
         "AVAX_USDT": 25.0,
+        "PEPE_USDT": 0.0000095,
+        "SHIB_USDT": 0.0000175,
     }
   return valid_tickers
 
@@ -163,6 +175,9 @@ def track_and_manage_positions(state, current_prices):
   active = state.get("active_positions", {})
   to_remove = []
 
+  if "MATIC_USDT" in active:
+    del active["MATIC_USDT"]
+
   for contract, pos in list(active.items()):
     if contract not in current_prices:
       continue
@@ -181,7 +196,7 @@ def track_and_manage_positions(state, current_prices):
         msg = (
             "🛡️ *[손절(SL) 도달 마감]*\n"
             f"🪙 종목: `{coin_name} / USDT` (LONG)\n"
-            f"📉 손절가 `{sl:,.4f}` 이탈 종료\n\n"
+            f"📉 손절가 `{fmt_price(sl)}` 이탈 종료\n\n"
             f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
@@ -194,7 +209,7 @@ def track_and_manage_positions(state, current_prices):
         msg = (
             "🎉 *[TP3 최종 익절 달성 마감!]*\n"
             f"🪙 종목: `{coin_name} / USDT` (LONG)\n"
-            f"🎯 3차 목표가 `{tp3:,.4f}` 달성 완료!\n\n"
+            f"🎯 3차 목표가 `{fmt_price(tp3)}` 달성 완료!\n\n"
             f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
@@ -204,14 +219,14 @@ def track_and_manage_positions(state, current_prices):
       if current_price >= tp2 and "TP2" not in hit:
         send_telegram(
             f"🎯 *[TP2 2차 익절 도달]*\n🪙 종목: `{coin_name} / USDT`"
-            f" (LONG)\n💰 목표가 `{tp2:,.4f}` 도달!"
+            f" (LONG)\n💰 목표가 `{fmt_price(tp2)}` 도달!"
         )
         pos["hit"].append("TP2")
       if current_price >= tp1 and "TP1" not in hit:
         send_telegram(
             f"🎯 *[TP1 1차 익절 & 본전스탑]*\n🪙 종목: `{coin_name} / USDT`"
-            f" (LONG)\n💰 목표가 `{tp1:,.4f}` 도달!\n🛡️ 손절가를 진입가"
-            f" 고정(`{entry:,.4f}`)으로 상향."
+            f" (LONG)\n💰 목표가 `{fmt_price(tp1)}` 도달!\n🛡️ 손절가를 진입가"
+            f" 고정(`{fmt_price(entry)}`)으로 상향."
         )
         pos["sl"] = entry
         pos["hit"].append("TP1")
@@ -223,7 +238,7 @@ def track_and_manage_positions(state, current_prices):
         msg = (
             "🛡️ *[손절(SL) 도달 마감]*\n"
             f"🪙 종목: `{coin_name} / USDT` (SHORT)\n"
-            f"📈 손절가 `{sl:,.4f}` 이탈 종료\n\n"
+            f"📈 손절가 `{fmt_price(sl)}` 이탈 종료\n\n"
             f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
@@ -236,7 +251,7 @@ def track_and_manage_positions(state, current_prices):
         msg = (
             "🎉 *[TP3 최종 익절 달성 마감!]*\n"
             f"🪙 종목: `{coin_name} / USDT` (SHORT)\n"
-            f"🎯 3차 목표가 `{tp3:,.4f}` 달성 완료!\n\n"
+            f"🎯 3차 목표가 `{fmt_price(tp3)}` 달성 완료!\n\n"
             f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
@@ -246,14 +261,14 @@ def track_and_manage_positions(state, current_prices):
       if current_price <= tp2 and "TP2" not in hit:
         send_telegram(
             f"🎯 *[TP2 2차 익절 도달]*\n🪙 종목: `{coin_name} / USDT`"
-            f" (SHORT)\n💰 목표가 `{tp2:,.4f}` 도달!"
+            f" (SHORT)\n💰 목표가 `{fmt_price(tp2)}` 도달!"
         )
         pos["hit"].append("TP2")
       if current_price <= tp1 and "TP1" not in hit:
         send_telegram(
             f"🎯 *[TP1 1차 익절 & 본전스탑]*\n🪙 종목: `{coin_name} / USDT`"
-            f" (SHORT)\n💰 목표가 `{tp1:,.4f}` 도달!\n🛡️ 손절가를 진입가"
-            f" 고정(`{entry:,.4f}`)으로 하향."
+            f" (SHORT)\n💰 목표가 `{fmt_price(tp1)}` 도달!\n🛡️ 손절가를 진입가"
+            f" 고정(`{fmt_price(entry)}`)으로 하향."
         )
         pos["sl"] = entry
         pos["hit"].append("TP1")
@@ -312,15 +327,15 @@ def analyze_market():
         f"📌 슬롯 번호: `[ {signals_sent} / 8 ]`\n"
         f"🪙 종목명: `{coin_name} / USDT`\n"
         f"📊 포지션: **{방향텍스트}**\n"
-        f"💰 실시간 진입가: `{current_price:,.4f}` USDT\n\n"
+        f"💰 실시간 진입가: `{fmt_price(current_price)}` USDT\n\n"
         "💡 소액러 부담 완화 가이드\n"
         "  • 100 USDT 이하 가벼운 종목 선별\n"
         "  • 권장 레버리지: `5x ~ 10x` (격리 마진)\n\n"
         "🎯 목표가 (Take Profit)\n"
-        f"  • 1차 (TP1): `{tp1:,.4f}` (본전 스탑)\n"
-        f"  • 2차 (TP2): `{tp2:,.4f}`\n"
-        f"  • 3차 (TP3): `{tp3:,.4f}` (최종 익절)\n\n"
-        f"🛡️ 손절가 (Stop Loss): `{sl:,.4f}`\n"
+        f"  • 1차 (TP1): `{fmt_price(tp1)}` (본전 스탑)\n"
+        f"  • 2차 (TP2): `{fmt_price(tp2)}`\n"
+        f"  • 3차 (TP3): `{fmt_price(tp3)}` (최종 익절)\n\n"
+        f"🛡️ 손절가 (Stop Loss): `{fmt_price(sl)}`\n"
         f"⏱️ 발생 시간: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
     )
 
