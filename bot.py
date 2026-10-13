@@ -102,12 +102,11 @@ def get_market_data():
 
 def get_recent_high_low(contract):
     try:
-        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit=3"
+        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit=10"
         r = requests.get(url, timeout=5)
         if r.status_code == 200:
             data = r.json()
             if data and isinstance(data, list):
-                # 최근 캔들들의 고가와 저가를 넓게 잡아서 실시간 가격 변화를 확실하게 포착
                 highs = [float(item.get("high", item.get("h", 0))) for item in data]
                 lows = [float(item.get("low", item.get("l", 0))) for item in data]
                 closes = [float(item.get("close", item.get("c", 0))) for item in data]
@@ -177,24 +176,21 @@ def posmsg(p, k):
     return f"🛡️ *[손절(SL) 도달 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n📉 손절가 이탈로 포지션 종료 (12시간 재진입 금지)"
 
 
-def check(state, tickers):
-    ticker_map = {item["symbol"]: item for item in tickers}
+def check(state):
+    # 🌟 스캔 목록과 무관하게 현재 보유 중인 모든 포지션을 직접 개별 조회하여 강제 감시
     for key, p in list(state["positions"].items()):
         if not isinstance(p, dict):
             state["positions"].pop(key, None)
             continue
         p.setdefault("symbol", key)
-        if key not in ticker_map:
+        contract = f"{key}_USDT"
+        
+        h, l, curr_p = get_recent_high_low(contract)
+        if curr_p is None:
             continue
-        
-        info = ticker_map[key]
-        contract = info.get("contract", key + "_USDT")
-        curr_p = info["price"]
-        
-        h, l, _ = get_recent_high_low(contract)
+            
         high_p = h if h else curr_p
         low_p = l if l else curr_p
-        
         long = p["direction"] == "LONG"
 
         if long:
@@ -235,20 +231,23 @@ def check(state, tickers):
 
 def main():
     print("===================================")
-    print(" GATE.IO REALTIME TRACKING BOT")
+    print(" GATE.IO DIRECT POSITION MONITOR")
     print("===================================")
     
+    state = load()
+    
+    # 🌟 포지션 상태를 먼저 최우선으로 정밀 감시 및 청산 처리
+    check(state)
+    save(state)
+
+    # 현황판 전송
+    tg(status_msg(state["positions"]))
+
     tickers = get_market_data()
     print("Fetched Tickers:", len(tickers))
     if not tickers:
         print("No tickers fetched.")
         return
-
-    state = load()
-    check(state, tickers)
-
-    # 현황판 전송
-    tg(status_msg(state["positions"]))
 
     candidates = []
     for item in tickers:
@@ -278,4 +277,69 @@ def main():
         else:
             sl = p + risk
             tp1 = p - risk * 1.5
-            tp2 = p - risk * 2.
+            tp2 = p - risk * 2.5
+            tp3 = p - risk * 4.0
+            pos_text = "숏 (SHORT) 🔴"
+
+        candidates.append({
+            "symbol": sym,
+            "direction": direction,
+            "price": p,
+            "sl": sl,
+            "tp1": tp1,
+            "tp2": tp2,
+            "tp3": tp3,
+            "lev": lev,
+            "pos_text": pos_text,
+        })
+
+    random.shuffle(candidates)
+
+    current_active_count = len(state["positions"])
+    available_slots = MAX_SLOTS - current_active_count
+    print(f"ACTIVE SLOTS: {current_active_count}/{MAX_SLOTS} (Available: {available_slots})")
+
+    sent = 0
+    t = time.time()
+    sl_penalties = state.get("sl_penalties", {})
+
+    if available_slots > 0:
+        for s in candidates:
+            if sent >= available_slots:
+                break
+            key = s["symbol"]
+
+            if key in state["positions"] or key in sl_penalties:
+                if key in sl_penalties and t - float(sl_penalties[key]) < SL_PENALTY_HOURS * 3600:
+                    continue
+
+            sid = f"{key}:{s['direction']}"
+            if t - float(state["signals"].get(sid, 0) or 0) < COOLDOWN * 60:
+                continue
+
+            current_slot_number = current_active_count + sent + 1
+            if not tg(msg(s, current_slot_number)):
+                continue
+
+            state["signals"][sid] = t
+            state["positions"][key] = {
+                "symbol": key,
+                "direction": s["direction"],
+                "entry": s["price"],
+                "sl": s["sl"],
+                "tp1": s["tp1"],
+                "tp2": s["tp2"],
+                "tp3": s["tp3"],
+                "tp1_hit": False,
+                "hit": [],
+            }
+            save(state)
+            sent += 1
+            print("SIGNAL SENT:", key)
+
+    save(state)
+    print("DONE. Sent:", sent)
+
+
+if __name__ == "__main__":
+    main()
