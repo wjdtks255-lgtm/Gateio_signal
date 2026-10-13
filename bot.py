@@ -102,16 +102,16 @@ def get_market_data():
 
 def get_recent_high_low(contract):
     try:
-        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit=2"
+        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit=3"
         r = requests.get(url, timeout=5)
         if r.status_code == 200:
             data = r.json()
             if data and isinstance(data, list):
-                latest = data[-1]
-                h = float(latest.get("high", latest.get("h", 0)))
-                l = float(latest.get("low", latest.get("l", 0)))
-                c = float(latest.get("close", latest.get("c", 0)))
-                return h, l, c
+                # 최근 캔들들의 고가와 저가를 넓게 잡아서 실시간 가격 변화를 확실하게 포착
+                highs = [float(item.get("high", item.get("h", 0))) for item in data]
+                lows = [float(item.get("low", item.get("l", 0))) for item in data]
+                closes = [float(item.get("close", item.get("c", 0))) for item in data]
+                return max(highs), min(lows), closes[-1]
     except Exception:
         pass
     return None, None, None
@@ -151,7 +151,7 @@ def status_msg(positions):
         return "📊 *[현재 보유 중인 포지션 현황]*\n━━━━━━━━━━━━━━━━━━━━━━\n• 현재 활성화된 포지션이 없습니다. (모든 슬롯 대기 중)"
     
     lines = [
-        "📊 *[현재 보유 중인 5개 포지션 현황]*",
+        "📊 *[현재 보유 중인 포지션 현황]*",
         "━━━━━━━━━━━━━━━━━━━━━━"
     ]
     for idx, (sym, p) in enumerate(positions.items(), 1):
@@ -235,7 +235,7 @@ def check(state, tickers):
 
 def main():
     print("===================================")
-    print(" GATE.IO STATUS & SIGNAL BOT")
+    print(" GATE.IO REALTIME TRACKING BOT")
     print("===================================")
     
     tickers = get_market_data()
@@ -247,7 +247,7 @@ def main():
     state = load()
     check(state, tickers)
 
-    # 🌟 현재 보유 중인 포지션 현황판을 텔레그램으로 전송
+    # 현황판 전송
     tg(status_msg(state["positions"]))
 
     candidates = []
@@ -278,69 +278,4 @@ def main():
         else:
             sl = p + risk
             tp1 = p - risk * 1.5
-            tp2 = p - risk * 2.5
-            tp3 = p - risk * 4.0
-            pos_text = "숏 (SHORT) 🔴"
-
-        candidates.append({
-            "symbol": sym,
-            "direction": direction,
-            "price": p,
-            "sl": sl,
-            "tp1": tp1,
-            "tp2": tp2,
-            "tp3": tp3,
-            "lev": lev,
-            "pos_text": pos_text,
-        })
-
-    random.shuffle(candidates)
-
-    current_active_count = len(state["positions"])
-    available_slots = MAX_SLOTS - current_active_count
-    print(f"ACTIVE SLOTS: {current_active_count}/{MAX_SLOTS} (Available: {available_slots})")
-
-    sent = 0
-    t = time.time()
-    sl_penalties = state.get("sl_penalties", {})
-
-    if available_slots > 0:
-        for s in candidates:
-            if sent >= available_slots:
-                break
-            key = s["symbol"]
-
-            if key in state["positions"] or key in sl_penalties:
-                if key in sl_penalties and t - float(sl_penalties[key]) < SL_PENALTY_HOURS * 3600:
-                    continue
-
-            sid = f"{key}:{s['direction']}"
-            if t - float(state["signals"].get(sid, 0) or 0) < COOLDOWN * 60:
-                continue
-
-            current_slot_number = current_active_count + sent + 1
-            if not tg(msg(s, current_slot_number)):
-                continue
-
-            state["signals"][sid] = t
-            state["positions"][key] = {
-                "symbol": key,
-                "direction": s["direction"],
-                "entry": s["price"],
-                "sl": s["sl"],
-                "tp1": s["tp1"],
-                "tp2": s["tp2"],
-                "tp3": s["tp3"],
-                "tp1_hit": False,
-                "hit": [],
-            }
-            save(state)
-            sent += 1
-            print("SIGNAL SENT:", key)
-
-    save(state)
-    print("DONE. Sent:", sent)
-
-
-if __name__ == "__main__":
-    main()
+            tp2 = p - risk * 2.
