@@ -11,6 +11,7 @@ STATE_FILE = "gate_state.json"
 KST = timezone(timedelta(hours=9))
 
 GATE_FUTURES_TICKERS = "https://fx-api.gateio.ws/api/v4/futures/usdt/tickers"
+GATE_FUTURES_CANDLES = "https://fx-api.gateio.ws/api/v4/futures/usdt/candlesticks"
 
 MAX_SLOTS = 5
 COOLDOWN = 120
@@ -65,7 +66,6 @@ def get_market_data():
     valid_tickers = []
     try:
         r = requests.get(GATE_FUTURES_TICKERS, timeout=15)
-        print("Gate.io API Status:", r.status_code)
         if r.status_code == 200:
             data = r.json()
             if isinstance(data, dict):
@@ -83,6 +83,7 @@ def get_market_data():
                     if 0.000001 < last_price <= 100.0:
                         valid_tickers.append({
                             "symbol": contract.replace("_USDT", "").replace("USDT", ""),
+                            "contract": contract,
                             "price": last_price,
                             "change": change
                         })
@@ -93,13 +94,27 @@ def get_market_data():
 
     if not valid_tickers:
         valid_tickers = [
-            {"symbol": "DOGE", "price": 0.12, "change": 2.5},
-            {"symbol": "XRP", "price": 0.60, "change": -1.2},
-            {"symbol": "ADA", "price": 0.45, "change": 1.8},
-            {"symbol": "NEAR", "price": 5.50, "change": 3.4},
-            {"symbol": "SUI", "price": 1.80, "change": 4.1},
+            {"symbol": "DOGE", "contract": "DOGE_USDT", "price": 0.12, "change": 2.5},
+            {"symbol": "XRP", "contract": "XRP_USDT", "price": 0.60, "change": -1.2},
         ]
     return valid_tickers
+
+
+def get_recent_high_low(contract):
+    try:
+        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit=2"
+        r = requests.get(url, timeout=5)
+        if r.status_code == 200:
+            data = r.json()
+            if data and isinstance(data, list):
+                latest = data[-1]
+                h = float(latest.get("high", latest.get("h", 0)))
+                l = float(latest.get("low", latest.get("l", 0)))
+                c = float(latest.get("close", latest.get("c", 0)))
+                return h, l, c
+    except Exception:
+        pass
+    return None, None, None
 
 
 def fmt(x):
@@ -131,6 +146,25 @@ def msg(s, slot_no):
     )
 
 
+def status_msg(positions):
+    if not positions:
+        return "📊 *[현재 보유 중인 포지션 현황]*\n━━━━━━━━━━━━━━━━━━━━━━\n• 현재 활성화된 포지션이 없습니다. (모든 슬롯 대기 중)"
+    
+    lines = [
+        "📊 *[현재 보유 중인 5개 포지션 현황]*",
+        "━━━━━━━━━━━━━━━━━━━━━━"
+    ]
+    for idx, (sym, p) in enumerate(positions.items(), 1):
+        d = p.get("direction", "LONG")
+        pos_icon = "🟢 롱" if d == "LONG" else "🔴 숏"
+        entry = p.get("entry", 0)
+        tp1_status = "✅ 도달(본전스탑)" if p.get("tp1_hit") else "⏳ 대기중"
+        lines.append(f"• `[{idx}]` **{sym} / USDT** ({pos_icon})\n  - 진입가: `{fmt(entry)}` | TP1: `{tp1_status}`")
+    
+    lines.append(f"\n⏱️ 확인 시간: `{now().strftime('%m-%d %H:%M')} (KST)`")
+    return "\n".join(lines)
+
+
 def posmsg(p, k):
     sy = p.get("symbol", "UNKNOWN")
     d = p.get("direction", "LONG")
@@ -143,42 +177,65 @@ def posmsg(p, k):
     return f"🛡️ *[손절(SL) 도달 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n📉 손절가 이탈로 포지션 종료 (12시간 재진입 금지)"
 
 
-def check(state, current_prices):
-    price_map = {item["symbol"]: item["price"] for item in current_prices}
+def check(state, tickers):
+    ticker_map = {item["symbol"]: item for item in tickers}
     for key, p in list(state["positions"].items()):
         if not isinstance(p, dict):
             state["positions"].pop(key, None)
             continue
         p.setdefault("symbol", key)
-        if key not in price_map:
+        if key not in ticker_map:
             continue
-        price = price_map[key]
+        
+        info = ticker_map[key]
+        contract = info.get("contract", key + "_USDT")
+        curr_p = info["price"]
+        
+        h, l, _ = get_recent_high_low(contract)
+        high_p = h if h else curr_p
+        low_p = l if l else curr_p
+        
         long = p["direction"] == "LONG"
 
-        if long and price >= p["tp3"] or not long and price <= p["tp3"]:
-            tg(posmsg(p, "TP3"))
-            state["positions"].pop(key, None)
-            continue
-
-        if long and price <= p["sl"] or not long and price >= p["sl"]:
-            tg(posmsg(p, "SL"))
-            state.setdefault("sl_penalties", {})[key] = time.time()
-            state["positions"].pop(key, None)
-            continue
-
-        if long and price >= p["tp2"] and "TP2" not in p.get("hit", []):
-            tg(posmsg(p, "TP2"))
-            p.setdefault("hit", []).append("TP2")
-
-        if not p.get("tp1_hit", False) and (price >= p["tp1"] if long else price <= p["tp1"]):
-            p["tp1_hit"] = True
-            p["sl"] = p["entry"]
-            tg(posmsg(p, "TP1"))
+        if long:
+            if high_p >= p["tp3"]:
+                tg(posmsg(p, "TP3"))
+                state["positions"].pop(key, None)
+                continue
+            if low_p <= p["sl"]:
+                tg(posmsg(p, "SL"))
+                state.setdefault("sl_penalties", {})[key] = time.time()
+                state["positions"].pop(key, None)
+                continue
+            if high_p >= p["tp2"] and "TP2" not in p.get("hit", []):
+                tg(posmsg(p, "TP2"))
+                p.setdefault("hit", []).append("TP2")
+            if not p.get("tp1_hit", False) and high_p >= p["tp1"]:
+                p["tp1_hit"] = True
+                p["sl"] = p["entry"]
+                tg(posmsg(p, "TP1"))
+        else:
+            if low_p <= p["tp3"]:
+                tg(posmsg(p, "TP3"))
+                state["positions"].pop(key, None)
+                continue
+            if high_p >= p["sl"]:
+                tg(posmsg(p, "SL"))
+                state.setdefault("sl_penalties", {})[key] = time.time()
+                state["positions"].pop(key, None)
+                continue
+            if low_p <= p["tp2"] and "TP2" not in p.get("hit", []):
+                tg(posmsg(p, "TP2"))
+                p.setdefault("hit", []).append("TP2")
+            if not p.get("tp1_hit", False) and low_p <= p["tp1"]:
+                p["tp1_hit"] = True
+                p["sl"] = p["entry"]
+                tg(posmsg(p, "TP1"))
 
 
 def main():
     print("===================================")
-    print(" GATE.IO DYNAMIC LEVERAGE BOT")
+    print(" GATE.IO STATUS & SIGNAL BOT")
     print("===================================")
     
     tickers = get_market_data()
@@ -189,6 +246,9 @@ def main():
 
     state = load()
     check(state, tickers)
+
+    # 🌟 현재 보유 중인 포지션 현황판을 텔레그램으로 전송
+    tg(status_msg(state["positions"]))
 
     candidates = []
     for item in tickers:
