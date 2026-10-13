@@ -199,7 +199,6 @@ def main():
         direction = "LONG" if ch >= 0 else "SHORT"
         risk = max(p * 0.015, p * 0.005)
 
-        # 🌟 종목의 가격 변동성(변동률 절댓값)에 따라 레버리지를 동적으로 설정 (3배 ~ 10배)
         abs_ch = abs(ch)
         if abs_ch > 5.0:
             lev = 3
@@ -269,4 +268,19 @@ def main():
                 "direction": s["direction"],
                 "entry": s["price"],
                 "sl": s["sl"],
-                "
+                "tp1": s["tp1"],
+                "tp2": s["tp2"],
+                "tp3": s["tp3"],
+                "tp1_hit": False,
+                "hit": [],
+            }
+            save(state)
+            sent += 1
+            print("SIGNAL SENT:", key)
+
+    save(state)
+    print("DONE. Sent:", sent)
+
+
+if __name__ == "__main__":
+    main()
