@@ -1,3 +1,117 @@
 {
-  
+  "stats": {
+    "total_closed": 0,
+    "long_wins": 0,
+    "long_losses": 0,
+    "short_wins": 0,
+    "short_losses": 0
+  },
+  "active_positions": {
+    "LINK_USDT": {
+      "type": "LONG",
+      "entry": 14.0,
+      "tp1": 14.42,
+      "tp2": 14.784,
+      "tp3": 15.26,
+      "sl": 13.58,
+      "hit": []
+    },
+    "NEAR_USDT": {
+      "type": "SHORT",
+      "entry": 5.5,
+      "tp1": 5.335,
+      "tp2": 5.192,
+      "tp3": 5.005,
+      "sl": 5.665,
+      "hit": []
+    },
+    "DOGE_USDT": {
+      "type": "LONG",
+      "entry": 0.12,
+      "tp1": 0.1236,
+      "tp2": 0.12672,
+      "tp3": 0.1308,
+      "sl": 0.11639999999999999,
+      "hit": []
+    },
+    "SUI_USDT": {
+      "type": "SHORT",
+      "entry": 1.8,
+      "tp1": 1.746,
+      "tp2": 1.6992,
+      "tp3": 1.638,
+      "sl": 1.854,
+      "hit": []
+    },
+    "ADA_USDT": {
+      "type": "LONG",
+      "entry": 0.45,
+      "tp1": 0.4635,
+      "tp2": 0.4752,
+      "tp3": 0.49050000000000005,
+      "sl": 0.4365,
+      "hit": []
+    },
+    "AVAX_USDT": {
+      "type": "SHORT",
+      "entry": 25.0,
+      "tp1": 24.25,
+      "tp2": 23.6,
+      "tp3": 22.75,
+      "sl": 25.75,
+      "hit": []
+    },
+    "XRP_USDT": {
+      "type": "LONG",
+      "entry": 0.6,
+      "tp1": 0.618,
+      "tp2": 0.6335999999999999,
+      "tp3": 0.654,
+      "sl": 0.582,
+      "hit": []
+    },
+    "MATIC_USDT": {
+      "type": "SHORT",
+      "entry": 0.5,
+      "tp1": 0.485,
+      "tp2": 0.472,
+      "tp3": 0.455,
+      "sl": 0.515,
+      "hit": []
+    }
+  },
+  "signals": {
+    "LINK_USDT": {
+      "time": 1791860457.9789965,
+      "type": "LONG"
+    },
+    "NEAR_USDT": {
+      "time": 1791860457.9789965,
+      "type": "SHORT"
+    },
+    "DOGE_USDT": {
+      "time": 1791860457.9789965,
+      "type": "LONG"
+    },
+    "SUI_USDT": {
+      "time": 1791860457.9789965,
+      "type": "SHORT"
+    },
+    "ADA_USDT": {
+      "time": 1791860457.9789965,
+      "type": "LONG"
+    },
+    "AVAX_USDT": {
+      "time": 1791860457.9789965,
+      "type": "SHORT"
+    },
+    "XRP_USDT": {
+      "time": 1791860457.9789965,
+      "type": "LONG"
+    },
+    "MATIC_USDT": {
+      "time": 1791860457.9789965,
+      "type": "SHORT"
+    }
+  }
 }
