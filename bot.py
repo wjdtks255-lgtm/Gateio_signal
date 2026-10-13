@@ -91,7 +91,6 @@ def get_market_data():
     except Exception as e:
         print(f"Error fetching Gate.io tickers: {e}")
 
-    # API 파싱이 안 될 경우를 대비한 든든한 백업 풀 (즉시 발송 보장)
     if not valid_tickers:
         valid_tickers = [
             {"symbol": "DOGE", "price": 0.12, "change": 2.5},
@@ -115,13 +114,13 @@ def fmt(x):
 
 def msg(s, slot_no):
     return (
-        f"🚨 *Gate.io 소액러 맞춤 트레이딩 시그널* 🚨\n"
+        f"🚨 *Gate.io 프로페셔널 트레이딩 시그널* 🚨\n"
         f"━━━━━━━━━━━━━━━━━━━━━━\n"
         f"📌 슬롯 번호: `[ {slot_no} / {MAX_SLOTS} ]`\n"
         f"🪙 종목명: `{s['symbol']} / USDT`\n"
         f"📊 포지션: **{s['pos_text']}**\n"
         f"💰 실시간 진입가: `{fmt(s['price'])}` USDT\n\n"
-        f"💡 소액러 부담 완화 가이드\n"
+        f"⚙️ 포지션 운용 가이드\n"
         f"  • 권장 레버리지: `{s['lev']}x` (격리 마진)\n\n"
         f"🎯 목표가 (Take Profit)\n"
         f"  • 1차 (TP1): `{fmt(s['tp1'])}` (본전 스탑)\n"
@@ -179,7 +178,7 @@ def check(state, current_prices):
 
 def main():
     print("===================================")
-    print(" GATE.IO ROBUST SIGNAL BOT")
+    print(" GATE.IO DYNAMIC LEVERAGE BOT")
     print("===================================")
     
     tickers = get_market_data()
@@ -199,6 +198,17 @@ def main():
         
         direction = "LONG" if ch >= 0 else "SHORT"
         risk = max(p * 0.015, p * 0.005)
+
+        # 🌟 종목의 가격 변동성(변동률 절댓값)에 따라 레버리지를 동적으로 설정 (3배 ~ 10배)
+        abs_ch = abs(ch)
+        if abs_ch > 5.0:
+            lev = 3
+        elif abs_ch > 2.5:
+            lev = 5
+        elif abs_ch > 1.0:
+            lev = 7
+        else:
+            lev = 10
 
         if direction == "LONG":
             sl = p - risk
@@ -221,7 +231,7 @@ def main():
             "tp1": tp1,
             "tp2": tp2,
             "tp3": tp3,
-            "lev": 5,
+            "lev": lev,
             "pos_text": pos_text,
         })
 
@@ -259,19 +269,4 @@ def main():
                 "direction": s["direction"],
                 "entry": s["price"],
                 "sl": s["sl"],
-                "tp1": s["tp1"],
-                "tp2": s["tp2"],
-                "tp3": s["tp3"],
-                "tp1_hit": False,
-                "hit": [],
-            }
-            save(state)
-            sent += 1
-            print("SIGNAL SENT:", key)
-
-    save(state)
-    print("DONE. Sent:", sent)
-
-
-if __name__ == "__main__":
-    main()
+                "
