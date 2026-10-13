@@ -11,9 +11,8 @@ KST = timezone(timedelta(hours=9))
 TV_URL = "https://scanner.tradingview.com/crypto/scan"
 
 MAX_SLOTS = 5
-COOLDOWN = 240
+COOLDOWN = 120
 SL_PENALTY_HOURS = 12
-MIN_SCORE = 82
 
 SYMBOL_MAP = {
     "1000PEPEUSDT": "PEPEUSDT",
@@ -30,23 +29,9 @@ COL = [
     "volume|15",
     "EMA20|15",
     "EMA50|15",
-    "EMA100|15",
     "RSI|15",
-    "ADX|15",
     "ATR|15",
-    "open|60",
-    "high|60",
-    "low|60",
-    "close|60",
-    "volume|60",
-    "EMA20|60",
-    "EMA50|60",
-    "EMA100|60",
-    "RSI|60",
-    "ADX|60",
-    "ATR|60",
     "change|15",
-    "change|60",
 ]
 
 HEAD = {
@@ -79,7 +64,7 @@ def save(s):
     os.replace(STATE_FILE + ".tmp", STATE_FILE)
 
 
-def tg(msg, label="MSG"):
+def tg(msg):
     if not TOKEN or not CHAT_ID:
         print("TG CONFIG ERROR")
         return False
@@ -89,22 +74,12 @@ def tg(msg, label="MSG"):
         "text": msg,
         "parse_mode": "Markdown",
         "disable_web_page_preview": True,
-        "disable_notification": False,
     }
-    for n in range(3):
-        try:
-            r = requests.post(url, json=data, timeout=20)
-            j = r.json() if r.status_code == 200 else {}
-            if r.status_code == 200 and j.get("ok") is True:
-                time.sleep(1.2)
-                return True
-            if r.status_code == 429:
-                retry_after = int(r.headers.get("Retry-After", 3))
-                time.sleep(retry_after)
-        except Exception as e:
-            print("TG ERROR:", e)
-        if n < 2:
-            time.sleep(1.5)
+    try:
+        r = requests.post(url, json=data, timeout=20)
+        return r.status_code == 200
+    except Exception as e:
+        print("TG ERROR:", e)
     return False
 
 
@@ -115,7 +90,7 @@ def rows():
         "filter": [{"left": "exchange", "operation": "equal", "right": "GATEIO"}],
         "columns": COL,
         "sort": {"sortBy": "volume|15", "sortOrder": "desc"},
-        "range": [0, 1000],
+        "range": [0, 500],
     }
     try:
         r = requests.post(TV_URL, json=q, headers=HEAD, timeout=25)
@@ -146,96 +121,18 @@ def fmt(x):
     return f"{x:.8f}".rstrip("0").rstrip(".")
 
 
-def fetch_klines(sym, limit=12):
-    try:
-        clean_sym = sym.upper().replace(".P", "")
-        clean_sym = SYMBOL_MAP.get(clean_sym, clean_sym)
-        url = f"https://api.gateio.ws/api/v4/futures/usdt/candlesticks?contract={clean_sym}&interval=15m&limit={limit}"
-        r = requests.get(url, timeout=4)
-        if r.status_code == 200:
-            data = r.json()
-            klines = []
-            for item in data:
-                try:
-                    c_open = float(item.get("open", item[5] if len(item) > 5 else 0))
-                    c_high = float(item.get("high", item[3] if len(item) > 3 else 0))
-                    c_low = float(item.get("low", item[4] if len(item) > 4 else 0))
-                    c_close = float(item.get("close", item[2] if len(item) > 2 else 0))
-                    klines.append({"open": c_open, "high": c_high, "low": c_low, "close": c_close})
-                except Exception:
-                    pass
-            if klines:
-                return klines
-    except Exception as e:
-        print(f"KLINE FETCH ERROR ({sym}):", e)
-    return []
-
-
-def verify_candle_structure(sym, direction, current_p):
-    klines = fetch_klines(sym, limit=12)
-    if len(klines) < 8:
-        return True, "KLINE_FETCH_SKIP"
-    history = klines[:-1]
-    curr = klines[-1]
-    recent_highs = [k["high"] for k in history[-5:]]
-    recent_lows = [k["low"] for k in history[-5:]]
-    max_range = (max(recent_highs) - min(recent_lows)) / current_p * 100
-    if max_range < 0.25:
-        return False, "FLAT_CONSOLIDATION"
-    if direction == "LONG":
-        has_pullback = any(k["close"] < k["open"] for k in history[-6:-1])
-        is_rebound = curr["close"] > curr["open"] and curr["close"] > history[-1]["close"]
-        if not has_pullback or not is_rebound:
-            return False, "NO_WAVE"
-    else:
-        has_bounce = any(k["close"] > k["open"] for k in history[-6:-1])
-        is_breakdown = curr["close"] < curr["open"] and curr["close"] < history[-1]["low"]
-        if not has_bounce or not is_breakdown:
-            return False, "NO_WAVE"
-    return True, "STRUCTURE_VALIDATED"
-
-
-def analyze(r, st):
-    p, o, h, l = [v(r, i) for i in (3, 0, 1, 2)]
-    e20, e50, e100, rs, adx, atr = [v(r, i) for i in (5, 6, 7, 8, 9, 10)]
-    ph, e20h, e50h, e100h, rsh, adxh, atrh = [v(r, i) for i in (14, 16, 17, 18, 19, 20, 21)]
-    ch15, ch60 = [v(r, i) for i in (22, 23)]
-
-    if min(p, e20, e50, e100, e20h, e50h, e100h, atr, atrh) <= 0:
-        return
-
-    atrp = atr / p * 100
-    atrph = atrh / ph * 100
-    d20 = (p - e20) / e20 * 100
-
-    if atrp < 0.18 or atrp > 3.5:
-        return
-
-    bull = e20h > e50h > e100h and e20 > e50 > e100 and ph > e20h
-    bear = e20h < e50h < e100h and e20 < e50 < e100 and ph < e20h
-
-    if not bull and not bear:
-        return
-
-    direction = "LONG" if bull else "SHORT"
-
-    if direction == "LONG":
-        pullback = -0.75 <= d20 <= 0.25
-        rsi_ok = 34 <= rs <= 67
-    else:
-        pullback = -0.25 <= d20 <= 0.75
-        rsi_ok = 33 <= rs <= 66
-
-    if not pullback or not rsi_ok or adx < 20:
-        return
+def analyze(r):
+    p, o, h, l, vol, e20, e50, rs, atr, ch15 = [v(r, i) for i in range(10)]
+    if p <= 0 or atr <= 0:
+        return None
 
     sym = symbol(r)
-    valid_structure, reason = verify_candle_structure(sym, direction, p)
-    if not valid_structure:
-        return
+    # 소액러 친화적인 100 USDT 이하 종목만 선별
+    if p > 100.0:
+        return None
 
-    score = 85
-    risk = max(atr * 1.20, p * 0.0045)
+    direction = "LONG" if ch15 >= 0 else "SHORT"
+    risk = max(atr * 1.2, p * 0.005)
 
     if direction == "LONG":
         sl = p - risk
@@ -250,18 +147,15 @@ def analyze(r, st):
         tp3 = p - risk * 4.0
         pos_text = "숏 (SHORT) 🔴"
 
-    lev = 8 if atrp < 0.8 else (6 if atrp < 1.4 else 5)
-
     return {
         "symbol": sym,
         "direction": direction,
-        "score": score,
         "price": p,
         "sl": sl,
         "tp1": tp1,
         "tp2": tp2,
         "tp3": tp3,
-        "lev": lev,
+        "lev": 5,
         "pos_text": pos_text,
     }
 
@@ -312,29 +206,30 @@ def check(state, rs):
         long = p["direction"] == "LONG"
 
         if long and price >= p["tp3"] or not long and price <= p["tp3"]:
-            tg(posmsg(p, "TP3"), f"{p['symbol']} TP3")
+            tg(posmsg(p, "TP3"))
             state["positions"].pop(key, None)
             continue
 
         if long and price <= p["sl"] or not long and price >= p["sl"]:
-            tg(posmsg(p, "SL"), f"{p['symbol']} SL")
+            tg(posmsg(p, "SL"))
             state.setdefault("sl_penalties", {})[key] = time.time()
             state["positions"].pop(key, None)
             continue
 
         if long and price >= p["tp2"] and "TP2" not in p.get("hit", []):
-            tg(posmsg(p, "TP2"), f"{p['symbol']} TP2")
+            tg(posmsg(p, "TP2"))
             p.setdefault("hit", []).append("TP2")
 
         if not p.get("tp1_hit", False) and (price >= p["tp1"] if long else price <= p["tp1"]):
             p["tp1_hit"] = True
             p["sl"] = p["entry"]
-            tg(posmsg(p, "TP1"), f"{p['symbol']} TP1")
+            tg(posmsg(p, "TP1"))
 
 
 def main():
     rs = rows()
     if not rs:
+        print("No rows fetched from TradingView.")
         return
 
     state = load()
@@ -343,7 +238,7 @@ def main():
     candidates = []
     for r in rs:
         try:
-            s = analyze(r, None)
+            s = analyze(r)
             if s:
                 candidates.append(s)
         except Exception:
@@ -371,7 +266,7 @@ def main():
                 continue
 
             current_slot_number = current_active_count + sent + 1
-            if not tg(msg(s, current_slot_number), f"{key} {s['direction']}"):
+            if not tg(msg(s, current_slot_number)):
                 continue
 
             state["signals"][sid] = t
@@ -390,6 +285,7 @@ def main():
             sent += 1
 
     save(state)
+    print(f"Successfully sent {sent} signals.")
 
 
 if __name__ == "__main__":
