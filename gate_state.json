@@ -1,4 +1,37 @@
 {
-  "signals": {},
+  "signals": {
+    "USDBRL_USDT": {
+      "time": 1791851116.012103,
+      "type": "LONG"
+    },
+    "BLESS_USDT": {
+      "time": 1791851116.012103,
+      "type": "SHORT"
+    },
+    "NEWT_USDT": {
+      "time": 1791851116.012103,
+      "type": "LONG"
+    },
+    "MICRODUCK_USDT": {
+      "time": 1791851116.012103,
+      "type": "SHORT"
+    },
+    "DOGE_USDT": {
+      "time": 1791851116.012103,
+      "type": "LONG"
+    },
+    "SNXX_USDT": {
+      "time": 1791851116.012103,
+      "type": "SHORT"
+    },
+    "FIX_USDT": {
+      "time": 1791851116.012103,
+      "type": "LONG"
+    },
+    "BWET_USDT": {
+      "time": 1791851116.012103,
+      "type": "SHORT"
+    }
+  },
   "active_positions": {}
 }
