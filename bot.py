@@ -93,18 +93,18 @@ def analyze_market():
     print("No contracts found.")
     return
 
-  signals_list = []
+  signals_sent = 0
   last_signals = state.get("signals", {})
   current_time = time.time()
 
   for contract in contracts:
-    if len(signals_list) >= 8:
+    if signals_sent >= 8:
       break
 
     coin_name = contract.replace("_USDT", "")
     current_price, high_p, low_p = fetch_current_price(contract)
 
-    signal_type = "LONG" if len(signals_list) % 2 == 0 else "SHORT"
+    signal_type = "LONG" if signals_sent % 2 == 0 else "SHORT"
     atr = current_price * 0.02
 
     if signal_type == "LONG":
@@ -112,47 +112,42 @@ def analyze_market():
       tp1 = current_price + (atr * 1.5)
       tp2 = current_price + (atr * 2.8)
       tp3 = current_price + (atr * 4.5)
+      방향텍스트 = "롱 (LONG) 🟢"
     else:
       sl = current_price + (atr * 1.5)
       tp1 = current_price - (atr * 1.5)
       tp2 = current_price - (atr * 2.8)
       tp3 = current_price - (atr * 4.5)
+      방향텍스트 = "숏 (SHORT) 🔴"
 
-    signals_list.append({
-        "slot": len(signals_list) + 1,
-        "coin": coin_name,
-        "type": signal_type,
-        "price": current_price,
-        "tp1": tp1,
-        "tp2": tp2,
-        "tp3": tp3,
-        "sl": sl,
-        "rsi": 52.5,
-    })
-    last_signals[contract] = {"time": current_time, "type": signal_type}
+    signals_sent += 1
 
-  if not signals_list:
-    print("No signals generated.")
-    return
-
-  msg = (
-      f"🚨 *Gate.io Futures Signals (Slot 1 ~ 8)* 🚨\n"
-      f"⏱️ *시간*: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`\n"
-      f"━━━━━━━━━━━━━━━━━━━━━━\n\n"
-  )
-
-  for s in signals_list:
-    emoji = "🟢" if s["type"] == "LONG" else "🔴"
-    msg += (
-        f"📌 *[Slot {s['slot']}/8] {s['coin']}/USDT* {emoji} **{s['type']}**\n"
-        f"  • 진입가: `{s['price']:,.4f}`\n"
-        f"  • TP1: `{s['tp1']:,.4f}` | TP2: `{s['tp2']:,.4f}` | TP3:"
-        f" `{s['tp3']:,.4f}`\n"
-        f"  • 손절(SL): `{s['sl']:,.4f}` | RSI: `{s['rsi']:.1f}`\n\n"
+    # 보기 좋게 다듬은 한국어 포맷 메시지 생성
+    msg = (
+        f"🚨 *Gate.io 선물 트레이딩 시그널* 🚨\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"📌 *슬롯 번호*: `[ {signals_sent} / 8 ]`\n"
+        f"🪙 *종목명*: `{coin_name} / USDT` (1시간봉)\n"
+        f"📊 *포지션*: **{방향텍스트}**\n"
+        f"💰 *진입 가격*: `{current_price:,.4f}` USDT\n\n"
+        f"💡 *투자 전략 가이드*\n"
+        f"  • 권장 레버리지: `5x ~ 10x` (격리)\n"
+        f"  • 자금 비중: `총 시트의 5%`\n\n"
+        f"🎯 *목표가 (Take Profit)*\n"
+        f"  • 1차 (TP1): `{tp1:,.4f}` (본전 스탑 전환)\n"
+        f"  • 2차 (TP2): `{tp2:,.4f}`\n"
+        f"  • 3차 (TP3): `{tp3:,.4f}` (최종 익절)\n\n"
+        f"🛡️ *손절가 (Stop Loss)*: `{sl:,.4f}`\n"
+        f"📈 *참고 지표*: RSI `52.5`\n"
+        f"⏱️ *발생 시간*: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
     )
 
-  if send_telegram(msg):
-    print("Successfully sent 8 slots summary message!")
+    # 각각의 메시지가 뭉치지 않도록 0.6초 간격을 두고 개별 전송
+    if send_telegram(msg):
+      print(f"Successfully sent slot {signals_sent} for {coin_name}")
+      last_signals[contract] = {"time": current_time, "type": signal_type}
+
+    time.sleep(0.6)
 
   state["signals"] = last_signals
   save_state(state)
