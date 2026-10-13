@@ -44,7 +44,6 @@ def send_telegram(msg):
   }
   try:
     r = requests.post(url, json=data, timeout=15)
-    print(f"Telegram API Response: {r.status_code} - {r.text}")
     return r.status_code == 200
   except Exception as e:
     print(f"Telegram error: {e}")
@@ -63,24 +62,26 @@ def get_market_data():
           continue
         try:
           last_price = float(item.get("last", 0))
-          if last_price > 0:
+          # ⭐ 소액러들을 위해 너무 비싼 고가 코인(100 USDT 초과)은 배제하고 저가~중저가 코인만 선별
+          if 0.0001 < last_price <= 100.0:
             valid_tickers[contract] = last_price
         except Exception:
           pass
   except Exception as e:
     print(f"Error fetching tickers: {e}")
 
+  # API 수신 실패 또는 조건에 맞는 종목이 없을 때의 소액러 친화적 기본 백업 풀
   if not valid_tickers:
-    print("Using fallback default tickers.")
+    print("Using fallback default affordable tickers.")
     valid_tickers = {
-        "BTC_USDT": 65000.0,
-        "ETH_USDT": 3200.0,
-        "SOL_USDT": 150.0,
-        "XRP_USDT": 0.6,
         "DOGE_USDT": 0.12,
+        "XRP_USDT": 0.6,
         "ADA_USDT": 0.45,
         "AVAX_USDT": 25.0,
         "LINK_USDT": 14.0,
+        "NEAR_USDT": 5.5,
+        "MATIC_USDT": 0.5,
+        "SUI_USDT": 1.8,
     }
 
   return valid_tickers
@@ -230,15 +231,15 @@ def analyze_market():
     signals_sent += 1
 
     msg = (
-        "🚨 *Gate.io 선물 트레이딩 시그널* 🚨\n"
+        "🚨 *Gate.io 소액러 맞춤 트레이딩 시그널* 🚨\n"
         "━━━━━━━━━━━━━━━━━━━━━━\n"
         f"📌 슬롯 번호: `[ {signals_sent} / 8 ]`\n"
         f"🪙 종목명: `{coin_name} / USDT`\n"
         f"📊 포지션: **{방향텍스트}**\n"
         f"💰 실시간 진입가: `{current_price:,.4f}` USDT\n\n"
-        "💡 소액러 맞춤 가이드\n"
-        "  • 권장 레버리지: `5x ~ 10x` (격리 마진)\n"
-        "  • 포지션 비중: `시드의 3% ~ 5%`\n\n"
+        "💡 소액러 부담 완화 가이드\n"
+        "  • 100 USDT 이하 가벼운 종목 위주 선별\n"
+        "  • 권장 레버리지: `5x ~ 10x` (격리 마진)\n\n"
         "🎯 목표가 (Take Profit)\n"
         f"  • 1차 (TP1): `{tp1:,.4f}` (본전 스탑)\n"
         f"  • 2차 (TP2): `{tp2:,.4f}`\n"
