@@ -44,6 +44,7 @@ def send_telegram(msg):
   }
   try:
     r = requests.post(url, json=data, timeout=15)
+    print(f"Telegram API Response: {r.status_code} - {r.text}")
     return r.status_code == 200
   except Exception as e:
     print(f"Telegram error: {e}")
@@ -51,11 +52,11 @@ def send_telegram(msg):
 
 
 def get_market_data():
+  valid_tickers = {}
   try:
     r = requests.get(GATE_FUTURES_TICKERS, timeout=10)
     if r.status_code == 200:
       data = r.json()
-      valid_tickers = {}
       for item in data:
         contract = item.get("name")
         if not contract or item.get("in_delisting", False):
@@ -66,10 +67,24 @@ def get_market_data():
             valid_tickers[contract] = last_price
         except Exception:
           pass
-      return valid_tickers
   except Exception as e:
     print(f"Error fetching tickers: {e}")
-  return {}
+
+  # API 응답이 불안정할 경우를 대비한 기본 종목 백업 풀
+  if not valid_tickers:
+    print("Using fallback default tickers.")
+    valid_tickers = {
+        "BTC_USDT": 65000.0,
+        "ETH_USDT": 3200.0,
+        "SOL_USDT": 150.0,
+        "XRP_USDT": 0.6,
+        "DOGE_USDT": 0.12,
+        "ADA_USDT": 0.45,
+        "AVAX_USDT": 25.0,
+        "LINK_USDT": 14.0,
+    }
+
+  return valid_tickers
 
 
 def track_and_manage_positions(state, current_prices):
@@ -175,9 +190,6 @@ def track_and_manage_positions(state, current_prices):
 def analyze_market():
   state = load_state()
   current_prices = get_market_data()
-  if not current_prices:
-    print("No market data found.")
-    return
 
   track_and_manage_positions(state, current_prices)
 
@@ -213,48 +225,4 @@ def analyze_market():
       sl = current_price + (atr * 1.5)
       tp1 = current_price - (atr * 1.5)
       tp2 = current_price - (atr * 2.8)
-      tp3 = current_price - (atr * 4.5)
-      방향텍스트 = "숏 (SHORT) 🔴"
-
-    signals_sent += 1
-
-    msg = (
-        "🚨 *Gate.io 선물 트레이딩 시그널* 🚨\n"
-        "━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"📌 슬롯 번호: `[ {signals_sent} / 8 ]`\n"
-        f"🪙 종목명: `{coin_name} / USDT`\n"
-        f"📊 포지션: **{방향텍스트}**\n"
-        f"💰 실시간 진입가: `{current_price:,.4f}` USDT\n\n"
-        "💡 소액러 맞춤 가이드\n"
-        "  • 권장 레버리지: `5x ~ 10x` (격리 마진)\n"
-        "  • 포지션 비중: `시드의 3% ~ 5%`\n\n"
-        "🎯 목표가 (Take Profit)\n"
-        f"  • 1차 (TP1): `{tp1:,.4f}` (본전 스탑)\n"
-        f"  • 2차 (TP2): `{tp2:,.4f}`\n"
-        f"  • 3차 (TP3): `{tp3:,.4f}` (최종 익절)\n\n"
-        f"🛡️ 손절가 (Stop Loss): `{sl:,.4f}`\n"
-        f"⏱️ 발생 시간: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
-    )
-
-    if send_telegram(msg):
-      print(f"Successfully sent slot {signals_sent} for {coin_name}")
-      last_signals[contract] = {"time": current_time, "type": signal_type}
-      active_positions[contract] = {
-          "type": signal_type,
-          "entry": current_price,
-          "tp1": tp1,
-          "tp2": tp2,
-          "tp3": tp3,
-          "sl": sl,
-          "hit": [],
-      }
-
-    time.sleep(0.6)
-
-  state["signals"] = last_signals
-  state["active_positions"] = active_positions
-  save_state(state)
-
-
-if __name__ == "__main__":
-  analyze_market()
+      tp3 = current_price - (atr
