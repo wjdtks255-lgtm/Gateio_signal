@@ -72,7 +72,7 @@ def send_telegram(msg):
 def get_market_data():
   valid_tickers = {}
   try:
-    r = requests.get(GATE_FUTURES_TICKERS, timeout=10)
+    r = requests.get(GATE_FUTURES_TICKERS, timeout=15)
     if r.status_code == 200:
       data = r.json()
       for item in data:
@@ -81,23 +81,27 @@ def get_market_data():
           continue
         try:
           last_price = float(item.get("last", 0))
-          if 0.0001 < last_price <= 100.0:
+          # 100 USDT 이하의 소액 종목들을 다양하게 수집
+          if 0.00001 < last_price <= 100.0:
             valid_tickers[contract] = last_price
         except Exception:
           pass
   except Exception as e:
     print(f"Error fetching tickers: {e}")
 
+  # API 통신 실패 시 사용할 풍부한 백업 풀
   if not valid_tickers:
     valid_tickers = {
         "DOGE_USDT": 0.12,
         "XRP_USDT": 0.6,
         "ADA_USDT": 0.45,
-        "AVAX_USDT": 25.0,
         "LINK_USDT": 14.0,
         "NEAR_USDT": 5.5,
-        "MATIC_USDT": 0.5,
         "SUI_USDT": 1.8,
+        "PEPE_USDT": 0.00001,
+        "SHIB_USDT": 0.00002,
+        "MATIC_USDT": 0.5,
+        "AVAX_USDT": 25.0,
     }
   return valid_tickers
 
@@ -244,7 +248,7 @@ def track_and_manage_positions(state, current_prices):
             f"🎯 *[TP2 2차 익절 도달]*\n🪙 종목: `{coin_name} / USDT`"
             f" (SHORT)\n💰 목표가 `{tp2:,.4f}` 도달!"
         )
-        send_telegram(pos["hit"].append("TP2"))
+        pos["hit"].append("TP2")
       if current_price <= tp1 and "TP1" not in hit:
         send_telegram(
             f"🎯 *[TP1 1차 익절 & 본전스탑]*\n🪙 종목: `{coin_name} / USDT`"
