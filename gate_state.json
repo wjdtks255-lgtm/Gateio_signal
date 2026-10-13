@@ -1,2 +1,67 @@
 {
+  "positions": {
+    "HHGRACE": {
+      "symbol": "HHGRACE",
+      "direction": "SHORT",
+      "entry": 11.172,
+      "sl": 11.33958,
+      "tp1": 10.920630000000001,
+      "tp2": 10.75305,
+      "tp3": 10.50168,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "ZCAT": {
+      "symbol": "ZCAT",
+      "direction": "SHORT",
+      "entry": 0.04405,
+      "sl": 0.04471075,
+      "tp1": 0.043058874999999996,
+      "tp2": 0.042398125,
+      "tp3": 0.041407,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "ORDI": {
+      "symbol": "ORDI",
+      "direction": "SHORT",
+      "entry": 4.104,
+      "sl": 4.16556,
+      "tp1": 4.01166,
+      "tp2": 3.9501,
+      "tp3": 3.8577600000000003,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "MOVR": {
+      "symbol": "MOVR",
+      "direction": "SHORT",
+      "entry": 1.515,
+      "sl": 1.537725,
+      "tp1": 1.4809124999999999,
+      "tp2": 1.4581875,
+      "tp3": 1.4241,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "XAG": {
+      "symbol": "XAG",
+      "direction": "SHORT",
+      "entry": 60.6,
+      "sl": 61.509,
+      "tp1": 59.2365,
+      "tp2": 58.3275,
+      "tp3": 56.964,
+      "tp1_hit": false,
+      "hit": []
+    }
+  },
+  "signals": {
+    "HHGRACE:SHORT": 1791884701.3659954,
+    "ZCAT:SHORT": 1791884701.3659954,
+    "ORDI:SHORT": 1791884701.3659954,
+    "MOVR:SHORT": 1791884701.3659954,
+    "XAG:SHORT": 1791884701.3659954
+  },
+  "sl_penalties": {}
 }
