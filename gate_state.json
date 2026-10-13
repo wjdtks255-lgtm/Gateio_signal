@@ -205,5 +205,12 @@
       "sl": 5.335,
       "hit": []
     }
+  },
+  "stats": {
+    "total_closed": 0,
+    "long_wins": 0,
+    "long_losses": 0,
+    "short_wins": 0,
+    "short_losses": 0
   }
 }
