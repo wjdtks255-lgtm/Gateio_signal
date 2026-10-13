@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import json
 import os
+import random
 import time
 import requests
 
@@ -8,38 +9,12 @@ TOKEN = os.getenv("GATE_TELEGRAM_TOKEN", "").strip()
 CHAT_ID = (os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID") or "").strip()
 STATE_FILE = "gate_state.json"
 KST = timezone(timedelta(hours=9))
-TV_URL = "https://scanner.tradingview.com/crypto/scan"
+
+GATE_FUTURES_TICKERS = "https://fx-api.gateio.ws/api/v4/futures/usdt/tickers"
 
 MAX_SLOTS = 5
 COOLDOWN = 120
 SL_PENALTY_HOURS = 12
-
-SYMBOL_MAP = {
-    "1000PEPEUSDT": "PEPEUSDT",
-    "1000SHIBUSDT": "SHIBUSDT",
-    "1000BONKUSDT": "BONKUSDT",
-    "1000FLOKIUSDT": "FLOKIUSDT",
-}
-
-COL = [
-    "open|15",
-    "high|15",
-    "low|15",
-    "close|15",
-    "volume|15",
-    "EMA20|15",
-    "EMA50|15",
-    "RSI|15",
-    "ATR|15",
-    "change|15",
-]
-
-HEAD = {
-    "User-Agent": "Mozilla/5.0",
-    "Origin": "https://www.tradingview.com",
-    "Referer": "https://www.tradingview.com/",
-    "Content-Type": "application/json",
-}
 
 
 def now():
@@ -83,32 +58,30 @@ def tg(msg):
     return False
 
 
-def rows():
-    q = {
-        "options": {"lang": "en"},
-        "markets": ["crypto"],
-        "filter": [{"left": "exchange", "operation": "equal", "right": "GATEIO"}],
-        "columns": COL,
-        "sort": {"sortBy": "volume|15", "sortOrder": "desc"},
-        "range": [0, 500],
-    }
+def get_market_data():
+    valid_tickers = {}
     try:
-        r = requests.post(TV_URL, json=q, headers=HEAD, timeout=25)
-        return r.json().get("data", []) if r.status_code == 200 else []
+        r = requests.get(GATE_FUTURES_TICKERS, timeout=15)
+        if r.status_code == 200:
+            data = r.json()
+            random.shuffle(data)  # 매번 다양한 알트코인이 무작위로 뽑히도록 셔플
+            for item in data:
+                contract = item.get("name")
+                if not contract or item.get("in_delisting", False):
+                    continue
+                if "MATIC" in contract:
+                    continue
+                try:
+                    last_price = float(item.get("last", 0))
+                    change = float(item.get("change_percentage", 0))
+                    # 100 USDT 이하의 가벼운 소액 알트코인 선별
+                    if 0.000001 < last_price <= 100.0:
+                        valid_tickers[contract] = {"price": last_price, "change": change}
+                except Exception:
+                    pass
     except Exception as e:
-        print("TV ERROR:", e)
-        return []
-
-
-def v(r, i):
-    try:
-        return float(r["d"][i])
-    except Exception:
-        return 0.0
-
-
-def symbol(r):
-    return str(r.get("s", "")).split(":")[-1].replace(".P", "")
+        print(f"Error fetching Gate.io tickers: {e}")
+    return valid_tickers
 
 
 def fmt(x):
@@ -121,47 +94,8 @@ def fmt(x):
     return f"{x:.8f}".rstrip("0").rstrip(".")
 
 
-def analyze(r):
-    p, o, h, l, vol, e20, e50, rs, atr, ch15 = [v(r, i) for i in range(10)]
-    if p <= 0 or atr <= 0:
-        return None
-
-    sym = symbol(r)
-    # 소액러 친화적인 100 USDT 이하 종목만 선별
-    if p > 100.0:
-        return None
-
-    direction = "LONG" if ch15 >= 0 else "SHORT"
-    risk = max(atr * 1.2, p * 0.005)
-
-    if direction == "LONG":
-        sl = p - risk
-        tp1 = p + risk * 1.5
-        tp2 = p + risk * 2.5
-        tp3 = p + risk * 4.0
-        pos_text = "롱 (LONG) 🟢"
-    else:
-        sl = p + risk
-        tp1 = p - risk * 1.5
-        tp2 = p - risk * 2.5
-        tp3 = p - risk * 4.0
-        pos_text = "숏 (SHORT) 🔴"
-
-    return {
-        "symbol": sym,
-        "direction": direction,
-        "price": p,
-        "sl": sl,
-        "tp1": tp1,
-        "tp2": tp2,
-        "tp3": tp3,
-        "lev": 5,
-        "pos_text": pos_text,
-    }
-
-
 def msg(s, slot_no):
-    coin_name = s["symbol"].replace("USDT", "")
+    coin_name = s["symbol"].replace("_USDT", "").replace("USDT", "")
     return (
         f"🚨 *Gate.io 소액러 맞춤 트레이딩 시그널* 🚨\n"
         f"━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -181,7 +115,7 @@ def msg(s, slot_no):
 
 
 def posmsg(p, k):
-    sy = p.get("symbol", "UNKNOWN").replace("USDT", "")
+    sy = p.get("symbol", "UNKNOWN").replace("_USDT", "").replace("USDT", "")
     d = p.get("direction", "LONG")
     if k == "TP1":
         return f"🎯 *[TP1 1차 익절 & 본전스탑]*\n🪙 종목: `{sy} / USDT` ({d})\n💰 1차 목표가 도달!\n🛡️ 손절가를 진입가로 상향 조정."
@@ -192,17 +126,15 @@ def posmsg(p, k):
     return f"🛡️ *[손절(SL) 도달 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n📉 손절가 이탈로 포지션 종료 (12시간 재진입 금지)"
 
 
-def check(state, rs):
-    mp = {symbol(r): r for r in rs}
+def check(state, current_prices):
     for key, p in list(state["positions"].items()):
         if not isinstance(p, dict):
             state["positions"].pop(key, None)
             continue
         p.setdefault("symbol", key)
-        r = mp.get(p["symbol"])
-        if not r:
+        if key not in current_prices:
             continue
-        price = v(r, 3)
+        price = current_prices[key]["price"]
         long = p["direction"] == "LONG"
 
         if long and price >= p["tp3"] or not long and price <= p["tp3"]:
@@ -227,22 +159,50 @@ def check(state, rs):
 
 
 def main():
-    rs = rows()
-    if not rs:
-        print("No rows fetched from TradingView.")
+    current_prices = get_market_data()
+    print("Gate.io Fetched Tickers:", len(current_prices))
+    if not current_prices:
+        print("No rows fetched from Gate.io API.")
         return
 
     state = load()
-    check(state, rs)
+    check(state, current_prices)
 
     candidates = []
-    for r in rs:
-        try:
-            s = analyze(r)
-            if s:
-                candidates.append(s)
-        except Exception:
-            pass
+    for sym, info in current_prices.items():
+        p = info["price"]
+        ch = info["change"]
+        atr = p * 0.02
+
+        direction = "LONG" if ch >= 0 else "SHORT"
+        risk = max(atr * 1.2, p * 0.005)
+
+        if direction == "LONG":
+            sl = p - risk
+            tp1 = p + risk * 1.5
+            tp2 = p + risk * 2.5
+            tp3 = p + risk * 4.0
+            pos_text = "롱 (LONG) 🟢"
+        else:
+            sl = p + risk
+            tp1 = p - risk * 1.5
+            tp2 = p - risk * 2.5
+            tp3 = p - risk * 4.0
+            pos_text = "숏 (SHORT) 🔴"
+
+        candidates.append({
+            "symbol": sym,
+            "direction": direction,
+            "price": p,
+            "sl": sl,
+            "tp1": tp1,
+            "tp2": tp2,
+            "tp3": tp3,
+            "lev": 5,
+            "pos_text": pos_text,
+        })
+
+    random.shuffle(candidates)
 
     current_active_count = len(state["positions"])
     available_slots = MAX_SLOTS - current_active_count
