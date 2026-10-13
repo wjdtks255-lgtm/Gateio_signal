@@ -1,3 +1,117 @@
 {
-
+  "stats": {
+    "total_closed": 0,
+    "long_wins": 0,
+    "long_losses": 0,
+    "short_wins": 0,
+    "short_losses": 0
+  },
+  "active_positions": {
+    "MATIC_USDT": {
+      "type": "LONG",
+      "entry": 0.5,
+      "tp1": 0.515,
+      "tp2": 0.528,
+      "tp3": 0.545,
+      "sl": 0.485,
+      "hit": []
+    },
+    "XRP_USDT": {
+      "type": "SHORT",
+      "entry": 0.6,
+      "tp1": 0.582,
+      "tp2": 0.5664,
+      "tp3": 0.5459999999999999,
+      "sl": 0.618,
+      "hit": []
+    },
+    "ADA_USDT": {
+      "type": "LONG",
+      "entry": 0.45,
+      "tp1": 0.4635,
+      "tp2": 0.4752,
+      "tp3": 0.49050000000000005,
+      "sl": 0.4365,
+      "hit": []
+    },
+    "PEPE_USDT": {
+      "type": "SHORT",
+      "entry": 1e-05,
+      "tp1": 9.7e-06,
+      "tp2": 9.440000000000001e-06,
+      "tp3": 9.100000000000001e-06,
+      "sl": 1.0300000000000001e-05,
+      "hit": []
+    },
+    "LINK_USDT": {
+      "type": "LONG",
+      "entry": 14.0,
+      "tp1": 14.42,
+      "tp2": 14.784,
+      "tp3": 15.26,
+      "sl": 13.58,
+      "hit": []
+    },
+    "NEAR_USDT": {
+      "type": "SHORT",
+      "entry": 5.5,
+      "tp1": 5.335,
+      "tp2": 5.192,
+      "tp3": 5.005,
+      "sl": 5.665,
+      "hit": []
+    },
+    "AVAX_USDT": {
+      "type": "LONG",
+      "entry": 25.0,
+      "tp1": 25.75,
+      "tp2": 26.4,
+      "tp3": 27.25,
+      "sl": 24.25,
+      "hit": []
+    },
+    "SHIB_USDT": {
+      "type": "SHORT",
+      "entry": 2e-05,
+      "tp1": 1.94e-05,
+      "tp2": 1.8880000000000002e-05,
+      "tp3": 1.8200000000000002e-05,
+      "sl": 2.0600000000000003e-05,
+      "hit": []
+    }
+  },
+  "signals": {
+    "MATIC_USDT": {
+      "time": 1791867854.3790183,
+      "type": "LONG"
+    },
+    "XRP_USDT": {
+      "time": 1791867854.3790183,
+      "type": "SHORT"
+    },
+    "ADA_USDT": {
+      "time": 1791867854.3790183,
+      "type": "LONG"
+    },
+    "PEPE_USDT": {
+      "time": 1791867854.3790183,
+      "type": "SHORT"
+    },
+    "LINK_USDT": {
+      "time": 1791867854.3790183,
+      "type": "LONG"
+    },
+    "NEAR_USDT": {
+      "time": 1791867854.3790183,
+      "type": "SHORT"
+    },
+    "AVAX_USDT": {
+      "time": 1791867854.3790183,
+      "type": "LONG"
+    },
+    "SHIB_USDT": {
+      "time": 1791867854.3790183,
+      "type": "SHORT"
+    }
+  }
 }
