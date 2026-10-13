@@ -31,6 +31,38 @@
     "BWET_USDT": {
       "time": 1791851116.012103,
       "type": "SHORT"
+    },
+    "FCX_USDT": {
+      "time": 1791856297.905256,
+      "type": "LONG"
+    },
+    "JCT_USDT": {
+      "time": 1791856297.905256,
+      "type": "SHORT"
+    },
+    "ANET_USDT": {
+      "time": 1791856297.905256,
+      "type": "LONG"
+    },
+    "PENDLE_USDT": {
+      "time": 1791856297.905256,
+      "type": "SHORT"
+    },
+    "INTC_USDT": {
+      "time": 1791856297.905256,
+      "type": "LONG"
+    },
+    "ZHONGJI_USDT": {
+      "time": 1791856297.905256,
+      "type": "SHORT"
+    },
+    "BASECAT_USDT": {
+      "time": 1791856297.905256,
+      "type": "LONG"
+    },
+    "ORDI_USDT": {
+      "time": 1791856297.905256,
+      "type": "SHORT"
     }
   },
   "active_positions": {}
