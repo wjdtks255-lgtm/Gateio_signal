@@ -11,17 +11,6 @@
       "tp1_hit": false,
       "hit": []
     },
-    "ZCAT": {
-      "symbol": "ZCAT",
-      "direction": "SHORT",
-      "entry": 0.04405,
-      "sl": 0.04405,
-      "tp1": 0.043058874999999996,
-      "tp2": 0.042398125,
-      "tp3": 0.041407,
-      "tp1_hit": true,
-      "hit": []
-    },
     "ORDI": {
       "symbol": "ORDI",
       "direction": "SHORT",
@@ -54,6 +43,17 @@
       "tp3": 56.964,
       "tp1_hit": false,
       "hit": []
+    },
+    "MICRODUCK": {
+      "symbol": "MICRODUCK",
+      "direction": "SHORT",
+      "entry": 0.00198,
+      "sl": 0.0020097,
+      "tp1": 0.00193545,
+      "tp2": 0.00190575,
+      "tp3": 0.0018612,
+      "tp1_hit": false,
+      "hit": []
     }
   },
   "signals": {
@@ -61,7 +61,10 @@
     "ZCAT:SHORT": 1791884701.3659954,
     "ORDI:SHORT": 1791884701.3659954,
     "MOVR:SHORT": 1791884701.3659954,
-    "XAG:SHORT": 1791884701.3659954
+    "XAG:SHORT": 1791884701.3659954,
+    "MICRODUCK:SHORT": 1791909465.809127
   },
-  "sl_penalties": {}
+  "sl_penalties": {
+    "ZCAT": 1791909463.3206246
+  }
 }
