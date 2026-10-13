@@ -20,9 +20,28 @@ def now():
 def load_state():
   try:
     with open(STATE_FILE, encoding="utf-8") as f:
-      return json.load(f)
+      data = json.load(f)
+      if "stats" not in data:
+        data["stats"] = {
+            "total_closed": 0,
+            "long_wins": 0,
+            "long_losses": 0,
+            "short_wins": 0,
+            "short_losses": 0,
+        }
+      return data
   except Exception:
-    return {"signals": {}, "active_positions": {}}
+    return {
+        "signals": {},
+        "active_positions": {},
+        "stats": {
+            "total_closed": 0,
+            "long_wins": 0,
+            "long_losses": 0,
+            "short_wins": 0,
+            "short_losses": 0,
+        },
+    }
 
 
 def save_state(s):
@@ -62,7 +81,6 @@ def get_market_data():
           continue
         try:
           last_price = float(item.get("last", 0))
-          # ⭐ 소액러들을 위해 너무 비싼 고가 코인(100 USDT 초과)은 배제하고 저가~중저가 코인만 선별
           if 0.0001 < last_price <= 100.0:
             valid_tickers[contract] = last_price
         except Exception:
@@ -70,9 +88,7 @@ def get_market_data():
   except Exception as e:
     print(f"Error fetching tickers: {e}")
 
-  # API 수신 실패 또는 조건에 맞는 종목이 없을 때의 소액러 친화적 기본 백업 풀
   if not valid_tickers:
-    print("Using fallback default affordable tickers.")
     valid_tickers = {
         "DOGE_USDT": 0.12,
         "XRP_USDT": 0.6,
@@ -83,8 +99,60 @@ def get_market_data():
         "MATIC_USDT": 0.5,
         "SUI_USDT": 1.8,
     }
-
   return valid_tickers
+
+
+def record_stats(state, signal_type, is_win):
+  stats = state.setdefault(
+      "stats",
+      {
+          "total_closed": 0,
+          "long_wins": 0,
+          "long_losses": 0,
+          "short_wins": 0,
+          "short_losses": 0,
+      },
+  )
+  stats["total_closed"] += 1
+  if signal_type == "LONG":
+    if is_win:
+      stats["long_wins"] += 1
+    else:
+      stats["long_losses"] += 1
+  else:
+    if is_win:
+      stats["short_wins"] += 1
+    else:
+      stats["short_losses"] += 1
+
+
+def get_stats_message(state):
+  stats = state.get("stats", {})
+  total = stats.get("total_closed", 0)
+  lw = stats.get("long_wins", 0)
+  ll = stats.get("long_losses", 0)
+  sw = stats.get("short_wins", 0)
+  sl = stats.get("short_losses", 0)
+
+  long_total = lw + ll
+  short_total = sw + sl
+
+  long_winrate = (lw / long_total * 100) if long_total > 0 else 0.0
+  short_winrate = (sw / short_total * 100) if short_total > 0 else 0.0
+  total_wins = lw + sw
+  total_winrate = (total_wins / total * 100) if total > 0 else 0.0
+
+  return (
+      f"📊 *[누적 트레이딩 성과 통계]*\n"
+      f"━━━━━━━━━━━━━━━━━━━━━━\n"
+      f"• 진행한 총 시그널: `{total}회`\n"
+      f"• 🟢 롱(LONG): `{long_total}회` (적중률: `{long_winrate:.1f}%` | 승:"
+      f" {lw} / 패: {ll})\n"
+      f"• 🔴 숏(SHORT): `{short_total}회` (적중률: `{short_winrate:.1f}%` | 승:"
+      f" {sw} / 패: {sl})\n"
+      f"• 🔥 **통합 적중률**: `{total_winrate:.1f}%` (총 승: {total_wins} / 총"
+      f" 패: {total - total_wins})\n"
+  )
 
 
 def track_and_manage_positions(state, current_prices):
@@ -104,81 +172,85 @@ def track_and_manage_positions(state, current_prices):
 
     if signal_type == "LONG":
       if current_price <= sl:
+        record_stats(state, "LONG", is_win=False)
+        stat_msg = get_stats_message(state)
         msg = (
-            "🛡️ *[손절(SL) 도달 알림]*\n"
+            "🛡️ *[손절(SL) 도달 마감]*\n"
             f"🪙 종목: `{coin_name} / USDT` (LONG)\n"
-            f"📉 손절가 `{sl:,.4f}` 이탈로 포지션 종료\n"
+            f"📉 손절가 `{sl:,.4f}` 이탈 종료\n\n"
+            f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
         send_telegram(msg)
         to_remove.append(contract)
         continue
       if current_price >= tp3 and "TP3" not in hit:
+        record_stats(state, "LONG", is_win=True)
+        stat_msg = get_stats_message(state)
         msg = (
-            "🎉 *[TP3 최종 익절 달성!]*\n"
+            "🎉 *[TP3 최종 익절 달성 마감!]*\n"
             f"🪙 종목: `{coin_name} / USDT` (LONG)\n"
-            f"🎯 3차 목표가 `{tp3:,.4f}` 도달 완료!\n"
+            f"🎯 3차 목표가 `{tp3:,.4f}` 달성 완료!\n\n"
+            f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
         send_telegram(msg)
         to_remove.append(contract)
         continue
       if current_price >= tp2 and "TP2" not in hit:
-        msg = (
-            "🎯 *[TP2 2차 익절 도달]*\n"
-            f"🪙 종목: `{coin_name} / USDT` (LONG)\n"
-            f"💰 목표가 `{tp2:,.4f}` 도달!"
+        send_telegram(
+            f"🎯 *[TP2 2차 익절 도달]*\n🪙 종목: `{coin_name} / USDT`"
+            f" (LONG)\n💰 목표가 `{tp2:,.4f}` 도달!"
         )
-        send_telegram(msg)
         pos["hit"].append("TP2")
       if current_price >= tp1 and "TP1" not in hit:
-        msg = (
-            "🎯 *[TP1 1차 익절 & 본전스탑]*\n"
-            f"🪙 종목: `{coin_name} / USDT` (LONG)\n"
-            f"💰 목표가 `{tp1:,.4f}` 도달!\n"
-            f"🛡️ 손절가를 진입가 고정(`{entry:,.4f}`)으로 상향."
+        send_telegram(
+            f"🎯 *[TP1 1차 익절 & 본전스탑]*\n🪙 종목: `{coin_name} / USDT`"
+            f" (LONG)\n💰 목표가 `{tp1:,.4f}` 도달!\n🛡️ 손절가를 진입가"
+            f" 고정(`{entry:,.4f}`)으로 상향."
         )
-        send_telegram(msg)
         pos["sl"] = entry
         pos["hit"].append("TP1")
 
     elif signal_type == "SHORT":
       if current_price >= sl:
+        record_stats(state, "SHORT", is_win=False)
+        stat_msg = get_stats_message(state)
         msg = (
-            "🛡️ *[손절(SL) 도달 알림]*\n"
+            "🛡️ *[손절(SL) 도달 마감]*\n"
             f"🪙 종목: `{coin_name} / USDT` (SHORT)\n"
-            f"📈 손절가 `{sl:,.4f}` 이탈로 포지션 종료\n"
+            f"📈 손절가 `{sl:,.4f}` 이탈 종료\n\n"
+            f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
         send_telegram(msg)
         to_remove.append(contract)
         continue
       if current_price <= tp3 and "TP3" not in hit:
+        record_stats(state, "SHORT", is_win=True)
+        stat_msg = get_stats_message(state)
         msg = (
-            "🎉 *[TP3 최종 익절 달성!]*\n"
+            "🎉 *[TP3 최종 익절 달성 마감!]*\n"
             f"🪙 종목: `{coin_name} / USDT` (SHORT)\n"
-            f"🎯 3차 목표가 `{tp3:,.4f}` 도달 완료!\n"
+            f"🎯 3차 목표가 `{tp3:,.4f}` 달성 완료!\n\n"
+            f"{stat_msg}\n"
             f"⏱️ `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
         )
         send_telegram(msg)
         to_remove.append(contract)
         continue
       if current_price <= tp2 and "TP2" not in hit:
-        msg = (
-            "🎯 *[TP2 2차 익절 도달]*\n"
-            f"🪙 종목: `{coin_name} / USDT` (SHORT)\n"
-            f"💰 목표가 `{tp2:,.4f}` 도달!"
+        send_telegram(
+            f"🎯 *[TP2 2차 익절 도달]*\n🪙 종목: `{coin_name} / USDT`"
+            f" (SHORT)\n💰 목표가 `{tp2:,.4f}` 도달!"
         )
-        send_telegram(msg)
-        pos["hit"].append("TP2")
+        send_telegram(pos["hit"].append("TP2"))
       if current_price <= tp1 and "TP1" not in hit:
-        msg = (
-            "🎯 *[TP1 1차 익절 & 본전스탑]*\n"
-            f"🪙 종목: `{coin_name} / USDT` (SHORT)\n"
-            f"💰 목표가 `{tp1:,.4f}` 도달!\n"
-            f"🛡️ 손절가를 진입가 고정(`{entry:,.4f}`)으로 하향."
+        send_telegram(
+            f"🎯 *[TP1 1차 익절 & 본전스탑]*\n🪙 종목: `{coin_name} / USDT`"
+            f" (SHORT)\n💰 목표가 `{tp1:,.4f}` 도달!\n🛡️ 손절가를 진입가"
+            f" 고정(`{entry:,.4f}`)으로 하향."
         )
-        send_telegram(msg)
         pos["sl"] = entry
         pos["hit"].append("TP1")
 
@@ -238,7 +310,7 @@ def analyze_market():
         f"📊 포지션: **{방향텍스트}**\n"
         f"💰 실시간 진입가: `{current_price:,.4f}` USDT\n\n"
         "💡 소액러 부담 완화 가이드\n"
-        "  • 100 USDT 이하 가벼운 종목 위주 선별\n"
+        "  • 100 USDT 이하 가벼운 종목 선별\n"
         "  • 권장 레버리지: `5x ~ 10x` (격리 마진)\n\n"
         "🎯 목표가 (Take Profit)\n"
         f"  • 1차 (TP1): `{tp1:,.4f}` (본전 스탑)\n"
