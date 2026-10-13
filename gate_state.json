@@ -26,11 +26,11 @@
       "symbol": "MOVR",
       "direction": "SHORT",
       "entry": 1.515,
-      "sl": 1.537725,
+      "sl": 1.515,
       "tp1": 1.4809124999999999,
       "tp2": 1.4581875,
       "tp3": 1.4241,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": []
     },
     "XAG": {
