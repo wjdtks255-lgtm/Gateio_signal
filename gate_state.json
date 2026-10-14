@@ -1,57 +1,61 @@
 {
   "positions": {
-    "HHGRACE": {
-      "symbol": "HHGRACE",
-      "direction": "SHORT",
-      "entry": 11.172,
-      "sl": 11.172,
-      "tp1": 10.920630000000001,
-      "tp2": 10.75305,
-      "tp3": 10.50168,
-      "tp1_hit": true,
-      "hit": []
-    },
     "ORDI": {
       "symbol": "ORDI",
       "direction": "SHORT",
       "entry": 4.104,
-      "sl": 4.16556,
+      "sl": 4.104,
       "tp1": 4.01166,
       "tp2": 3.9501,
       "tp3": 3.8577600000000003,
-      "tp1_hit": false,
-      "hit": []
-    },
-    "XAG": {
-      "symbol": "XAG",
-      "direction": "SHORT",
-      "entry": 60.6,
-      "sl": 60.6,
-      "tp1": 59.2365,
-      "tp2": 58.3275,
-      "tp3": 56.964,
       "tp1_hit": true,
-      "hit": []
-    },
-    "BVOL": {
-      "symbol": "BVOL",
-      "direction": "LONG",
-      "entry": 37.8,
-      "sl": 37.233,
-      "tp1": 38.650499999999994,
-      "tp2": 39.217499999999994,
-      "tp3": 40.068,
-      "tp1_hit": false,
-      "hit": []
+      "hit": [
+        "TP2"
+      ]
     },
     "THE": {
       "symbol": "THE",
       "direction": "SHORT",
       "entry": 0.0593,
-      "sl": 0.0601895,
+      "sl": 0.0593,
       "tp1": 0.057965749999999996,
       "tp2": 0.057076249999999995,
       "tp3": 0.055742,
+      "tp1_hit": true,
+      "hit": [
+        "TP2"
+      ]
+    },
+    "BSX": {
+      "symbol": "BSX",
+      "direction": "SHORT",
+      "entry": 42.56,
+      "sl": 43.1984,
+      "tp1": 41.6024,
+      "tp2": 40.964000000000006,
+      "tp3": 40.0064,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "BAND": {
+      "symbol": "BAND",
+      "direction": "SHORT",
+      "entry": 0.2314,
+      "sl": 0.234871,
+      "tp1": 0.2261935,
+      "tp2": 0.2227225,
+      "tp3": 0.217516,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "ALT": {
+      "symbol": "ALT",
+      "direction": "SHORT",
+      "entry": 0.008148,
+      "sl": 0.00827022,
+      "tp1": 0.00796467,
+      "tp2": 0.00784245,
+      "tp3": 0.007659120000000001,
       "tp1_hit": false,
       "hit": []
     }
@@ -65,12 +69,16 @@
     "MICRODUCK:SHORT": 1791909465.809127,
     "BANANA:SHORT": 1791910108.0735657,
     "BVOL:LONG": 1791940193.9428496,
-    "THE:SHORT": 1791958272.984422
+    "THE:SHORT": 1791958272.984422,
+    "BSX:SHORT": 1791997469.7594638,
+    "BAND:SHORT": 1791997469.7594638,
+    "ALT:SHORT": 1791997469.7594638
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
     "MICRODUCK": 1791910105.9020684,
     "BANANA": 1791940192.1226518,
-    "MOVR": 1791958269.3034945
+    "MOVR": 1791958269.3034945,
+    "BVOL": 1791997466.189982
   }
 }
