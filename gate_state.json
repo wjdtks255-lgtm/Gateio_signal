@@ -31,27 +31,29 @@
       "tp2": 1.4581875,
       "tp3": 1.4241,
       "tp1_hit": true,
-      "hit": []
+      "hit": [
+        "TP2"
+      ]
     },
     "XAG": {
       "symbol": "XAG",
       "direction": "SHORT",
       "entry": 60.6,
-      "sl": 61.509,
+      "sl": 60.6,
       "tp1": 59.2365,
       "tp2": 58.3275,
       "tp3": 56.964,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": []
     },
-    "BANANA": {
-      "symbol": "BANANA",
-      "direction": "SHORT",
-      "entry": 3.679,
-      "sl": 3.7341849999999996,
-      "tp1": 3.5962224999999997,
-      "tp2": 3.5410375,
-      "tp3": 3.4582599999999997,
+    "BVOL": {
+      "symbol": "BVOL",
+      "direction": "LONG",
+      "entry": 37.8,
+      "sl": 37.233,
+      "tp1": 38.650499999999994,
+      "tp2": 39.217499999999994,
+      "tp3": 40.068,
       "tp1_hit": false,
       "hit": []
     }
@@ -63,10 +65,12 @@
     "MOVR:SHORT": 1791884701.3659954,
     "XAG:SHORT": 1791884701.3659954,
     "MICRODUCK:SHORT": 1791909465.809127,
-    "BANANA:SHORT": 1791910108.0735657
+    "BANANA:SHORT": 1791910108.0735657,
+    "BVOL:LONG": 1791940193.9428496
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
-    "MICRODUCK": 1791910105.9020684
+    "MICRODUCK": 1791910105.9020684,
+    "BANANA": 1791940192.1226518
   }
 }
