@@ -1,31 +1,5 @@
 {
   "positions": {
-    "ORDI": {
-      "symbol": "ORDI",
-      "direction": "SHORT",
-      "entry": 4.104,
-      "sl": 4.104,
-      "tp1": 4.01166,
-      "tp2": 3.9501,
-      "tp3": 3.8577600000000003,
-      "tp1_hit": true,
-      "hit": [
-        "TP2"
-      ]
-    },
-    "THE": {
-      "symbol": "THE",
-      "direction": "SHORT",
-      "entry": 0.0593,
-      "sl": 0.0593,
-      "tp1": 0.057965749999999996,
-      "tp2": 0.057076249999999995,
-      "tp3": 0.055742,
-      "tp1_hit": true,
-      "hit": [
-        "TP2"
-      ]
-    },
     "BSX": {
       "symbol": "BSX",
       "direction": "SHORT",
@@ -41,22 +15,46 @@
       "symbol": "BAND",
       "direction": "SHORT",
       "entry": 0.2314,
-      "sl": 0.234871,
+      "sl": 0.2314,
       "tp1": 0.2261935,
       "tp2": 0.2227225,
       "tp3": 0.217516,
+      "tp1_hit": true,
+      "hit": [
+        "TP2"
+      ]
+    },
+    "BIWIN": {
+      "symbol": "BIWIN",
+      "direction": "SHORT",
+      "entry": 23.1,
+      "sl": 23.4465,
+      "tp1": 22.580250000000003,
+      "tp2": 22.23375,
+      "tp3": 21.714000000000002,
       "tp1_hit": false,
       "hit": []
     },
-    "ALT": {
-      "symbol": "ALT",
+    "CRO": {
+      "symbol": "CRO",
       "direction": "SHORT",
-      "entry": 0.008148,
-      "sl": 0.008148,
-      "tp1": 0.00796467,
-      "tp2": 0.00784245,
-      "tp3": 0.007659120000000001,
-      "tp1_hit": true,
+      "entry": 0.05623,
+      "sl": 0.057073450000000005,
+      "tp1": 0.054964825,
+      "tp2": 0.054121375,
+      "tp3": 0.0528562,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "PEPE": {
+      "symbol": "PEPE",
+      "direction": "SHORT",
+      "entry": 3.885e-06,
+      "sl": 3.943275e-06,
+      "tp1": 3.7975875000000003e-06,
+      "tp2": 3.7393125e-06,
+      "tp3": 3.6519e-06,
+      "tp1_hit": false,
       "hit": []
     }
   },
@@ -72,7 +70,10 @@
     "THE:SHORT": 1791958272.984422,
     "BSX:SHORT": 1791997469.7594638,
     "BAND:SHORT": 1791997469.7594638,
-    "ALT:SHORT": 1791997469.7594638
+    "ALT:SHORT": 1791997469.7594638,
+    "BIWIN:SHORT": 1792046038.0614266,
+    "CRO:SHORT": 1792046038.0614266,
+    "PEPE:SHORT": 1792046038.0614266
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
