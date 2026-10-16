@@ -1,27 +1,5 @@
 {
   "positions": {
-    "OG": {
-      "symbol": "OG",
-      "direction": "LONG",
-      "entry": 2.734,
-      "sl": 2.69299,
-      "tp1": 2.795515,
-      "tp2": 2.836525,
-      "tp3": 2.89804,
-      "tp1_hit": false,
-      "hit": []
-    },
-    "GPRO": {
-      "symbol": "GPRO",
-      "direction": "LONG",
-      "entry": 1.149,
-      "sl": 1.1317650000000001,
-      "tp1": 1.1748525,
-      "tp2": 1.1920875,
-      "tp3": 1.21794,
-      "tp1_hit": false,
-      "hit": []
-    },
     "TUNGSTEN": {
       "symbol": "TUNGSTEN",
       "direction": "SHORT",
@@ -33,17 +11,6 @@
       "tp1_hit": false,
       "hit": []
     },
-    "PEOPLE": {
-      "symbol": "PEOPLE",
-      "direction": "LONG",
-      "entry": 0.007979,
-      "sl": 0.007859315,
-      "tp1": 0.0081585275,
-      "tp2": 0.0082782125,
-      "tp3": 0.00845774,
-      "tp1_hit": false,
-      "hit": []
-    },
     "HOLO": {
       "symbol": "HOLO",
       "direction": "SHORT",
@@ -52,6 +19,39 @@
       "tp1": 0.057193525,
       "tp2": 0.056315875,
       "tp3": 0.0549994,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "UMC": {
+      "symbol": "UMC",
+      "direction": "SHORT",
+      "entry": 19.79,
+      "sl": 20.08685,
+      "tp1": 19.344725,
+      "tp2": 19.047874999999998,
+      "tp3": 18.6026,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "LULU": {
+      "symbol": "LULU",
+      "direction": "SHORT",
+      "entry": 96.13,
+      "sl": 97.57195,
+      "tp1": 93.967075,
+      "tp2": 92.525125,
+      "tp3": 90.3622,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "SONIC": {
+      "symbol": "SONIC",
+      "direction": "SHORT",
+      "entry": 0.02175,
+      "sl": 0.02207625,
+      "tp1": 0.021260625,
+      "tp2": 0.020934374999999998,
+      "tp3": 0.020444999999999998,
       "tp1_hit": false,
       "hit": []
     }
@@ -84,7 +84,10 @@
     "CAKE:LONG": 1792130807.3963506,
     "TUNGSTEN:SHORT": 1792164436.6107562,
     "PEOPLE:LONG": 1792164436.6107562,
-    "HOLO:SHORT": 1792164436.6107562
+    "HOLO:SHORT": 1792164436.6107562,
+    "UMC:SHORT": 1792177100.6084158,
+    "LULU:SHORT": 1792177100.6084158,
+    "SONIC:SHORT": 1792177100.6084158
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
@@ -104,6 +107,9 @@
     "PROLOGUE": 1792130805.2397556,
     "MSFU": 1792164431.8420208,
     "USUAL": 1792164433.58645,
-    "CAKE": 1792164434.765577
+    "CAKE": 1792164434.765577,
+    "OG": 1792177095.6335716,
+    "GPRO": 1792177096.833833,
+    "PEOPLE": 1792177098.3987203
   }
 }
