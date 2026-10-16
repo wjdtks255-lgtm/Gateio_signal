@@ -11,17 +11,6 @@
       "tp1_hit": false,
       "hit": []
     },
-    "MSFU": {
-      "symbol": "MSFU",
-      "direction": "LONG",
-      "entry": 42.83,
-      "sl": 42.18755,
-      "tp1": 43.793675,
-      "tp2": 44.436125,
-      "tp3": 45.3998,
-      "tp1_hit": false,
-      "hit": []
-    },
     "GPRO": {
       "symbol": "GPRO",
       "direction": "LONG",
@@ -33,25 +22,36 @@
       "tp1_hit": false,
       "hit": []
     },
-    "USUAL": {
-      "symbol": "USUAL",
-      "direction": "LONG",
-      "entry": 0.01076,
-      "sl": 0.0105986,
-      "tp1": 0.0110021,
-      "tp2": 0.0111635,
-      "tp3": 0.0114056,
+    "TUNGSTEN": {
+      "symbol": "TUNGSTEN",
+      "direction": "SHORT",
+      "entry": 6.547,
+      "sl": 6.645205,
+      "tp1": 6.3996925,
+      "tp2": 6.3014874999999995,
+      "tp3": 6.15418,
       "tp1_hit": false,
       "hit": []
     },
-    "CAKE": {
-      "symbol": "CAKE",
+    "PEOPLE": {
+      "symbol": "PEOPLE",
       "direction": "LONG",
-      "entry": 2.1938,
-      "sl": 2.160893,
-      "tp1": 2.2431605,
-      "tp2": 2.2760675,
-      "tp3": 2.325428,
+      "entry": 0.007979,
+      "sl": 0.007859315,
+      "tp1": 0.0081585275,
+      "tp2": 0.0082782125,
+      "tp3": 0.00845774,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "HOLO": {
+      "symbol": "HOLO",
+      "direction": "SHORT",
+      "entry": 0.05851,
+      "sl": 0.05938765,
+      "tp1": 0.057193525,
+      "tp2": 0.056315875,
+      "tp3": 0.0549994,
       "tp1_hit": false,
       "hit": []
     }
@@ -81,7 +81,10 @@
     "GPRO:LONG": 1792105680.1801789,
     "PROLOGUE:LONG": 1792113691.267387,
     "USUAL:LONG": 1792130807.3963506,
-    "CAKE:LONG": 1792130807.3963506
+    "CAKE:LONG": 1792130807.3963506,
+    "TUNGSTEN:SHORT": 1792164436.6107562,
+    "PEOPLE:LONG": 1792164436.6107562,
+    "HOLO:SHORT": 1792164436.6107562
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
@@ -98,6 +101,9 @@
     "SUNAC": 1792105676.8025355,
     "BTR": 1792113688.3084533,
     "BIWIN": 1792130801.91855,
-    "PROLOGUE": 1792130805.2397556
+    "PROLOGUE": 1792130805.2397556,
+    "MSFU": 1792164431.8420208,
+    "USUAL": 1792164433.58645,
+    "CAKE": 1792164434.765577
   }
 }
