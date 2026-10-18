@@ -11,19 +11,6 @@
       "tp1_hit": false,
       "hit": []
     },
-    "HOLO": {
-      "symbol": "HOLO",
-      "direction": "SHORT",
-      "entry": 0.05851,
-      "sl": 0.05851,
-      "tp1": 0.057193525,
-      "tp2": 0.056315875,
-      "tp3": 0.0549994,
-      "tp1_hit": true,
-      "hit": [
-        "TP2"
-      ]
-    },
     "UMC": {
       "symbol": "UMC",
       "direction": "SHORT",
@@ -54,6 +41,17 @@
       "tp1": 55.34605,
       "tp2": 54.49675,
       "tp3": 53.2228,
+      "tp1_hit": false,
+      "hit": []
+    },
+    "ARB": {
+      "symbol": "ARB",
+      "direction": "SHORT",
+      "entry": 0.17809,
+      "sl": 0.18076135,
+      "tp1": 0.174082975,
+      "tp2": 0.171411625,
+      "tp3": 0.1674046,
       "tp1_hit": false,
       "hit": []
     }
@@ -91,7 +89,8 @@
     "LULU:SHORT": 1792177100.6084158,
     "SONIC:SHORT": 1792177100.6084158,
     "IOST:SHORT": 1792196633.7628503,
-    "PYPL:SHORT": 1792343690.4620519
+    "PYPL:SHORT": 1792343690.4620519,
+    "ARB:SHORT": 1792351742.8687673
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
