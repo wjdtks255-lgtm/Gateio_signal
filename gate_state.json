@@ -26,11 +26,11 @@
       "symbol": "VANA",
       "direction": "SHORT",
       "entry": 0.912,
-      "sl": 0.9256800000000001,
+      "sl": 0.912,
       "tp1": 0.89148,
       "tp2": 0.8778,
       "tp3": 0.85728,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": []
     },
     "JMKE": {
