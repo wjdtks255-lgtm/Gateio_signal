@@ -1,16 +1,5 @@
 {
   "positions": {
-    "TUNGSTEN": {
-      "symbol": "TUNGSTEN",
-      "direction": "SHORT",
-      "entry": 6.547,
-      "sl": 6.547,
-      "tp1": 6.3996925,
-      "tp2": 6.3014874999999995,
-      "tp3": 6.15418,
-      "tp1_hit": true,
-      "hit": []
-    },
     "PYPL": {
       "symbol": "PYPL",
       "direction": "SHORT",
@@ -55,30 +44,6 @@
       "tp1_hit": false,
       "hit": []
     },
-    "IRYS": {
-      "symbol": "IRYS",
-      "direction": "LONG",
-      "entry": 0.01256,
-      "sl": 0.01256,
-      "tp1": 0.01278608,
-      "tp2": 0.01297448,
-      "tp3": 0.01327592,
-      "tp1_hit": true,
-      "hit": [],
-      "entry_time": 1792458865
-    },
-    "AXS": {
-      "symbol": "AXS",
-      "direction": "LONG",
-      "entry": 1.0091,
-      "sl": 0.9939635000000001,
-      "tp1": 1.0272638,
-      "tp2": 1.0424003000000002,
-      "tp3": 1.0666187,
-      "tp1_hit": false,
-      "hit": [],
-      "entry_time": 1792467790
-    },
     "FCX": {
       "symbol": "FCX",
       "direction": "LONG",
@@ -90,6 +55,18 @@
       "tp1_hit": false,
       "hit": [],
       "entry_time": 1792467791
+    },
+    "A": {
+      "symbol": "A",
+      "direction": "LONG",
+      "entry": 0.09483,
+      "sl": 0.09340754999999999,
+      "tp1": 0.09653694,
+      "tp2": 0.09795939,
+      "tp3": 0.10023531,
+      "tp1_hit": false,
+      "hit": [],
+      "entry_time": 1792486485
     }
   },
   "signals": {
@@ -135,7 +112,8 @@
     "PFE:LONG": 1792421535.552467,
     "IRYS:LONG": 1792458865.3452106,
     "AXS:LONG": 1792467790.3599608,
-    "FCX:LONG": 1792467790.3599608
+    "FCX:LONG": 1792467790.3599608,
+    "A:LONG": 1792486485.0483005
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
@@ -166,10 +144,13 @@
     "UMC": 1792394525.8820176,
     "MONITOR": 1792394527.6551764,
     "BAC": 1792421531.8899302,
-    "MEW": 1792421533.1131535
+    "MEW": 1792421533.1131535,
+    "TUNGSTEN": 1792486449.6999133,
+    "IRYS": 1792486454.350522,
+    "AXS": 1792486456.1053576
   },
   "stats": {
     "wins": 0,
-    "losses": 0
+    "losses": 3
   }
 }
