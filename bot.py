@@ -28,11 +28,11 @@ def load():
         with open(STATE_FILE, encoding="utf-8") as f:
             s = json.load(f)
     except Exception:
-        s = {"positions": {}, "signals": {}, "sl_penalties": {}, "stats": {"wins": 0, "losses": 0}}
+        s = {"positions": {}, "signals": {}, "sl_penalties": {}, "stats": {"wins": 0, "breakeven": 0, "losses": 0}}
     s.setdefault("positions", {})
     s.setdefault("signals", {})
     s.setdefault("sl_penalties", {})
-    s.setdefault("stats", {"wins": 0, "losses": 0})
+    s.setdefault("stats", {"wins": 0, "breakeven": 0, "losses": 0})
     return s
 
 
@@ -242,19 +242,22 @@ def status_msg(positions):
     return "\n".join(lines)
 
 
-# --- 🌟 성적표 단독 전송 함수 ---
+# --- 🌟 세분화된 통계 성적표 함수 ---
 def get_stats_text(stats):
     wins = stats.get("wins", 0)
+    breakeven = stats.get("breakeven", 0)
     losses = stats.get("losses", 0)
-    total = wins + losses
+    total = wins + breakeven + losses
+    # 승률 = (익절 성공 / 전체 종료 건수) 혹은 방어 포함 성공률로 계산 가능
     win_rate = (wins / total * 100) if total > 0 else 0.0
     return (
         f"📈 *[누적 트레이딩 성적 통계]*\n"
         f"━━━━━━━━━━━━━━━━━━━━━━\n"
         f"• 총 종료 포지션: `{total}건`\n"
         f"• 성공 (TP3 익절): `{wins}건` 🟢\n"
+        f"• 본전 방어 (BE스탑): `{breakeven}건` 🟡\n"
         f"• 실패 (손절 마감): `{losses}건` 🔴\n"
-        f"• **현재 누적 승률: `{win_rate:.1f}%`**"
+        f"• **익절 승률: `{win_rate:.1f}%`**"
     )
 
 
@@ -269,12 +272,14 @@ def posmsg(p, k):
         return f"🎉 *[TP3 최종 익절 달성 마감!]*\n🪙 종목: `{sy} / USDT` ({d})\n🎯 최종 목표가 도달로 포지션 완벽 마감!"
     if k == "TIMEOUT":
         return f"⏱️ *[보유 시간 초과 슬롯 반환]*\n🪙 종목: `{sy} / USDT` ({d})\n⌛ 24시간 동안 목표가 미도달로 슬롯을 회수합니다."
-    return f"🛡️ *[손절(SL) 도달 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n📉 손절가 이탈로 포지션 종료\n🔒 **규칙 적용:** 12시간 동안 해당 종목 재진입이 금지됩니다."
+    if k == "BE_STOP":
+        return f"🛡️ *[본전스탑(BE) 방어 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n🔒 TP1 달성 후 본전가(진입가) 이탈로 원금을 온전히 지키며 종료합니다."
+    return f"🛡️ *[손절(SL) 도달 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n📉 초기 손절가 이탈로 포지션 종료\n🔒 **규칙 적용:** 12시간 동안 해당 종목 재진입이 금지됩니다."
 
 
 def check(state):
     t_now = time.time()
-    stats = state.setdefault("stats", {"wins": 0, "losses": 0})
+    stats = state.setdefault("stats", {"wins": 0, "breakeven": 0, "losses": 0})
 
     for key, p in list(state["positions"].items()):
         if not isinstance(p, dict):
@@ -312,14 +317,19 @@ def check(state):
         if long:
             if high_p >= p["tp3"]:
                 stats["wins"] += 1
-                tg(posmsg(p, "TP3"))          # 1. 청산 알림 전송 (분리)
-                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
+                tg(posmsg(p, "TP3"))
+                tg(get_stats_text(stats))
                 state["positions"].pop(key, None)
                 continue
             if low_p <= p["sl"]:
-                stats["losses"] += 1
-                tg(posmsg(p, "SL"))           # 1. 손절 알림 전송 (분리)
-                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
+                # 🌟 TP1 도달 여부에 따른 본전방어 vs 순수손절 분기 처리
+                if p.get("tp1_hit", False):
+                    stats["breakeven"] += 1
+                    tg(posmsg(p, "BE_STOP"))
+                else:
+                    stats["losses"] += 1
+                    tg(posmsg(p, "SL"))
+                tg(get_stats_text(stats))
                 state.setdefault("sl_penalties", {})[key] = time.time()
                 state["positions"].pop(key, None)
                 continue
@@ -333,14 +343,19 @@ def check(state):
         else:
             if low_p <= p["tp3"]:
                 stats["wins"] += 1
-                tg(posmsg(p, "TP3"))          # 1. 청산 알림 전송 (분리)
-                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
+                tg(posmsg(p, "TP3"))
+                tg(get_stats_text(stats))
                 state["positions"].pop(key, None)
                 continue
             if high_p >= p["sl"]:
-                stats["losses"] += 1
-                tg(posmsg(p, "SL"))           # 1. 손절 알림 전송 (분리)
-                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
+                # 🌟 TP1 도달 여부에 따른 본전방어 vs 순수손절 분기 처리
+                if p.get("tp1_hit", False):
+                    stats["breakeven"] += 1
+                    tg(posmsg(p, "BE_STOP"))
+                else:
+                    stats["losses"] += 1
+                    tg(posmsg(p, "SL"))
+                tg(get_stats_text(stats))
                 state.setdefault("sl_penalties", {})[key] = time.time()
                 state["positions"].pop(key, None)
                 continue
