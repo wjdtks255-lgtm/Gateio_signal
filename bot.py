@@ -13,10 +13,10 @@ KST = timezone(timedelta(hours=9))
 GATE_FUTURES_TICKERS = "https://fx-api.gateio.ws/api/v4/futures/usdt/tickers"
 GATE_FUTURES_CANDLES = "https://fx-api.gateio.ws/api/v4/futures/usdt/candlesticks"
 
-MAX_SLOTS = 8          # 🌟 슬롯 8개로 확장
+MAX_SLOTS = 8
 COOLDOWN = 120
 SL_PENALTY_HOURS = 12
-MAX_HOLDING_HOURS = 24 # 🌟 24시간 횡보 시 슬롯 잠김 방지용 타임아웃
+MAX_HOLDING_HOURS = 24
 
 
 def now():
@@ -28,10 +28,11 @@ def load():
         with open(STATE_FILE, encoding="utf-8") as f:
             s = json.load(f)
     except Exception:
-        s = {"positions": {}, "signals": {}, "sl_penalties": {}}
+        s = {"positions": {}, "signals": {}, "sl_penalties": {}, "stats": {"wins": 0, "losses": 0}}
     s.setdefault("positions", {})
     s.setdefault("signals", {})
     s.setdefault("sl_penalties", {})
+    s.setdefault("stats", {"wins": 0, "losses": 0})
     return s
 
 
@@ -63,7 +64,6 @@ def tg(msg):
     return False
 
 
-# --- 순수 파이썬 기술적 지표 계산 함수 ---
 def calculate_ema(prices, period):
     if not prices or len(prices) < period:
         return None
@@ -114,7 +114,6 @@ def get_candles(contract, limit=60):
     return None, None, None, None, None
 
 
-# --- 고승률 분석 및 후보군 선별 함수 ---
 def analyze_market_candidates():
     valid_candidates = []
     try:
@@ -125,7 +124,7 @@ def analyze_market_candidates():
                 data = data.get("data", [])
             random.shuffle(data)
             
-            for item in data[:40]:  # 슬롯 8개 확장에 맞춰 스캔 풀 확대
+            for item in data[:40]:
                 contract = item.get("contract") or item.get("name")
                 if not contract or item.get("in_delisting", False):
                     continue
@@ -152,10 +151,8 @@ def analyze_market_candidates():
                     curr_vol = volumes[-1]
 
                     direction = None
-                    # [고승률 롱 조건]: EMA 20 > EMA 50 정배열 + RSI 50~65 + 거래량 폭발
                     if ema20 > ema50 and 50 <= rsi <= 65 and curr_vol > avg_vol * 1.5:
                         direction = "LONG"
-                    # [고승률 숏 조건]: EMA 20 < EMA 50 역배열 + RSI 35~50 + 거래량 폭발
                     elif ema20 < ema50 and 35 <= rsi <= 50 and curr_vol > avg_vol * 1.5:
                         direction = "SHORT"
 
@@ -245,6 +242,22 @@ def status_msg(positions):
     return "\n".join(lines)
 
 
+# --- 🌟 성적표 단독 전송 함수 ---
+def get_stats_text(stats):
+    wins = stats.get("wins", 0)
+    losses = stats.get("losses", 0)
+    total = wins + losses
+    win_rate = (wins / total * 100) if total > 0 else 0.0
+    return (
+        f"📈 *[누적 트레이딩 성적 통계]*\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"• 총 종료 포지션: `{total}건`\n"
+        f"• 성공 (TP3 익절): `{wins}건` 🟢\n"
+        f"• 실패 (손절 마감): `{losses}건` 🔴\n"
+        f"• **현재 누적 승률: `{win_rate:.1f}%`**"
+    )
+
+
 def posmsg(p, k):
     sy = p.get("symbol", "UNKNOWN")
     d = p.get("direction", "LONG")
@@ -261,6 +274,8 @@ def posmsg(p, k):
 
 def check(state):
     t_now = time.time()
+    stats = state.setdefault("stats", {"wins": 0, "losses": 0})
+
     for key, p in list(state["positions"].items()):
         if not isinstance(p, dict):
             state["positions"].pop(key, None)
@@ -269,7 +284,7 @@ def check(state):
         contract = f"{key}_USDT"
         entry_time = p.get("entry_time", 0)
         
-        # 🌟 1. 24시간 타임아웃 검사 (슬롯 자동 반환)
+        # 1. 타임아웃 검사
         if entry_time > 0 and (t_now - entry_time) > (MAX_HOLDING_HOURS * 3600):
             tg(posmsg(p, "TIMEOUT"))
             state["positions"].pop(key, None)
@@ -279,7 +294,6 @@ def check(state):
         if not closes or not timestamps:
             continue
             
-        # 🌟 2. 진입 시점 이후의 캔들만 추적 (과거 캔들 오작동 방지)
         valid_highs, valid_lows = [], []
         for h, l, t in zip(highs, lows, timestamps):
             if t >= entry_time:
@@ -297,11 +311,15 @@ def check(state):
 
         if long:
             if high_p >= p["tp3"]:
-                tg(posmsg(p, "TP3"))
+                stats["wins"] += 1
+                tg(posmsg(p, "TP3"))          # 1. 청산 알림 전송 (분리)
+                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
                 state["positions"].pop(key, None)
                 continue
             if low_p <= p["sl"]:
-                tg(posmsg(p, "SL"))
+                stats["losses"] += 1
+                tg(posmsg(p, "SL"))           # 1. 손절 알림 전송 (분리)
+                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
                 state.setdefault("sl_penalties", {})[key] = time.time()
                 state["positions"].pop(key, None)
                 continue
@@ -314,11 +332,15 @@ def check(state):
                 tg(posmsg(p, "TP1"))
         else:
             if low_p <= p["tp3"]:
-                tg(posmsg(p, "TP3"))
+                stats["wins"] += 1
+                tg(posmsg(p, "TP3"))          # 1. 청산 알림 전송 (분리)
+                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
                 state["positions"].pop(key, None)
                 continue
             if high_p >= p["sl"]:
-                tg(posmsg(p, "SL"))
+                stats["losses"] += 1
+                tg(posmsg(p, "SL"))           # 1. 손절 알림 전송 (분리)
+                tg(get_stats_text(stats))     # 2. 성적표 알림 별도 전송
                 state.setdefault("sl_penalties", {})[key] = time.time()
                 state["positions"].pop(key, None)
                 continue
@@ -333,12 +355,12 @@ def check(state):
 
 def main():
     print("==================================================")
-    print(" GATE.IO 8-SLOT HIGH WIN-RATE MONITOR & BOT")
+    print(" GATE.IO 8-SLOT HIGH WIN-RATE MONITOR & STATS BOT")
     print("==================================================")
     
     state = load()
     
-    # 1. 기존 보유 포지션 정밀 모니터링 (타임아웃 및 진입 이후 캔들 기준)
+    # 1. 기존 보유 포지션 정밀 모니터링
     check(state)
     save(state)
 
@@ -391,7 +413,7 @@ def main():
                 "tp3": s["tp3"],
                 "tp1_hit": False,
                 "hit": [],
-                "entry_time": int(time.time()), # 진입 시각 기록
+                "entry_time": int(time.time()),
             }
             save(state)
             sent += 1
