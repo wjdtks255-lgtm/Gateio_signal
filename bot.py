@@ -28,11 +28,16 @@ def load():
         with open(STATE_FILE, encoding="utf-8") as f:
             s = json.load(f)
     except Exception:
-        s = {"positions": {}, "signals": {}, "sl_penalties": {}, "stats": {"wins": 0, "breakeven": 0, "losses": 0}}
+        s = {}
     s.setdefault("positions", {})
     s.setdefault("signals", {})
     s.setdefault("sl_penalties", {})
-    s.setdefault("stats", {"wins": 0, "breakeven": 0, "losses": 0})
+    
+    # 🌟 기존 상태 파일에 누락된 통계 키가 있어도 에러가 나지 않도록 안전하게 보정
+    stats = s.setdefault("stats", {})
+    stats.setdefault("wins", 0)
+    stats.setdefault("breakeven", 0)
+    stats.setdefault("losses", 0)
     return s
 
 
@@ -242,13 +247,11 @@ def status_msg(positions):
     return "\n".join(lines)
 
 
-# --- 🌟 세분화된 통계 성적표 함수 ---
 def get_stats_text(stats):
     wins = stats.get("wins", 0)
     breakeven = stats.get("breakeven", 0)
     losses = stats.get("losses", 0)
     total = wins + breakeven + losses
-    # 승률 = (익절 성공 / 전체 종료 건수) 혹은 방어 포함 성공률로 계산 가능
     win_rate = (wins / total * 100) if total > 0 else 0.0
     return (
         f"📈 *[누적 트레이딩 성적 통계]*\n"
@@ -289,7 +292,6 @@ def check(state):
         contract = f"{key}_USDT"
         entry_time = p.get("entry_time", 0)
         
-        # 1. 타임아웃 검사
         if entry_time > 0 and (t_now - entry_time) > (MAX_HOLDING_HOURS * 3600):
             tg(posmsg(p, "TIMEOUT"))
             state["positions"].pop(key, None)
@@ -322,7 +324,6 @@ def check(state):
                 state["positions"].pop(key, None)
                 continue
             if low_p <= p["sl"]:
-                # 🌟 TP1 도달 여부에 따른 본전방어 vs 순수손절 분기 처리
                 if p.get("tp1_hit", False):
                     stats["breakeven"] += 1
                     tg(posmsg(p, "BE_STOP"))
@@ -348,7 +349,6 @@ def check(state):
                 state["positions"].pop(key, None)
                 continue
             if high_p >= p["sl"]:
-                # 🌟 TP1 도달 여부에 따른 본전방어 vs 순수손절 분기 처리
                 if p.get("tp1_hit", False):
                     stats["breakeven"] += 1
                     tg(posmsg(p, "BE_STOP"))
@@ -375,14 +375,11 @@ def main():
     
     state = load()
     
-    # 1. 기존 보유 포지션 정밀 모니터링
     check(state)
     save(state)
 
-    # 2. 포지션 현황판 전송
     tg(status_msg(state["positions"]))
 
-    # 3. 고승률 조건 후보군 스캔
     candidates = analyze_market_candidates()
     print("Filtered High Win-Rate Candidates:", len(candidates))
     if not candidates:
