@@ -1,9 +1,12 @@
 name: Gate.io Signal Bot
 
 on:
+  # 5분마다 자동 실행
   schedule:
-    - cron: '*/5 * * * *' # 5분마다 실행
-  workflow_dispatch: # 수동 실행 버튼 허용
+    - cron: '*/5 * * * *'
+  
+  # 수동 실행 버튼 허용
+  workflow_dispatch: 
 
 jobs:
   run-bot:
