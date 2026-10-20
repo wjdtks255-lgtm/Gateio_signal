@@ -13,9 +13,10 @@ KST = timezone(timedelta(hours=9))
 GATE_FUTURES_TICKERS = "https://fx-api.gateio.ws/api/v4/futures/usdt/tickers"
 GATE_FUTURES_CANDLES = "https://fx-api.gateio.ws/api/v4/futures/usdt/candlesticks"
 
-MAX_SLOTS = 5
+MAX_SLOTS = 8          # 🌟 슬롯 8개로 확장
 COOLDOWN = 120
 SL_PENALTY_HOURS = 12
+MAX_HOLDING_HOURS = 24 # 🌟 24시간 횡보 시 슬롯 잠김 방지용 타임아웃
 
 
 def now():
@@ -62,47 +63,42 @@ def tg(msg):
     return False
 
 
-def get_market_data():
-    valid_tickers = []
+# --- 순수 파이썬 기술적 지표 계산 함수 ---
+def calculate_ema(prices, period):
+    if not prices or len(prices) < period:
+        return None
+    multiplier = 2 / (period + 1)
+    ema = sum(prices[:period]) / period
+    for price in prices[period:]:
+        ema = (price - ema) * multiplier + ema
+    return ema
+
+
+def calculate_rsi(prices, period=14):
+    if not prices or len(prices) < period + 1:
+        return 50.0
+    gains, losses = [], []
+    for i in range(1, len(prices)):
+        diff = prices[i] - prices[i - 1]
+        gains.append(max(diff, 0))
+        losses.append(max(-diff, 0))
+    
+    avg_gain = sum(gains[:period]) / period
+    avg_loss = sum(losses[:period]) / period
+    
+    for i in range(period, len(gains)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+        
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return 100 - (100 / (1 + rs))
+
+
+def get_candles(contract, limit=60):
     try:
-        r = requests.get(GATE_FUTURES_TICKERS, timeout=15)
-        if r.status_code == 200:
-            data = r.json()
-            if isinstance(data, dict):
-                data = data.get("data", [])
-            random.shuffle(data)
-            for item in data:
-                contract = item.get("contract") or item.get("name")
-                if not contract or item.get("in_delisting", False):
-                    continue
-                if "MATIC" in contract:
-                    continue
-                try:
-                    last_price = float(item.get("last", 0))
-                    change = float(item.get("change_percentage", 0))
-                    if 0.000001 < last_price <= 100.0:
-                        valid_tickers.append({
-                            "symbol": contract.replace("_USDT", "").replace("USDT", ""),
-                            "contract": contract,
-                            "price": last_price,
-                            "change": change
-                        })
-                except Exception:
-                    pass
-    except Exception as e:
-        print(f"Error fetching Gate.io tickers: {e}")
-
-    if not valid_tickers:
-        valid_tickers = [
-            {"symbol": "DOGE", "contract": "DOGE_USDT", "price": 0.12, "change": 2.5},
-            {"symbol": "XRP", "contract": "XRP_USDT", "price": 0.60, "change": -1.2},
-        ]
-    return valid_tickers
-
-
-def get_recent_high_low(contract):
-    try:
-        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit=10"
+        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit={limit}"
         r = requests.get(url, timeout=5)
         if r.status_code == 200:
             data = r.json()
@@ -110,10 +106,94 @@ def get_recent_high_low(contract):
                 highs = [float(item.get("high", item.get("h", 0))) for item in data]
                 lows = [float(item.get("low", item.get("l", 0))) for item in data]
                 closes = [float(item.get("close", item.get("c", 0))) for item in data]
-                return max(highs), min(lows), closes[-1]
+                volumes = [float(item.get("sum", item.get("v", 0))) for item in data]
+                timestamps = [int(item.get("t", 0)) for item in data]
+                return highs, lows, closes, volumes, timestamps
     except Exception:
         pass
-    return None, None, None
+    return None, None, None, None, None
+
+
+# --- 고승률 분석 및 후보군 선별 함수 ---
+def analyze_market_candidates():
+    valid_candidates = []
+    try:
+        r = requests.get(GATE_FUTURES_TICKERS, timeout=15)
+        if r.status_code == 200:
+            data = r.json()
+            if isinstance(data, dict):
+                data = data.get("data", [])
+            random.shuffle(data)
+            
+            for item in data[:40]:  # 슬롯 8개 확장에 맞춰 스캔 풀 확대
+                contract = item.get("contract") or item.get("name")
+                if not contract or item.get("in_delisting", False):
+                    continue
+                if "MATIC" in contract:
+                    continue
+                
+                try:
+                    last_price = float(item.get("last", 0))
+                    if not (0.000001 < last_price <= 100.0):
+                        continue
+
+                    highs, lows, closes, volumes, timestamps = get_candles(contract, limit=60)
+                    if not closes or len(closes) < 50:
+                        continue
+
+                    ema20 = calculate_ema(closes, 20)
+                    ema50 = calculate_ema(closes, 50)
+                    rsi = calculate_rsi(closes, 14)
+                    
+                    if not ema20 or not ema50:
+                        continue
+
+                    avg_vol = sum(volumes[-11:-1]) / 10 if len(volumes) >= 11 else volumes[-1]
+                    curr_vol = volumes[-1]
+
+                    direction = None
+                    # [고승률 롱 조건]: EMA 20 > EMA 50 정배열 + RSI 50~65 + 거래량 폭발
+                    if ema20 > ema50 and 50 <= rsi <= 65 and curr_vol > avg_vol * 1.5:
+                        direction = "LONG"
+                    # [고승률 숏 조건]: EMA 20 < EMA 50 역배열 + RSI 35~50 + 거래량 폭발
+                    elif ema20 < ema50 and 35 <= rsi <= 50 and curr_vol > avg_vol * 1.5:
+                        direction = "SHORT"
+
+                    if direction:
+                        risk = max(last_price * 0.015, last_price * 0.005)
+                        lev = 5 if abs(last_price) > 0 else 7
+
+                        if direction == "LONG":
+                            sl = last_price - risk
+                            tp1 = last_price + risk * 1.2
+                            tp2 = last_price + risk * 2.2
+                            tp3 = last_price + risk * 3.8
+                            pos_text = "롱 (LONG) 🟢"
+                        else:
+                            sl = last_price + risk
+                            tp1 = last_price - risk * 1.2
+                            tp2 = last_price - risk * 2.2
+                            tp3 = last_price - risk * 3.8
+                            pos_text = "숏 (SHORT) 🔴"
+
+                        valid_candidates.append({
+                            "symbol": contract.replace("_USDT", "").replace("USDT", ""),
+                            "contract": contract,
+                            "direction": direction,
+                            "price": last_price,
+                            "sl": sl,
+                            "tp1": tp1,
+                            "tp2": tp2,
+                            "tp3": tp3,
+                            "lev": lev,
+                            "pos_text": pos_text,
+                        })
+                except Exception:
+                    pass
+    except Exception as e:
+        print(f"Error fetching Gate.io tickers: {e}")
+
+    return valid_candidates
 
 
 def fmt(x):
@@ -135,11 +215,12 @@ def msg(s, slot_no):
         f"📊 포지션: **{s['pos_text']}**\n"
         f"💰 실시간 진입가: `{fmt(s['price'])}` USDT\n\n"
         f"⚙️ 포지션 운용 가이드\n"
-        f"  • 권장 레버리지: `{s['lev']}x` (격리 마진)\n\n"
+        f"  • 권장 레버리지: `{s['lev']}x` (격리 마진)\n"
+        f"  • 리스크 관리: `TP1 도달 시 즉시 본전스탑(SL=진입가)`\n\n"
         f"🎯 목표가 (Take Profit)\n"
-        f"  • 1차 (TP1): `{fmt(s['tp1'])}` (본전 스탑)\n"
+        f"  • 1차 (TP1): `{fmt(s['tp1'])}`\n"
         f"  • 2차 (TP2): `{fmt(s['tp2'])}`\n"
-        f"  • 3차 (TP3): `{fmt(s['tp3'])}` (최종 익절)\n\n"
+        f"  • 3차 (TP3): `{fmt(s['tp3'])}` (최종)\n\n"
         f"🛡️ 손절가 (Stop Loss): `{fmt(s['sl'])}`\n"
         f"⏱️ 발생 시간: `{now().strftime('%Y-%m-%d %H:%M:%S')} (KST)`"
     )
@@ -168,29 +249,50 @@ def posmsg(p, k):
     sy = p.get("symbol", "UNKNOWN")
     d = p.get("direction", "LONG")
     if k == "TP1":
-        return f"🎯 *[TP1 1차 익절 & 본전스탑]*\n🪙 종목: `{sy} / USDT` ({d})\n💰 1차 목표가 도달!\n🛡️ 손절가를 진입가로 상향 조정."
+        return f"🎯 *[TP1 1차 익절 & 본전스탑 완료]*\n🪙 종목: `{sy} / USDT` ({d})\n💰 1차 목표가 도달 성공!\n🛡️ **안전장치 발동:** 손절가가 진입가로 상향 조정되었습니다."
     if k == "TP2":
-        return f"🎯 *[TP2 2차 익절 도달]*\n🪙 종목: `{sy} / USDT` ({d})\n💰 2차 목표가 도달!"
+        return f"🎯 *[TP2 2차 익절 도달]*\n🪙 종목: `{sy} / USDT` ({d})\n💰 2차 목표가 달성 완료!"
     if k == "TP3":
-        return f"🎉 *[TP3 최종 익절 달성 마감!]*\n🪙 종목: `{sy} / USDT` ({d})\n🎯 3차 목표가 달성 완료!"
-    return f"🛡️ *[손절(SL) 도달 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n📉 손절가 이탈로 포지션 종료 (12시간 재진입 금지)"
+        return f"🎉 *[TP3 최종 익절 달성 마감!]*\n🪙 종목: `{sy} / USDT` ({d})\n🎯 최종 목표가 도달로 포지션 완벽 마감!"
+    if k == "TIMEOUT":
+        return f"⏱️ *[보유 시간 초과 슬롯 반환]*\n🪙 종목: `{sy} / USDT` ({d})\n⌛ 24시간 동안 목표가 미도달로 슬롯을 회수합니다."
+    return f"🛡️ *[손절(SL) 도달 마감]*\n🪙 종목: `{sy} / USDT` ({d})\n📉 손절가 이탈로 포지션 종료\n🔒 **규칙 적용:** 12시간 동안 해당 종목 재진입이 금지됩니다."
 
 
 def check(state):
-    # 🌟 스캔 목록과 무관하게 현재 보유 중인 모든 포지션을 직접 개별 조회하여 강제 감시
+    t_now = time.time()
     for key, p in list(state["positions"].items()):
         if not isinstance(p, dict):
             state["positions"].pop(key, None)
             continue
         p.setdefault("symbol", key)
         contract = f"{key}_USDT"
+        entry_time = p.get("entry_time", 0)
         
-        h, l, curr_p = get_recent_high_low(contract)
-        if curr_p is None:
+        # 🌟 1. 24시간 타임아웃 검사 (슬롯 자동 반환)
+        if entry_time > 0 and (t_now - entry_time) > (MAX_HOLDING_HOURS * 3600):
+            tg(posmsg(p, "TIMEOUT"))
+            state["positions"].pop(key, None)
+            continue
+
+        highs, lows, closes, volumes, timestamps = get_candles(contract, limit=15)
+        if not closes or not timestamps:
             continue
             
-        high_p = h if h else curr_p
-        low_p = l if l else curr_p
+        # 🌟 2. 진입 시점 이후의 캔들만 추적 (과거 캔들 오작동 방지)
+        valid_highs, valid_lows = [], []
+        for h, l, t in zip(highs, lows, timestamps):
+            if t >= entry_time:
+                valid_highs.append(h)
+                valid_lows.append(l)
+                
+        high_p = max(valid_highs) if valid_highs else closes[-1]
+        low_p = min(valid_lows) if valid_lows else closes[-1]
+        curr_p = closes[-1]
+        
+        high_p = max(high_p, curr_p)
+        low_p = min(low_p, curr_p)
+
         long = p["direction"] == "LONG"
 
         if long:
@@ -230,68 +332,25 @@ def check(state):
 
 
 def main():
-    print("===================================")
-    print(" GATE.IO DIRECT POSITION MONITOR")
-    print("===================================")
+    print("==================================================")
+    print(" GATE.IO 8-SLOT HIGH WIN-RATE MONITOR & BOT")
+    print("==================================================")
     
     state = load()
     
-    # 🌟 포지션 상태를 먼저 최우선으로 정밀 감시 및 청산 처리
+    # 1. 기존 보유 포지션 정밀 모니터링 (타임아웃 및 진입 이후 캔들 기준)
     check(state)
     save(state)
 
-    # 현황판 전송
+    # 2. 포지션 현황판 전송
     tg(status_msg(state["positions"]))
 
-    tickers = get_market_data()
-    print("Fetched Tickers:", len(tickers))
-    if not tickers:
-        print("No tickers fetched.")
+    # 3. 고승률 조건 후보군 스캔
+    candidates = analyze_market_candidates()
+    print("Filtered High Win-Rate Candidates:", len(candidates))
+    if not candidates:
+        print("No qualified candidates found in this cycle.")
         return
-
-    candidates = []
-    for item in tickers:
-        sym = item["symbol"]
-        p = item["price"]
-        ch = item["change"]
-        
-        direction = "LONG" if ch >= 0 else "SHORT"
-        risk = max(p * 0.015, p * 0.005)
-
-        abs_ch = abs(ch)
-        if abs_ch > 5.0:
-            lev = 3
-        elif abs_ch > 2.5:
-            lev = 5
-        elif abs_ch > 1.0:
-            lev = 7
-        else:
-            lev = 10
-
-        if direction == "LONG":
-            sl = p - risk
-            tp1 = p + risk * 1.5
-            tp2 = p + risk * 2.5
-            tp3 = p + risk * 4.0
-            pos_text = "롱 (LONG) 🟢"
-        else:
-            sl = p + risk
-            tp1 = p - risk * 1.5
-            tp2 = p - risk * 2.5
-            tp3 = p - risk * 4.0
-            pos_text = "숏 (SHORT) 🔴"
-
-        candidates.append({
-            "symbol": sym,
-            "direction": direction,
-            "price": p,
-            "sl": sl,
-            "tp1": tp1,
-            "tp2": tp2,
-            "tp3": tp3,
-            "lev": lev,
-            "pos_text": pos_text,
-        })
 
     random.shuffle(candidates)
 
@@ -332,10 +391,11 @@ def main():
                 "tp3": s["tp3"],
                 "tp1_hit": False,
                 "hit": [],
+                "entry_time": int(time.time()), # 진입 시각 기록
             }
             save(state)
             sent += 1
-            print("SIGNAL SENT:", key)
+            print("HIGH WIN-RATE SIGNAL SENT (Slot):", key)
 
     save(state)
     print("DONE. Sent:", sent)
