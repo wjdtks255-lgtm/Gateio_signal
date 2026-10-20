@@ -1,16 +1,5 @@
 {
   "positions": {
-    "PYPL": {
-      "symbol": "PYPL",
-      "direction": "SHORT",
-      "entry": 56.62,
-      "sl": 57.4693,
-      "tp1": 55.34605,
-      "tp2": 54.49675,
-      "tp3": 53.2228,
-      "tp1_hit": false,
-      "hit": []
-    },
     "JMKE": {
       "symbol": "JMKE",
       "direction": "SHORT",
@@ -32,30 +21,6 @@
       "tp3": 31.336779999999997,
       "tp1_hit": false,
       "hit": []
-    },
-    "A": {
-      "symbol": "A",
-      "direction": "LONG",
-      "entry": 0.09483,
-      "sl": 0.09483,
-      "tp1": 0.09653694,
-      "tp2": 0.09795939,
-      "tp3": 0.10023531,
-      "tp1_hit": true,
-      "hit": [],
-      "entry_time": 1792486485
-    },
-    "INDEX": {
-      "symbol": "INDEX",
-      "direction": "SHORT",
-      "entry": 0.00715,
-      "sl": 0.00725725,
-      "tp1": 0.0070213,
-      "tp2": 0.00691405,
-      "tp3": 0.0067424500000000005,
-      "tp1_hit": false,
-      "hit": [],
-      "entry_time": 1792505538
     },
     "AIOT": {
       "symbol": "AIOT",
@@ -151,10 +116,14 @@
     "TUNGSTEN": 1792486449.6999133,
     "IRYS": 1792486454.350522,
     "AXS": 1792486456.1053576,
-    "FCX": 1792505516.3798232
+    "FCX": 1792505516.3798232,
+    "PYPL": 1792508282.1054482,
+    "A": 1792508284.8766315,
+    "INDEX": 1792508286.761551
   },
   "stats": {
     "wins": 0,
-    "losses": 5
+    "losses": 7,
+    "breakeven": 1
   }
 }
