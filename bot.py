@@ -101,9 +101,24 @@ def calculate_rsi(prices, period=14):
     return 100 - (100 / (1 + rs))
 
 
-def get_candles(contract, limit=60):
+def calculate_atr(highs, lows, closes, period=14):
+    """동적 손절가를 위한 ATR(Average True Range) 계산"""
+    if not closes or len(closes) < period + 1:
+        return closes[-1] * 0.015 if closes else 0.0
+    tr_list = []
+    for i in range(1, len(closes)):
+        tr = max(
+            highs[i] - lows[i],
+            abs(highs[i] - closes[i - 1]),
+            abs(lows[i] - closes[i - 1])
+        )
+        tr_list.append(tr)
+    return sum(tr_list[-period:]) / period
+
+
+def get_candles(contract, interval="15m", limit=60):
     try:
-        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval=15m&limit={limit}"
+        url = f"{GATE_FUTURES_CANDLES}?contract={contract}&interval={interval}&limit={limit}"
         r = requests.get(url, timeout=5)
         if r.status_code == 200:
             data = r.json()
@@ -117,6 +132,25 @@ def get_candles(contract, limit=60):
     except Exception:
         pass
     return None, None, None, None, None
+
+
+def get_btc_trend():
+    """비트코인(BTC) 1시간봉 기준 대장주 추세 확인"""
+    highs, lows, closes, _, _ = get_candles("BTC_USDT", interval="1h", limit=60)
+    if not closes or len(closes) < 50:
+        return "NEUTRAL"
+    
+    ema20 = calculate_ema(closes, 20)
+    ema50 = calculate_ema(closes, 50)
+    
+    if not ema20 or not ema50:
+        return "NEUTRAL"
+    
+    if ema20 > ema50 and closes[-1] > ema20:
+        return "BULLISH"  # BTC 상승세
+    elif ema20 < ema50 and closes[-1] < ema20:
+        return "BEARISH"  # BTC 하락세
+    return "NEUTRAL"
 
 
 def get_open_interest_growth(contract):
@@ -137,6 +171,9 @@ def get_open_interest_growth(contract):
 
 def analyze_market_candidates():
     valid_candidates = []
+    btc_trend = get_btc_trend()
+    print(f"CURRENT BTC TREND: {btc_trend}")
+
     try:
         r = requests.get(GATE_FUTURES_TICKERS, timeout=15)
         if r.status_code == 200:
@@ -149,7 +186,7 @@ def analyze_market_candidates():
                 contract = item.get("contract") or item.get("name")
                 if not contract or item.get("in_delisting", False):
                     continue
-                if "MATIC" in contract:
+                if "MATIC" in contract or "BTC_USDT" in contract:
                     continue
                 
                 try:
@@ -158,15 +195,16 @@ def analyze_market_candidates():
                     if not (0.000001 < last_price <= 100.0):
                         continue
 
-                    highs, lows, closes, volumes, timestamps = get_candles(contract, limit=60)
+                    highs, lows, closes, volumes, timestamps = get_candles(contract, interval="15m", limit=60)
                     if not closes or len(closes) < 50:
                         continue
 
                     ema20 = calculate_ema(closes, 20)
                     ema50 = calculate_ema(closes, 50)
                     rsi = calculate_rsi(closes, 14)
+                    atr = calculate_atr(highs, lows, closes, 14)
                     
-                    if not ema20 or not ema50:
+                    if not ema20 or not ema50 or atr == 0:
                         continue
 
                     avg_vol = sum(volumes[-11:-1]) / 10 if len(volumes) >= 11 else volumes[-1]
@@ -180,51 +218,54 @@ def analyze_market_candidates():
                     # [전략 A] 추세 & 모멘텀형
                     if not direction:
                         if ema20 > ema50 and 50 <= rsi <= 65 and curr_vol > avg_vol * 1.5:
-                            direction = "LONG"
-                            strategy_tag = "추세돌파형 (LONG)"
-                            strategy_desc = "EMA 정배열 및 RSI 상승 동력 속에서 거래량이 평균 대비 1.5배 이상 폭발하며 정직한 추세 지속 예상"
+                            if btc_trend != "BEARISH":  # BTC 하락장이 아닐 때만 롱
+                                direction = "LONG"
+                                strategy_tag = "추세돌파형 (LONG)"
+                                strategy_desc = "BTC 안정세 속 EMA 정배열 및 RSI 상승 동력, 거래량 1.5배 폭발 포착"
                         elif ema20 < ema50 and 35 <= rsi <= 50 and curr_vol > avg_vol * 1.5:
-                            direction = "SHORT"
-                            strategy_tag = "추세하락형 (SHORT)"
-                            strategy_desc = "EMA 역배열 및 하방 압력 속에서 거래량 동반 매도세가 유입되어 하락 추세 가속화 예상"
+                            if btc_trend != "BULLISH":  # BTC 상승장이 아닐 때만 숏
+                                direction = "SHORT"
+                                strategy_tag = "추세하락형 (SHORT)"
+                                strategy_desc = "BTC 하방 압력 속 EMA 역배열 및 거래량 동반 매도세 유입 포착"
 
                     # [전략 B] 미결제약정(OI) 수급 급증형
                     if not direction and oi_growth >= 2.0:
-                        if ema20 > ema50 and rsi >= 45:
+                        if ema20 > ema50 and rsi >= 45 and btc_trend != "BEARISH":
                             direction = "LONG"
                             strategy_tag = "OI수급유입형 (LONG)"
-                            strategy_desc = f"미결제약정이 최근 15분간 +{oi_growth:.2f}% 급증하며 고래들의 적극적인 매수 자금 유입 포착"
-                        elif ema20 < ema50 and rsi <= 55:
+                            strategy_desc = f"BTC 방어막 형성 중 미결제약정 +{oi_growth:.2f}% 급증하며 고래 매수 자금 유입"
+                        elif ema20 < ema50 and rsi <= 55 and btc_trend != "BULLISH":
                             direction = "SHORT"
                             strategy_tag = "OI수급유입형 (SHORT)"
-                            strategy_desc = f"미결제약정이 최근 15분간 +{oi_growth:.2f}% 급증하며 하방 포지션으로 거대 수급 쏠림 포착"
+                            strategy_desc = f"미결제약정이 +{oi_growth:.2f}% 급증하며 하방 포지션으로 거대 수급 쏠림 포착"
 
                     # [전략 C] 펀딩비 쏠림 스퀴즈 역매매형
                     if not direction:
-                        if funding_rate >= 0.0005:
+                        if funding_rate >= 0.0005 and btc_trend != "BULLISH":
                             direction = "SHORT"
                             strategy_tag = "펀딩비과열역매매 (SHORT)"
-                            strategy_desc = f"롱 포지션 과열로 펀딩비가 극단적 양수({funding_rate:.4f})로 치달아, 하방 스퀴즈(연쇄 청산) 유도 확률 극대화"
-                        elif funding_rate <= -0.0005:
+                            strategy_desc = f"롱 포지션 과열(펀딩비 {funding_rate:.4f})로 인한 하방 스퀴즈(청산 빔) 유도 노림"
+                        elif funding_rate <= -0.0005 and btc_trend != "BEARISH":
                             direction = "LONG"
                             strategy_tag = "펀딩비과열역매매 (LONG)"
-                            strategy_desc = f"숏 포지션 과열로 펀딩비가 극단적 음수({funding_rate:.4f})로 치달아, 상방 스퀴즈(연쇄 청산) 유도 확률 극대화"
+                            strategy_desc = f"숏 포지션 과열(펀딩비 {funding_rate:.4f})로 인한 상방 스퀴즈(청산 빔) 유도 노림"
 
                     if direction:
-                        risk = max(last_price * 0.015, last_price * 0.005)
+                        # ATR 기반 동적 손절 폭 (최소 1.5% ~ 최대 ATR * 1.5)
+                        stop_dist = max(atr * 1.5, last_price * 0.015)
                         lev = 5 if abs(last_price) > 0 else 7
 
                         if direction == "LONG":
-                            sl = last_price - risk
-                            tp1 = last_price + risk * 1.2
-                            tp2 = last_price + risk * 2.2
-                            tp3 = last_price + risk * 3.8
+                            sl = last_price - stop_dist
+                            tp1 = last_price + stop_dist * 1.0  # 1차 익절 시 바로 본전스탑 전환
+                            tp2 = last_price + stop_dist * 2.0
+                            tp3 = last_price + stop_dist * 3.5
                             pos_text = "롱 (LONG) 🟢"
                         else:
-                            sl = last_price + risk
-                            tp1 = last_price - risk * 1.2
-                            tp2 = last_price - risk * 2.2
-                            tp3 = last_price - risk * 3.8
+                            sl = last_price + stop_dist
+                            tp1 = last_price - stop_dist * 1.0
+                            tp2 = last_price - stop_dist * 2.0
+                            tp3 = last_price - stop_dist * 3.5
                             pos_text = "숏 (SHORT) 🔴"
 
                         valid_candidates.append({
@@ -261,7 +302,7 @@ def fmt(x):
 
 def msg(s, slot_no):
     return (
-        f"🚨 *Gate.io 멀티 전략 수급 시그널* 🚨\n"
+        f"🚨 *Gate.io ATR/BTC필터 멀티 수급 시그널* 🚨\n"
         f"━━━━━━━━━━━━━━━━━━━━━━\n"
         f"📌 슬롯 번호: `[ {slot_no} / {MAX_SLOTS} ]`\n"
         f"🪙 종목명: `{s['symbol']} / USDT`\n"
@@ -272,7 +313,8 @@ def msg(s, slot_no):
         f"  • 선정 이유: `{s['strategy_desc']}`\n\n"
         f"⚙️ 포지션 운용 가이드\n"
         f"  • 권장 레버리지: `{s['lev']}x` (격리 마진)\n"
-        f"  • 리스크 관리: `TP1 도달 시 즉시 본전스탑(SL=진입가)`\n\n"
+        f"  • 리스크 관리: `TP1 도달 시 즉시 본전스탑(SL=진입가)`\n"
+        f"  • 손절 구조: `ATR 변동성 대응 동적 손절 적용`\n\n"
         f"🎯 목표가 (Take Profit)\n"
         f"  • 1차 (TP1): `{fmt(s['tp1'])}`\n"
         f"  • 2차 (TP2): `{fmt(s['tp2'])}`\n"
@@ -354,7 +396,7 @@ def check(state):
             changed = True
             continue
 
-        highs, lows, closes, volumes, timestamps = get_candles(contract, limit=15)
+        highs, lows, closes, volumes, timestamps = get_candles(contract, interval="15m", limit=15)
         if not closes or not timestamps:
             continue
             
@@ -437,18 +479,17 @@ def check(state):
 
 def main():
     print("==================================================")
-    print(" GATE.IO DETAILED STRATEGY REPORT SIGNAL BOT")
+    print(" GATE.IO BTC-FILTER & ATR DYNAMIC SIGNAL BOT")
     print("==================================================")
     
     state = load()
-    
     old_positions_count = len(state["positions"])
 
     position_changed = check(state)
     save(state)
 
     candidates = analyze_market_candidates()
-    print("Filtered Report Candidates:", len(candidates))
+    print("Filtered Dynamic Candidates:", len(candidates))
 
     random.shuffle(candidates)
 
@@ -493,7 +534,7 @@ def main():
             }
             save(state)
             sent += 1
-            print("DETAILED REPORT SIGNAL SENT (Slot):", key)
+            print("DYNAMIC ATR SIGNAL SENT (Slot):", key)
 
     new_positions_count = len(state["positions"])
     if position_changed or (sent > 0) or (new_positions_count != old_positions_count):
