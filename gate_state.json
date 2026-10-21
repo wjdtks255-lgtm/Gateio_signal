@@ -27,11 +27,11 @@
       "symbol": "SCR",
       "direction": "LONG",
       "entry": 0.02078,
-      "sl": 0.0204683,
+      "sl": 0.02078,
       "tp1": 0.02115404,
       "tp2": 0.02146574,
       "tp3": 0.021964459999999998,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": [],
       "entry_time": 1792542022
     },
