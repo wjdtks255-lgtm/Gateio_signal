@@ -75,11 +75,11 @@
       "symbol": "EDEN",
       "direction": "LONG",
       "entry": 0.06037,
-      "sl": 0.05946445,
+      "sl": 0.06037,
       "tp1": 0.06127555,
       "tp2": 0.0621811,
       "tp3": 0.063539425,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": [],
       "entry_time": 1792607175
     },
