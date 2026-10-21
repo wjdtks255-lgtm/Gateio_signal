@@ -12,6 +12,7 @@ KST = timezone(timedelta(hours=9))
 
 GATE_FUTURES_TICKERS = "https://fx-api.gateio.ws/api/v4/futures/usdt/tickers"
 GATE_FUTURES_CANDLES = "https://fx-api.gateio.ws/api/v4/futures/usdt/candlesticks"
+GATE_FUTURES_STATS = "https://fx-api.gateio.ws/api/v4/futures/usdt/contract_stats"
 
 MAX_SLOTS = 8
 COOLDOWN = 120
@@ -118,6 +119,22 @@ def get_candles(contract, limit=60):
     return None, None, None, None, None
 
 
+def get_open_interest_growth(contract):
+    try:
+        url = f"{GATE_FUTURES_STATS}?contract={contract}&interval=15m&limit=3"
+        r = requests.get(url, timeout=5)
+        if r.status_code == 200:
+            data = r.json()
+            if isinstance(data, list) and len(data) >= 2:
+                oi_prev = float(data[-2].get("open_interest", 0))
+                oi_curr = float(data[-1].get("open_interest", 0))
+                if oi_prev > 0:
+                    return ((oi_curr - oi_prev) / oi_prev) * 100
+    except Exception:
+        pass
+    return 0.0
+
+
 def analyze_market_candidates():
     valid_candidates = []
     try:
@@ -128,7 +145,7 @@ def analyze_market_candidates():
                 data = data.get("data", [])
             random.shuffle(data)
             
-            for item in data[:40]:
+            for item in data[:60]:
                 contract = item.get("contract") or item.get("name")
                 if not contract or item.get("in_delisting", False):
                     continue
@@ -137,6 +154,7 @@ def analyze_market_candidates():
                 
                 try:
                     last_price = float(item.get("last", 0))
+                    funding_rate = float(item.get("funding_rate", 0))
                     if not (0.000001 < last_price <= 100.0):
                         continue
 
@@ -153,12 +171,37 @@ def analyze_market_candidates():
 
                     avg_vol = sum(volumes[-11:-1]) / 10 if len(volumes) >= 11 else volumes[-1]
                     curr_vol = volumes[-1]
+                    oi_growth = get_open_interest_growth(contract)
 
                     direction = None
-                    if ema20 > ema50 and 50 <= rsi <= 65 and curr_vol > avg_vol * 1.5:
-                        direction = "LONG"
-                    elif ema20 < ema50 and 35 <= rsi <= 50 and curr_vol > avg_vol * 1.5:
-                        direction = "SHORT"
+                    strategy_tag = ""
+
+                    # [전략 A] 추세 & 모멘텀형 (EMA + RSI + Volume)
+                    if not direction:
+                        if ema20 > ema50 and 50 <= rsi <= 65 and curr_vol > avg_vol * 1.5:
+                            direction = "LONG"
+                            strategy_tag = "추세돌파형"
+                        elif ema20 < ema50 and 35 <= rsi <= 50 and curr_vol > avg_vol * 1.5:
+                            direction = "SHORT"
+                            strategy_tag = "추세하락형"
+
+                    # [전략 B] 미결제약정(OI) 수급 급증형 (고래 자금 유입)
+                    if not direction and oi_growth >= 2.0:
+                        if ema20 > ema50 and rsi >= 45:
+                            direction = "LONG"
+                            strategy_tag = "OI수급유입형(롱)"
+                        elif ema20 < ema50 and rsi <= 55:
+                            direction = "SHORT"
+                            strategy_tag = "OI수급유입형(숏)"
+
+                    # [전략 C] 펀딩비 쏠림 스퀴즈 역매매형
+                    if not direction:
+                        if funding_rate >= 0.0005:  # 롱 과열 -> 숏 스퀴즈 노림
+                            direction = "SHORT"
+                            strategy_tag = "펀딩비과열역매매(숏)"
+                        elif funding_rate <= -0.0005:  # 숏 과열 -> 롱 스퀴즈 노림
+                            direction = "LONG"
+                            strategy_tag = "펀딩비과열역매매(롱)"
 
                     if direction:
                         risk = max(last_price * 0.015, last_price * 0.005)
@@ -188,6 +231,7 @@ def analyze_market_candidates():
                             "tp3": tp3,
                             "lev": lev,
                             "pos_text": pos_text,
+                            "strategy": strategy_tag,
                         })
                 except Exception:
                     pass
@@ -209,11 +253,12 @@ def fmt(x):
 
 def msg(s, slot_no):
     return (
-        f"🚨 *Gate.io 프로페셔널 트레이딩 시그널* 🚨\n"
+        f"🚨 *Gate.io 멀티 전략 수급 시그널* 🚨\n"
         f"━━━━━━━━━━━━━━━━━━━━━━\n"
         f"📌 슬롯 번호: `[ {slot_no} / {MAX_SLOTS} ]`\n"
         f"🪙 종목명: `{s['symbol']} / USDT`\n"
         f"📊 포지션: **{s['pos_text']}**\n"
+        f"🔍 감지 전략: `{s['strategy']}`\n"
         f"💰 실시간 진입가: `{fmt(s['price'])}` USDT\n\n"
         f"⚙️ 포지션 운용 가이드\n"
         f"  • 권장 레버리지: `{s['lev']}x` (격리 마진)\n"
@@ -382,19 +427,18 @@ def check(state):
 
 def main():
     print("==================================================")
-    print(" GATE.IO 8-SLOT HIGH WIN-RATE MONITOR & STATS BOT")
+    print(" GATE.IO MULTI-STRATEGY ENSEMBLE SIGNAL BOT")
     print("==================================================")
     
     state = load()
     
-    # 이전 포지션 수 기록
     old_positions_count = len(state["positions"])
 
     position_changed = check(state)
     save(state)
 
     candidates = analyze_market_candidates()
-    print("Filtered High Win-Rate Candidates:", len(candidates))
+    print("Filtered Multi-Strategy Candidates:", len(candidates))
 
     random.shuffle(candidates)
 
@@ -439,9 +483,8 @@ def main():
             }
             save(state)
             sent += 1
-            print("HIGH WIN-RATE SIGNAL SENT (Slot):", key)
+            print("MULTI-STRATEGY SIGNAL SENT (Slot):", key)
 
-    # 새로운 포지션이 진입했거나 청산/변동이 있을 때만 현황판(Status) 전송
     new_positions_count = len(state["positions"])
     if position_changed or (sent > 0) or (new_positions_count != old_positions_count):
         tg(status_msg(state["positions"]))
