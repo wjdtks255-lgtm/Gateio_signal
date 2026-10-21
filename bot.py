@@ -33,7 +33,6 @@ def load():
     s.setdefault("signals", {})
     s.setdefault("sl_penalties", {})
     
-    # 🌟 기존 상태 파일에 누락된 통계 키가 있어도 에러가 나지 않도록 안전하게 보정
     stats = s.setdefault("stats", {})
     stats.setdefault("wins", 0)
     stats.setdefault("breakeven", 0)
