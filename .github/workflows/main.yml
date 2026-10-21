@@ -8,7 +8,7 @@ on:
   # 2. 웹에서 수동 실행 버튼 허용
   workflow_dispatch:
 
-  # 3. cron-job.org 외부 핑 연동을 위한 웹훅 트리거
+  # 3. cron-job.org 외부 핀 연동을 위한 웹훅 트리거
   repository_dispatch:
     types: [trigger-bot]
 
@@ -38,3 +38,19 @@ jobs:
           GATE_TELEGRAM_CHAT_ID: ${{ secrets.GATE_TELEGRAM_CHAT_ID }}
         run: |
           python bot.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add gate_state.json
+          git commit -m "chore: update bot state [skip ci]" || exit 0
+          git push
+```[cite: 17]
+
+---
+
+### 📌 적용 후 확인 방법
+1. GitHub 레포지토리에서 위 코드로 `main.yml`을 수정하고 저장합니다[cite: 17].
+2. **Actions** 탭으로 이동하여 수동으로 `Run workflow`를 한 번 실행하거나, 다음 자동 실행 주기를 기다립니다[cite: 17, 20].
+3. 이제 새로 진입한 포지션들이 `gate_state.json`에 영구적으로 저장되므로, 텔레그램 현황판에 슬롯이 정상적으로 추가되어 표시됩니다.
