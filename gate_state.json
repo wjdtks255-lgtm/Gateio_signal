@@ -75,11 +75,11 @@
       "symbol": "MOVE",
       "direction": "LONG",
       "entry": 0.00754,
-      "sl": 0.0074269,
+      "sl": 0.00754,
       "tp1": 0.0076530999999999995,
       "tp2": 0.0077662,
       "tp3": 0.00793585,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": [],
       "entry_time": 1792588287
     },
