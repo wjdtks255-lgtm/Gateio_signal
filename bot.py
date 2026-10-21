@@ -282,10 +282,12 @@ def posmsg(p, k):
 def check(state):
     t_now = time.time()
     stats = state.setdefault("stats", {"wins": 0, "breakeven": 0, "losses": 0})
+    changed = False
 
     for key, p in list(state["positions"].items()):
         if not isinstance(p, dict):
             state["positions"].pop(key, None)
+            changed = True
             continue
         p.setdefault("symbol", key)
         contract = f"{key}_USDT"
@@ -294,6 +296,7 @@ def check(state):
         if entry_time > 0 and (t_now - entry_time) > (MAX_HOLDING_HOURS * 3600):
             tg(posmsg(p, "TIMEOUT"))
             state["positions"].pop(key, None)
+            changed = True
             continue
 
         highs, lows, closes, volumes, timestamps = get_candles(contract, limit=15)
@@ -321,6 +324,7 @@ def check(state):
                 tg(posmsg(p, "TP3"))
                 tg(get_stats_text(stats))
                 state["positions"].pop(key, None)
+                changed = True
                 continue
             if low_p <= p["sl"]:
                 if p.get("tp1_hit", False):
@@ -332,20 +336,24 @@ def check(state):
                 tg(get_stats_text(stats))
                 state.setdefault("sl_penalties", {})[key] = time.time()
                 state["positions"].pop(key, None)
+                changed = True
                 continue
             if high_p >= p["tp2"] and "TP2" not in p.get("hit", []):
                 tg(posmsg(p, "TP2"))
                 p.setdefault("hit", []).append("TP2")
+                changed = True
             if not p.get("tp1_hit", False) and high_p >= p["tp1"]:
                 p["tp1_hit"] = True
                 p["sl"] = p["entry"]
                 tg(posmsg(p, "TP1"))
+                changed = True
         else:
             if low_p <= p["tp3"]:
                 stats["wins"] += 1
                 tg(posmsg(p, "TP3"))
                 tg(get_stats_text(stats))
                 state["positions"].pop(key, None)
+                changed = True
                 continue
             if high_p >= p["sl"]:
                 if p.get("tp1_hit", False):
@@ -357,14 +365,19 @@ def check(state):
                 tg(get_stats_text(stats))
                 state.setdefault("sl_penalties", {})[key] = time.time()
                 state["positions"].pop(key, None)
+                changed = True
                 continue
             if low_p <= p["tp2"] and "TP2" not in p.get("hit", []):
                 tg(posmsg(p, "TP2"))
                 p.setdefault("hit", []).append("TP2")
+                changed = True
             if not p.get("tp1_hit", False) and low_p <= p["tp1"]:
                 p["tp1_hit"] = True
                 p["sl"] = p["entry"]
                 tg(posmsg(p, "TP1"))
+                changed = True
+                
+    return changed
 
 
 def main():
@@ -374,16 +387,14 @@ def main():
     
     state = load()
     
-    check(state)
-    save(state)
+    # 이전 포지션 수 기록
+    old_positions_count = len(state["positions"])
 
-    tg(status_msg(state["positions"]))
+    position_changed = check(state)
+    save(state)
 
     candidates = analyze_market_candidates()
     print("Filtered High Win-Rate Candidates:", len(candidates))
-    if not candidates:
-        print("No qualified candidates found in this cycle.")
-        return
 
     random.shuffle(candidates)
 
@@ -395,7 +406,7 @@ def main():
     t = time.time()
     sl_penalties = state.get("sl_penalties", {})
 
-    if available_slots > 0:
+    if available_slots > 0 and candidates:
         for s in candidates:
             if sent >= available_slots:
                 break
@@ -429,6 +440,11 @@ def main():
             save(state)
             sent += 1
             print("HIGH WIN-RATE SIGNAL SENT (Slot):", key)
+
+    # 새로운 포지션이 진입했거나 청산/변동이 있을 때만 현황판(Status) 전송
+    new_positions_count = len(state["positions"])
+    if position_changed or (sent > 0) or (new_positions_count != old_positions_count):
+        tg(status_msg(state["positions"]))
 
     save(state)
     print("DONE. Sent:", sent)
