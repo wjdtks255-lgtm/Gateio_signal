@@ -63,11 +63,11 @@
       "symbol": "FET",
       "direction": "LONG",
       "entry": 0.1983,
-      "sl": 0.1953255,
+      "sl": 0.1983,
       "tp1": 0.2012745,
       "tp2": 0.204249,
       "tp3": 0.20871075,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": [],
       "entry_time": 1792595808
     },
