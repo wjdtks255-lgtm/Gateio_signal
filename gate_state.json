@@ -71,18 +71,6 @@
       "hit": [],
       "entry_time": 1792561256
     },
-    "RLC": {
-      "symbol": "RLC",
-      "direction": "LONG",
-      "entry": 0.7393,
-      "sl": 0.7282105,
-      "tp1": 0.7526073999999999,
-      "tp2": 0.7636969,
-      "tp3": 0.7814401,
-      "tp1_hit": false,
-      "hit": [],
-      "entry_time": 1792580169
-    },
     "TAIKO": {
       "symbol": "TAIKO",
       "direction": "LONG",
@@ -94,6 +82,18 @@
       "tp1_hit": false,
       "hit": [],
       "entry_time": 1792580515
+    },
+    "NEO": {
+      "symbol": "NEO",
+      "direction": "SHORT",
+      "entry": 2.274,
+      "sl": 2.30811,
+      "tp1": 2.233068,
+      "tp2": 2.198958,
+      "tp3": 2.1443820000000002,
+      "tp1_hit": false,
+      "hit": [],
+      "entry_time": 1792580797
     }
   },
   "signals": {
@@ -153,7 +153,8 @@
     "ZBCN:LONG": 1792570859.1610925,
     "DOS:SHORT": 1792576254.780867,
     "RLC:LONG": 1792580168.745309,
-    "TAIKO:LONG": 1792580514.5172887
+    "TAIKO:LONG": 1792580514.5172887,
+    "NEO:SHORT": 1792580796.6668406
   },
   "sl_penalties": {
     "ZCAT": 1791909463.3206246,
@@ -196,11 +197,12 @@
     "AIOT": 1792521063.239414,
     "APLD": 1792570531.5312483,
     "SCR": 1792576234.534685,
-    "ZBCN": 1792580125.28334
+    "ZBCN": 1792580125.28334,
+    "RLC": 1792580730.7328448
   },
   "stats": {
     "wins": 0,
-    "losses": 10,
+    "losses": 11,
     "breakeven": 4
   }
 }
