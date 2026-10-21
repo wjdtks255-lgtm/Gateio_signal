@@ -35,18 +35,6 @@
       "hit": [],
       "entry_time": 1792552084
     },
-    "WCT": {
-      "symbol": "WCT",
-      "direction": "LONG",
-      "entry": 0.03594,
-      "sl": 0.03594,
-      "tp1": 0.03658692,
-      "tp2": 0.03712602,
-      "tp3": 0.03798858,
-      "tp1_hit": true,
-      "hit": [],
-      "entry_time": 1792560942
-    },
     "TAIKO": {
       "symbol": "TAIKO",
       "direction": "LONG",
@@ -204,11 +192,12 @@
     "RLC": 1792580730.7328448,
     "ATOM": 1792588238.131704,
     "S": 1792594529.7509735,
-    "MOVE": 1792595739.076469
+    "MOVE": 1792595739.076469,
+    "WCT": 1792598452.072153
   },
   "stats": {
     "wins": 0,
     "losses": 13,
-    "breakeven": 5
+    "breakeven": 6
   }
 }
