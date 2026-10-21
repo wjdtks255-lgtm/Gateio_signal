@@ -175,33 +175,40 @@ def analyze_market_candidates():
 
                     direction = None
                     strategy_tag = ""
+                    strategy_desc = ""
 
-                    # [전략 A] 추세 & 모멘텀형 (EMA + RSI + Volume)
+                    # [전략 A] 추세 & 모멘텀형
                     if not direction:
                         if ema20 > ema50 and 50 <= rsi <= 65 and curr_vol > avg_vol * 1.5:
                             direction = "LONG"
-                            strategy_tag = "추세돌파형"
+                            strategy_tag = "추세돌파형 (LONG)"
+                            strategy_desc = "EMA 정배열 및 RSI 상승 동력 속에서 거래량이 평균 대비 1.5배 이상 폭발하며 정직한 추세 지속 예상"
                         elif ema20 < ema50 and 35 <= rsi <= 50 and curr_vol > avg_vol * 1.5:
                             direction = "SHORT"
-                            strategy_tag = "추세하락형"
+                            strategy_tag = "추세하락형 (SHORT)"
+                            strategy_desc = "EMA 역배열 및 하방 압력 속에서 거래량 동반 매도세가 유입되어 하락 추세 가속화 예상"
 
-                    # [전략 B] 미결제약정(OI) 수급 급증형 (고래 자금 유입)
+                    # [전략 B] 미결제약정(OI) 수급 급증형
                     if not direction and oi_growth >= 2.0:
                         if ema20 > ema50 and rsi >= 45:
                             direction = "LONG"
-                            strategy_tag = "OI수급유입형(롱)"
+                            strategy_tag = "OI수급유입형 (LONG)"
+                            strategy_desc = f"미결제약정이 최근 15분간 +{oi_growth:.2f}% 급증하며 고래들의 적극적인 매수 자금 유입 포착"
                         elif ema20 < ema50 and rsi <= 55:
                             direction = "SHORT"
-                            strategy_tag = "OI수급유입형(숏)"
+                            strategy_tag = "OI수급유입형 (SHORT)"
+                            strategy_desc = f"미결제약정이 최근 15분간 +{oi_growth:.2f}% 급증하며 하방 포지션으로 거대 수급 쏠림 포착"
 
                     # [전략 C] 펀딩비 쏠림 스퀴즈 역매매형
                     if not direction:
-                        if funding_rate >= 0.0005:  # 롱 과열 -> 숏 스퀴즈 노림
+                        if funding_rate >= 0.0005:
                             direction = "SHORT"
-                            strategy_tag = "펀딩비과열역매매(숏)"
-                        elif funding_rate <= -0.0005:  # 숏 과열 -> 롱 스퀴즈 노림
+                            strategy_tag = "펀딩비과열역매매 (SHORT)"
+                            strategy_desc = f"롱 포지션 과열로 펀딩비가 극단적 양수({funding_rate:.4f})로 치달아, 하방 스퀴즈(연쇄 청산) 유도 확률 극대화"
+                        elif funding_rate <= -0.0005:
                             direction = "LONG"
-                            strategy_tag = "펀딩비과열역매매(롱)"
+                            strategy_tag = "펀딩비과열역매매 (LONG)"
+                            strategy_desc = f"숏 포지션 과열로 펀딩비가 극단적 음수({funding_rate:.4f})로 치달아, 상방 스퀴즈(연쇄 청산) 유도 확률 극대화"
 
                     if direction:
                         risk = max(last_price * 0.015, last_price * 0.005)
@@ -232,6 +239,7 @@ def analyze_market_candidates():
                             "lev": lev,
                             "pos_text": pos_text,
                             "strategy": strategy_tag,
+                            "strategy_desc": strategy_desc,
                         })
                 except Exception:
                     pass
@@ -260,6 +268,8 @@ def msg(s, slot_no):
         f"📊 포지션: **{s['pos_text']}**\n"
         f"🔍 감지 전략: `{s['strategy']}`\n"
         f"💰 실시간 진입가: `{fmt(s['price'])}` USDT\n\n"
+        f"🎯 *[이 종목의 핵심 매매 기준 및 솔루션]*\n"
+        f"  • 선정 이유: `{s['strategy_desc']}`\n\n"
         f"⚙️ 포지션 운용 가이드\n"
         f"  • 권장 레버리지: `{s['lev']}x` (격리 마진)\n"
         f"  • 리스크 관리: `TP1 도달 시 즉시 본전스탑(SL=진입가)`\n\n"
@@ -427,7 +437,7 @@ def check(state):
 
 def main():
     print("==================================================")
-    print(" GATE.IO MULTI-STRATEGY ENSEMBLE SIGNAL BOT")
+    print(" GATE.IO DETAILED STRATEGY REPORT SIGNAL BOT")
     print("==================================================")
     
     state = load()
@@ -438,7 +448,7 @@ def main():
     save(state)
 
     candidates = analyze_market_candidates()
-    print("Filtered Multi-Strategy Candidates:", len(candidates))
+    print("Filtered Report Candidates:", len(candidates))
 
     random.shuffle(candidates)
 
@@ -483,7 +493,7 @@ def main():
             }
             save(state)
             sent += 1
-            print("MULTI-STRATEGY SIGNAL SENT (Slot):", key)
+            print("DETAILED REPORT SIGNAL SENT (Slot):", key)
 
     new_positions_count = len(state["positions"])
     if position_changed or (sent > 0) or (new_positions_count != old_positions_count):
