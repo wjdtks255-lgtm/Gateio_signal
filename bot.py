@@ -56,11 +56,12 @@ def load():
         s = {}
     for k, v in {
         "positions": {}, "signals": {}, "sl_penalties": {},
-        "stats": {"wins": 0, "breakeven": 0, "losses": 0, "timeouts": 0}
+        "stats": {"wins": 0, "breakeven": 0, "losses": 0, "timeouts": 0, "partial_tp1_profit": 0.0}
     }.items():
         s.setdefault(k, v)
     for k in ("wins", "breakeven", "losses", "timeouts"):
         s["stats"].setdefault(k, 0)
+    s["stats"].setdefault("partial_tp1_profit", 0.0)
     return s
 
 
@@ -320,7 +321,7 @@ def signal_msg(s, slot):
         f"⭐ 신호 점수: `{s['score']}/9`\n"
         f"💰 기준 진입가: `{fmt(s['price'])}` USDT\n"
         f"🛑 손절가: `{fmt(s['sl'])}`\n"
-        f"🎯 TP1: `{fmt(s['tp1'])}`\n"
+        f"🎯 TP1 (40% 부분익절): `{fmt(s['tp1'])}`\n"
         f"🎯 TP2: `{fmt(s['tp2'])}`\n"
         f"🎯 TP3: `{fmt(s['tp3'])}`\n"
         f"📊 RSI: `{s['rsi']:.1f}` | ATR: `{fmt(s['atr'])}`\n"
@@ -336,11 +337,12 @@ def result_msg(p, kind):
     name = p.get("symbol", "?")
     d = p.get("direction", "?")
     text = {
-        "TP1": "1차 목표 도달. 본전 스탑 단계로 전환",
-        "TP2": "2차 목표 도달",
-        "TP3": "최종 목표 도달",
+        "TP1": "TP1 도달: 40% 부분 익절 완료 및 15분봉 마감 대기",
+        "TP1_BE": "15분봉 마감 확인 완료: 잔여 60% 물량 본전 스탑 전환",
+        "TP2": "2차 목표 도달 (추가 익절)",
+        "TP3": "최종 목표 도달 (익절 마감)",
         "SL": "초기 손절 도달",
-        "BE": "본전 스탑 도달",
+        "BE": "본전 스탑 도달 (부분 익절 수익 방어)",
         "TIME": "보유 시간 제한 종료"
     }.get(kind, kind)
     return f"📊 *포지션 추적 알림*\n`{name}_USDT` | `{d}`\n{text}"
@@ -358,7 +360,7 @@ def status_msg(positions):
         d = p.get("direction", "LONG")
         pos_icon = "🟢 롱" if d == "LONG" else "🔴 숏"
         entry = p.get("entry", 0)
-        tp1_status = "✅ 도달(본전스탑)" if p.get("tp1_hit") else "⏳ 대기중"
+        tp1_status = "✅ 40% 익절완료" if p.get("tp1_hit") else "⏳ 대기중"
         lines.append(f"• `[{idx}]` **{sym} / USDT** ({pos_icon})\n  - 진입가: `{fmt(entry)}` | TP1: `{tp1_status}`")
     
     lines.append(f"\n⏱️ 확인 시간: `{now():%m-%d %H:%M} (KST)`")
@@ -379,50 +381,79 @@ def monitor(s):
             s["positions"].pop(key, None)
             changed = True
             continue
+            
         data = candles(key + "_USDT", "15m", 5)
         if not data:
             continue
         last = data[-1]
         if last[0] <= p.get("last_bar", 0):
             continue
+            
         bars = [z for z in data if z[0] > p.get("entry_bar", 0)
               and z[0] > p.get("last_bar", 0)]
         if not bars:
             p["last_bar"] = last[0]
             changed = True
             continue
+            
         for bar in bars:
             t, high, low, close, _ = bar
             long = p["direction"] == "LONG"
             sl = p["sl"]
+            
+            # 1. 보수적 충돌 처리: 같은 봉에서 SL과 TP가 동시에 닿은 경우 손절(SL) 우선 처리
             stop_hit = low <= sl if long else high >= sl
+            tp1_hit_cond = high >= p["tp1"] if long else low <= p["tp1"]
+            
             if stop_hit:
-                kind = "BE" if p.get("tp1_hit") else "SL"
+                kind = "BE" if p.get("tp1_confirmed") else "SL"
                 tg(result_msg(p, kind))
-                stats["breakeven" if kind == "BE" else "losses"] += 1
-                if kind == "SL":
+                if kind == "BE":
+                    stats["breakeven"] += 1
+                else:
+                    stats["losses"] += 1
                     s["sl_penalties"][key] = time.time()
                 s["positions"].pop(key, None)
                 changed = True
                 break
-            tp1 = high >= p["tp1"] if long else low <= p["tp1"]
-            tp2 = high >= p["tp2"] if long else low <= p["tp2"]
-            tp3 = high >= p["tp3"] if long else low <= p["tp3"]
-            if tp1 and not p.get("tp1_hit"):
+                
+            # 2. TP1 도달 시 40% 부분 익절 기록 및 15분봉 마감 확인 대기 모드 진입
+            if tp1_hit_cond and not p.get("tp1_hit"):
                 p["tp1_hit"] = True
-                p["sl"] = p["entry"]
+                p["tp1_bar_time"] = t  # TP1에 닿은 15분봉 시점 기록
+                # 40% 부분 익절 수익 누적 시뮬레이션 (수수료 0.05% 감안)
+                risk_unit = abs(p["entry"] - p["tp1"])
+                partial_gain = risk_unit * 0.4 * 0.995
+                stats["partial_tp1_profit"] += partial_gain
                 tg(result_msg(p, "TP1"))
                 changed = True
+                
+            # 3. TP1 도달 이후 '다음 완성된 15분봉' 마감 시점에 진입가로 본전 스탑 전환
+            if p.get("tp1_hit") and not p.get("tp1_confirmed"):
+                if t > p.get("tp1_bar_time", 0):
+                    # 봉 마감 가격이 TP1 바깥에서 유지되었는지 확인 (long: close > tp1, short: close < tp1)
+                    confirmed = (close >= p["tp1"]) if long else (close <= p["tp1"])
+                    if confirmed:
+                        p["tp1_confirmed"] = True
+                        p["sl"] = p["entry"]  # 본전 스탑 전환
+                        tg(result_msg(p, "TP1_BE"))
+                        changed = True
+
+            tp2 = high >= p["tp2"] if long else low <= p["tp2"]
+            tp3 = high >= p["tp3"] if long else low <= p["tp3"]
+            
             if tp2 and "TP2" not in p.get("hit", []):
                 p.setdefault("hit", []).append("TP2")
                 tg(result_msg(p, "TP2"))
                 changed = True
+                
             if tp3:
                 tg(result_msg(p, "TP3"))
                 stats["wins"] += 1
                 s["positions"].pop(key, None)
                 changed = True
                 break
+                
             p["last_bar"] = t
         else:
             p["last_bar"] = bars[-1][0]
@@ -431,14 +462,12 @@ def monitor(s):
 
 
 def main():
-    print("GATE.IO LONG/SHORT SCANNER")
+    print("GATE.IO QUANT PARTIAL TP & 15M CONFIRM BOT")
     if not TOKEN or not CHAT:
         print("Missing GATE_TELEGRAM_TOKEN or GATE_TELEGRAM_CHAT_ID")
         return
     
     s = load()
-    
-    # 1. 기존 포지션 상태 검사 (청산, TP 도달 등 변동 발생 여부 확인)
     position_changed = monitor(s)
     save(s)
 
@@ -494,25 +523,26 @@ def main():
             "symbol": key, "direction": c["direction"],
             "entry": c["price"], "sl": c["sl"],
             "tp1": c["tp1"], "tp2": c["tp2"], "tp3": c["tp3"],
-            "tp1_hit": False, "hit": [], "entry_time": t,
+            "tp1_hit": False, "tp1_confirmed": False, "tp1_bar_time": 0,
+            "hit": [], "entry_time": t,
             "entry_bar": entrybar, "last_bar": entrybar
         }
         save(s)
         sent += 1
         print("SIGNAL:", key, c["direction"], c["score"])
 
-    # 2. 포지션 청산/종료 혹은 신규 신호 발송(sent > 0)이 있을 때만 현황판 및 통계 전송
     if position_changed or sent > 0:
         total = sum(s["stats"].get(k, 0) for k in ("wins", "breakeven", "losses", "timeouts"))
         st = s["stats"]
         
         tg(status_msg(s["positions"]))
         tg(
-            "📊 *누적 시뮬레이션 통계*\n"
-            f"종료: `{total}` | TP3: `{st['wins']}` | "
-            f"본전: `{st['breakeven']}` | 손절: `{st['losses']}` | "
+            "📊 *누적 부분익절 시뮬레이션 통계*\n"
+            f"종료: `{total}` | TP3익절: `{st['wins']}` | "
+            f"본전방어: `{st['breakeven']}` | 손절: `{st['losses']}` | "
             f"시간종료: `{st['timeouts']}`\n"
-            "※ 실제 체결·부분 익절·수수료를 반영한 계좌 손익이 아닙니다."
+            f"💰 TP1 40% 부분익절 누적수익: `{st['partial_tp1_profit']:.4f}` USDT\n"
+            "※ 수수료 반영 및 부분 익절 가상 시뮬레이션 결과입니다."
         )
 
     save(s)
