@@ -39,11 +39,11 @@
       "symbol": "WCT",
       "direction": "LONG",
       "entry": 0.03594,
-      "sl": 0.0354009,
+      "sl": 0.03594,
       "tp1": 0.03658692,
       "tp2": 0.03712602,
       "tp3": 0.03798858,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": [],
       "entry_time": 1792560942
     },
