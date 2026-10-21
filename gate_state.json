@@ -15,11 +15,11 @@
       "symbol": "PENDLE",
       "direction": "LONG",
       "entry": 2.164,
-      "sl": 2.13154,
+      "sl": 2.164,
       "tp1": 2.2029520000000002,
       "tp2": 2.235412,
       "tp3": 2.287348,
-      "tp1_hit": false,
+      "tp1_hit": true,
       "hit": [],
       "entry_time": 1792542021
     },
