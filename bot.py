@@ -162,7 +162,7 @@ def tickers():
     vr={x["contract"]:i for i,x in enumerate(
         sorted(good,key=lambda z:z["_vol"],reverse=True))}
     cr={x["contract"]:i for i,x in enumerate(
-        sorted(good, key=lambda z: abs(z["_chg"]), reverse=True))}
+        sorted(good,key=lambda z:abs(z["_chg"]),reverse=True))}
     good.sort(key=lambda x:0.65*vr[x["contract"]]+
               0.35*cr[x["contract"]])
     return good[:MAX_SCAN]
@@ -184,13 +184,13 @@ def analyze(symbol,btc_trend):
     if not e50 or e20[-1] is None: return None
 
     c=m[-1]; prev=m[-2]
-    price=num(api("/tickers",{"contract":symbol})[0].get("last"))
+    # 진입가를 실시간 변동가 대신 완성된 15m 봉 종가(c["c"])로 고정하여 추적 일관성 확보
+    price = c["c"]
     a=atr(m)
     dx=adx(m)
     rr=rsi(close)
     if price<=0 or a<=0: return None
 
-    if abs(price-c["c"])>MAX_ENTRY_SLIPPAGE_ATR*a: return None
     if dx<MIN_ADX: return None
 
     t1=trend(h)
@@ -213,22 +213,21 @@ def analyze(symbol,btc_trend):
         rsi_ok=48<=rr<=68
         candle_ok=(c["c"]-c["l"])/max(c["h"]-c["l"],1e-12)>=0.65
         btc_ok=btc_trend>=0
-        distance=(price-e20[-1])/a
     else:
         pullback=near and prev["h"]>=e20[-2] and c["c"]<e20[-1] and c["c"]<c["o"]
         breakout=c["c"]<low and vr>=1.2
         rsi_ok=32<=rr<=52
         candle_ok=(c["h"]-c["c"])/max(c["h"]-c["l"],1e-12)>=0.65
         btc_ok=btc_trend<=0
-        distance=(e20[-1]-price)/a
 
-    if distance>MAX_ENTRY_DISTANCE_ATR: return None
     if not (pullback or breakout): return None
 
     score=0
     reasons=[]
     score+=2; reasons.append("1H·15M 추세 일치")
-    score+=2; reasons.append("눌림 반등" if pullback else "거래량 동반 돌파")
+    # 방향별 명확한 문구 구분 적용
+    reasons.append("눌림 후 반등" if long else "저항 되돌림 후 하락")
+    score+=2
     if rsi_ok: score+=1; reasons.append(f"RSI {rr:.1f}")
     if dx>=20: score+=1; reasons.append(f"ADX {dx:.1f}")
     if vr>=1.2: score+=1; reasons.append(f"거래량 {vr:.2f}배")
@@ -256,31 +255,42 @@ def send_signal(sig,st):
     side=sig["side"]
     entry=sig["entry"]
     tps=sig["tp"]
+    sl=sig["sl"]
     
-    tp_pcts = []
-    for tp in tps:
+    if side == "LONG":
+        sl_pct = ((sl - entry) / entry) * 100
+    else:
+        sl_pct = ((entry - sl) / entry) * 100
+
+    tp_data = []
+    for i, tp in enumerate(tps, 1):
         if side == "LONG":
             pct = ((tp - entry) / entry) * 100
         else:
             pct = ((entry - tp) / entry) * 100
-        tp_pcts.append(pct)
+        r_mult = TP_R[i-1]
+        tp_data.append(f"🎯 TP{i}: <code>{fmt(tp)}</code> (+{pct:.2f}% / {r_mult}R)")
+
+    bar_time_kst = datetime.fromtimestamp(sig['bar'], KST).strftime('%Y-%m-%d %H:%M:%S')
+    send_time_kst = datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
 
     msg=(
         "🚨 <b>GATE.IO FUTURES SIGNAL</b>\n"
         "━━━━━━━━━━━━━━━━━━\n"
         f"📌 계약: <b>{sym}</b>\n"
         f"📈 방향: <b>{side}</b>\n"
-        f"💵 기준 진입가: <code>{fmt(entry)}</code>\n"
-        f"🛑 손절가: <code>{fmt(sig['sl'])}</code>\n"
-        f"🎯 TP1: <code>{fmt(tps[0])}</code> (+{tp_pcts[0]:.2f}%)\n"
-        f"🎯 TP2: <code>{fmt(tps[1])}</code> (+{tp_pcts[1]:.2f}%)\n"
-        f"🎯 TP3: <code>{fmt(tps[2])}</code> (+{tp_pcts[2]:.2f}%)\n"
+        f"💵 모의 기준 진입가: <code>{fmt(entry)}</code>\n"
+        f"🛑 손절가: <code>{fmt(sl)}</code> ({sl_pct:.2f}%)\n"
+        f"{tp_data[0]}\n"
+        f"{tp_data[1]}\n"
+        f"{tp_data[2]}\n"
         "━━━━━━━━━━━━━━━━━━\n"
-        f"⚡ 추천 레버리지: <b>{sig['leverage']}x</b>\n"
-        f"🧠 점수: <b>{sig['score']}/10</b>\n"
+        f"⚡ 추천 레버리지: <b>{sig['leverage']}x</b> (계좌 위험 미반영 참고값)\n"
+        f"🧠 점수: <b>{sig['score']}/9</b>\n"
         f"📊 RSI {sig['rsi']:.1f} | ADX {sig['adx']:.1f} | 거래량 {sig['vr']:.2f}배\n"
         "🔎 근거: "+", ".join(sig["reasons"])+"\n"
-        f"🕒 KST: {datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"🕒 신호 기준봉 시각: {bar_time_kst}\n"
+        f"🕒 발송 시각: {send_time_kst}\n"
         "⚠️ 시그널 추적용 모의 기준이며 실제 주문은 실행하지 않습니다."
     )
     if not tg(msg): return False
@@ -321,11 +331,23 @@ def monitor(st):
                 if c["t"]<=p["last_bar"]: continue
                 long=p["side"]=="LONG"
                 
+                # 동일 캔들 내에서 TP와 SL이 모두 닿았을 때 보수적으로 손절/종료 우선 처리
+                stop_hit=(c["l"]<=p["sl"]) if long else (c["h"]>=p["sl"])
+                
                 hits=[]
                 for i,tp in enumerate(p["tp"],1):
                     hit=(c["h"]>=tp) if long else (c["l"]<=tp)
                     if hit: hits.append(i)
                 
+                if stop_hit and not (3 in hits):
+                    # 손절/본전 라인 터치 우선 (보수적 처리)
+                    if p["max_tp"]>=2: outcome="tp2_end"
+                    elif p["max_tp"]==1: outcome="tp1_end"
+                    else: outcome="initial_sl"
+                    close_position(st,p,outcome,p["sl"],c["t"])
+                    closed_any = True
+                    break
+
                 if 3 in hits:
                     close_position(st,p,"tp3",p["tp"][2],c["t"])
                     closed_any = True
@@ -341,7 +363,6 @@ def monitor(st):
                     tg(f"📊 <b>포지션 추적 알림</b>\n{p['symbol']} {p['side']}\n🎯 <b>TP1 도달</b> — 추세 관찰 중 (본전 스탑 전환)")
                     save_state(st)
 
-                stop_hit=(c["l"]<=p["sl"]) if long else (c["h"]>=p["sl"])
                 if stop_hit:
                     if p["max_tp"]>=2: outcome="tp2_end"
                     elif p["max_tp"]==1: outcome="tp1_end"
@@ -396,7 +417,9 @@ def get_status_msg(st):
         pnl_str = f"{sign}{pnl_pct:.2f}%"
         
         lines.append(f"<code>{i}. {p['symbol']}</code> {d}{lev_str}\n진입: <code>{fmt(entry)}</code> | 현재: <code>{fmt(cur_price)}</code>\n상태: {status} | 수익률: <b>{pnl_str}</b>")
-    lines.append(f"🕒 {datetime.now(KST).strftime('%m-%d %H:%M')} KST")
+    
+    current_query_time = datetime.now(KST).strftime('%m-%d %H:%M:%S')
+    lines.append(f"🕒 현재가 조회 시각: {current_query_time} KST")
     return "\n".join(lines)
 
 def report(st):
@@ -406,7 +429,7 @@ def report(st):
     total=len(h)
     wins=counts["tp3"]+counts["tp2_end"]+counts["tp1_end"]
     rate=100*wins/total if total else 0
-    return (f"📊 <b>시그널 누적 성과 통계</b>\n"
+    return (f"📊 <b>목표 도달 후 추적 종료 분류 통계</b>\n"
             "━━━━━━━━━━━━━━━━━━\n"
             f"총 종료 시그널: {total}건\n\n"
             f"🎯 TP3 종료: {counts['tp3']}건\n"
@@ -417,7 +440,7 @@ def report(st):
             f"🏆 분류상 승률: {rate:.1f}%\n"
             f"(TP 종료·본전 종료 {wins}건 / 초기 손절 {counts['initial_sl']}건)\n"
             f"현재 추적 중: {len(st['active'])}건\n"
-            "※ 신호 기준가 기반 모의 추적 통계이며 실제 계좌 수익률이 아닙니다.")
+            "※ 실현 계좌 수익률이 아닌 모의 시그널 목표 도달·종료 기록입니다.")
 
 def main():
     if not TOKEN or not CHAT:
