@@ -1,3 +1,4 @@
+
 from datetime import datetime, timedelta, timezone
 import json, os, time, math
 import requests
@@ -43,8 +44,6 @@ def tg(msg):
             f"https://api.telegram.org/bot{TOKEN}/sendMessage",
             json={"chat_id": CHAT, "text": msg, "parse_mode": "Markdown",
                   "disable_web_page_preview": True}, timeout=15)
-        # 💡 연속 알림 폭탄 방지를 위한 미세 딜레이 (1.5초)
-        time.sleep(1.5)
         if r.ok and r.json().get("ok"):
             return True
         print("TG ERROR:", r.text[:250])
@@ -95,6 +94,7 @@ def rsi(a, n=14):
     return 100.0 if l == 0 else 100 - 100 / (1 + g / l)
 
 
+# Candle format: timestamp, open, high, low, close, quote turnover
 def candles(contract, interval, limit=80):
     try:
         d = api("/candlesticks", {
@@ -207,6 +207,7 @@ def choose_pool(tickers):
             "change": change, "turnover": tv
         })
 
+    # 후보군을 합친 뒤 중복 제거하고 우선순위로 정렬한다.
     liquid = sorted(valid, key=lambda x: x["turnover"], reverse=True)[:35]
     movers = sorted(valid, key=lambda x: abs(x["change"]), reverse=True)[:35]
     pool = {x["contract"]: x for x in liquid + movers}
@@ -240,6 +241,7 @@ def analyze(x, btc):
     if p <= 0 or a / p > MAX_ATR_PCT or ax < MIN_ADX:
         return None
 
+    # 데이터가 없는 거래대금은 통과로 간주하지 않는다.
     avg_turn = sum(v[-11:-1]) / 10 if len(v) >= 11 else 0
     if avg_turn < 10000:
         return None
@@ -449,6 +451,7 @@ def monitor(s):
             tp2_hit = high >= p["tp2"] if long else low <= p["tp2"]
             tp3_hit = high >= p["tp3"] if long else low <= p["tp3"]
 
+            # 한 봉에서 SL과 TP가 모두 닿으면 보수적으로 SL을 먼저 처리한다.
             if stop_hit:
                 hit = p.get("max_tp_hit", 0)
                 if hit >= 2:
@@ -486,6 +489,7 @@ def monitor(s):
                 tg(result_msg(p, "TP1"))
                 changed = True
 
+            # TP1을 기록한 봉이 끝난 뒤 다음 완료 봉에서 본전 스탑 적용.
             if (p.get("max_tp_hit", 0) >= 1
                     and not p.get("be_adjusted", False)
                     and t > p.get("tp1_bar_time", 0)):
