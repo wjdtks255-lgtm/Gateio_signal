@@ -1,3 +1,1 @@
-{
-
-}
+{"positions":{"OPENAI":{"symbol":"OPENAI","direction":"LONG","entry":1504.21,"sl":1492.17632,"tp1":1516.24368,"tp2":1525.8706240000001,"tp3":1537.9043040000001,"tp1_hit":false,"tp1_confirmed":false,"tp1_bar_time":0,"hit":[],"entry_time":1792627546.1123445,"entry_bar":1792627200,"last_bar":1792627200}},"signals":{"OPENAI:LONG":1792627546.1123445},"sl_penalties":{},"stats":{"wins":0,"breakeven":0,"losses":0,"timeouts":0,"partial_tp1_profit":0.0}}
