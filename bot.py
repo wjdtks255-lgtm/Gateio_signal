@@ -162,7 +162,7 @@ def tickers():
     vr={x["contract"]:i for i,x in enumerate(
         sorted(good,key=lambda z:z["_vol"],reverse=True))}
     cr={x["contract"]:i for i,x in enumerate(
-        sorted(good,key=lambda z:abs(z["_chg"]),reverse=True))}
+        sorted(good,key=lambda z:abs(z["_chg"],reverse=True))}
     good.sort(key=lambda x:0.65*vr[x["contract"]]+
               0.35*cr[x["contract"]])
     return good[:MAX_SCAN]
@@ -240,9 +240,14 @@ def analyze(symbol,btc_trend):
     if risk/price>MAX_RISK_PCT: return None
     sl=price-risk if long else price+risk
     targets=[price+(1 if long else -1)*risk*r for r in TP_R]
+    
+    # [복구] 변동성(손절 폭 %) 기반 추천 레버리지 계산 (2배 ~ 20배 제한)
+    risk_pct = risk / price
+    rec_lev = max(2, min(20, round(0.15 / risk_pct)))
+
     return {"symbol":symbol,"side":direction,"entry":price,"sl":sl,
             "tp":targets,"risk":risk,"score":score,"rsi":rr,
-            "adx":dx,"vr":vr,"reasons":reasons,"bar":c["t"]}
+            "adx":dx,"vr":vr,"reasons":reasons,"bar":c["t"],"leverage":rec_lev}
 
 def fmt(x):
     return f"{x:.8g}"
@@ -250,17 +255,29 @@ def fmt(x):
 def send_signal(sig,st):
     sym=sig["symbol"]
     side=sig["side"]
+    entry=sig["entry"]
+    tps=sig["tp"]
+    
+    tp_pcts = []
+    for tp in tps:
+        if side == "LONG":
+            pct = ((tp - entry) / entry) * 100
+        else:
+            pct = ((entry - tp) / entry) * 100
+        tp_pcts.append(pct)
+
     msg=(
         "🚨 <b>GATE.IO FUTURES SIGNAL</b>\n"
         "━━━━━━━━━━━━━━━━━━\n"
         f"📌 계약: <b>{sym}</b>\n"
         f"📈 방향: <b>{side}</b>\n"
-        f"💵 기준 진입가: <code>{fmt(sig['entry'])}</code>\n"
+        f"💵 기준 진입가: <code>{fmt(entry)}</code>\n"
         f"🛑 손절가: <code>{fmt(sig['sl'])}</code>\n"
-        f"🎯 TP1: <code>{fmt(sig['tp'][0])}</code>\n"
-        f"🎯 TP2: <code>{fmt(sig['tp'][1])}</code>\n"
-        f"🎯 TP3: <code>{fmt(sig['tp'][2])}</code>\n"
+        f"🎯 TP1: <code>{fmt(tps[0])}</code> (+{tp_pcts[0]:.2f}%)\n"
+        f"🎯 TP2: <code>{fmt(tps[1])}</code> (+{tp_pcts[1]:.2f}%)\n"
+        f"🎯 TP3: <code>{fmt(tps[2])}</code> (+{tp_pcts[2]:.2f}%)\n"
         "━━━━━━━━━━━━━━━━━━\n"
+        f"⚡ 추천 레버리지: <b>{sig['leverage']}x</b>\n"
         f"🧠 점수: <b>{sig['score']}/10</b>\n"
         f"📊 RSI {sig['rsi']:.1f} | ADX {sig['adx']:.1f} | 거래량 {sig['vr']:.2f}배\n"
         "🔎 근거: "+", ".join(sig["reasons"])+"\n"
@@ -272,7 +289,7 @@ def send_signal(sig,st):
         "symbol":sym,"side":side,"entry":sig["entry"],"sl":sig["sl"],
         "tp":sig["tp"],"risk":sig["risk"],"score":sig["score"],
         "entry_time":now(),"entry_bar":sig["bar"],"last_bar":sig["bar"],
-        "max_tp":0,"rsi":sig["rsi"],"adx":sig["adx"]})
+        "max_tp":0,"rsi":sig["rsi"],"adx":sig["adx"],"leverage":sig["leverage"]})
     st["last_signal"][sym]=now()
     save_state(st)
     return True
@@ -357,8 +374,8 @@ def get_status_msg(st):
         hit=p.get("max_tp",0)
         status="TP2 도달" if hit==2 else "TP1 도달" if hit==1 else "추적 중"
         d="🟢 LONG" if p.get("side")=="LONG" else "🔴 SHORT"
+        lev_str = f" | 레버리지: {p.get('leverage', 5)}x" if p.get('leverage') else ""
         
-        # 실시간 현재가 조회 및 수익률 계산
         cur_price = p["entry"]
         try:
             t_data = api("/tickers", {"contract": p["symbol"]})
@@ -379,7 +396,7 @@ def get_status_msg(st):
         sign = "+" if pnl_pct >= 0 else ""
         pnl_str = f"{sign}{pnl_pct:.2f}%"
         
-        lines.append(f"<code>{i}. {p['symbol']}</code> {d}\n진입: <code>{fmt(entry)}</code> | 현재: <code>{fmt(cur_price)}</code>\n상태: {status} | 수익률: <b>{pnl_str}</b>")
+        lines.append(f"<code>{i}. {p['symbol']}</code> {d}{lev_str}\n진입: <code>{fmt(entry)}</code> | 현재: <code>{fmt(cur_price)}</code>\n상태: {status} | 수익률: <b>{pnl_str}</b>")
     lines.append(f"🕒 {datetime.now(KST).strftime('%m-%d %H:%M')} KST")
     return "\n".join(lines)
 
