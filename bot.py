@@ -1,4 +1,3 @@
-
 import os,json,time,math,requests
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
@@ -160,7 +159,6 @@ def tickers():
         x["_vol"]=vol
         x["_chg"]=change
         good.append(x)
-    # Liquidity and daily movement both affect selection.
     vr={x["contract"]:i for i,x in enumerate(
         sorted(good,key=lambda z:z["_vol"],reverse=True))}
     cr={x["contract"]:i for i,x in enumerate(
@@ -192,7 +190,6 @@ def analyze(symbol,btc_trend):
     rr=rsi(close)
     if price<=0 or a<=0: return None
 
-    # Avoid chasing prices far from the completed candle.
     if abs(price-c["c"])>MAX_ENTRY_SLIPPAGE_ATR*a: return None
     if dx<MIN_ADX: return None
 
@@ -202,7 +199,6 @@ def analyze(symbol,btc_trend):
     long=t1==1
     direction="LONG" if long else "SHORT"
 
-    # Use only earlier completed candles for breakout levels.
     prior=m[-21:-1]
     if len(prior)<20: return None
     high=max(x["h"] for x in prior)
@@ -254,7 +250,6 @@ def fmt(x):
 def send_signal(sig,st):
     sym=sig["symbol"]
     side=sig["side"]
-    link="https://www.gate.com/futures/USDT/"+sym.replace("_","_")
     msg=(
         "🚨 <b>GATE.IO FUTURES SIGNAL</b>\n"
         "━━━━━━━━━━━━━━━━━━\n"
@@ -302,20 +297,20 @@ def close_position(st,p,outcome,price,bar):
     save_state(st)
 
 def monitor(st):
+    closed_any = False
     for p in list(st["active"]):
         try:
             cs=candles(p["symbol"],"15m",100)
             for c in cs:
                 if c["t"]<=p["last_bar"]: continue
                 long=p["side"]=="LONG"
-                # Conservative handling: stop is checked before targets
-                # if both could have been hit inside the same 15m candle.
                 stop_hit=(c["l"]<=p["sl"]) if long else (c["h"]>=p["sl"])
                 if stop_hit:
                     if p["max_tp"]>=2: outcome="tp2_end"
                     elif p["max_tp"]==1: outcome="tp1_end"
                     else: outcome="initial_sl"
                     close_position(st,p,outcome,p["sl"],c["t"])
+                    closed_any = True
                     break
 
                 hits=[]
@@ -324,6 +319,7 @@ def monitor(st):
                     if hit: hits.append(i)
                 if 3 in hits:
                     close_position(st,p,"tp3",p["tp"][2],c["t"])
+                    closed_any = True
                     break
                 if 2 in hits:
                     p["max_tp"]=max(p["max_tp"],2)
@@ -335,14 +331,29 @@ def monitor(st):
                 p["last_bar"]=c["t"]
                 if now()-p["entry_time"]>=MAX_HOLD:
                     close_position(st,p,"timeout",c["c"],c["t"])
+                    closed_any = True
                     break
             else:
                 if now()-p["entry_time"]>=MAX_HOLD and cs:
                     close_position(st,p,"timeout",cs[-1]["c"],cs[-1]["t"])
+                    closed_any = True
                     continue
                 save_state(st)
         except Exception as e:
             print("Monitor error",p.get("symbol"),repr(e))
+    return closed_any
+
+def get_status_msg(st):
+    if not st["active"]:
+        return "📊 <b>현재 활성 시그널 없음</b>\n모든 슬롯이 대기 중입니다."
+    lines=["📊 <b>현재 활성 시그널</b>", "━━━━━━━━━━━━━━━━━━"]
+    for i,p in enumerate(st["active"],1):
+        hit=p.get("max_tp",0)
+        status="TP2 도달" if hit==2 else "TP1 도달" if hit==1 else "추적 중"
+        d="🟢 LONG" if p.get("side")=="LONG" else "🔴 SHORT"
+        lines.append(f"<code>{i}. {p['symbol']}</code> {d}\n진입: <code>{fmt(p.get('entry',0))}</code> | {status}")
+    lines.append(f"🕒 {datetime.now(KST).strftime('%m-%d %H:%M')} KST")
+    return "\n".join(lines)
 
 def report(st):
     h=st["history"]
@@ -351,8 +362,6 @@ def report(st):
     total=len(h)
     wins=counts["tp3"]+counts["tp2_end"]+counts["tp1_end"]
     rate=100*wins/total if total else 0
-    print("Closed:",total,"Active:",len(st["active"]),
-          "Counts:",counts,"Classified win rate:",round(rate,1))
     return (f"📊 <b>시그널 누적 성과 통계</b>\n"
             "━━━━━━━━━━━━━━━━━━\n"
             f"총 종료 시그널: {total}건\n\n"
@@ -371,8 +380,14 @@ def main():
         raise RuntimeError("GATE_TELEGRAM_TOKEN 및 GATE_TELEGRAM_CHAT_ID Secrets를 확인하세요.")
     st=load_state()
     print("Gate.io signal bot start",datetime.now(KST).isoformat())
-    monitor(st)
+    
+    # 1. 기존 포지션 모니터링 (종료 여부 체크)
+    position_closed = monitor(st)
+
     if len(st["active"])>=MAX_SLOTS:
+        if position_closed:
+            tg(get_status_msg(st))
+            tg(report(st))
         save_state(st)
         return
 
@@ -381,8 +396,12 @@ def main():
         btc_trend=trend(btc)
         if not btc_trend:
             print("BTC trend unclear; skip new entries")
+            if position_closed:
+                tg(get_status_msg(st))
+                tg(report(st))
             save_state(st)
             return
+            
         pool=tickers()
         print("Candidates:",len(pool),"BTC trend:",btc_trend)
         results=[]
@@ -398,13 +417,27 @@ def main():
             time.sleep(0.08)
 
         results.sort(key=lambda x:(x["score"],x["adx"],x["vr"]),reverse=True)
+        
+        new_sent = 0
         for sig in results:
             if len(st["active"])>=MAX_SLOTS: break
-            send_signal(sig,st)
+            if send_signal(sig,st):
+                new_sent += 1
+                
+        # [핵심 수정] 신규 시그널이 진입했거나(new_sent > 0), 포지션이 종료되었을 때(position_closed)
+        # 활성 슬롯 현황판과 누적 성과 통계를 무조건 전송하도록 보장합니다.
+        if new_sent > 0 or position_closed:
+            print("Sending status and stats update due to new signal or position closure.")
+            tg(get_status_msg(st))
+            tg(report(st))
+            
         save_state(st)
-        print("Qualified:",len(results),"Active:",len(st["active"]))
+        print("Qualified:",len(results),"Active:",len(st["active"]), "New Sent:", new_sent)
     except Exception as e:
         print("Scan error:",repr(e))
+        if position_closed:
+            tg(get_status_msg(st))
+            tg(report(st))
         raise
 
 if __name__=="__main__":
