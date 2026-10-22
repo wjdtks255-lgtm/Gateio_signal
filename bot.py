@@ -304,6 +304,27 @@ def monitor(st):
             for c in cs:
                 if c["t"]<=p["last_bar"]: continue
                 long=p["side"]=="LONG"
+                
+                hits=[]
+                for i,tp in enumerate(p["tp"],1):
+                    hit=(c["h"]>=tp) if long else (c["l"]<=tp)
+                    if hit: hits.append(i)
+                
+                if 3 in hits:
+                    close_position(st,p,"tp3",p["tp"][2],c["t"])
+                    closed_any = True
+                    break
+                if 2 in hits and p["max_tp"]<2:
+                    p["max_tp"]=2
+                    p["sl"]=p["entry"]
+                    tg(f"📊 <b>포지션 추적 알림</b>\n{p['symbol']} {p['side']}\n🎯 <b>TP2 도달</b> — 남은 시그널 추적 중 (본전 스탑 전환)")
+                    save_state(st)
+                if 1 in hits and p["max_tp"]<1:
+                    p["max_tp"]=1
+                    p["sl"]=p["entry"]
+                    tg(f"📊 <b>포지션 추적 알림</b>\n{p['symbol']} {p['side']}\n🎯 <b>TP1 도달</b> — 추세 관찰 중 (본전 스탑 전환)")
+                    save_state(st)
+
                 stop_hit=(c["l"]<=p["sl"]) if long else (c["h"]>=p["sl"])
                 if stop_hit:
                     if p["max_tp"]>=2: outcome="tp2_end"
@@ -312,21 +333,6 @@ def monitor(st):
                     close_position(st,p,outcome,p["sl"],c["t"])
                     closed_any = True
                     break
-
-                hits=[]
-                for i,tp in enumerate(p["tp"],1):
-                    hit=(c["h"]>=tp) if long else (c["l"]<=tp)
-                    if hit: hits.append(i)
-                if 3 in hits:
-                    close_position(st,p,"tp3",p["tp"][2],c["t"])
-                    closed_any = True
-                    break
-                if 2 in hits:
-                    p["max_tp"]=max(p["max_tp"],2)
-                    p["sl"]=p["entry"]
-                elif 1 in hits and p["max_tp"]<1:
-                    p["max_tp"]=1
-                    p["sl"]=p["entry"]
 
                 p["last_bar"]=c["t"]
                 if now()-p["entry_time"]>=MAX_HOLD:
@@ -351,7 +357,29 @@ def get_status_msg(st):
         hit=p.get("max_tp",0)
         status="TP2 도달" if hit==2 else "TP1 도달" if hit==1 else "추적 중"
         d="🟢 LONG" if p.get("side")=="LONG" else "🔴 SHORT"
-        lines.append(f"<code>{i}. {p['symbol']}</code> {d}\n진입: <code>{fmt(p.get('entry',0))}</code> | {status}")
+        
+        # 실시간 현재가 조회 및 수익률 계산
+        cur_price = p["entry"]
+        try:
+            t_data = api("/tickers", {"contract": p["symbol"]})
+            if isinstance(t_data, list) and len(t_data) > 0:
+                cur_price = num(t_data[0].get("last", p["entry"]))
+        except Exception:
+            pass
+            
+        entry = p["entry"]
+        if entry > 0:
+            if p.get("side") == "LONG":
+                pnl_pct = ((cur_price - entry) / entry) * 100
+            else:
+                pnl_pct = ((entry - cur_price) / entry) * 100
+        else:
+            pnl_pct = 0.0
+            
+        sign = "+" if pnl_pct >= 0 else ""
+        pnl_str = f"{sign}{pnl_pct:.2f}%"
+        
+        lines.append(f"<code>{i}. {p['symbol']}</code> {d}\n진입: <code>{fmt(entry)}</code> | 현재: <code>{fmt(cur_price)}</code>\n상태: {status} | 수익률: <b>{pnl_str}</b>")
     lines.append(f"🕒 {datetime.now(KST).strftime('%m-%d %H:%M')} KST")
     return "\n".join(lines)
 
@@ -381,7 +409,6 @@ def main():
     st=load_state()
     print("Gate.io signal bot start",datetime.now(KST).isoformat())
     
-    # 1. 기존 포지션 모니터링 (종료 여부 체크)
     position_closed = monitor(st)
 
     if len(st["active"])>=MAX_SLOTS:
@@ -424,8 +451,6 @@ def main():
             if send_signal(sig,st):
                 new_sent += 1
                 
-        # [핵심 수정] 신규 시그널이 진입했거나(new_sent > 0), 포지션이 종료되었을 때(position_closed)
-        # 활성 슬롯 현황판과 누적 성과 통계를 무조건 전송하도록 보장합니다.
         if new_sent > 0 or position_closed:
             print("Sending status and stats update due to new signal or position closure.")
             tg(get_status_msg(st))
