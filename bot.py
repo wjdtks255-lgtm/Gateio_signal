@@ -148,10 +148,13 @@ def adx(cs,n=14):
 def tickers():
     data=api("/tickers")
     good=[]
+    excluded_keywords = ["XAU", "XAUT", "XAG", "QQQ", "SPY", "NBIS", "ZHIPU", "OPENAI", "AAOI", "AAPL", "TSLA", "NVDA", "MSFT", "GOOG", "META"]
     for x in data:
         sym=x.get("contract","")
         if not sym.endswith("_USDT"): continue
         if x.get("in_delisting") is True: continue
+        if any(exc in sym for exc in excluded_keywords): continue
+        
         vol=num(x.get("volume_24h_quote",x.get("volume_24h_usd",0)))
         price=num(x.get("last"))
         change=num(x.get("change_percentage"))
@@ -184,7 +187,6 @@ def analyze(symbol,btc_trend):
     if not e50 or e20[-1] is None: return None
 
     c=m[-1]; prev=m[-2]
-    # 진입가를 실시간 변동가 대신 완성된 15m 봉 종가(c["c"])로 고정하여 추적 일관성 확보
     price = c["c"]
     a=atr(m)
     dx=adx(m)
@@ -225,7 +227,6 @@ def analyze(symbol,btc_trend):
     score=0
     reasons=[]
     score+=2; reasons.append("1H·15M 추세 일치")
-    # 방향별 명확한 문구 구분 적용
     reasons.append("눌림 후 반등" if long else "저항 되돌림 후 하락")
     score+=2
     if rsi_ok: score+=1; reasons.append(f"RSI {rr:.1f}")
@@ -331,7 +332,6 @@ def monitor(st):
                 if c["t"]<=p["last_bar"]: continue
                 long=p["side"]=="LONG"
                 
-                # 동일 캔들 내에서 TP와 SL이 모두 닿았을 때 보수적으로 손절/종료 우선 처리
                 stop_hit=(c["l"]<=p["sl"]) if long else (c["h"]>=p["sl"])
                 
                 hits=[]
@@ -340,7 +340,6 @@ def monitor(st):
                     if hit: hits.append(i)
                 
                 if stop_hit and not (3 in hits):
-                    # 손절/본전 라인 터치 우선 (보수적 처리)
                     if p["max_tp"]>=2: outcome="tp2_end"
                     elif p["max_tp"]==1: outcome="tp1_end"
                     else: outcome="initial_sl"
@@ -427,18 +426,27 @@ def report(st):
     counts={k:sum(x.get("outcome")==k for x in h) for k in
             ("tp3","tp2_end","tp1_end","initial_sl","timeout")}
     total=len(h)
-    wins=counts["tp3"]+counts["tp2_end"]+counts["tp1_end"]
-    rate=100*wins/total if total else 0
+    
+    # 승(Win): tp3, tp2_end (TP2는 TP1을 거쳐 도달 후 본전 종료이므로 승으로 인정)
+    # 무(Draw): tp1_end (1차 본전 종료 - 승률 계산에서 제외)
+    # 패(Loss): initial_sl, timeout
+    wins=counts["tp3"]+counts["tp2_end"]
+    draws=counts["tp1_end"]
+    losses=counts["initial_sl"]+counts["timeout"]
+    
+    decisive_total = total - draws
+    rate = 100 * wins / decisive_total if decisive_total else 0
+    
     return (f"📊 <b>목표 도달 후 추적 종료 분류 통계</b>\n"
             "━━━━━━━━━━━━━━━━━━\n"
             f"총 종료 시그널: {total}건\n\n"
-            f"🎯 TP3 종료: {counts['tp3']}건\n"
-            f"🎯 TP2 이후 종료: {counts['tp2_end']}건\n"
-            f"🎯 TP1 이후 본전 종료: {counts['tp1_end']}건\n"
-            f"🛑 초기 손절 종료: {counts['initial_sl']}건\n"
-            f"⏱️ 시간 종료: {counts['timeout']}건\n\n"
-            f"🏆 분류상 승률: {rate:.1f}%\n"
-            f"(TP 종료·본전 종료 {wins}건 / 초기 손절 {counts['initial_sl']}건)\n"
+            f"🎯 TP3 종료 (승): {counts['tp3']}건\n"
+            f"🎯 TP2 이후 종료 (승): {counts['tp2_end']}건\n"
+            f"🤝 1차 본전 종료 (무): {counts['tp1_end']}건\n"
+            f"🛑 초기 손절 종료 (패): {counts['initial_sl']}건\n"
+            f"⏱️ 시간 종료 (패): {counts['timeout']}건\n\n"
+            f"🏆 승률 (승/패 기준): {rate:.1f}%\n"
+            f"(승 {wins}건 / 패 {losses}건 | 무 {draws}건 제외)\n"
             f"현재 추적 중: {len(st['active'])}건\n"
             "※ 실현 계좌 수익률이 아닌 모의 시그널 목표 도달·종료 기록입니다.")
 
