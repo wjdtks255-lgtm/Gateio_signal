@@ -1,1 +1,1 @@
-{"active":[],"history":[],"cooldown":{},"last_signal":{}}
+{"active":[{"symbol":"DOOD_USDT","side":"SHORT","entry":0.001972,"sl":0.0020219889834246145,"tp":[0.001922011016575385,0.0018820198298356934,0.001832030846411079],"risk":4.998898342461462e-05,"score":8,"entry_time":1792746074,"entry_bar":1792745100,"last_bar":1792745100,"max_tp":0,"rsi":47.62194496229421,"adx":21.42490439159555,"leverage":6}],"history":[],"cooldown":{},"last_signal":{"DOOD_USDT":1792746074}}
