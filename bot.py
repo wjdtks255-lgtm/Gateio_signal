@@ -9,8 +9,7 @@ CHAT=os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID","")
 KST=timezone(timedelta(hours=9))
 
 MAX_SLOTS=8
-MAX_SCAN=70
-MIN_TURNOVER=5_000_000
+MIN_TURNOVER=3_000_000  # 알트코인 기회 포착을 위해 최소 거래대금을 300만 USDT로 유연하게 조정
 MIN_SCORE=8
 MIN_ADX=16
 MAX_RISK_PCT=0.035
@@ -148,7 +147,7 @@ def adx(cs,n=14):
 def tickers():
     data=api("/tickers")
     good=[]
-    # 금, 나스닥, 주식 등 전통 금융 자산 선물 포함 전수 스캔 복구
+    # 개수 제한 없이 거래대금 조건을 만족하는 모든 USDT 선물 마켓 (알트코인, 원자재, 지수/주식) 전수 스캔
     for x in data:
         sym=x.get("contract","")
         if not sym.endswith("_USDT"): continue
@@ -161,13 +160,10 @@ def tickers():
         x["_vol"]=vol
         x["_chg"]=change
         good.append(x)
-    vr={x["contract"]:i for i,x in enumerate(
-        sorted(good,key=lambda z:z["_vol"],reverse=True))}
-    cr={x["contract"]:i for i,x in enumerate(
-        sorted(good,key=lambda z:abs(z["_chg"]),reverse=True))}
-    good.sort(key=lambda x:0.65*vr[x["contract"]]+
-              0.35*cr[x["contract"]])
-    return good[:MAX_SCAN]
+        
+    # 거래대금순 정렬하여 반환 (개수 자르기 없이 전체 반환)
+    good.sort(key=lambda x:x["_vol"], reverse=True)
+    return good
 
 def trend(cs):
     closes=[x["c"] for x in cs]
@@ -473,7 +469,7 @@ def main():
             return
             
         pool=tickers()
-        print("Candidates:",len(pool),"BTC trend:",btc_trend)
+        print("Candidates (All Markets):",len(pool),"BTC trend:",btc_trend)
         results=[]
         for t in pool:
             sym=t["contract"]
@@ -484,7 +480,7 @@ def main():
                 if sig: results.append(sig)
             except Exception as e:
                 print("Analyze error",sym,repr(e))
-            time.sleep(0.08)
+            time.sleep(0.02)  # 전수 스캔 속도 최적화
 
         results.sort(key=lambda x:(x["score"],x["adx"],x["vr"]),reverse=True)
         
