@@ -9,9 +9,9 @@ CHAT=os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID","")
 KST=timezone(timedelta(hours=9))
 
 MAX_SLOTS=8
-MIN_TURNOVER=3_000_000
-MIN_SCORE=8
-MIN_ADX=16
+MIN_TURNOVER=10_000_000  # 1천만 USDT 이상 유동성 좋은 종목만 선별
+MIN_SCORE=9              # 모든 조건 만점(9점) 만족 시에만 진입
+MIN_ADX=22               # ADX 추세 강도 기준 대폭 강화 (횡보장 차단)
 MAX_RISK_PCT=0.035
 MAX_ENTRY_DISTANCE_ATR=1.8
 MAX_ENTRY_SLIPPAGE_ATR=0.45
@@ -213,15 +213,15 @@ def analyze(symbol,btc_trend):
     near=abs(c["c"]-e20[-1])<=0.85*a
     if long:
         pullback=near and prev["l"]<=e20[-2] and c["c"]>e20[-1] and c["c"]>c["o"]
-        breakout=c["c"]>high and vr>=1.2
-        rsi_ok=48<=rr<=68
-        candle_ok=(c["c"]-c["l"])/max(c["h"]-c["l"],1e-12)>=0.65
+        breakout=c["c"]>high and vr>=1.25  # 거래량 조건 강화
+        rsi_ok=50<=rr<=65                 # RSI 범위 슬림화
+        candle_ok=(c["c"]-c["l"])/max(c["h"]-c["l"],1e-12)>=0.70  # 캔들 몸통 비중 강화
         btc_ok=btc_trend>=0
     else:
         pullback=near and prev["h"]>=e20[-2] and c["c"]<e20[-1] and c["c"]<c["o"]
-        breakout=c["c"]<low and vr>=1.2
-        rsi_ok=32<=rr<=52
-        candle_ok=(c["h"]-c["c"])/max(c["h"]-c["l"],1e-12)>=0.65
+        breakout=c["c"]<low and vr>=1.25
+        rsi_ok=35<=rr<=50
+        candle_ok=(c["h"]-c["c"])/max(c["h"]-c["l"],1e-12)>=0.70
         btc_ok=btc_trend<=0
 
     if not (pullback or breakout): return None
@@ -232,8 +232,8 @@ def analyze(symbol,btc_trend):
     reasons.append("눌림 후 반등" if long else "저항 되돌림 후 하락")
     score+=2
     if rsi_ok: score+=1; reasons.append(f"RSI {rr:.1f}")
-    if dx>=20: score+=1; reasons.append(f"ADX {dx:.1f}")
-    if vr>=1.2: score+=1; reasons.append(f"거래량 {vr:.2f}배")
+    if dx>=MIN_ADX: score+=1; reasons.append(f"ADX {dx:.1f}")
+    if vr>=1.25: score+=1; reasons.append(f"거래량 {vr:.2f}배")
     if candle_ok: score+=1; reasons.append("캔들 종가 위치 양호")
     if btc_ok: score+=1; reasons.append("BTC 방향 필터 통과")
     if not rsi_ok or not btc_ok or score<MIN_SCORE: return None
@@ -279,7 +279,7 @@ def send_signal(sig,st):
     send_time_kst = datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
 
     msg=(
-        "🚨 <b>GATE.IO FUTURES SIGNAL</b>\n"
+        "🚨 <b>GATE.IO FUTURES SIGNAL (PRO)</b>\n"
         "━━━━━━━━━━━━━━━━━━\n"
         f"📌 계약: <b>{sym}</b> ({asset_type})\n"
         f"📈 방향: <b>{side}</b>\n"
@@ -290,7 +290,7 @@ def send_signal(sig,st):
         f"{tp_data[2]}\n"
         "━━━━━━━━━━━━━━━━━━\n"
         f"⚡ 추천 레버리지: <b>{sig['leverage']}x</b> (계좌 위험 미반영 참고값)\n"
-        f"🧠 점수: <b>{sig['score']}/9</b>\n"
+        f"🧠 점수: <b>{sig['score']}/9</b> (고품질 필터 적용)\n"
         f"📊 RSI {sig['rsi']:.1f} | ADX {sig['adx']:.1f} | 거래량 {sig['vr']:.2f}배\n"
         "🔎 근거: "+", ".join(sig["reasons"])+"\n"
         f"🕒 신호 기준봉 시각: {bar_time_kst}\n"
@@ -441,7 +441,7 @@ def report(st):
     decisive_total = total - draws
     rate = 100 * wins / decisive_total if decisive_total else 0
     
-    return (f"📊 <b>목표 도달 후 추적 종료 분류 통계</b>\n"
+    return (f"📊 <b>목표 도달 후 추적 종료 분류 통계 (PRO)</b>\n"
             "━━━━━━━━━━━━━━━━━━\n"
             f"총 종료 시그널: {total}건\n\n"
             f"🎯 TP3 종료 (승): {counts['tp3']}건\n"
@@ -458,7 +458,7 @@ def main():
     if not TOKEN or not CHAT:
         raise RuntimeError("GATE_TELEGRAM_TOKEN 및 GATE_TELEGRAM_CHAT_ID Secrets를 확인하세요.")
     st=load_state()
-    print("Gate.io signal bot start",datetime.now(KST).isoformat())
+    print("Gate.io signal bot start (PRO)",datetime.now(KST).isoformat())
     
     position_closed = monitor(st)
 
@@ -481,7 +481,7 @@ def main():
             return
             
         pool=tickers()
-        print("Candidates (All Markets):",len(pool),"BTC trend:",btc_trend)
+        print("Candidates (Filtered PRO Pool):",len(pool),"BTC trend:",btc_trend)
         results=[]
         for t in pool:
             sym=t["contract"]
