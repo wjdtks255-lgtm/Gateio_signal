@@ -148,12 +148,11 @@ def adx(cs,n=14):
 def tickers():
     data=api("/tickers")
     good=[]
-    excluded_keywords = ["XAU", "XAUT", "XAG", "QQQ", "SPY", "NBIS", "ZHIPU", "OPENAI", "AAOI", "AAPL", "TSLA", "NVDA", "MSFT", "GOOG", "META"]
+    # 금, 나스닥, 주식 등 전통 금융 자산 선물 포함 전수 스캔 복구
     for x in data:
         sym=x.get("contract","")
         if not sym.endswith("_USDT"): continue
         if x.get("in_delisting") is True: continue
-        if any(exc in sym for exc in excluded_keywords): continue
         
         vol=num(x.get("volume_24h_quote",x.get("volume_24h_usd",0)))
         price=num(x.get("last"))
@@ -427,9 +426,6 @@ def report(st):
             ("tp3","tp2_end","tp1_end","initial_sl","timeout")}
     total=len(h)
     
-    # 승(Win): tp3, tp2_end (TP2는 TP1을 거쳐 도달 후 본전 종료이므로 승으로 인정)
-    # 무(Draw): tp1_end (1차 본전 종료 - 승률 계산에서 제외)
-    # 패(Loss): initial_sl, timeout
     wins=counts["tp3"]+counts["tp2_end"]
     draws=counts["tp1_end"]
     losses=counts["initial_sl"]+counts["timeout"]
