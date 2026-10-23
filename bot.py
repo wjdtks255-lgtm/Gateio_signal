@@ -9,7 +9,7 @@ CHAT=os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID","")
 KST=timezone(timedelta(hours=9))
 
 MAX_SLOTS=8
-MIN_TURNOVER=3_000_000  # 알트코인 기회 포착을 위해 최소 거래대금을 300만 USDT로 유연하게 조정
+MIN_TURNOVER=3_000_000
 MIN_SCORE=8
 MIN_ADX=16
 MAX_RISK_PCT=0.035
@@ -69,6 +69,15 @@ def num(x,default=0.0):
         return y if math.isfinite(y) else default
     except Exception:
         return default
+
+def get_asset_type(symbol):
+    sym = symbol.upper()
+    if any(k in sym for k in ["XAU", "XAG", "XAUT", "OIL", "COPPER"]):
+        return "원자재·귀금속"
+    elif any(k in sym for k in ["QQQ", "SPY", "SNDK", "AAPL", "TSLA", "NVDA", "MSFT", "GOOG", "META", "AMZN", "NFLX", "NBIS", "AAOI"]):
+        return "미국 주식·지수"
+    else:
+        return "암호화폐"
 
 def candles(symbol,interval,limit=100):
     rows=api("/candlesticks",{
@@ -147,7 +156,6 @@ def adx(cs,n=14):
 def tickers():
     data=api("/tickers")
     good=[]
-    # 개수 제한 없이 거래대금 조건을 만족하는 모든 USDT 선물 마켓 (알트코인, 원자재, 지수/주식) 전수 스캔
     for x in data:
         sym=x.get("contract","")
         if not sym.endswith("_USDT"): continue
@@ -161,7 +169,6 @@ def tickers():
         x["_chg"]=change
         good.append(x)
         
-    # 거래대금순 정렬하여 반환 (개수 자르기 없이 전체 반환)
     good.sort(key=lambda x:x["_vol"], reverse=True)
     return good
 
@@ -252,6 +259,7 @@ def send_signal(sig,st):
     entry=sig["entry"]
     tps=sig["tp"]
     sl=sig["sl"]
+    asset_type = get_asset_type(sym)
     
     if side == "LONG":
         sl_pct = ((sl - entry) / entry) * 100
@@ -273,7 +281,7 @@ def send_signal(sig,st):
     msg=(
         "🚨 <b>GATE.IO FUTURES SIGNAL</b>\n"
         "━━━━━━━━━━━━━━━━━━\n"
-        f"📌 계약: <b>{sym}</b>\n"
+        f"📌 계약: <b>{sym}</b> ({asset_type})\n"
         f"📈 방향: <b>{side}</b>\n"
         f"💵 모의 기준 진입가: <code>{fmt(entry)}</code>\n"
         f"🛑 손절가: <code>{fmt(sl)}</code> ({sl_pct:.2f}%)\n"
@@ -312,7 +320,8 @@ def close_position(st,p,outcome,price,bar):
     labels={"tp3":"TP3 목표 도달","tp2_end":"TP2 이후 본전 종료",
             "tp1_end":"TP1 이후 본전 종료","initial_sl":"초기 손절",
             "timeout":"시간 종료"}
-    msg=(f"📊 <b>시그널 종료</b>\n{p['symbol']} {p['side']}\n"
+    asset_type = get_asset_type(p['symbol'])
+    msg=(f"📊 <b>시그널 종료</b>\n{p['symbol']} ({asset_type}) {p['side']}\n"
          f"결과: <b>{labels[outcome]}</b>\n"
          f"진입: {fmt(p['entry'])} → 종료 기준: {fmt(price)}")
     tg(msg)
@@ -349,12 +358,14 @@ def monitor(st):
                 if 2 in hits and p["max_tp"]<2:
                     p["max_tp"]=2
                     p["sl"]=p["entry"]
-                    tg(f"📊 <b>포지션 추적 알림</b>\n{p['symbol']} {p['side']}\n🎯 <b>TP2 도달</b> — 남은 시그널 추적 중 (본전 스탑 전환)")
+                    asset_type = get_asset_type(p['symbol'])
+                    tg(f"📊 <b>포지션 추적 알림</b>\n{p['symbol']} ({asset_type}) {p['side']}\n🎯 <b>TP2 도달</b> — 남은 시그널 추적 중 (본전 스탑 전환)")
                     save_state(st)
                 if 1 in hits and p["max_tp"]<1:
                     p["max_tp"]=1
                     p["sl"]=p["entry"]
-                    tg(f"📊 <b>포지션 추적 알림</b>\n{p['symbol']} {p['side']}\n🎯 <b>TP1 도달</b> — 추세 관찰 중 (본전 스탑 전환)")
+                    asset_type = get_asset_type(p['symbol'])
+                    tg(f"📊 <b>포지션 추적 알림</b>\n{p['symbol']} ({asset_type}) {p['side']}\n🎯 <b>TP1 도달</b> — 추세 관찰 중 (본전 스탑 전환)")
                     save_state(st)
 
                 if stop_hit:
@@ -389,6 +400,7 @@ def get_status_msg(st):
         status="TP2 도달" if hit==2 else "TP1 도달" if hit==1 else "추적 중"
         d="🟢 LONG" if p.get("side")=="LONG" else "🔴 SHORT"
         lev_str = f" | 레버리지: {p.get('leverage', 5)}x" if p.get('leverage') else ""
+        asset_type = get_asset_type(p['symbol'])
         
         cur_price = p["entry"]
         try:
@@ -410,7 +422,7 @@ def get_status_msg(st):
         sign = "+" if pnl_pct >= 0 else ""
         pnl_str = f"{sign}{pnl_pct:.2f}%"
         
-        lines.append(f"<code>{i}. {p['symbol']}</code> {d}{lev_str}\n진입: <code>{fmt(entry)}</code> | 현재: <code>{fmt(cur_price)}</code>\n상태: {status} | 수익률: <b>{pnl_str}</b>")
+        lines.append(f"<code>{i}. {p['symbol']} ({asset_type})</code> {d}{lev_str}\n진입: <code>{fmt(entry)}</code> | 현재: <code>{fmt(cur_price)}</code>\n상태: {status} | 수익률: <b>{pnl_str}</b>")
     
     current_query_time = datetime.now(KST).strftime('%m-%d %H:%M:%S')
     lines.append(f"🕒 현재가 조회 시각: {current_query_time} KST")
@@ -480,7 +492,7 @@ def main():
                 if sig: results.append(sig)
             except Exception as e:
                 print("Analyze error",sym,repr(e))
-            time.sleep(0.02)  # 전수 스캔 속도 최적화
+            time.sleep(0.02)
 
         results.sort(key=lambda x:(x["score"],x["adx"],x["vr"]),reverse=True)
         
