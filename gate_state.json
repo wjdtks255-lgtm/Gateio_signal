@@ -458,7 +458,7 @@
       "created": "2026-10-24T00:10:36+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "CRWV_USDT": {
       "symbol": "CRWV_USDT",
@@ -481,7 +481,7 @@
       "created": "2026-10-24T00:15:58+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "KORU_USDT": {
       "symbol": "KORU_USDT",
@@ -504,7 +504,7 @@
       "created": "2026-10-24T00:15:42+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "LINK_USDT": {
       "symbol": "LINK_USDT",
@@ -527,7 +527,7 @@
       "created": "2026-10-24T00:15:57+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "CRCL_USDT": {
       "symbol": "CRCL_USDT",
@@ -550,7 +550,7 @@
       "created": "2026-10-24T00:15:49+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "TIA_USDT": {
       "symbol": "TIA_USDT",
@@ -573,7 +573,7 @@
       "created": "2026-10-24T00:15:59+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "ZEC_USDT": {
       "symbol": "ZEC_USDT",
@@ -596,7 +596,7 @@
       "created": "2026-10-24T00:15:31+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "AVAX_USDT": {
       "symbol": "AVAX_USDT",
@@ -619,7 +619,7 @@
       "created": "2026-10-24T00:15:50+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "XRP_USDT": {
       "symbol": "XRP_USDT",
@@ -642,7 +642,7 @@
       "created": "2026-10-24T00:15:32+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     },
     "ONDO_USDT": {
       "symbol": "ONDO_USDT",
@@ -665,7 +665,7 @@
       "created": "2026-10-24T00:15:51+00:00",
       "tp1_hit": false,
       "tp2_hit": false,
-      "last_monitor_bar": 1792800000
+      "last_monitor_bar": 1792800900
     }
   },
   "cooldowns": {},
