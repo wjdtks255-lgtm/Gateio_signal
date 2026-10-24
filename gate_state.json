@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.06983,
+      "last_price": 0.07017,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,45 +60,12 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:15:52+09:00",
-      "last_price": 0.29704,
+      "last_price": 0.29652,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 4
-    },
-    "NG_USDT": {
-      "symbol": "NG_USDT",
-      "side": "SHORT",
-      "entry": 3.046,
-      "sl": 3.052092,
-      "tp1": 3.0386895999999997,
-      "tp2": 3.033816,
-      "tp3": 3.0277239999999996,
-      "sl_pct": -0.20000000000000687,
-      "tp1_pct": 0.24000000000000532,
-      "tp2_pct": 0.39999999999999913,
-      "tp3_pct": 0.600000000000006,
-      "leverage": 20,
-      "rsi": 38.7096774193547,
-      "atr": 0.0034999999999999953,
-      "volume_surge": 1.8675982946470868,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 증가",
-        "EMA21 조건 충족",
-        "캔들 방향 확인"
-      ],
-      "entry_time": "2026-10-24T12:46:20+09:00",
-      "last_price": 3.047,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 2
     },
     "US_USDT": {
       "symbol": "US_USDT",
@@ -126,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:00:54+09:00",
-      "last_price": 0.005401,
+      "last_price": 0.005393,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +126,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:01:03+09:00",
-      "last_price": 18.66,
+      "last_price": 18.69,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -193,6 +160,19 @@
       "outcome": "TP3",
       "reason": "TP3",
       "return_pct": 5.7911
+    },
+    {
+      "symbol": "NG_USDT",
+      "side": "SHORT",
+      "asset": "원자재",
+      "entry": 3.046,
+      "exit": 3.052092,
+      "entry_time": "2026-10-24T12:46:20+09:00",
+      "exit_time": "2026-10-24T13:10:25+09:00",
+      "duration": "0시간 24분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.2
     }
   ],
   "cooldown": {},
