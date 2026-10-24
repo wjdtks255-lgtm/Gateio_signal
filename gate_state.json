@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04511,
+      "last_price": 0.04413,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 196.36,
+      "last_price": 196.24,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004918,
+      "last_price": 0.004929,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00889,
+      "last_price": 0.00888,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T05:15:48+09:00",
-      "last_price": 0.46308,
+      "last_price": 0.46154,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:00:54+09:00",
-      "last_price": 0.0465,
+      "last_price": 0.04657,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:31:02+09:00",
-      "last_price": 640.15,
+      "last_price": 640.7,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 8
+    },
+    "ANTHROPIC_USDT": {
+      "symbol": "ANTHROPIC_USDT",
+      "side": "SHORT",
+      "entry": 1913.33,
+      "sl": 1919.916,
+      "tp1": 1900.1580000000001,
+      "tp2": 1890.2790000000002,
+      "tp3": 1880.4,
+      "sl_pct": -0.34421662755510096,
+      "tp1_pct": 0.68843325511019,
+      "tp2_pct": 1.2047581964428355,
+      "tp3_pct": 1.7210831377754927,
+      "leverage": 20,
+      "rsi": 39.08153701968133,
+      "atr": 4.704285714285675,
+      "volume_surge": 1.9683387373641046,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-25T06:45:42+09:00",
+      "last_price": 1913.33,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 9
     }
   },
   "history": [
@@ -757,7 +790,8 @@
     "BR_USDT": 1792872948.3197966,
     "STRK_USDT": 1792875654.2548673,
     "ATOM_USDT": 1792876552.7508776,
-    "META_USDT": 1792877462.1624138
+    "META_USDT": 1792877462.1624138,
+    "ANTHROPIC_USDT": 1792878342.6301897
   },
   "last_bars": {},
   "stats": {
