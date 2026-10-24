@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04453,
+      "last_price": 0.04472,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004949,
+      "last_price": 0.004939,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,45 +159,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T05:15:48+09:00",
-      "last_price": 0.46155,
+      "last_price": 0.46036,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 3
-    },
-    "BE_USDT": {
-      "symbol": "BE_USDT",
-      "side": "SHORT",
-      "entry": 188.4,
-      "sl": 189.28,
-      "tp1": 186.64000000000001,
-      "tp2": 185.32000000000002,
-      "tp3": 184.0,
-      "sl_pct": -0.4670912951167704,
-      "tp1_pct": 0.9341825902335408,
-      "tp2_pct": 1.6348195329086965,
-      "tp3_pct": 2.335456475583867,
-      "leverage": 20,
-      "rsi": 30.43478260869557,
-      "atr": 0.6285714285714273,
-      "volume_surge": 1.4712862894681076,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-25T06:00:52+09:00",
-      "last_price": 189.2,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 4
     },
     "STRK_USDT": {
       "symbol": "STRK_USDT",
@@ -225,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:00:54+09:00",
-      "last_price": 0.04656,
+      "last_price": 0.04652,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:45:42+09:00",
-      "last_price": 1914.2,
+      "last_price": 1913.9,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 111.7,
+      "last_price": 111.68,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -324,7 +291,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:40:29+09:00",
-      "last_price": 0.4642,
+      "last_price": 0.4647,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -774,6 +741,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -3.3788
+    },
+    {
+      "symbol": "BE_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 188.4,
+      "exit": 189.28,
+      "entry_time": "2026-10-25T06:00:52+09:00",
+      "exit_time": "2026-10-25T08:00:43+09:00",
+      "duration": "1시간 59분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.4671
     }
   ],
   "cooldown": {},
