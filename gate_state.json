@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04363,
+      "last_price": 0.04341,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 196.3,
+      "last_price": 196.32,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004944,
+      "last_price": 0.00495,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00882,
+      "last_price": 0.00884,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T03:45:50+09:00",
-      "last_price": 0.1569,
+      "last_price": 0.1568,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T05:15:48+09:00",
-      "last_price": 0.46241,
+      "last_price": 0.46112,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:00:52+09:00",
-      "last_price": 187.9,
+      "last_price": 188.2,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,45 +258,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:00:54+09:00",
-      "last_price": 0.04636,
+      "last_price": 0.04649,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 5
-    },
-    "META_USDT": {
-      "symbol": "META_USDT",
-      "side": "SHORT",
-      "entry": 639.93,
-      "sl": 641.2098599999999,
-      "tp1": 637.37028,
-      "tp2": 635.45049,
-      "tp3": 633.5306999999999,
-      "sl_pct": -0.1999999999999977,
-      "tp1_pct": 0.3999999999999954,
-      "tp2_pct": 0.7000000000000008,
-      "tp3_pct": 1.0000000000000062,
-      "leverage": 20,
-      "rsi": 40.497737556561134,
-      "atr": 0.5242857142857085,
-      "volume_surge": 2.705848123363398,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-25T06:31:02+09:00",
-      "last_price": 640.96,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 8
     },
     "ANTHROPIC_USDT": {
       "symbol": "ANTHROPIC_USDT",
@@ -324,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:45:42+09:00",
-      "last_price": 1910.55,
+      "last_price": 1911.11,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 9
+    },
+    "BZ_USDT": {
+      "symbol": "BZ_USDT",
+      "side": "SHORT",
+      "entry": 111.71,
+      "sl": 111.93342,
+      "tp1": 111.26316,
+      "tp2": 110.92802999999999,
+      "tp3": 110.5929,
+      "sl_pct": -0.20000000000000395,
+      "tp1_pct": 0.39999999999999514,
+      "tp2_pct": 0.7000000000000011,
+      "tp3_pct": 0.9999999999999943,
+      "leverage": 20,
+      "rsi": 32.05128205128135,
+      "atr": 0.12214285714285669,
+      "volume_surge": 1.5336725652515126,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-25T07:05:34+09:00",
+      "last_price": 111.71,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 8
     }
   },
   "history": [
@@ -748,6 +748,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.5179
+    },
+    {
+      "symbol": "META_USDT",
+      "side": "SHORT",
+      "asset": "주식",
+      "entry": 639.93,
+      "exit": 641.2098599999999,
+      "entry_time": "2026-10-25T06:31:02+09:00",
+      "exit_time": "2026-10-25T07:05:24+09:00",
+      "duration": "0시간 34분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.2
     }
   ],
   "cooldown": {},
@@ -791,7 +804,8 @@
     "STRK_USDT": 1792875654.2548673,
     "ATOM_USDT": 1792876552.7508776,
     "META_USDT": 1792877462.1624138,
-    "ANTHROPIC_USDT": 1792878342.6301897
+    "ANTHROPIC_USDT": 1792878342.6301897,
+    "BZ_USDT": 1792879534.8706632
   },
   "last_bars": {},
   "stats": {
