@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04483,
+      "last_price": 0.04449,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08603,
+      "last_price": 0.08627,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 195.58,
+      "last_price": 195.62,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:39+09:00",
-      "last_price": 704.31,
+      "last_price": 704.44,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:45+09:00",
-      "last_price": 0.16692,
+      "last_price": 0.16682,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T00:10:30+09:00",
-      "last_price": 3996.1,
+      "last_price": 3995.56,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004819,
+      "last_price": 0.004833,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:45+09:00",
-      "last_price": 322.37,
+      "last_price": 322.39,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00887,
+      "last_price": 0.00885,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 6
+    },
+    "CT_USDT": {
+      "symbol": "CT_USDT",
+      "side": "SHORT",
+      "entry": 0.1539,
+      "sl": 0.15910000000000002,
+      "tp1": 0.14350000000000002,
+      "tp2": 0.13570000000000002,
+      "tp3": 0.1279,
+      "sl_pct": -3.37881741390514,
+      "tp1_pct": 6.757634827810262,
+      "tp2_pct": 11.82586094866796,
+      "tp3_pct": 16.89408706952566,
+      "leverage": 4,
+      "rsi": 33.55481727574751,
+      "atr": 0.0037142857142857155,
+      "volume_surge": 3.4983950236666,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-25T03:45:50+09:00",
+      "last_price": 0.1539,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 10
     }
   },
   "history": [
@@ -674,7 +707,8 @@
     "XAU_USDT": 1792854630.7823164,
     "ENA_USDT": 1792855244.0377934,
     "AVGO_USDT": 1792858545.6086667,
-    "MITO_USDT": 1792860950.023819
+    "MITO_USDT": 1792860950.023819,
+    "CT_USDT": 1792867550.7743998
   },
   "last_bars": {},
   "stats": {
