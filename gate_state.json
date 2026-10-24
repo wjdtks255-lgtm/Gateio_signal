@@ -27,45 +27,12 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:30:50+09:00",
-      "last_price": 3.026e-06,
+      "last_price": 3.012e-06,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 6
-    },
-    "FLOKI_USDT": {
-      "symbol": "FLOKI_USDT",
-      "side": "SHORT",
-      "entry": 2.369e-05,
-      "sl": 2.384e-05,
-      "tp1": 2.351e-05,
-      "tp2": 2.339e-05,
-      "tp3": 2.324e-05,
-      "sl_pct": -0.6331785563528927,
-      "tp1_pct": 0.7598142676234626,
-      "tp2_pct": 1.2663571127057711,
-      "tp3_pct": 1.8995356690586638,
-      "leverage": 20,
-      "rsi": 44.92753623188393,
-      "atr": 1.071428571428566e-07,
-      "volume_surge": 2.4590761091901525,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 증가",
-        "EMA21 조건 충족",
-        "캔들 방향 확인"
-      ],
-      "entry_time": "2026-10-24T14:15:55+09:00",
-      "last_price": 2.328e-05,
-      "tp1_hit": true,
-      "tp2_hit": true,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 10
     },
     "HYPE_USDT": {
       "symbol": "HYPE_USDT",
@@ -93,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:10:35+09:00",
-      "last_price": 76.036,
+      "last_price": 75.575,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -126,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:35:27+09:00",
-      "last_price": 2366.71,
+      "last_price": 2358.84,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -159,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:50:32+09:00",
-      "last_price": 1.2851,
+      "last_price": 1.2781,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.05889,
+      "last_price": 0.05741,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08691,
+      "last_price": 0.08633,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 197.23,
+      "last_price": 197.0,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,8 +258,8 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:30:42+09:00",
-      "last_price": 1.663,
-      "tp1_hit": false,
+      "last_price": 1.657,
+      "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
@@ -324,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:50:42+09:00",
-      "last_price": 0.6232,
+      "last_price": 0.6207,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 1
+    },
+    "LTC_USDT": {
+      "symbol": "LTC_USDT",
+      "side": "SHORT",
+      "entry": 55.87,
+      "sl": 56.151999999999994,
+      "tp1": 55.306,
+      "tp2": 54.883,
+      "tp3": 54.46000000000001,
+      "sl_pct": -0.50474315374977,
+      "tp1_pct": 1.0094863074995526,
+      "tp2_pct": 1.7666010381242074,
+      "tp3_pct": 2.5237157687488625,
+      "leverage": 20,
+      "rsi": 33.87096774193539,
+      "atr": 0.20142857142857043,
+      "volume_surge": 1.5649466959337845,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-24T23:15:31+09:00",
+      "last_price": 55.87,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 10
     }
   },
   "history": [
@@ -514,6 +514,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -9.6414
+    },
+    {
+      "symbol": "FLOKI_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 2.369e-05,
+      "exit": 2.324e-05,
+      "entry_time": "2026-10-24T14:15:55+09:00",
+      "exit_time": "2026-10-24T23:15:25+09:00",
+      "duration": "8시간 59분",
+      "outcome": "TP3",
+      "reason": "TP3",
+      "return_pct": 1.8995
     }
   ],
   "cooldown": {},
@@ -542,7 +555,8 @@
     "MAGIC_USDT": 1792845053.1691582,
     "PLTR_USDT": 1792848057.4867377,
     "TRUMP_USDT": 1792848642.765087,
-    "ETHFI_USDT": 1792849842.3198116
+    "ETHFI_USDT": 1792849842.3198116,
+    "LTC_USDT": 1792851331.175869
   },
   "last_bars": {},
   "stats": {
