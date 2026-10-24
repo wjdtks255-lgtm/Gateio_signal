@@ -27,45 +27,12 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:00:54+09:00",
-      "last_price": 0.005194,
+      "last_price": 0.005168,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 3
-    },
-    "CASHCAT_USDT": {
-      "symbol": "CASHCAT_USDT",
-      "side": "SHORT",
-      "entry": 0.09611,
-      "sl": 0.097237,
-      "tp1": 0.0947576,
-      "tp2": 0.09385600000000001,
-      "tp3": 0.092729,
-      "sl_pct": -1.172614712308816,
-      "tp1_pct": 1.407137654770579,
-      "tp2_pct": 2.3452294246176173,
-      "tp3_pct": 3.517844136926433,
-      "leverage": 13,
-      "rsi": 40.8119658119658,
-      "atr": 0.0008049999999999992,
-      "volume_surge": 1.2437827778717645,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 증가",
-        "EMA21 조건 충족",
-        "캔들 방향 확인"
-      ],
-      "entry_time": "2026-10-24T13:15:59+09:00",
-      "last_price": 0.09299,
-      "tp1_hit": true,
-      "tp2_hit": true,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 2
     },
     "BONK_USDT": {
       "symbol": "BONK_USDT",
@@ -93,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:30:50+09:00",
-      "last_price": 3.061e-06,
+      "last_price": 3.046e-06,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -126,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T14:15:55+09:00",
-      "last_price": 2.344e-05,
+      "last_price": 2.335e-05,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -159,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:10:35+09:00",
-      "last_price": 75.894,
+      "last_price": 75.734,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -192,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:35:27+09:00",
-      "last_price": 2368.25,
+      "last_price": 2366.21,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -258,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.06429,
+      "last_price": 0.06341,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:42+09:00",
-      "last_price": 0.22178,
+      "last_price": 0.22297,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -324,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08726,
+      "last_price": 0.08706,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 8
+    },
+    "PLTR_USDT": {
+      "symbol": "PLTR_USDT",
+      "side": "SHORT",
+      "entry": 196.96,
+      "sl": 197.35392000000002,
+      "tp1": 196.17216000000002,
+      "tp2": 195.58128000000002,
+      "tp3": 194.9904,
+      "sl_pct": -0.20000000000000429,
+      "tp1_pct": 0.3999999999999942,
+      "tp2_pct": 0.6999999999999934,
+      "tp3_pct": 1.000000000000007,
+      "leverage": 20,
+      "rsi": 39.240506329113195,
+      "atr": 0.09357142857142467,
+      "volume_surge": 1.8305700658641835,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-24T22:20:57+09:00",
+      "last_price": 196.96,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 2
     }
   },
   "history": [
@@ -475,6 +475,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.3479
+    },
+    {
+      "symbol": "CASHCAT_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.09611,
+      "exit": 0.092729,
+      "entry_time": "2026-10-24T13:15:59+09:00",
+      "exit_time": "2026-10-24T22:20:24+09:00",
+      "duration": "9시간 4분",
+      "outcome": "TP3",
+      "reason": "TP3",
+      "return_pct": 3.5178
     }
   ],
   "cooldown": {},
@@ -500,7 +513,8 @@
     "BE_USDT": 1792828238.5606203,
     "IRYS_USDT": 1792840879.9569259,
     "MAGMA_USDT": 1792845042.9764068,
-    "MAGIC_USDT": 1792845053.1691582
+    "MAGIC_USDT": 1792845053.1691582,
+    "PLTR_USDT": 1792848057.4867377
   },
   "last_bars": {},
   "stats": {
