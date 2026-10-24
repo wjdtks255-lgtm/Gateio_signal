@@ -27,19 +27,53 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.06983,
+      "last_price": 0.06979,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 1
+    },
+    "SOPH_USDT": {
+      "symbol": "SOPH_USDT",
+      "side": "SHORT",
+      "entry": 0.00158,
+      "sl": 0.0016105,
+      "tp1": 0.0015434,
+      "tp2": 0.001519,
+      "tp3": 0.0014885,
+      "sl_pct": -1.9303797468354384,
+      "tp1_pct": 2.31645569620254,
+      "tp2_pct": 3.8607594936708907,
+      "tp3_pct": 5.79113924050633,
+      "leverage": 8,
+      "rsi": 38.1679389312977,
+      "atr": 2.1785714285714312e-05,
+      "volume_surge": 1.3539481956796138,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 증가",
+        "EMA21 조건 충족",
+        "캔들 방향 확인"
+      ],
+      "entry_time": "2026-10-24T12:00:58+09:00",
+      "last_price": 0.00158,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 2
     }
   },
   "history": [],
   "cooldown": {},
   "cooldowns": {},
   "last_signal": {
-    "CAP_USDT": 1792810664.2151325
+    "CAP_USDT": 1792810664.2151325,
+    "SOPH_USDT": 1792810858.1396677
   },
   "last_bars": {},
   "stats": {
