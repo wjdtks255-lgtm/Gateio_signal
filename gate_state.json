@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04449,
+      "last_price": 0.04446,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08627,
+      "last_price": 0.08631,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 195.62,
+      "last_price": 195.78,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:39+09:00",
-      "last_price": 704.44,
+      "last_price": 704.55,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:45+09:00",
-      "last_price": 0.16682,
+      "last_price": 0.16705,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T00:10:30+09:00",
-      "last_price": 3995.56,
+      "last_price": 3995.79,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,45 +225,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004833,
+      "last_price": 0.004824,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 1
-    },
-    "AVGO_USDT": {
-      "symbol": "AVGO_USDT",
-      "side": "SHORT",
-      "entry": 321.75,
-      "sl": 322.49,
-      "tp1": 320.27,
-      "tp2": 319.16,
-      "tp3": 318.05,
-      "sl_pct": -0.22999222999223282,
-      "tp1_pct": 0.45998445998446563,
-      "tp2_pct": 0.8049728049727972,
-      "tp3_pct": 1.1499611499611464,
-      "leverage": 20,
-      "rsi": 30.163934426229915,
-      "atr": 0.5285714285714269,
-      "volume_surge": 1.3193498708141889,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-25T01:15:45+09:00",
-      "last_price": 322.39,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 3
     },
     "MITO_USDT": {
       "symbol": "MITO_USDT",
@@ -291,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00885,
+      "last_price": 0.00884,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -670,6 +637,19 @@
       "outcome": "TP1_BE",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.5047
+    },
+    {
+      "symbol": "AVGO_USDT",
+      "side": "SHORT",
+      "asset": "주식",
+      "entry": 321.75,
+      "exit": 322.49,
+      "entry_time": "2026-10-25T01:15:45+09:00",
+      "exit_time": "2026-10-25T03:50:27+09:00",
+      "duration": "2시간 34분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.23
     }
   ],
   "cooldown": {},
