@@ -1,318 +1,405 @@
-
-import os,json,requests
-from datetime import datetime,timezone,timedelta
+import os,json,time,math,requests
 from pathlib import Path
+from datetime import datetime,timezone,timedelta
 
 BASE="https://api.gateio.ws/api/v4"
-TOKEN=(os.getenv("GATE_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_TOKEN") or "").strip()
-CHAT=(os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID") or "").strip()
+TOKEN=os.getenv("GATE_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_TOKEN","")
+CHAT=os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID","")
 STATE=Path("gate_state.json")
-LOG=Path("gate_log.json")
-KST=timezone(timedelta(hours=9))
-MAX_ACTIVE=10
-MAX_SCAN=90
-MIN_TURNOVER=500000
-MIN_SCORE=6
-COOLDOWN=60
-STOP_ATR=1.4
+MAX_ACTIVE=int(os.getenv("MAX_ACTIVE","10"))
+MAX_SCAN=int(os.getenv("MAX_SCAN","90"))
+MIN_TURNOVER=float(os.getenv("MIN_TURNOVER","500000"))
+MIN_SCORE=int(os.getenv("MIN_SCORE","6"))
+COOLDOWN=int(os.getenv("COOLDOWN","60"))
+STOP_ATR=float(os.getenv("STOP_ATR","1.4"))
 TP_R=(1.2,2.0,3.0)
+TZ=timezone(timedelta(hours=9))
 S=requests.Session()
+S.headers.update({"Accept":"application/json","User-Agent":"GateSignalBot/2.0"})
 
 def now():
-    return datetime.now(timezone.utc)
+    return datetime.now(TZ)
 
-def parsed(s):
+def stamp():
+    return now().isoformat(timespec="seconds")
+
+def num(v,d=0.0):
     try:
-        return datetime.fromisoformat(str(s).replace("Z","+00:00")).astimezone(timezone.utc)
-    except Exception:
-        return now()
-
-def elapsed(s):
-    sec=max(0,int((now()-parsed(s)).total_seconds()))
-    d,sec=divmod(sec,86400)
-    h,sec=divmod(sec,3600)
-    m=sec//60
-    if d:return f"{d}일 {h}시간 {m}분"
-    if h:return f"{h}시간 {m}분"
-    return f"{m}분"
-
-def kst(s):
-    return parsed(s).astimezone(KST).strftime("%Y-%m-%d %H:%M:%S KST")
-
-def load(path,default):
-    try:return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:return default
-
-def save(st):
-    STATE.write_text(json.dumps(st,ensure_ascii=False,indent=2),encoding="utf-8")
-
-def log(event,data=None):
-    rows=load(LOG,[])
-    rows.append({"time":now().isoformat(),"event":event,"data":data or {}})
-    LOG.write_text(json.dumps(rows[-500:],ensure_ascii=False,indent=2),encoding="utf-8")
-
-def tg(text):
-    if not TOKEN or not CHAT:
-        print("Telegram secrets missing")
-        return False
-    try:
-        r=requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-          json={"chat_id":CHAT,"text":text,"disable_web_page_preview":True},timeout=15)
-        print("Telegram:",r.status_code)
-        return r.ok
-    except Exception as e:
-        print("Telegram error:",e)
-        return False
+        x=float(v)
+        return x if math.isfinite(x) else d
+    except (TypeError,ValueError):
+        return d
 
 def api(path,params=None):
     r=S.get(BASE+path,params=params,timeout=15)
     r.raise_for_status()
     return r.json()
 
-def num(v,default=0):
-    try:return float(v)
-    except Exception:return default
+def send(msg):
+    if not TOKEN or not CHAT:
+        print("TELEGRAM CONFIG MISSING")
+        return False
+    try:
+        r=requests.post(
+            f"https://api.telegram.org/bot{TOKEN}/sendMessage",
+            json={"chat_id":CHAT,"text":msg,"disable_web_page_preview":True},
+            timeout=15)
+        print("TG",r.status_code,r.text[:150])
+        return r.ok and r.json().get("ok",False)
+    except Exception as e:
+        print("TG ERROR",e)
+        return False
 
-def pct(a,b):
-    return (b-a)/a*100 if a else 0
+def read_json(path,default):
+    if not path.exists():
+        return default
+    try:
+        with open(path,encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        raise RuntimeError(f"{path} 읽기 실패. 파일을 덮어쓰지 않음: {e}")
 
-def candles(sym,interval="15m",limit=100):
-    raw=api("/futures/usdt/candlesticks",
-            {"contract":sym,"interval":interval,"limit":limit})
+def save_json(path,data):
+    tmp=path.with_suffix(path.suffix+".tmp")
+    with open(tmp,"w",encoding="utf-8") as f:
+        json.dump(data,f,ensure_ascii=False,indent=2)
+    tmp.replace(path)
+
+def load_state():
+    st=read_json(STATE,{"positions":{},"last_signal":{},"history":[]})
+    if not isinstance(st,dict):
+        raise RuntimeError("상태 파일 형식 오류")
+    st.setdefault("positions",{})
+    st.setdefault("last_signal",{})
+    st.setdefault("history",[])
+    if not isinstance(st["positions"],dict):
+        raise RuntimeError("positions 형식 오류: 기존 파일을 수정하지 마세요.")
+    return st
+
+def save_state(st):
+    save_json(STATE,st)
+
+def candles(sym,interval,limit=120):
+    raw=api("/futures/usdt/candlesticks",{
+        "contract":sym,"interval":interval,"limit":limit})
     out=[]
     for x in raw:
-        try:
-            out.append({"t":int(x[0]),"v":num(x[1]),"c":num(x[2]),
-                        "h":num(x[3]),"l":num(x[4]),"o":num(x[5])})
-        except Exception:pass
+        if isinstance(x,dict):
+            q={k:num(x.get(k)) for k in ("t","o","h","l","c","v")}
+        elif isinstance(x,(list,tuple)) and len(x)>=6:
+            q=dict(t=num(x[0]),v=num(x[1]),c=num(x[2]),
+                   h=num(x[3]),l=num(x[4]),o=num(x[5]))
+        else:
+            continue
+        if min(q["o"],q["h"],q["l"],q["c"])>0:
+            out.append(q)
     return sorted(out,key=lambda x:x["t"])
 
-def ema(v,n):
-    if len(v)<n:return []
-    a=2/(n+1)
-    out=[sum(v[:n])/n]
-    for x in v[n:]:out.append(x*a+out[-1]*(1-a))
-    return out
+def ema(a,n):
+    if len(a)<n:
+        return None
+    e=sum(a[:n])/n
+    k=2/(n+1)
+    for x in a[n:]:
+        e=x*k+e*(1-k)
+    return e
 
-def rsi(v,n=14):
-    if len(v)<n+1:return 50
-    d=[v[i]-v[i-1] for i in range(1,len(v))][-n:]
-    g=sum(max(x,0) for x in d)/n
-    l=sum(max(-x,0) for x in d)/n
+def rsi(a,n=14):
+    if len(a)<n+1:
+        return None
+    d=[a[i]-a[i-1] for i in range(1,len(a))]
+    g=sum(max(x,0) for x in d[-n:])/n
+    l=sum(max(-x,0) for x in d[-n:])/n
     return 100 if l==0 else 100-100/(1+g/l)
 
 def atr(cs,n=14):
-    if len(cs)<n+1:return 0
+    if len(cs)<n+1:
+        return None
     tr=[]
     for i in range(1,len(cs)):
-        c,p=cs[i],cs[i-1]
-        tr.append(max(c["h"]-c["l"],abs(c["h"]-p["c"]),abs(c["l"]-p["c"])))
+        c=cs[i]
+        prev=cs[i-1]["c"]
+        tr.append(max(c["h"]-c["l"],abs(c["h"]-prev),abs(c["l"]-prev)))
     return sum(tr[-n:])/n
 
-def adx(cs,n=14):
-    if len(cs)<n+2:return 0
-    plus=[];minus=[];trs=[]
-    for i in range(1,len(cs)):
-        c,p=cs[i],cs[i-1]
-        u=c["h"]-p["h"];d=p["l"]-c["l"]
-        plus.append(max(u,0) if u>d else 0)
-        minus.append(max(d,0) if d>u else 0)
-        trs.append(max(c["h"]-c["l"],abs(c["h"]-p["c"]),abs(c["l"]-p["c"])))
-    t=sum(trs[-n:]) or 1
-    p=100*sum(plus[-n:])/t;m=100*sum(minus[-n:])/t
-    return 100*abs(p-m)/(p+m) if p+m else 0
-
-def category(sym):
-    s=sym.upper()
-    if any(x in s for x in ("PAXG","XAU","XAG","GOLD","SILVER")):
-        return "금속·원자재"
-    if any(x in s for x in ("SPY","QQQ","NVDA","TSLA","AAPL","MSFT","COIN","NBIS","CRWV","UNITREE")):
-        return "미국 주식·지수"
-    return "암호화폐"
-
 def market():
+    rows=api("/futures/usdt/tickers")
     out=[]
-    for x in api("/futures/usdt/tickers"):
-        sym=x.get("contract","")
+    for x in rows:
+        if not x.get("contract","").endswith("_USDT"):
+            continue
         price=num(x.get("last"))
-        turnover=num(x.get("volume_24h_quote") or x.get("volume_24h_settle") or x.get("volume_24h_usd"))
-        if sym.endswith("_USDT") and price>0 and turnover>=MIN_TURNOVER:
-            out.append((sym,price,turnover))
-    return sorted(out,key=lambda x:x[2],reverse=True)[:MAX_SCAN]
+        turnover=num(x.get("volume_24h_quote",x.get("volume_24h_usd",0)))
+        if price>0 and turnover>=MIN_TURNOVER:
+            x["_price"]=price
+            x["_turnover"]=turnover
+            out.append(x)
+    out.sort(key=lambda x:x["_turnover"],reverse=True)
+    return out[:MAX_SCAN]
 
-def btc_trend():
+def btc_direction():
     try:
-        c=candles("BTC_USDT","1h",80)
-        v=[x["c"] for x in c[:-1]]
-        a=ema(v,20);b=ema(v,50)
-        return "up" if a[-1]>b[-1] else "down" if a[-1]<b[-1] else "flat"
-    except Exception:return "flat"
-
-def find_signal(sym,price,turnover,btc):
-    try:
-        m=candles(sym,"15m",100)[:-1]
-        h=candles(sym,"1h",80)[:-1]
-        if len(m)<55 or len(h)<55:return None
-        v=[x["c"] for x in m];hv=[x["c"] for x in h]
-        e20=ema(v,20);e50=ema(v,50);he20=ema(hv,20);he50=ema(hv,50)
-        a=atr(m);r=rsi(v);ad=adx(m)
-        if not a or a/price>.08:return None
-        vb=sum(x["v"] for x in m[-21:-1])/20
-        vr=m[-1]["v"]/vb if vb else 0
-        L=SCORE_L=0;SHORT=0
-        L+=e20[-1]>e50[-1];SHORT+=e20[-1]<e50[-1]
-        L+=he20[-1]>he50[-1];SHORT+=he20[-1]<he50[-1]
-        L+=r>=53;SHORT+=r<=47
-        L+=ad>=18;SHORT+=ad>=18
-        L+=vr>=1.2;SHORT+=vr>=1.2
-        c=m[-1];pos=(c["c"]-c["l"])/max(c["h"]-c["l"],1e-12)
-        L+=pos>=.68;SHORT+=pos<=.32
-        direction="LONG" if L>SHORT else "SHORT" if SHORT>L else ""
-        score=max(L,SHORT)
-        if not direction or score<MIN_SCORE:return None
-        if abs(price-e20[-1])>a*.45:return None
-        if category(sym)=="암호화폐":
-            if direction=="LONG" and btc=="down":return None
-            if direction=="SHORT" and btc=="up":return None
-        risk=a*STOP_ATR
-        sign=1 if direction=="LONG" else -1
-        sl=price-sign*risk
-        t1=price+sign*risk*TP_R[0]
-        t2=price+sign*risk*TP_R[1]
-        t3=price+sign*risk*TP_R[2]
-        ap=a/price*100
-        lev=3 if ap>=3 else 5 if ap>=2 else 8 if ap>=1 else 10
-        return {"symbol":sym,"category":category(sym),"direction":direction,
-          "entry":price,"sl":sl,"tp1":t1,"tp2":t2,"tp3":t3,
-          "leverage":lev,"score":score,"max_score":6,"rsi":r,"adx":ad,
-          "volume_ratio":vr,"bar_time":datetime.fromtimestamp(m[-1]["t"],timezone.utc).isoformat(),
-          "entry_time":now().isoformat(),"status":"추적 중","tp1_hit":False,
-          "tp2_hit":False,"breakeven":False,"last_price":price,"turnover":turnover}
+        cs=candles("BTC_USDT","1h",100)
+        a=[x["c"] for x in cs[:-1]]
+        e20,e50=ema(a,20),ema(a,50)
+        if e20 is None or e50 is None:
+            return "FLAT"
+        if a[-1]>e20>e50:
+            return "LONG"
+        if a[-1]<e20<e50:
+            return "SHORT"
     except Exception as e:
-        print("Signal scan error",sym,e)
+        print("BTC ERROR",e)
+    return "FLAT"
+
+def find_signal(t,btc):
+    sym=t["contract"]
+    cs=candles(sym,"15m",100)
+    if len(cs)<60:
         return None
+    cs=cs[:-1]
+    a=[x["c"] for x in cs]
+    v=[x["v"] for x in cs]
+    last=cs[-1]
+    e9,e21,e50=ema(a,9),ema(a,21),ema(a,50)
+    rv,av=rsi(a),atr(cs)
+    if any(x is None for x in (e9,e21,e50,rv,av)) or av<=0:
+        return None
+    avg=sum(v[-21:-1])/20 if len(v)>=21 else 0
+    surge=v[-1]/avg if avg>0 else 0
+    body=abs(last["c"]-last["o"])>=av*.15
+    funding=num(t.get("funding_rate"))
+    lc=[btc=="LONG",e9>e21>e50,52<=rv<=72,
+        surge>=1.2,last["c"]>e21,last["c"]>last["o"] and body]
+    sc=[btc=="SHORT",e9<e21<e50,28<=rv<=48,
+        surge>=1.2,last["c"]<e21,last["c"]<last["o"] and body]
+    side="LONG" if sum(lc)>=sum(sc) else "SHORT"
+    checks=lc if side=="LONG" else sc
+    score=sum(checks)
+    if score<MIN_SCORE:
+        return None
+    if side=="LONG" and funding>.003:
+        return None
+    if side=="SHORT" and funding<-.003:
+        return None
+    entry=num(t.get("_price"),last["c"])
+    dist=max(av*STOP_ATR,entry*.002)
+    sl=entry-dist if side=="LONG" else entry+dist
+    tps=[entry+dist*r if side=="LONG" else entry-dist*r for r in TP_R]
+    reasons=[]
+    names=["BTC 추세 일치","EMA 추세 정렬","RSI 조건 충족",
+           "거래량 증가","EMA21 조건 충족","캔들 방향 확인"]
+    reasons=[names[i] for i,x in enumerate(checks) if x]
+    return {
+        "symbol":sym,"side":side,"entry":entry,"sl":sl,
+        "tp1":tps[0],"tp2":tps[1],"tp3":tps[2],
+        "rsi":rv,"atr":av,"volume_surge":surge,"score":score,
+        "reasons":reasons,"entry_time":stamp(),"last_price":entry,
+        "tp1_hit":False,"tp2_hit":False,"tp3_hit":False,
+        "status":"ACTIVE"
+    }
 
-def target_status(p):
-    if p.get("tp2_hit"):return "TP3 대기"
-    if p.get("tp1_hit"):return "TP2 대기"
-    return "TP1 대기"
+def elapsed(p):
+    try:
+        d=datetime.fromisoformat(p["entry_time"])
+        if d.tzinfo is None:
+            d=d.replace(tzinfo=TZ)
+        sec=max(0,int((now()-d.astimezone(TZ)).total_seconds()))
+        days,sec=divmod(sec,86400)
+        hours,sec=divmod(sec,3600)
+        mins=sec//60
+        return f"{days}일 {hours}시간 {mins}분" if days else f"{hours}시간 {mins}분"
+    except Exception:
+        return "-"
 
-def active_report(st,prices=None):
-    prices=prices or {}
-    pos=st["positions"]
-    lines=["📊 현재 활성 시그널", "━━━━━━━━━━━━━━━━━━"]
-    if not pos:return "📊 현재 활성 시그널\n활성 시그널 없음"
-    for i,(sym,p) in enumerate(pos.items(),1):
-        cur=num(prices.get(sym),num(p.get("last_price"),p["entry"]))
-        p["last_price"]=cur
-        sign=1 if p["direction"]=="LONG" else -1
-        ret=sign*pct(p["entry"],cur)
-        direction="🟢 LONG" if p["direction"]=="LONG" else "🔴 SHORT"
-        opened=p.get("entry_time") or p.get("opened_at") or p.get("bar_time") or now().isoformat()
+def pnl(p,price):
+    entry=num(p.get("entry"))
+    if entry<=0:
+        return 0
+    delta=price-entry
+    if p.get("side")=="SHORT":
+        delta=-delta
+    return delta/entry*100
+
+def tp_status(p):
+    if p.get("tp3_hit"):
+        return "TP3 달성"
+    if p.get("tp2_hit"):
+        return "TP1·TP2 달성 / TP3 대기"
+    if p.get("tp1_hit"):
+        return "TP1 달성 / TP2 대기"
+    return "TP1 대기 / TP2 대기 / TP3 대기"
+
+def active_report(st):
+    ps=st["positions"]
+    lines=["📊 GATE.IO FUTURES | 활성 시그널",
+           f"활성 슬롯: {len(ps)}/{MAX_ACTIVE}"]
+    if not ps:
+        lines.append("활성 시그널 없음")
+    for i,(sym,p) in enumerate(ps.items(),1):
+        price=num(p.get("last_price"),num(p.get("entry")))
         lines.extend([
-          f"{i}. {sym} ({p.get('category',category(sym))}) {direction} | 레버리지: {p.get('leverage','-')}x",
-          f"진입: {p['entry']:.6g} | 현재: {cur:.6g}",
-          f"상태: {p.get('status','추적 중')} | 수익률: {ret:+.2f}%",
-          f"⏱️ 보유 시간: {elapsed(opened)}",
-          f"🎯 진행: {target_status(p)} | 손절가: {p['sl']:.6g}"
+            f"\n#{i} {sym} | {p.get('side')}",
+            f"진입 {num(p.get('entry')):.8g} / 현재 {price:.8g}",
+            f"변동 {pnl(p,price):+.2f}% | 보유 {elapsed(p)}",
+            tp_status(p),
+            f"SL {num(p.get('sl')):.8g}",
+            f"TP1 {num(p.get('tp1')):.8g} | TP2 {num(p.get('tp2')):.8g} | TP3 {num(p.get('tp3')):.8g}"
         ])
-    lines.append("🕒 조회 시각: "+now().astimezone(KST).strftime("%m-%d %H:%M:%S KST"))
     return "\n".join(lines)
 
-def signal_message(p):
-    sign=1 if p["direction"]=="LONG" else -1
-    d="🟢 LONG" if sign==1 else "🔴 SHORT"
+def stats_report(st):
+    counts={"TP3":0,"TP2":0,"TP1":0,"SL":0}
+    for x in st.get("history",[]):
+        if x.get("outcome") in counts:
+            counts[x["outcome"]]+=1
+    total=sum(counts.values())
+    wins=counts["TP3"]+counts["TP2"]+counts["TP1"]
+    rate=wins/total*100 if total else 0
     return (
-      "🚨 GATE.IO FUTURES SIGNAL\n━━━━━━━━━━━━━━━━━━\n"
-      f"📌 계약: {p['symbol']} ({p['category']})\n📈 방향: {d}\n"
-      f"💵 모의 기준 진입가: {p['entry']:.6g}\n"
-      f"🛑 손절가: {p['sl']:.6g} ({pct(p['entry'],p['sl']):+.2f}%)\n"
-      f"🎯 TP1: {p['tp1']:.6g} ({sign*pct(p['entry'],p['tp1']):+.2f}% / {TP_R[0]}R)\n"
-      f"🎯 TP2: {p['tp2']:.6g} ({sign*pct(p['entry'],p['tp2']):+.2f}% / {TP_R[1]}R)\n"
-      f"🎯 TP3: {p['tp3']:.6g} ({sign*pct(p['entry'],p['tp3']):+.2f}% / {TP_R[2]}R)\n"
-      "━━━━━━━━━━━━━━━━━━\n"
-      f"⚡ 추천 레버리지: {p['leverage']}x (참고값)\n"
-      f"🧠 점수: {p['score']}/{p['max_score']}\n"
-      f"📊 RSI {p['rsi']:.1f} | ADX {p['adx']:.1f} | 거래량 {p['volume_ratio']:.2f}배\n"
-      f"🕒 기준봉: {kst(p['bar_time'])}\n"
-      f"🕒 발송: {now().astimezone(KST).strftime('%Y-%m-%d %H:%M:%S KST')}\n"
-      "⚠️ 모의 시그널이며 실제 주문은 실행하지 않습니다."
+        "📈 종료 시그널 통계\n━━━━━━━━━━━━━━\n"
+        f"총 종료: {total}\nTP3 종료: {counts['TP3']}회\n"
+        f"TP2 종료: {counts['TP2']}회\nTP1 종료: {counts['TP1']}회\n"
+        f"손절 종료: {counts['SL']}회\n승률: {rate:.2f}% ({wins}/{total})"
     )
 
-def slot_notice(st,action,sym,prices=None):
-    return (f"🔄 활성 슬롯 변경\n변경: {action} {sym}\n"
-            f"활성 슬롯: {len(st['positions'])}/{MAX_ACTIVE}\n\n"
-            +active_report(st,prices))
-
 def close_position(st,sym,reason,price):
-    p=st["positions"].pop(sym,None)
-    if not p:return
-    sign=1 if p["direction"]=="LONG" else -1
-    ret=sign*pct(p["entry"],price)
-    label={"tp3":"TP3 도달","sl":"손절 도달","be":"본전 손절"}.get(reason,reason)
-    tg(f"🏁 시그널 종료 | {sym}\n종료 사유: {label}\n진입: {p['entry']:.6g} | 종료: {price:.6g}\n진입 대비: {ret:+.2f}%\n⏱️ 보유 시간: {elapsed(p.get('entry_time',now().isoformat()))}\n⚠️ 모의 기준")
-    tg(slot_notice(st,"슬롯 해제",sym))
-    log("closed",{"symbol":sym,"reason":reason,"price":price})
-    save(st)
+    p=st["positions"].get(sym)
+    if not p:
+        return
+    highest=3 if p.get("tp3_hit") else 2 if p.get("tp2_hit") else 1 if p.get("tp1_hit") else 0
+    outcome="TP3" if reason=="TP3" else "TP2" if highest==2 else "TP1" if highest==1 else "SL"
+    record={
+        "symbol":sym,"side":p.get("side"),
+        "entry":num(p.get("entry")),"exit":price,
+        "entry_time":p.get("entry_time"),"exit_time":stamp(),
+        "duration":elapsed(p),"outcome":outcome,"reason":reason,
+        "return_pct":round(pnl(p,price),4)
+    }
+    st["history"].append(record)
+    st["history"]=st["history"][-5000:]
+    del st["positions"][sym]
+    save_state(st)
+    send(
+        f"🏁 시그널 종료 | {sym} {p.get('side')}\n"
+        f"분류: {outcome} | 사유: {reason}\n"
+        f"진입: {num(p.get('entry')):.8g} → 종료: {price:.8g}\n"
+        f"변동률: {pnl(p,price):+.2f}%\n보유 시간: {elapsed(p)}"
+    )
+    send(active_report(st))
+    send(stats_report(st))
 
-def monitor(st,prices):
-    changed=False
-    for sym,p in list(st["positions"].items()):
+def monitor(st):
+    changed_any=False
+    for sym in list(st["positions"]):
+        p=st["positions"].get(sym)
+        if not p:
+            continue
+        changed=False
         try:
-            cs=candles(sym,"1m",4)
-            if len(cs)<2:continue
-            c=cs[-2];cur=num(prices.get(sym),c["c"]);p["last_price"]=cur
-            long=p["direction"]=="LONG"
-            slhit=c["l"]<=p["sl"] if long else c["h"]>=p["sl"]
-            tp1=c["h"]>=p["tp1"] if long else c["l"]<=p["tp1"]
-            tp2=c["h"]>=p["tp2"] if long else c["l"]<=p["tp2"]
-            tp3=c["h"]>=p["tp3"] if long else c["l"]<=p["tp3"]
+            cs=candles(sym,"1m",5)
+            if len(cs)<2:
+                continue
+            c=cs[-2]
+            price=c["c"]
+            p["last_price"]=price
+            long=p.get("side")=="LONG"
+            sl=num(p.get("sl"))
+            slhit=c["l"]<=sl if long else c["h"]>=sl
+            # 동일 1분봉에서 SL과 TP가 모두 닿으면 보수적으로 SL 우선
             if slhit:
-                close_position(st,sym,"be" if p.get("breakeven") else "sl",p["sl"])
-                changed=True
+                close_position(st,sym,"SL 또는 본절 청산",price)
+                changed_any=True
                 continue
-            if tp3:
-                close_position(st,sym,"tp3",p["tp3"])
+            for target,flag in [
+                ("tp1","tp1_hit"),("tp2","tp2_hit"),("tp3","tp3_hit")
+            ]:
+                if p.get(flag):
+                    continue
+                level=num(p.get(target))
+                hit=c["h"]>=level if long else c["l"]<=level
+                if not hit:
+                    continue
+                p[flag]=True
                 changed=True
+                if target=="tp1":
+                    p["sl"]=num(p.get("entry"))
+                    send(f"🎯 TP1 도달 | {sym}\n변동: {pnl(p,level):+.2f}%\n손절가를 진입가로 이동\nTP2 대기")
+                elif target=="tp2":
+                    p["sl"]=num(p.get("entry"))
+                    send(f"🎯 TP2 도달 | {sym}\n변동: {pnl(p,level):+.2f}%\nTP3 대기")
+                else:
+                    p["last_price"]=level
+                    save_state(st)
+                    close_position(st,sym,"TP3",level)
+                    changed_any=True
+                    break
+            if sym in st["positions"] and changed:
+                save_state(st)
+                changed_any=True
+        except Exception as e:
+            print("MONITOR ERROR",sym,str(e)[:200])
+    if changed_any:
+        send(active_report(st))
+
+def scan(st):
+    if len(st["positions"])>=MAX_ACTIVE:
+        print("SLOTS FULL",len(st["positions"]))
+        return
+    btc=btc_direction()
+    if btc=="FLAT":
+        print("BTC FILTER: FLAT")
+        return
+    try:
+        tickers=market()
+    except Exception as e:
+        print("MARKET ERROR",e)
+        return
+    for t in tickers:
+        if len(st["positions"])>=MAX_ACTIVE:
+            break
+        sym=t["contract"]
+        if sym in st["positions"]:
+            continue
+        last=num(st["last_signal"].get(sym))
+        if time.time()-last<COOLDOWN*60:
+            continue
+        try:
+            sig=find_signal(t,btc)
+            if not sig:
                 continue
-            if tp2 and not p.get("tp2_hit"):
-                p["tp1_hit"]=p["tp2_hit"]=p["breakeven"]=True
-                p["sl"]=p["entry"];p["status"]="TP2 도달"
-                tg(f"🎯 TP2 도달 | {sym}\n다음 목표: TP3\n손절가: 진입가로 이동\n⏱️ 보유 시간: {elapsed(p['entry_time'])}")
-                tg(active_report(st,prices));changed=True
-            elif tp1 and not p.get("tp1_hit"):
-                p["tp1_hit"]=p["breakeven"]=True
-                p["sl"]=p["entry"];p["status"]="TP1 도달"
-                tg(f"🎯 TP1 도달 | {sym}\n다음 목표: TP2\n손절가: 진입가로 이동\n⏱️ 보유 시간: {elapsed(p['entry_time'])}")
-                tg(active_report(st,prices));changed=True
-        except Exception as e:print("Monitor error",sym,e)
-    if changed:save(st)
+            st["positions"][sym]=sig
+            st["last_signal"][sym]=time.time()
+            save_state(st)
+            send(
+                f"🚨 GATE.IO FUTURES SIGNAL\n━━━━━━━━━━━━━━\n"
+                f"{sym} | {sig['side']}\n진입: {sig['entry']:.8g}\n"
+                f"SL: {sig['sl']:.8g}\nTP1: {sig['tp1']:.8g}\n"
+                f"TP2: {sig['tp2']:.8g}\nTP3: {sig['tp3']:.8g}\n"
+                f"점수: {sig['score']}/6\nRSI: {sig['rsi']:.1f} | "
+                f"거래량: {sig['volume_surge']:.1f}배\n"
+                f"근거: {', '.join(sig['reasons'])}\n"
+                "※ 시그널 전용, 자동 주문 미실행"
+            )
+            print("SIGNAL",sym,sig["side"],sig["score"])
+        except Exception as e:
+            print("SCAN ERROR",sym,str(e)[:200])
 
 def main():
-    if not TOKEN or not CHAT:
-        print("Set TELEGRAM_TOKEN and TELEGRAM_CHAT_ID")
-        return
-    st=load(STATE,{"positions":{},"last_signal":{}})
-    st.setdefault("positions",{});st.setdefault("last_signal",{})
-    for sym,p in st["positions"].items():
-        if not p.get("entry_time"):
-            p["entry_time"]=p.get("opened_at") or p.get("bar_time") or now().isoformat()
-        p.setdefault("category",category(sym))
-        p.setdefault("status","TP2 도달" if p.get("tp2_hit") else "TP1 도달" if p.get("tp1_hit") else "추적 중")
-    mk=market();prices={s:p for s,p,_ in mk}
-    monitor(st,prices)
-    btc=btc_trend()
-    for sym,price,turnover in mk:
-        if sym in st["positions"] or len(st["positions"])>=MAX_ACTIVE:continue
-        last=st["last_signal"].get(sym)
-        if last and (now()-parsed(last)).total_seconds()<COOLDOWN*60:continue
-        p=find_signal(sym,price,turnover,btc)
-        if not p:continue
-        st["positions"][sym]=p;st["last_signal"][sym]=now().isoformat()
-        save(st);tg(signal_message(p))
-        tg(slot_notice(st,"새 시그널 진입",sym,prices))
-        log("opened",{"symbol":sym,"direction":p["direction"],"entry":price})
-    save(st)
-    print(active_report(st,prices))
+    print("GATE.IO FUTURES BOT",stamp())
+    st=load_state()
+    for p in st["positions"].values():
+        p.setdefault("entry_time",stamp())
+        p.setdefault("tp1_hit",False)
+        p.setdefault("tp2_hit",False)
+        p.setdefault("tp3_hit",False)
+        p.setdefault("status","ACTIVE")
+        p.setdefault("last_price",num(p.get("entry")))
+    save_state(st)
+    monitor(st)
+    scan(st)
+    print("ACTIVE:",len(st["positions"]))
+    print(stats_report(st))
 
-if __name__=="__main__":main()
+if __name__=="__main__":
+    main()
