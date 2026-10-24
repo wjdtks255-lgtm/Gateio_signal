@@ -1,10 +1,40 @@
 {
   "active": [],
-  "positions": {},
+  "positions": {
+    "MAGMA_USDT": {
+      "symbol": "MAGMA_USDT",
+      "side": "SHORT",
+      "entry": 0.38188,
+      "sl": 0.388121,
+      "tp1": 0.3743908,
+      "tp2": 0.369398,
+      "tp3": 0.363157,
+      "rsi": 45.900137425561134,
+      "atr": 0.00445785714285714,
+      "volume_surge": 1.214314435062324,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 증가",
+        "EMA21 조건 충족",
+        "캔들 방향 확인"
+      ],
+      "entry_time": "2026-10-24T10:25:26+09:00",
+      "last_price": 0.38188,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE"
+    }
+  },
   "history": [],
   "cooldown": {},
   "cooldowns": {},
-  "last_signal": {},
+  "last_signal": {
+    "MAGMA_USDT": 1792805126.7547581
+  },
   "last_bars": {},
   "stats": {
     "tp3": 0,
