@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.05051,
+      "last_price": 0.04943,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08552,
+      "last_price": 0.08529,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 195.88,
+      "last_price": 196.05,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:15:31+09:00",
-      "last_price": 55.85,
+      "last_price": 55.94,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:39+09:00",
-      "last_price": 703.79,
+      "last_price": 704.28,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,45 +192,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:45+09:00",
-      "last_price": 0.16592,
+      "last_price": 0.1658,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 9
-    },
-    "ZEC_USDT": {
-      "symbol": "ZEC_USDT",
-      "side": "SHORT",
-      "entry": 1143.48,
-      "sl": 1154.0230000000001,
-      "tp1": 1122.394,
-      "tp2": 1106.5794999999998,
-      "tp3": 1090.7649999999999,
-      "sl_pct": -0.9220100045475321,
-      "tp1_pct": 1.8440200090950443,
-      "tp2_pct": 3.2270350159163423,
-      "tp3_pct": 4.61005002273762,
-      "leverage": 16,
-      "rsi": 36.117330944916866,
-      "atr": 7.530714285714323,
-      "volume_surge": 5.440336460144422,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-24T23:30:37+09:00",
-      "last_price": 1151.68,
-      "tp1_hit": true,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 6
     },
     "XAU_USDT": {
       "symbol": "XAU_USDT",
@@ -258,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T00:10:30+09:00",
-      "last_price": 3993.46,
+      "last_price": 3993.38,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004953,
+      "last_price": 0.004978,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -324,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:45+09:00",
-      "last_price": 322.03,
+      "last_price": 322.27,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 3
+    },
+    "MITO_USDT": {
+      "symbol": "MITO_USDT",
+      "side": "SHORT",
+      "entry": 0.00885,
+      "sl": 0.009038000000000001,
+      "tp1": 0.008474,
+      "tp2": 0.008192,
+      "tp3": 0.00791,
+      "sl_pct": -2.124293785310742,
+      "tp1_pct": 4.248587570621464,
+      "tp2_pct": 7.435028248587577,
+      "tp3_pct": 10.621468926553671,
+      "leverage": 7,
+      "rsi": 36.84210526315792,
+      "atr": 0.0001342857142857144,
+      "volume_surge": 1.4828974415185234,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-25T01:55:50+09:00",
+      "last_price": 0.00885,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 6
     }
   },
   "history": [
@@ -644,6 +644,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -1.155
+    },
+    {
+      "symbol": "ZEC_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 1143.48,
+      "exit": 1154.0230000000001,
+      "entry_time": "2026-10-24T23:30:37+09:00",
+      "exit_time": "2026-10-25T01:55:20+09:00",
+      "duration": "2시간 24분",
+      "outcome": "TP1_BE",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.922
     }
   ],
   "cooldown": {},
@@ -680,7 +693,8 @@
     "ZEC_USDT": 1792852237.3147538,
     "XAU_USDT": 1792854630.7823164,
     "ENA_USDT": 1792855244.0377934,
-    "AVGO_USDT": 1792858545.6086667
+    "AVGO_USDT": 1792858545.6086667,
+    "MITO_USDT": 1792860950.023819
   },
   "last_bars": {},
   "stats": {
