@@ -8,7 +8,6 @@ import logging
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
-# 환경변수 안전 조회 함수들
 def getenv_float(key, default):
     try:
         v = float(os.getenv(key, default))
@@ -29,7 +28,6 @@ def getenv_int(key, default):
         logging.warning(f"환경변수 {key} 값 오류, 기본값({default}) 적용")
         return int(default)
 
-# 기본 상수 및 환경 변수
 BASE = "https://api.gateio.ws/api/v4"
 TOKEN = os.getenv("GATE_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_TOKEN", "")
 CHAT = os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID", "")
@@ -50,7 +48,7 @@ logging.basicConfig(
 )
 
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/3.5"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/3.7"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC
 COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA
@@ -76,9 +74,6 @@ def asset(sym):
         return "코인"
     return "기타·미확인"
 
-def asset_line(sym):
-    return f"자산: {asset(sym)}"
-
 def now():
     return datetime.now(TZ)
 
@@ -92,7 +87,6 @@ def num(v, d=0.0):
     except Exception:
         return d
 
-# API 호출 함수 (재시도 포함)
 def api(path, params=None, retries=3, delay=2):
     for attempt in range(retries):
         try:
@@ -106,7 +100,6 @@ def api(path, params=None, retries=3, delay=2):
             else:
                 raise
 
-# 텔레그램 메시지 전송 (재시도 포함)
 def send(msg, retries=3):
     if not TOKEN or not CHAT:
         logging.warning("텔레그램 설정 미완료")
@@ -128,7 +121,6 @@ def send(msg, retries=3):
     logging.error("텔레그램 메시지 전송 최대 재시도 실패")
     return False
 
-# 상태 파일 읽기/쓰기 (파일 락 적용)
 def save_json_with_lock(path, data):
     tmp = path.with_suffix(path.suffix + ".tmp")
     with open(tmp, "w", encoding="utf-8") as f:
@@ -177,9 +169,6 @@ def get_next_slot(positions):
             return i
     return len(positions) + 1
 
-def slot_map(st):
-    return {p.get("slot", i): (sym, p.get("side", "?")) for i, (sym, p) in enumerate(st["positions"].items(), 1)}
-
 def elapsed(p):
     try:
         d = datetime.fromisoformat(p["entry_time"])
@@ -202,21 +191,8 @@ def pnl(p, price):
         delta = -delta
     return delta / entry * 100
 
-def slot_change_message(old, new, st):
-    """슬롯 변동 시 변동 내역과 함께 현재 보유 중인 전체 종목의 수익률과 보유 시간을 한 번에 출력"""
-    lines = ["🔔 <b>GATE.IO 슬롯 변동 및 전체 보유 현황</b>", "━━━━━━━━━━━━━━"]
-    changes = []
-    for slot, (sym, side) in old.items():
-        if slot not in new or new[slot][0] != sym:
-            changes.append(f"🔴 슬롯 #{slot} 종료: <b>{sym}</b> ({asset(sym)}) | {side}")
-    for slot, (sym, side) in new.items():
-        if slot not in old or old[slot][0] != sym:
-            changes.append(f"🟢 슬롯 #{slot} 신규 진입: <b>{sym}</b> ({asset(sym)}) | {side}")
-            
-    if changes:
-        lines.extend(changes)
-        lines.append("━━━━━━━━━━━━━━")
-
+def get_status_overview_msg(st, header_title="🔔 <b>GATE.IO 현재 보유 현황</b>"):
+    lines = [header_title, "━━━━━━━━━━━━━━"]
     ps = st.get("positions", {})
     lines.append(f"📋 <b>전체 보유 종목 리스트 ({len(ps)}/{MAX_ACTIVE})</b>")
     if not ps:
@@ -377,38 +353,6 @@ def find_signal(t, btc):
         "status": "ACTIVE"
     }
 
-def tp_status(p):
-    if p.get("tp3_hit"):
-        return "TP3 달성"
-    if p.get("tp2_hit"):
-        return "TP1·TP2 달성 / TP3 대기"
-    if p.get("tp1_hit"):
-        return "TP1 달성 / TP2 대기"
-    return "TP1 대기 / TP2 대기 / TP3 대기"
-
-def active_report(st):
-    ps = st["positions"]
-    lines = ["📊 <b>GATE.IO FUTURES | 활성 시그널 현황</b>",
-           f"활성 슬롯: <b>{len(ps)}/{MAX_ACTIVE}</b>"]
-    if not ps:
-        lines.append("활성 시그널 없음")
-    sorted_positions = sorted(ps.items(), key=lambda x: x[1].get("slot", 99))
-    for sym, p in sorted_positions:
-        slot_num = p.get("slot", "?")
-        price = num(p.get("last_price"), num(p.get("entry")))
-        side_icon = "🟢" if p.get("side") == "LONG" else "🔴"
-        chart_url = f"https://www.gate.io/futures/USDT/{sym}"
-        lines.extend([
-            f"\n#{slot_num} <b>{sym}</b> ({asset(sym)}) {side_icon} {p.get('side')} | 레버리지: <b>{p.get('leverage', 5)}x</b>",
-            f"진입 <code>{num(p.get('entry')):.8g}</code> / 현재 <code>{price:.8g}</code>",
-            f"수익률: <b>{pnl(p, price):+.2f}%</b> | 보유: {elapsed(p)}",
-            f"상태: {tp_status(p)}",
-            f"SL: <code>{num(p.get('sl')):.8g}</code> ({p.get('sl_pct', 0):+.2f}%)",
-            f"TP1: <code>{num(p.get('tp1')):.8g}</code> ({p.get('tp1_pct', 0):+.2f}%) | TP2: <code>{num(p.get('tp2')):.8g}</code> ({p.get('tp2_pct', 0):+.2f}%) | TP3: <code>{num(p.get('tp3')):.8g}</code> ({p.get('tp3_pct', 0):+.2f}%)",
-            f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>"
-        ])
-    return "\n".join(lines)
-
 def stats_report(st):
     counts = {"TP3": 0, "TP2_BE": 0, "TP1_BE": 0, "SL": 0}
     for x in st.get("history", []):
@@ -465,24 +409,25 @@ def close_position(st, sym, reason, price):
     
     chart_url = f"https://www.gate.io/futures/USDT/{sym}"
     label_map = {"TP3": "TP3 목표 달성", "TP2_BE": "TP2 이후 본전 종료", "TP1_BE": "1차 본전 종료", "SL": "초기 손절"}
+    
+    # 이벤트 2: 포지션 종료 시에만 발송
+    overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO 포지션 종료 및 현재 보유 현황</b>")
     send(
         f"🏁 <b>시그널 종료 | {sym} ({asset(sym)}) {p.get('side')}</b>\n"
         f"결과 분류: <b>{label_map.get(outcome, outcome)}</b>\n"
         f"진입: <code>{num(p.get('entry')):.8g}</code> → 종료: <code>{price:.8g}</code>\n"
         f"실현 변동률: <b>{pnl(p, price):+.2f}%</b>\n"
         f"보유 시간: {elapsed(p)}\n"
-        f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>"
+        f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n\n"
+        f"{overview_msg}"
     )
-    send(active_report(st))
     send(stats_report(st))
 
 def monitor(st):
-    changed_any = False
     for sym in list(st["positions"]):
         p = st["positions"].get(sym)
         if not p:
             continue
-        changed = False
         try:
             cs = candles(sym, "1m", 5)
             if len(cs) < 2:
@@ -506,17 +451,19 @@ def monitor(st):
             if tp_triggered:
                 for target, flag, level in tp_triggered:
                     p[flag] = True
-                    changed = True
+                    save_state(st)
                     if target == "tp1":
-                        p["sl"] = num(p.get("entry"))
-                        send(f"🎯 <b>TP1 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\n손절가를 진입가(본전)로 이동\nTP2 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>")
+                        # 이벤트 3-1: TP1 도달 시에만 발송
+                        overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO TP1 도달 및 현재 보유 현황</b>")
+                        send(f"🎯 <b>TP1 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\n손절가를 진입가(본전)로 이동\nTP2 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n\n{overview_msg}")
                     elif target == "tp2":
-                        send(f"🎯 <b>TP2 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\nTP3 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>")
+                        # 이벤트 3-2: TP2 도달 시에만 발송
+                        overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO TP2 도달 및 현재 보유 현황</b>")
+                        send(f"🎯 <b>TP2 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\nTP3 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n\n{overview_msg}")
                     else:
                         p["last_price"] = level
                         save_state(st)
                         close_position(st, sym, "TP3", level)
-                        changed_any = True
                         break
                 if sym not in st["positions"]:
                     continue
@@ -524,16 +471,12 @@ def monitor(st):
             sl_hit = c["l"] <= sl if long else c["h"] >= sl
             if sl_hit:
                 close_position(st, sym, "SL 또는 본절 청산", sl)
-                changed_any = True
                 continue
             
-            if sym in st["positions"] and changed:
-                save_state(st)
-                changed_any = True
+            # 일반 가격 갱신 시에는 저장만 하고 절대 알림을 보내지 않음
+            save_state(st)
         except Exception as e:
             logging.error(f"MONITOR ERROR {sym}: {e}")
-    if changed_any:
-        send(active_report(st))
 
 def scan(st):
     if len(st["positions"]) >= MAX_ACTIVE:
@@ -570,6 +513,8 @@ def scan(st):
             save_state(st)
             
             chart_url = f"https://www.gate.io/futures/USDT/{sym}"
+            # 이벤트 1: 신규 진입(추가) 시에만 발송
+            overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO 신규 진입 및 현재 보유 현황</b>")
             send(
                 f"🚨 <b>GATE.IO FUTURES SIGNAL</b>\n━━━━━━━━━━━━━━\n"
                 f"📌 슬롯: <b>#{slot_id}</b> | 계약: <b>{sym}</b> ({asset(sym)})\n"
@@ -584,19 +529,18 @@ def scan(st):
                 f"⚡ 추천 레버리지: <b>{sig['leverage']}x</b>\n"
                 f"🧠 점수: {sig['score']}/6 | RSI: {sig['rsi']:.1f} | 거래량: {sig['volume_surge']:.1f}배\n"
                 f"🔎 근거: {', '.join(sig['reasons'])}\n"
-                f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n"
-                "※ 시그널 전용, 자동 주문 미실행"
+                f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n\n"
+                f"{overview_msg}"
             )
             logging.info(f"SIGNAL {sym} {sig['side']} {sig['score']}")
         except Exception as e:
             logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT (PROD READY) 시작")
+    logging.info("GATE.IO FUTURES BOT 시작")
     try:
         st = load_state()
     except RuntimeError:
-        send("⚠️ 상태 파일 오류 발생, 봇 실행 중단")
         return
 
     for sym, p in st["positions"].items():
@@ -614,19 +558,10 @@ def main():
         if "slot" not in p:
             p["slot"] = get_next_slot(st["positions"])
             
-    old_map = {p.get("slot"): (sym, p.get("side")) for sym, p in st["positions"].items()}
-    
     monitor(st)
     scan(st)
-    
-    new_map = {p.get("slot"): (sym, p.get("side")) for sym, p in st["positions"].items()}
-    msg = slot_change_message(old_map, new_map, st)
-    if msg:
-        send(msg)
-        
     save_state(st)
     logging.info(f"ACTIVE: {len(st['positions'])}")
-    print(stats_report(st))
 
 if __name__ == "__main__":
     main()
