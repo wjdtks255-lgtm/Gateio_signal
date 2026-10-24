@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.06914,
+      "last_price": 0.06939,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:15:52+09:00",
-      "last_price": 0.29548,
+      "last_price": 0.29628,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,12 +93,78 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:46:20+09:00",
-      "last_price": 3.045,
+      "last_price": 3.046,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 2
+    },
+    "US_USDT": {
+      "symbol": "US_USDT",
+      "side": "SHORT",
+      "entry": 0.00541,
+      "sl": 0.0054965,
+      "tp1": 0.0053062,
+      "tp2": 0.005237,
+      "tp3": 0.0051505000000000006,
+      "sl_pct": -1.5988909426987017,
+      "tp1_pct": 1.918669131238452,
+      "tp2_pct": 3.1977818853974034,
+      "tp3_pct": 4.796672828096106,
+      "leverage": 9,
+      "rsi": 34.554973821989535,
+      "atr": 6.178571428571419e-05,
+      "volume_surge": 1.4832260499623413,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 증가",
+        "EMA21 조건 충족",
+        "캔들 방향 확인"
+      ],
+      "entry_time": "2026-10-24T13:00:54+09:00",
+      "last_price": 0.00541,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 3
+    },
+    "UVXY_USDT": {
+      "symbol": "UVXY_USDT",
+      "side": "SHORT",
+      "entry": 18.66,
+      "sl": 18.718,
+      "tp1": 18.5904,
+      "tp2": 18.544,
+      "tp3": 18.486,
+      "sl_pct": -0.3108252947481234,
+      "tp1_pct": 0.37299035369775574,
+      "tp2_pct": 0.6216505894962469,
+      "tp3_pct": 0.9324758842443702,
+      "leverage": 20,
+      "rsi": 44.444444444444116,
+      "atr": 0.04142857142857156,
+      "volume_surge": 2.9105174668410236,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 증가",
+        "EMA21 조건 충족",
+        "캔들 방향 확인"
+      ],
+      "entry_time": "2026-10-24T13:01:03+09:00",
+      "last_price": 18.66,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 5
     }
   },
   "history": [
@@ -136,7 +202,9 @@
     "SOPH_USDT": 1792810858.1396677,
     "GWEI_USDT": 1792811747.7697523,
     "UAI_USDT": 1792811752.7239652,
-    "NG_USDT": 1792813580.7691078
+    "NG_USDT": 1792813580.7691078,
+    "US_USDT": 1792814454.0091486,
+    "UVXY_USDT": 1792814463.856478
   },
   "last_bars": {},
   "stats": {
