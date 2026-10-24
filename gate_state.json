@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04991,
+      "last_price": 0.04952,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08528,
+      "last_price": 0.08506,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,45 +93,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 195.59,
+      "last_price": 195.45,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 2
-    },
-    "LTC_USDT": {
-      "symbol": "LTC_USDT",
-      "side": "SHORT",
-      "entry": 55.87,
-      "sl": 56.151999999999994,
-      "tp1": 55.306,
-      "tp2": 54.883,
-      "tp3": 54.46000000000001,
-      "sl_pct": -0.50474315374977,
-      "tp1_pct": 1.0094863074995526,
-      "tp2_pct": 1.7666010381242074,
-      "tp3_pct": 2.5237157687488625,
-      "leverage": 20,
-      "rsi": 33.87096774193539,
-      "atr": 0.20142857142857043,
-      "volume_surge": 1.5649466959337845,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-24T23:15:31+09:00",
-      "last_price": 56.14,
-      "tp1_hit": true,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 10
     },
     "QQQ_USDT": {
       "symbol": "QQQ_USDT",
@@ -192,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:45+09:00",
-      "last_price": 0.16585,
+      "last_price": 0.16577,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T00:10:30+09:00",
-      "last_price": 3995.58,
+      "last_price": 3995.93,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004777,
+      "last_price": 0.004767,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:45+09:00",
-      "last_price": 321.85,
+      "last_price": 321.94,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -324,7 +291,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00887,
+      "last_price": 0.00884,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -657,6 +624,19 @@
       "outcome": "TP1_BE",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.922
+    },
+    {
+      "symbol": "LTC_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 55.87,
+      "exit": 56.151999999999994,
+      "entry_time": "2026-10-24T23:15:31+09:00",
+      "exit_time": "2026-10-25T03:15:23+09:00",
+      "duration": "3시간 59분",
+      "outcome": "TP1_BE",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.5047
     }
   ],
   "cooldown": {},
