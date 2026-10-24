@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.069,
+      "last_price": 0.06912,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:00:54+09:00",
-      "last_price": 0.005317,
+      "last_price": 0.005325,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:15:59+09:00",
-      "last_price": 0.09467,
+      "last_price": 0.09454,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T14:15:40+09:00",
-      "last_price": 23.5,
+      "last_price": 23.52,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,45 +225,12 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T14:15:48+09:00",
-      "last_price": 0.001786,
+      "last_price": 0.001787,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 8
-    },
-    "JTO_USDT": {
-      "symbol": "JTO_USDT",
-      "side": "SHORT",
-      "entry": 0.443,
-      "sl": 0.44516,
-      "tp1": 0.44040799999999997,
-      "tp2": 0.43867999999999996,
-      "tp3": 0.4365199999999999,
-      "sl_pct": -0.4875846501128657,
-      "tp1_pct": 0.5851015801354489,
-      "tp2_pct": 0.975169300225744,
-      "tp3_pct": 1.4627539503386224,
-      "leverage": 20,
-      "rsi": 46.53465346534662,
-      "atr": 0.0015428571428571594,
-      "volume_surge": 8.992811077262425,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 증가",
-        "EMA21 조건 충족",
-        "캔들 방향 확인"
-      ],
-      "entry_time": "2026-10-24T14:15:51+09:00",
-      "last_price": 0.4371,
-      "tp1_hit": true,
-      "tp2_hit": true,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 9
     },
     "FLOKI_USDT": {
       "symbol": "FLOKI_USDT",
@@ -324,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:10:35+09:00",
-      "last_price": 76.448,
+      "last_price": 76.487,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 4
+    },
+    "ETH_USDT": {
+      "symbol": "ETH_USDT",
+      "side": "SHORT",
+      "entry": 2378.12,
+      "sl": 2383.541,
+      "tp1": 2367.278,
+      "tp2": 2359.1464999999994,
+      "tp3": 2351.0149999999994,
+      "sl_pct": -0.2279531730947251,
+      "tp1_pct": 0.45590634618943116,
+      "tp2_pct": 0.7978361058315188,
+      "tp3_pct": 1.1397658654735874,
+      "leverage": 20,
+      "rsi": 35.94182825484788,
+      "atr": 3.8721428571429573,
+      "volume_surge": 1.519945351479082,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-24T16:35:27+09:00",
+      "last_price": 2378.12,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 9
     }
   },
   "history": [
@@ -397,6 +397,19 @@
       "outcome": "TP3",
       "reason": "TP3",
       "return_pct": 2.4706
+    },
+    {
+      "symbol": "JTO_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.443,
+      "exit": 0.4365199999999999,
+      "entry_time": "2026-10-24T14:15:51+09:00",
+      "exit_time": "2026-10-24T16:35:24+09:00",
+      "duration": "2시간 19분",
+      "outcome": "TP3",
+      "reason": "TP3",
+      "return_pct": 1.4628
     }
   ],
   "cooldown": {},
@@ -416,7 +429,8 @@
     "GALA_USDT": 1792818948.8323374,
     "JTO_USDT": 1792818951.2682505,
     "FLOKI_USDT": 1792818955.5271654,
-    "HYPE_USDT": 1792825835.5093193
+    "HYPE_USDT": 1792825835.5093193,
+    "ETH_USDT": 1792827327.8469315
   },
   "last_bars": {},
   "stats": {
