@@ -1,3 +1,4 @@
+
 import os,json,time,math,requests
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
@@ -16,6 +17,33 @@ TP_R=(1.2,2.0,3.0)
 TZ=timezone(timedelta(hours=9))
 S=requests.Session()
 S.headers.update({"Accept":"application/json","User-Agent":"GateSignalBot/2.0"})
+
+# 자산 분류: 확실하지 않은 심볼은 추정이라고 표시
+STOCKS=set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC
+COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA
+SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
+COMMODITIES=set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT
+NATGAS NG COPPER HG""".split())
+INDICES=set("""SPX NDX NASDAQ SP500 US30 US500 US100 DJ30
+DXY VIX""".split())
+FX=set("""EURUSD GBPUSD USDJPY AUDUSD USDCAD USDCHF NZDUSD
+EUR GBP JPY AUD CAD CHF NZD""".split())
+
+def asset(sym):
+    b=sym.upper().replace("_USDT","").replace("_USD","")
+    if b in COMMODITIES or any(x in b for x in ("GOLD","SILVER","OIL","XAU","XAG","PAXG","XAUT")):
+        return "원자재·귀금속"
+    if b in INDICES or any(x in b for x in ("SP500","NASDAQ","US30")):
+        return "주가지수"
+    if b in FX or any(b.startswith(x) for x in ("EUR_USD","GBP_USD","USD_JPY")):
+        return "외환"
+    if b in STOCKS:
+        return "주식형 토큰·기초자산 추정"
+    # Gate USDT 무기한 계약은 기본적으로 암호화폐 계약으로 취급
+    return "암호화폐(추정)"
+
+def asset_line(sym):
+    return f"자산: {asset(sym)}"
 
 def now():
     return datetime.now(TZ)
@@ -78,6 +106,31 @@ def load_state():
 
 def save_state(st):
     save_json(STATE,st)
+
+def slot_map(st):
+    return {i:(sym,p.get("side","?")) for i,(sym,p) in
+            enumerate(st["positions"].items(),1)}
+
+def slot_change_message(old,new):
+    lines=["🔔 GATE.IO 슬롯 변동 알림","━━━━━━━━━━━━━━"]
+    old_by={sym:(i,side) for i,(sym,side) in old.items()}
+    new_by={sym:(i,side) for i,(sym,side) in new.items()}
+    changes=[]
+    for sym,(i,side) in old_by.items():
+        if sym not in new_by:
+            changes.append(f"🔴 슬롯 #{i} 종료: {sym} | {asset(sym)} | {side}")
+        elif new_by[sym][0]!=i:
+            ni=new_by[sym][0]
+            changes.append(f"🔄 슬롯 이동: #{i} → #{ni} | {sym} | {asset(sym)}")
+    for sym,(i,side) in new_by.items():
+        if sym not in old_by:
+            changes.append(f"🟢 슬롯 #{i} 신규 진입: {sym} | {asset(sym)} | {side}")
+    if not changes:
+        return ""
+    lines.extend(changes)
+    lines.append(f"현재 슬롯: {len(new)}/{MAX_ACTIVE}")
+    lines.append("※ 시그널 전용, 자동 주문 미실행")
+    return "\n".join(lines)
 
 def candles(sym,interval,limit=120):
     raw=api("/futures/usdt/candlesticks",{
@@ -186,7 +239,6 @@ def find_signal(t,btc):
     dist=max(av*STOP_ATR,entry*.002)
     sl=entry-dist if side=="LONG" else entry+dist
     tps=[entry+dist*r if side=="LONG" else entry-dist*r for r in TP_R]
-    reasons=[]
     names=["BTC 추세 일치","EMA 추세 정렬","RSI 조건 충족",
            "거래량 증가","EMA21 조건 충족","캔들 방향 확인"]
     reasons=[names[i] for i,x in enumerate(checks) if x]
@@ -240,6 +292,7 @@ def active_report(st):
         price=num(p.get("last_price"),num(p.get("entry")))
         lines.extend([
             f"\n#{i} {sym} | {p.get('side')}",
+            asset_line(sym),
             f"진입 {num(p.get('entry')):.8g} / 현재 {price:.8g}",
             f"변동 {pnl(p,price):+.2f}% | 보유 {elapsed(p)}",
             tp_status(p),
@@ -270,7 +323,7 @@ def close_position(st,sym,reason,price):
     highest=3 if p.get("tp3_hit") else 2 if p.get("tp2_hit") else 1 if p.get("tp1_hit") else 0
     outcome="TP3" if reason=="TP3" else "TP2" if highest==2 else "TP1" if highest==1 else "SL"
     record={
-        "symbol":sym,"side":p.get("side"),
+        "symbol":sym,"side":p.get("side"),"asset":asset(sym),
         "entry":num(p.get("entry")),"exit":price,
         "entry_time":p.get("entry_time"),"exit_time":stamp(),
         "duration":elapsed(p),"outcome":outcome,"reason":reason,
@@ -282,7 +335,7 @@ def close_position(st,sym,reason,price):
     save_state(st)
     send(
         f"🏁 시그널 종료 | {sym} {p.get('side')}\n"
-        f"분류: {outcome} | 사유: {reason}\n"
+        f"{asset_line(sym)}\n분류: {outcome} | 사유: {reason}\n"
         f"진입: {num(p.get('entry')):.8g} → 종료: {price:.8g}\n"
         f"변동률: {pnl(p,price):+.2f}%\n보유 시간: {elapsed(p)}"
     )
@@ -306,7 +359,6 @@ def monitor(st):
             long=p.get("side")=="LONG"
             sl=num(p.get("sl"))
             slhit=c["l"]<=sl if long else c["h"]>=sl
-            # 동일 1분봉에서 SL과 TP가 모두 닿으면 보수적으로 SL 우선
             if slhit:
                 close_position(st,sym,"SL 또는 본절 청산",price)
                 changed_any=True
@@ -324,10 +376,10 @@ def monitor(st):
                 changed=True
                 if target=="tp1":
                     p["sl"]=num(p.get("entry"))
-                    send(f"🎯 TP1 도달 | {sym}\n변동: {pnl(p,level):+.2f}%\n손절가를 진입가로 이동\nTP2 대기")
+                    send(f"🎯 TP1 도달 | {sym}\n{asset_line(sym)}\n변동: {pnl(p,level):+.2f}%\n손절가를 진입가로 이동\nTP2 대기")
                 elif target=="tp2":
                     p["sl"]=num(p.get("entry"))
-                    send(f"🎯 TP2 도달 | {sym}\n변동: {pnl(p,level):+.2f}%\nTP3 대기")
+                    send(f"🎯 TP2 도달 | {sym}\n{asset_line(sym)}\n변동: {pnl(p,level):+.2f}%\nTP3 대기")
                 else:
                     p["last_price"]=level
                     save_state(st)
@@ -373,7 +425,9 @@ def scan(st):
             save_state(st)
             send(
                 f"🚨 GATE.IO FUTURES SIGNAL\n━━━━━━━━━━━━━━\n"
-                f"{sym} | {sig['side']}\n진입: {sig['entry']:.8g}\n"
+                f"{sig['symbol']} | {sig['side']}\n{asset_line(sym)}\n"
+                f"🕒 발생: {sig['entry_time']}\n"
+                f"진입: {sig['entry']:.8g}\n"
                 f"SL: {sig['sl']:.8g}\nTP1: {sig['tp1']:.8g}\n"
                 f"TP2: {sig['tp2']:.8g}\nTP3: {sig['tp3']:.8g}\n"
                 f"점수: {sig['score']}/6\nRSI: {sig['rsi']:.1f} | "
@@ -395,9 +449,20 @@ def main():
         p.setdefault("tp3_hit",False)
         p.setdefault("status","ACTIVE")
         p.setdefault("last_price",num(p.get("entry")))
-    save_state(st)
+    # 최초 실행은 현재 슬롯을 기준선으로 저장해 가짜 변경 알림 방지
+    old=st.get("slot_snapshot")
+    if not isinstance(old,dict):
+        old=slot_map(st)
+        st["slot_snapshot"]=old
+        save_state(st)
     monitor(st)
     scan(st)
+    new=slot_map(st)
+    msg=slot_change_message(old,new)
+    if msg:
+        send(msg)
+    st["slot_snapshot"]=new
+    save_state(st)
     print("ACTIVE:",len(st["positions"]))
     print(stats_report(st))
 
