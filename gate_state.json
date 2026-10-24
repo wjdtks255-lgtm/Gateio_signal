@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04447,
+      "last_price": 0.04437,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08785,
+      "last_price": 0.08783,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 196.67,
+      "last_price": 196.69,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004847,
+      "last_price": 0.004819,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00882,
+      "last_price": 0.0088,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,12 +225,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T03:45:50+09:00",
-      "last_price": 0.1529,
+      "last_price": 0.1532,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 10
+    },
+    "BR_USDT": {
+      "symbol": "BR_USDT",
+      "side": "SHORT",
+      "entry": 0.4671,
+      "sl": 0.47457900000000003,
+      "tp1": 0.45214200000000004,
+      "tp2": 0.4409235,
+      "tp3": 0.429705,
+      "sl_pct": -1.6011560693641644,
+      "tp1_pct": 3.2023121387283173,
+      "tp2_pct": 5.604046242774564,
+      "tp3_pct": 8.00578034682081,
+      "leverage": 9,
+      "rsi": 41.518248175182514,
+      "atr": 0.005342142857142855,
+      "volume_surge": 1.8777350990846378,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-25T05:15:48+09:00",
+      "last_price": 0.4671,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 3
     }
   },
   "history": [
@@ -648,7 +681,8 @@
     "ENA_USDT": 1792855244.0377934,
     "AVGO_USDT": 1792858545.6086667,
     "MITO_USDT": 1792860950.023819,
-    "CT_USDT": 1792867550.7743998
+    "CT_USDT": 1792867550.7743998,
+    "BR_USDT": 1792872948.3197966
   },
   "last_bars": {},
   "stats": {
