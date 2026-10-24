@@ -1,10 +1,46 @@
 {
   "active": [],
-  "positions": {},
+  "positions": {
+    "CAP_USDT": {
+      "symbol": "CAP_USDT",
+      "side": "SHORT",
+      "entry": 0.06983,
+      "sl": 0.071266,
+      "tp1": 0.06810680000000001,
+      "tp2": 0.066958,
+      "tp3": 0.065522,
+      "sl_pct": -2.056422740942278,
+      "tp1_pct": 2.4677072891307374,
+      "tp2_pct": 4.112845481884576,
+      "tp3_pct": 6.169268222826874,
+      "leverage": 7,
+      "rsi": 32.544378698224875,
+      "atr": 0.0010257142857142856,
+      "volume_surge": 3.2016957174901735,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 증가",
+        "EMA21 조건 충족",
+        "캔들 방향 확인"
+      ],
+      "entry_time": "2026-10-24T11:57:44+09:00",
+      "last_price": 0.06983,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 1
+    }
+  },
   "history": [],
   "cooldown": {},
   "cooldowns": {},
-  "last_signal": {},
+  "last_signal": {
+    "CAP_USDT": 1792810664.2151325
+  },
   "last_bars": {},
   "stats": {
     "tp3": 0,
