@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.06907,
+      "last_price": 0.06909,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:00:54+09:00",
-      "last_price": 0.005262,
+      "last_price": 0.00526,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:15:59+09:00",
-      "last_price": 0.09384,
+      "last_price": 0.0937,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T14:15:40+09:00",
-      "last_price": 23.54,
+      "last_price": 23.53,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T14:15:55+09:00",
-      "last_price": 2.361e-05,
+      "last_price": 2.363e-05,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -225,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:10:35+09:00",
-      "last_price": 75.589,
+      "last_price": 75.6,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -258,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:35:27+09:00",
-      "last_price": 2370.64,
+      "last_price": 2370.69,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -291,7 +291,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:50:32+09:00",
-      "last_price": 1.2807,
+      "last_price": 1.2814,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -324,7 +324,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:50:38+09:00",
-      "last_price": 192.9,
+      "last_price": 192.7,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
