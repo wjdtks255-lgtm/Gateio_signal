@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:50:32+09:00",
-      "last_price": 1.2715,
+      "last_price": 1.2749,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.05809,
+      "last_price": 0.05827,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T21:30:53+09:00",
-      "last_price": 0.08617,
+      "last_price": 0.08662,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 196.78,
+      "last_price": 196.85,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:30:42+09:00",
-      "last_price": 1.644,
+      "last_price": 1.651,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:50:42+09:00",
-      "last_price": 0.6137,
+      "last_price": 0.6165,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -225,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:15:31+09:00",
-      "last_price": 55.61,
+      "last_price": 55.79,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,45 +258,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:39+09:00",
-      "last_price": 703.98,
+      "last_price": 705.0,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 4
-    },
-    "MU_USDT": {
-      "symbol": "MU_USDT",
-      "side": "SHORT",
-      "entry": 875.57,
-      "sl": 877.803,
-      "tp1": 871.104,
-      "tp2": 867.7545,
-      "tp3": 864.4050000000001,
-      "sl_pct": -0.25503386365452757,
-      "tp1_pct": 0.5100677273090681,
-      "tp2_pct": 0.8926185227908725,
-      "tp3_pct": 1.275169318272664,
-      "leverage": 20,
-      "rsi": 33.670653173872736,
-      "atr": 1.5950000000000029,
-      "volume_surge": 1.6443089762188063,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-24T23:20:43+09:00",
-      "last_price": 874.95,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 6
     },
     "ARB_USDT": {
       "symbol": "ARB_USDT",
@@ -324,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T23:20:45+09:00",
-      "last_price": 0.16602,
+      "last_price": 0.16699,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 9
+    },
+    "ZEC_USDT": {
+      "symbol": "ZEC_USDT",
+      "side": "SHORT",
+      "entry": 1143.48,
+      "sl": 1154.0230000000001,
+      "tp1": 1122.394,
+      "tp2": 1106.5794999999998,
+      "tp3": 1090.7649999999999,
+      "sl_pct": -0.9220100045475321,
+      "tp1_pct": 1.8440200090950443,
+      "tp2_pct": 3.2270350159163423,
+      "tp3_pct": 4.61005002273762,
+      "leverage": 16,
+      "rsi": 36.117330944916866,
+      "atr": 7.530714285714323,
+      "volume_surge": 5.440336460144422,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-24T23:30:37+09:00",
+      "last_price": 1143.48,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 6
     }
   },
   "history": [
@@ -566,6 +566,19 @@
       "outcome": "TP3",
       "reason": "TP3",
       "return_pct": 1.1398
+    },
+    {
+      "symbol": "MU_USDT",
+      "side": "SHORT",
+      "asset": "주식",
+      "entry": 875.57,
+      "exit": 877.803,
+      "entry_time": "2026-10-24T23:20:43+09:00",
+      "exit_time": "2026-10-24T23:30:34+09:00",
+      "duration": "0시간 9분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.255
     }
   ],
   "cooldown": {},
@@ -598,7 +611,8 @@
     "LTC_USDT": 1792851331.175869,
     "QQQ_USDT": 1792851639.9242716,
     "MU_USDT": 1792851643.6803734,
-    "ARB_USDT": 1792851645.076853
+    "ARB_USDT": 1792851645.076853,
+    "ZEC_USDT": 1792852237.3147538
   },
   "last_bars": {},
   "stats": {
