@@ -52,7 +52,32 @@ logging.basicConfig(
 S = requests.Session()
 S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/3.4"})
 
-# 유틸 함수들: now, stamp, num 등 기존 코드 유지 생략 가능
+STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC
+COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA
+SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
+COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT
+NATGAS NG COPPER HG""".split())
+INDICES = set("""SPX NDX NASDAQ SP500 US30 US500 US100 DJ30
+DXY VIX""".split())
+FX = set("""EURUSD GBPUSD USDJPY AUDUSD USDCAD USDCHF NZDUSD
+EUR GBP JPY AUD CAD CHF NZD""".split())
+
+def asset(sym):
+    b = sym.upper().replace("_USDT", "").replace("_USD", "")
+    if b in COMMODITIES or any(x in b for x in ("GOLD", "SILVER", "OIL", "XAU", "XAG", "PAXG", "XAUT")):
+        return "원자재"
+    if b in INDICES or any(x in b for x in ("SP500", "NASDAQ", "US30", "SPX", "NDX", "DXY", "VIX")):
+        return "지수"
+    if b in FX or any(b.startswith(x) for x in ("EUR", "GBP", "USD", "AUD", "CAD", "CHF", "NZD")) and "_" in sym:
+        return "외환"
+    if b in STOCKS:
+        return "주식"
+    if sym.endswith("_USDT"):
+        return "코인"
+    return "기타·미확인"
+
+def asset_line(sym):
+    return f"자산: {asset(sym)}"
 
 def now():
     return datetime.now(TZ)
@@ -81,46 +106,6 @@ def api(path, params=None, retries=3, delay=2):
             else:
                 raise
 
-# 상태 파일 읽기/쓰기 (파일 락 적용)
-
-def save_json_with_lock(path, data):
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    with open(tmp, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    with open(path, "a") as f:
-        fcntl.flock(f, fcntl.LOCK_EX)
-        tmp.replace(path)
-        fcntl.flock(f, fcntl.LOCK_UN)
-
-def load_state():
-    if not STATE.exists():
-        return {"positions": {}, "last_signal": {}, "history": []}
-    try:
-        with open(STATE, encoding="utf-8") as f:
-            st = json.load(f)
-        st.setdefault("positions", {})
-        st.setdefault("last_signal", {})
-        st.setdefault("history", [])
-        # 슬롯 번호 정비
-        used_slots = set()
-        for sym, pos in st["positions"].items():
-            slot = pos.get("slot")
-            if slot is None or slot in used_slots or slot > MAX_ACTIVE:
-                for i in range(1, MAX_ACTIVE + 1):
-                    if i not in used_slots:
-                        pos["slot"] = i
-                        used_slots.add(i)
-                        break
-            else:
-                used_slots.add(slot)
-        return st
-    except Exception as e:
-        logging.error(f"상태 파일 로드 실패: {e}")
-        raise RuntimeError("상태 파일 손상 또는 읽기 오류 발생")
-
-def save_state(st):
-    save_json_with_lock(STATE, st)
-
 # 텔레그램 메시지 전송 (재시도 포함)
 def send(msg, retries=3):
     if not TOKEN or not CHAT:
@@ -143,18 +128,460 @@ def send(msg, retries=3):
     logging.error("텔레그램 메시지 전송 최대 재시도 실패")
     return False
 
-# 이후 주요 기능 함수( candles, ema, rsi, atr, find_signal, monitor, scan, main 등 )는 기존 구현 유지하시면 됩니다.
+# 상태 파일 읽기/쓰기 (파일 락 적용)
+def save_json_with_lock(path, data):
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    with open(path, "a") as f:
+        try:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            tmp.replace(path)
+            fcntl.flock(f, fcntl.LOCK_UN)
+        except Exception as e:
+            logging.warning(f"파일 락 적용 예외: {e}")
+            tmp.replace(path)
 
-# 예시로 main 함수
+def save_state(st):
+    save_json_with_lock(STATE, st)
+
+def load_state():
+    if not STATE.exists():
+        return {"positions": {}, "last_signal": {}, "history": []}
+    try:
+        with open(STATE, encoding="utf-8") as f:
+            st = json.load(f)
+        st.setdefault("positions", {})
+        st.setdefault("last_signal", {})
+        st.setdefault("history", [])
+        used_slots = set()
+        for sym, pos in st["positions"].items():
+            slot = pos.get("slot")
+            if slot is None or slot in used_slots or slot > MAX_ACTIVE:
+                for i in range(1, MAX_ACTIVE + 1):
+                    if i not in used_slots:
+                        pos["slot"] = i
+                        used_slots.add(i)
+                        break
+            else:
+                used_slots.add(slot)
+        return st
+    except Exception as e:
+        logging.error(f"상태 파일 로드 실패: {e}")
+        raise RuntimeError("상태 파일 손상 또는 읽기 오류 발생")
+
+def get_next_slot(positions):
+    used_slots = {p.get("slot", 0) for p in positions.values()}
+    for i in range(1, MAX_ACTIVE + 1):
+        if i not in used_slots:
+            return i
+    return len(positions) + 1
+
+def slot_map(st):
+    return {p.get("slot", i): (sym, p.get("side", "?")) for i, (sym, p) in enumerate(st["positions"].items(), 1)}
+
+def slot_change_message(old, new):
+    lines = ["🔔 <b>GATE.IO 슬롯 변동 알림</b>", "━━━━━━━━━━━━━━"]
+    changes = []
+    for slot, (sym, side) in old.items():
+        if slot not in new or new[slot][0] != sym:
+            changes.append(f"🔴 슬롯 #{slot} 종료: <b>{sym}</b> ({asset(sym)}) | {side}")
+    for slot, (sym, side) in new.items():
+        if slot not in old or old[slot][0] != sym:
+            changes.append(f"🟢 슬롯 #{slot} 신규 진입: <b>{sym}</b> ({asset(sym)}) | {side}")
+    if not changes:
+        return ""
+    lines.extend(changes)
+    lines.append(f"현재 활성 슬롯: {len(new)}/{MAX_ACTIVE}")
+    lines.append("※ 시그널 전용, 자동 주문 미실행")
+    return "\n".join(lines)
+
+def candles(sym, interval, limit=120):
+    raw = api("/futures/usdt/candlesticks", {"contract": sym, "interval": interval, "limit": limit})
+    out = []
+    for x in raw:
+        if isinstance(x, dict):
+            q = {k: num(x.get(k)) for k in ("t", "o", "h", "l", "c", "v")}
+        elif isinstance(x, (list, tuple)) and len(x) >= 6:
+            q = dict(t=num(x[0]), v=num(x[1]), c=num(x[2]), h=num(x[3]), l=num(x[4]), o=num(x[5]))
+        else:
+            continue
+        if min(q["o"], q["h"], q["l"], q["c"]) > 0:
+            out.append(q)
+    return sorted(out, key=lambda x: x["t"])
+
+def ema(a, n):
+    if len(a) < n:
+        return None
+    e = sum(a[:n]) / n
+    k = 2 / (n + 1)
+    for x in a[n:]:
+        e = x * k + e * (1 - k)
+    return e
+
+def rsi(a, n=14):
+    if len(a) < n + 1:
+        return None
+    d = [a[i] - a[i-1] for i in range(1, len(a))]
+    g = sum(max(x, 0) for x in d[-n:]) / n
+    l = sum(max(-x, 0) for x in d[-n:]) / n
+    return 100 if l == 0 else 100 - 100 / (1 + g / l)
+
+def atr(cs, n=14):
+    if len(cs) < n + 1:
+        return None
+    tr = []
+    for i in range(1, len(cs)):
+        c = cs[i]
+        prev = cs[i-1]["c"]
+        tr.append(max(c["h"] - c["l"], abs(c["h"] - prev), abs(c["l"] - prev)))
+    return sum(tr[-n:]) / n
+
+def market():
+    rows = api("/futures/usdt/tickers")
+    out = []
+    for x in rows:
+        if not x.get("contract", "").endswith("_USDT"):
+            continue
+        if x.get("in_delisting") is True:
+            continue
+        price = num(x.get("last"))
+        turnover = num(x.get("volume_24h_quote", x.get("volume_24h_usd", 0)))
+        if price > 0 and turnover >= MIN_TURNOVER:
+            x["_price"] = price
+            x["_turnover"] = turnover
+            out.append(x)
+    out.sort(key=lambda x: x["_turnover"], reverse=True)
+    return out
+
+def btc_direction():
+    try:
+        cs = candles("BTC_USDT", "1h", 100)
+        a = [x["c"] for x in cs[:-1]]
+        e20, e50 = ema(a, 20), ema(a, 50)
+        if e20 is None or e50 is None:
+            return "FLAT"
+        if a[-1] > e20 > e50:
+            return "LONG"
+        if a[-1] < e20 < e50:
+            return "SHORT"
+    except Exception as e:
+        logging.error(f"BTC ERROR: {e}")
+    return "FLAT"
+
+def find_signal(t, btc):
+    sym = t["contract"]
+    cs = candles(sym, "15m", 100)
+    if len(cs) < 60:
+        return None
+    cs = cs[:-1]
+    a = [x["c"] for x in cs]
+    v = [x["v"] for x in cs]
+    last = cs[-1]
+    e9, e21, e50 = ema(a, 9), ema(a, 21), ema(a, 50)
+    rv, av = rsi(a), atr(cs)
+    if any(x is None for x in (e9, e21, e50, rv, av)) or av <= 0:
+        return None
+    avg = sum(v[-21:-1]) / 20 if len(v) >= 21 else 0
+    surge = v[-1] / avg if avg > 0 else 0
+    body = abs(last["c"] - last["o"]) >= av * .15
+    funding = num(t.get("funding_rate"))
+    lc = [btc == "LONG", e9 > e21 > e50, 52 <= rv <= 72,
+          surge >= 1.2, last["c"] > e21, last["c"] > last["o"] and body]
+    sc = [btc == "SHORT", e9 < e21 < e50, 28 <= rv <= 48,
+          surge >= 1.2, last["c"] < e21, last["c"] < last["o"] and body]
+    side = "LONG" if sum(lc) >= sum(sc) else "SHORT"
+    
+    if btc == "LONG" and side == "SHORT":
+        return None
+    if btc == "SHORT" and side == "LONG":
+        return None
+
+    checks = lc if side == "LONG" else sc
+    score = sum(checks)
+    if score < MIN_SCORE:
+        return None
+    if side == "LONG" and funding > .003:
+        return None
+    if side == "SHORT" and funding < -.003:
+        return None
+    entry = num(t.get("_price"), last["c"])
+    dist = max(av * STOP_ATR, entry * .002)
+    sl = entry - dist if side == "LONG" else entry + dist
+    tps = [entry + dist * r if side == "LONG" else entry - dist * r for r in TP_R]
+
+    if side == "LONG":
+        sl_pct = ((sl - entry) / entry) * 100
+        tp1_pct = ((tps[0] - entry) / entry) * 100
+        tp2_pct = ((tps[1] - entry) / entry) * 100
+        tp3_pct = ((tps[2] - entry) / entry) * 100
+    else:
+        sl_pct = ((entry - sl) / entry) * 100
+        tp1_pct = ((entry - tps[0]) / entry) * 100
+        tp2_pct = ((entry - tps[1]) / entry) * 100
+        tp3_pct = ((entry - tps[2]) / entry) * 100
+
+    risk_pct = abs(entry - sl) / entry
+    rec_lev = max(2, min(20, round(0.15 / risk_pct))) if risk_pct > 0 else 5
+
+    names = ["BTC 추세 일치", "EMA 추세 정렬", "RSI 조건 충족",
+           "거래량 증가", "EMA21 조건 충족", "캔들 방향 확인"]
+    reasons = [names[i] for i, x in enumerate(checks) if x]
+    return {
+        "symbol": sym, "side": side, "entry": entry, "sl": sl,
+        "tp1": tps[0], "tp2": tps[1], "tp3": tps[2],
+        "sl_pct": sl_pct, "tp1_pct": tp1_pct, "tp2_pct": tp2_pct, "tp3_pct": tp3_pct,
+        "leverage": rec_lev,
+        "rsi": rv, "atr": av, "volume_surge": surge, "score": score,
+        "reasons": reasons, "entry_time": stamp(), "last_price": entry,
+        "tp1_hit": False, "tp2_hit": False, "tp3_hit": False,
+        "status": "ACTIVE"
+    }
+
+def elapsed(p):
+    try:
+        d = datetime.fromisoformat(p["entry_time"])
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=TZ)
+        sec = max(0, int((now() - d.astimezone(TZ)).total_seconds()))
+        days, sec = divmod(sec, 86400)
+        hours, sec = divmod(sec, 3600)
+        mins = sec // 60
+        return f"{days}일 {hours}시간 {mins}분" if days else f"{hours}시간 {mins}분"
+    except Exception:
+        return "-"
+
+def pnl(p, price):
+    entry = num(p.get("entry"))
+    if entry <= 0:
+        return 0
+    delta = price - entry
+    if p.get("side") == "SHORT":
+        delta = -delta
+    return delta / entry * 100
+
+def tp_status(p):
+    if p.get("tp3_hit"):
+        return "TP3 달성"
+    if p.get("tp2_hit"):
+        return "TP1·TP2 달성 / TP3 대기"
+    if p.get("tp1_hit"):
+        return "TP1 달성 / TP2 대기"
+    return "TP1 대기 / TP2 대기 / TP3 대기"
+
+def active_report(st):
+    ps = st["positions"]
+    lines = ["📊 <b>GATE.IO FUTURES | 활성 시그널 현황</b>",
+           f"활성 슬롯: <b>{len(ps)}/{MAX_ACTIVE}</b>"]
+    if not ps:
+        lines.append("활성 시그널 없음")
+    sorted_positions = sorted(ps.items(), key=lambda x: x[1].get("slot", 99))
+    for sym, p in sorted_positions:
+        slot_num = p.get("slot", "?")
+        price = num(p.get("last_price"), num(p.get("entry")))
+        side_icon = "🟢" if p.get("side") == "LONG" else "🔴"
+        chart_url = f"https://www.gate.io/futures/USDT/{sym}"
+        lines.extend([
+            f"\n#{slot_num} <b>{sym}</b> ({asset(sym)}) {side_icon} {p.get('side')} | 레버리지: <b>{p.get('leverage', 5)}x</b>",
+            f"진입 <code>{num(p.get('entry')):.8g}</code> / 현재 <code>{price:.8g}</code>",
+            f"수익률: <b>{pnl(p, price):+.2f}%</b> | 보유: {elapsed(p)}",
+            f"상태: {tp_status(p)}",
+            f"SL: <code>{num(p.get('sl')):.8g}</code> ({p.get('sl_pct', 0):+.2f}%)",
+            f"TP1: <code>{num(p.get('tp1')):.8g}</code> ({p.get('tp1_pct', 0):+.2f}%) | TP2: <code>{num(p.get('tp2')):.8g}</code> ({p.get('tp2_pct', 0):+.2f}%) | TP3: <code>{num(p.get('tp3')):.8g}</code> ({p.get('tp3_pct', 0):+.2f}%)",
+            f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>"
+        ])
+    return "\n".join(lines)
+
+def stats_report(st):
+    counts = {"TP3": 0, "TP2_BE": 0, "TP1_BE": 0, "SL": 0}
+    for x in st.get("history", []):
+        outcome = x.get("outcome")
+        if outcome in counts:
+            counts[outcome] += 1
+            
+    total = sum(counts.values())
+    wins = counts["TP3"] + counts["TP2_BE"]
+    draws = counts["TP1_BE"]
+    losses = counts["SL"]
+    
+    decisive = wins + losses
+    rate = (wins / decisive * 100) if decisive else 0
+    return (
+        "📈 <b>종료 시그널 통계</b>\n━━━━━━━━━━━━━━\n"
+        f"총 종료 시그널: {total}건\n\n"
+        f"🎯 TP3 종료 (승): {counts['TP3']}건\n"
+        f"🎯 TP2 이후 본전 종료 (승): {counts['TP2_BE']}건\n"
+        f"🤝 1차 본전 종료 (무): {counts['TP1_BE']}건\n"
+        f"🛑 초기 손절 종료 (패): {counts['SL']}건\n\n"
+        f"🏆 승률 (승/패 기준): <b>{rate:.1f}%</b>\n"
+        f"(승 {wins}건 / 패 {losses}건 | 무 {draws}건 제외)"
+    )
+
+def close_position(st, sym, reason, price):
+    p = st["positions"].get(sym)
+    if not p:
+        return
+        
+    if reason == "TP3":
+        outcome = "TP3"
+    elif "SL" in reason or "청산" in reason:
+        if p.get("tp2_hit"):
+            outcome = "TP2_BE"
+        elif p.get("tp1_hit"):
+            outcome = "TP1_BE"
+        else:
+            outcome = "SL"
+    else:
+        outcome = "SL"
+
+    record = {
+        "symbol": sym, "side": p.get("side"), "asset": asset(sym),
+        "entry": num(p.get("entry")), "exit": price,
+        "entry_time": p.get("entry_time"), "exit_time": stamp(),
+        "duration": elapsed(p), "outcome": outcome, "reason": reason,
+        "return_pct": round(pnl(p, price), 4)
+    }
+    st["history"].append(record)
+    st["history"] = st["history"][-5000:]
+    del st["positions"][sym]
+    save_state(st)
+    
+    chart_url = f"https://www.gate.io/futures/USDT/{sym}"
+    label_map = {"TP3": "TP3 목표 달성", "TP2_BE": "TP2 이후 본전 종료", "TP1_BE": "1차 본전 종료", "SL": "초기 손절"}
+    send(
+        f"🏁 <b>시그널 종료 | {sym} ({asset(sym)}) {p.get('side')}</b>\n"
+        f"결과 분류: <b>{label_map.get(outcome, outcome)}</b>\n"
+        f"진입: <code>{num(p.get('entry')):.8g}</code> → 종료: <code>{price:.8g}</code>\n"
+        f"실현 변동률: <b>{pnl(p, price):+.2f}%</b>\n"
+        f"보유 시간: {elapsed(p)}\n"
+        f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>"
+    )
+    send(active_report(st))
+    send(stats_report(st))
+
+def monitor(st):
+    changed_any = False
+    for sym in list(st["positions"]):
+        p = st["positions"].get(sym)
+        if not p:
+            continue
+        changed = False
+        try:
+            cs = candles(sym, "1m", 5)
+            if len(cs) < 2:
+                continue
+            c = cs[-2]
+            price = c["c"]
+            p["last_price"] = price
+            long = p.get("side") == "LONG"
+            sl = num(p.get("sl"))
+            
+            tp_triggered = []
+            for target, flag in [("tp1", "tp1_hit"), ("tp2", "tp2_hit"), ("tp3", "tp3_hit")]:
+                if not p.get(flag):
+                    level = num(p.get(target))
+                    hit = c["h"] >= level if long else c["l"] <= level
+                    if hit:
+                        tp_triggered.append((target, flag, level))
+            
+            chart_url = f"https://www.gate.io/futures/USDT/{sym}"
+            
+            if tp_triggered:
+                for target, flag, level in tp_triggered:
+                    p[flag] = True
+                    changed = True
+                    if target == "tp1":
+                        p["sl"] = num(p.get("entry"))
+                        send(f"🎯 <b>TP1 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\n손절가를 진입가(본전)로 이동\nTP2 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>")
+                    elif target == "tp2":
+                        send(f"🎯 <b>TP2 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\nTP3 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>")
+                    else:
+                        p["last_price"] = level
+                        save_state(st)
+                        close_position(st, sym, "TP3", level)
+                        changed_any = True
+                        break
+                if sym not in st["positions"]:
+                    continue
+
+            sl_hit = c["l"] <= sl if long else c["h"] >= sl
+            if sl_hit:
+                close_position(st, sym, "SL 또는 본절 청산", sl)
+                changed_any = True
+                continue
+            
+            if sym in st["positions"] and changed:
+                save_state(st)
+                changed_any = True
+        except Exception as e:
+            logging.error(f"MONITOR ERROR {sym}: {e}")
+    if changed_any:
+        send(active_report(st))
+
+def scan(st):
+    if len(st["positions"]) >= MAX_ACTIVE:
+        logging.info("SLOTS FULL")
+        return
+    btc = btc_direction()
+    if btc == "FLAT":
+        logging.info("BTC FILTER: FLAT")
+        return
+    try:
+        tickers = market()
+    except Exception as e:
+        logging.error(f"MARKET ERROR: {e}")
+        return
+    for t in tickers:
+        if len(st["positions"]) >= MAX_ACTIVE:
+            break
+        sym = t["contract"]
+        if sym in st["positions"]:
+            continue
+        last = num(st["last_signal"].get(sym))
+        if time.time() - last < COOLDOWN * 60:
+            continue
+        try:
+            sig = find_signal(t, btc)
+            if not sig:
+                continue
+            
+            slot_id = get_next_slot(st["positions"])
+            sig["slot"] = slot_id
+            
+            st["positions"][sym] = sig
+            st["last_signal"][sym] = time.time()
+            save_state(st)
+            
+            chart_url = f"https://www.gate.io/futures/USDT/{sym}"
+            send(
+                f"🚨 <b>GATE.IO FUTURES SIGNAL</b>\n━━━━━━━━━━━━━━\n"
+                f"📌 슬롯: <b>#{slot_id}</b> | 계약: <b>{sym}</b> ({asset(sym)})\n"
+                f"📈 방향: <b>{sig['side']}</b>\n"
+                f"🕒 발생: {sig['entry_time']}\n"
+                f"💵 진입가: <code>{sig['entry']:.8g}</code>\n"
+                f"🛑 손절가: <code>{sig['sl']:.8g}</code> (<b>{sig['sl_pct']:+.2f}%</b>)\n"
+                f"🎯 TP1: <code>{sig['tp1']:.8g}</code> (<b>{sig['tp1_pct']:+.2f}%</b>)\n"
+                f"🎯 TP2: <code>{sig['tp2']:.8g}</code> (<b>{sig['tp2_pct']:+.2f}%</b>)\n"
+                f"🎯 TP3: <code>{sig['tp3']:.8g}</code> (<b>{sig['tp3_pct']:+.2f}%</b>)\n"
+                f"━━━━━━━━━━━━━━\n"
+                f"⚡ 추천 레버리지: <b>{sig['leverage']}x</b>\n"
+                f"🧠 점수: {sig['score']}/6 | RSI: {sig['rsi']:.1f} | 거래량: {sig['volume_surge']:.1f}배\n"
+                f"🔎 근거: {', '.join(sig['reasons'])}\n"
+                f"🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n"
+                "※ 시그널 전용, 자동 주문 미실행"
+            )
+            logging.info(f"SIGNAL {sym} {sig['side']} {sig['score']}")
+        except Exception as e:
+            logging.error(f"SCAN ERROR {sym}: {e}")
+
 def main():
-    logging.info("봇 시작")
+    logging.info("GATE.IO FUTURES BOT (PROD READY) 시작")
     try:
         st = load_state()
     except RuntimeError:
         send("⚠️ 상태 파일 오류 발생, 봇 실행 중단")
         return
 
-    # 기본값 보장 및 슬롯 번호 재할당
     for sym, p in st["positions"].items():
         p.setdefault("entry_time", stamp())
         p.setdefault("tp1_hit", False)
@@ -169,11 +596,19 @@ def main():
         p.setdefault("leverage", 5)
         if "slot" not in p:
             p["slot"] = get_next_slot(st["positions"])
-
+            
+    old_map = {p.get("slot"): (sym, p.get("side")) for sym, p in st["positions"].items()}
+    
     monitor(st)
     scan(st)
+    
+    new_map = {p.get("slot"): (sym, p.get("side")) for sym, p in st["positions"].items()}
+    msg = slot_change_message(old_map, new_map)
+    if msg:
+        send(msg)
+        
     save_state(st)
-    logging.info(f"활성 시그널 수: {len(st['positions'])}")
+    logging.info(f"ACTIVE: {len(st['positions'])}")
     print(stats_report(st))
 
 if __name__ == "__main__":
