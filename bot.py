@@ -37,7 +37,10 @@ MIN_TURNOVER = getenv_float("MIN_TURNOVER", 500000)
 MIN_SCORE = getenv_int("MIN_SCORE", 6)
 COOLDOWN = getenv_int("COOLDOWN", 60)
 STOP_ATR = getenv_float("STOP_ATR", 1.4)
-TP_R = (1.2, 2.0, 3.0)
+
+# 🚀 [보완] 목표가 배율을 높여 수익 폭 확대 (TP1: 2.0배, TP2: 3.5배, TP3: 5.0배)
+TP_R = (2.0, 3.5, 5.0)
+
 TZ = timezone(timedelta(hours=9))
 
 logging.basicConfig(
@@ -48,7 +51,7 @@ logging.basicConfig(
 )
 
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/3.7"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/3.8"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC
 COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA
@@ -298,13 +301,21 @@ def find_signal(t, btc):
     if any(x is None for x in (e9, e21, e50, rv, av)) or av <= 0:
         return None
     avg = sum(v[-21:-1]) / 20 if len(v) >= 21 else 0
+    
+    # 🚀 [보완] 정화도 강화: 거래량 급증 기준을 1.2배 -> 1.3배로 상향하여 허수 시그널 차단
     surge = v[-1] / avg if avg > 0 else 0
-    body = abs(last["c"] - last["o"]) >= av * .15
+    
+    # 🚀 [보완] 정화도 강화: 캔들 몸통 조건 강화 (av * 0.15 -> av * 0.2)
+    body = abs(last["c"] - last["o"]) >= av * .20
+    
     funding = num(t.get("funding_rate"))
-    lc = [btc == "LONG", e9 > e21 > e50, 52 <= rv <= 72,
-          surge >= 1.2, last["c"] > e21, last["c"] > last["o"] and body]
-    sc = [btc == "SHORT", e9 < e21 < e50, 28 <= rv <= 48,
-          surge >= 1.2, last["c"] < e21, last["c"] < last["o"] and body]
+    
+    # 롱/숏 조건 판정 (정밀도 필터 적용)
+    lc = [btc == "LONG", e9 > e21 > e50, 54 <= rv <= 70,
+          surge >= 1.3, last["c"] > e21, last["c"] > last["o"] and body]
+    sc = [btc == "SHORT", e9 < e21 < e50, 30 <= rv <= 46,
+          surge >= 1.3, last["c"] < e21, last["c"] < last["o"] and body]
+          
     side = "LONG" if sum(lc) >= sum(sc) else "SHORT"
     
     if btc == "LONG" and side == "SHORT":
@@ -320,6 +331,7 @@ def find_signal(t, btc):
         return None
     if side == "SHORT" and funding < -.003:
         return None
+        
     entry = num(t.get("_price"), last["c"])
     dist = max(av * STOP_ATR, entry * .002)
     sl = entry - dist if side == "LONG" else entry + dist
@@ -340,7 +352,7 @@ def find_signal(t, btc):
     rec_lev = max(2, min(20, round(0.15 / risk_pct))) if risk_pct > 0 else 5
 
     names = ["BTC 추세 일치", "EMA 추세 정렬", "RSI 조건 충족",
-           "거래량 증가", "EMA21 조건 충족", "캔들 방향 확인"]
+           "거래량 급증(정밀)", "EMA21 조건 충족", "캔들 방향/몸통 확인"]
     reasons = [names[i] for i, x in enumerate(checks) if x]
     return {
         "symbol": sym, "side": side, "entry": entry, "sl": sl,
@@ -410,7 +422,6 @@ def close_position(st, sym, reason, price):
     chart_url = f"https://www.gate.io/futures/USDT/{sym}"
     label_map = {"TP3": "TP3 목표 달성", "TP2_BE": "TP2 이후 본전 종료", "TP1_BE": "1차 본전 종료", "SL": "초기 손절"}
     
-    # 이벤트 2: 포지션 종료 시에만 발송
     overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO 포지션 종료 및 현재 보유 현황</b>")
     send(
         f"🏁 <b>시그널 종료 | {sym} ({asset(sym)}) {p.get('side')}</b>\n"
@@ -453,11 +464,9 @@ def monitor(st):
                     p[flag] = True
                     save_state(st)
                     if target == "tp1":
-                        # 이벤트 3-1: TP1 도달 시에만 발송
                         overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO TP1 도달 및 현재 보유 현황</b>")
                         send(f"🎯 <b>TP1 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\n손절가를 진입가(본전)로 이동\nTP2 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n\n{overview_msg}")
                     elif target == "tp2":
-                        # 이벤트 3-2: TP2 도달 시에만 발송
                         overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO TP2 도달 및 현재 보유 현황</b>")
                         send(f"🎯 <b>TP2 도달 | {sym} ({asset(sym)})</b>\n변동률: {pnl(p, level):+.2f}%\nTP3 대기\n🔗 <a href='{chart_url}'>Gate.io 차트 보기</a>\n\n{overview_msg}")
                     else:
@@ -473,7 +482,6 @@ def monitor(st):
                 close_position(st, sym, "SL 또는 본절 청산", sl)
                 continue
             
-            # 일반 가격 갱신 시에는 저장만 하고 절대 알림을 보내지 않음
             save_state(st)
         except Exception as e:
             logging.error(f"MONITOR ERROR {sym}: {e}")
@@ -513,7 +521,6 @@ def scan(st):
             save_state(st)
             
             chart_url = f"https://www.gate.io/futures/USDT/{sym}"
-            # 이벤트 1: 신규 진입(추가) 시에만 발송
             overview_msg = get_status_overview_msg(st, "🔔 <b>GATE.IO 신규 진입 및 현재 보유 현황</b>")
             send(
                 f"🚨 <b>GATE.IO FUTURES SIGNAL</b>\n━━━━━━━━━━━━━━\n"
