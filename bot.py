@@ -50,7 +50,7 @@ logging.basicConfig(
 )
 
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/3.4"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/3.5"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC
 COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA
@@ -180,8 +180,31 @@ def get_next_slot(positions):
 def slot_map(st):
     return {p.get("slot", i): (sym, p.get("side", "?")) for i, (sym, p) in enumerate(st["positions"].items(), 1)}
 
-def slot_change_message(old, new):
-    lines = ["🔔 <b>GATE.IO 슬롯 변동 알림</b>", "━━━━━━━━━━━━━━"]
+def elapsed(p):
+    try:
+        d = datetime.fromisoformat(p["entry_time"])
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=TZ)
+        sec = max(0, int((now() - d.astimezone(TZ)).total_seconds()))
+        days, sec = divmod(sec, 86400)
+        hours, sec = divmod(sec, 3600)
+        mins = sec // 60
+        return f"{days}일 {hours}시간 {mins}분" if days else f"{hours}시간 {mins}분"
+    except Exception:
+        return "-"
+
+def pnl(p, price):
+    entry = num(p.get("entry"))
+    if entry <= 0:
+        return 0
+    delta = price - entry
+    if p.get("side") == "SHORT":
+        delta = -delta
+    return delta / entry * 100
+
+def slot_change_message(old, new, st):
+    """슬롯 변동 시 변동 내역과 함께 현재 보유 중인 전체 종목의 수익률과 보유 시간을 한 번에 출력"""
+    lines = ["🔔 <b>GATE.IO 슬롯 변동 및 전체 보유 현황</b>", "━━━━━━━━━━━━━━"]
     changes = []
     for slot, (sym, side) in old.items():
         if slot not in new or new[slot][0] != sym:
@@ -189,10 +212,26 @@ def slot_change_message(old, new):
     for slot, (sym, side) in new.items():
         if slot not in old or old[slot][0] != sym:
             changes.append(f"🟢 슬롯 #{slot} 신규 진입: <b>{sym}</b> ({asset(sym)}) | {side}")
-    if not changes:
-        return ""
-    lines.extend(changes)
-    lines.append(f"현재 활성 슬롯: {len(new)}/{MAX_ACTIVE}")
+            
+    if changes:
+        lines.extend(changes)
+        lines.append("━━━━━━━━━━━━━━")
+
+    ps = st.get("positions", {})
+    lines.append(f"📋 <b>전체 보유 종목 리스트 ({len(ps)}/{MAX_ACTIVE})</b>")
+    if not ps:
+        lines.append("현재 보유 중인 종목이 없습니다.")
+    else:
+        sorted_positions = sorted(ps.items(), key=lambda x: x[1].get("slot", 99))
+        for sym, p in sorted_positions:
+            slot_num = p.get("slot", "?")
+            price = num(p.get("last_price"), num(p.get("entry")))
+            side_icon = "🟢" if p.get("side") == "LONG" else "🔴"
+            curr_pnl = pnl(p, price)
+            hold_time = elapsed(p)
+            lines.append(f"<b>#{slot_num}</b> {sym} ({asset(sym)}) {side_icon} {p.get('side')}\n  └ 수익률: <b>{curr_pnl:+.2f}%</b> | 보유: {hold_time}")
+            
+    lines.append("━━━━━━━━━━━━━━")
     lines.append("※ 시그널 전용, 자동 주문 미실행")
     return "\n".join(lines)
 
@@ -337,28 +376,6 @@ def find_signal(t, btc):
         "tp1_hit": False, "tp2_hit": False, "tp3_hit": False,
         "status": "ACTIVE"
     }
-
-def elapsed(p):
-    try:
-        d = datetime.fromisoformat(p["entry_time"])
-        if d.tzinfo is None:
-            d = d.replace(tzinfo=TZ)
-        sec = max(0, int((now() - d.astimezone(TZ)).total_seconds()))
-        days, sec = divmod(sec, 86400)
-        hours, sec = divmod(sec, 3600)
-        mins = sec // 60
-        return f"{days}일 {hours}시간 {mins}분" if days else f"{hours}시간 {mins}분"
-    except Exception:
-        return "-"
-
-def pnl(p, price):
-    entry = num(p.get("entry"))
-    if entry <= 0:
-        return 0
-    delta = price - entry
-    if p.get("side") == "SHORT":
-        delta = -delta
-    return delta / entry * 100
 
 def tp_status(p):
     if p.get("tp3_hit"):
@@ -603,7 +620,7 @@ def main():
     scan(st)
     
     new_map = {p.get("slot"): (sym, p.get("side")) for sym, p in st["positions"].items()}
-    msg = slot_change_message(old_map, new_map)
+    msg = slot_change_message(old_map, new_map, st)
     if msg:
         send(msg)
         
