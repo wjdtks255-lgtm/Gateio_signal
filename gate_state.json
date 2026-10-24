@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.06976,
+      "last_price": 0.0697,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:15:52+09:00",
-      "last_price": 0.29673,
+      "last_price": 0.29658,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:00:54+09:00",
-      "last_price": 0.005394,
+      "last_price": 0.0054,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:01:03+09:00",
-      "last_price": 18.64,
+      "last_price": 18.69,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,12 +159,45 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:15:59+09:00",
-      "last_price": 0.09696,
+      "last_price": 0.09682,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 2
+    },
+    "BONK_USDT": {
+      "symbol": "BONK_USDT",
+      "side": "SHORT",
+      "entry": 3.079e-06,
+      "sl": 3.1066e-06,
+      "tp1": 3.0458800000000002e-06,
+      "tp2": 3.0238e-06,
+      "tp3": 2.9962000000000002e-06,
+      "sl_pct": -0.8963949334199401,
+      "tp1_pct": 1.0756739201039254,
+      "tp2_pct": 1.7927898668398803,
+      "tp3_pct": 2.68918480025982,
+      "leverage": 17,
+      "rsi": 41.958041958041974,
+      "atr": 1.9714285714285714e-08,
+      "volume_surge": 1.4568458330953333,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 증가",
+        "EMA21 조건 충족",
+        "캔들 방향 확인"
+      ],
+      "entry_time": "2026-10-24T13:30:50+09:00",
+      "last_price": 3.079e-06,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 6
     }
   },
   "history": [
@@ -218,7 +251,8 @@
     "NG_USDT": 1792813580.7691078,
     "US_USDT": 1792814454.0091486,
     "UVXY_USDT": 1792814463.856478,
-    "CASHCAT_USDT": 1792815359.8328047
+    "CASHCAT_USDT": 1792815359.8328047,
+    "BONK_USDT": 1792816250.884164
   },
   "last_bars": {},
   "stats": {
