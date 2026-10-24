@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:00:54+09:00",
-      "last_price": 0.005203,
+      "last_price": 0.005195,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:15:59+09:00",
-      "last_price": 0.0936,
+      "last_price": 0.09329,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:30:50+09:00",
-      "last_price": 3.078e-06,
+      "last_price": 3.079e-06,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T14:15:55+09:00",
-      "last_price": 2.351e-05,
+      "last_price": 2.352e-05,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:10:35+09:00",
-      "last_price": 75.822,
+      "last_price": 75.695,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:35:27+09:00",
-      "last_price": 2369.26,
+      "last_price": 2369.54,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -225,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T16:50:32+09:00",
-      "last_price": 1.2852,
+      "last_price": 1.2857,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -258,12 +258,78 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.06345,
+      "last_price": 0.06246,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 7
+    },
+    "MAGMA_USDT": {
+      "symbol": "MAGMA_USDT",
+      "side": "SHORT",
+      "entry": 0.23091,
+      "sl": 0.253173,
+      "tp1": 0.186384,
+      "tp2": 0.1529895,
+      "tp3": 0.119595,
+      "sl_pct": -9.6414187345719,
+      "tp1_pct": 19.282837469143825,
+      "tp2_pct": 33.74496557100169,
+      "tp3_pct": 48.20709367285955,
+      "leverage": 2,
+      "rsi": 30.71489121220685,
+      "atr": 0.015902142857142858,
+      "volume_surge": 5.625325357770771,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-24T21:30:42+09:00",
+      "last_price": 0.23091,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 1
+    },
+    "MAGIC_USDT": {
+      "symbol": "MAGIC_USDT",
+      "side": "SHORT",
+      "entry": 0.08723,
+      "sl": 0.08798,
+      "tp1": 0.08573000000000001,
+      "tp2": 0.08460500000000001,
+      "tp3": 0.08348000000000003,
+      "sl_pct": -0.8597959417631557,
+      "tp1_pct": 1.7195918835262953,
+      "tp2_pct": 3.009285796171029,
+      "tp3_pct": 4.298979708815747,
+      "leverage": 17,
+      "rsi": 37.65586034912703,
+      "atr": 0.0005357142857142832,
+      "volume_surge": 1.4835828609328352,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-24T21:30:53+09:00",
+      "last_price": 0.08723,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 8
     }
   },
   "history": [
@@ -432,7 +498,9 @@
     "ETH_USDT": 1792827327.8469315,
     "XRP_USDT": 1792828232.9971972,
     "BE_USDT": 1792828238.5606203,
-    "IRYS_USDT": 1792840879.9569259
+    "IRYS_USDT": 1792840879.9569259,
+    "MAGMA_USDT": 1792845042.9764068,
+    "MAGIC_USDT": 1792845053.1691582
   },
   "last_bars": {},
   "stats": {
