@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04351,
+      "last_price": 0.0432,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 196.57,
+      "last_price": 196.62,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004957,
+      "last_price": 0.004958,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,45 +126,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00884,
+      "last_price": 0.00883,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 6
-    },
-    "CT_USDT": {
-      "symbol": "CT_USDT",
-      "side": "SHORT",
-      "entry": 0.1539,
-      "sl": 0.15910000000000002,
-      "tp1": 0.14350000000000002,
-      "tp2": 0.13570000000000002,
-      "tp3": 0.1279,
-      "sl_pct": -3.37881741390514,
-      "tp1_pct": 6.757634827810262,
-      "tp2_pct": 11.82586094866796,
-      "tp3_pct": 16.89408706952566,
-      "leverage": 4,
-      "rsi": 33.55481727574751,
-      "atr": 0.0037142857142857155,
-      "volume_surge": 3.4983950236666,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-25T03:45:50+09:00",
-      "last_price": 0.1585,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 10
     },
     "BR_USDT": {
       "symbol": "BR_USDT",
@@ -192,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T05:15:48+09:00",
-      "last_price": 0.45968,
+      "last_price": 0.45917,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -291,7 +258,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:45:42+09:00",
-      "last_price": 1912.46,
+      "last_price": 1913.73,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -324,12 +291,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 111.65,
+      "last_price": 111.69,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 8
+    },
+    "WLD_USDT": {
+      "symbol": "WLD_USDT",
+      "side": "SHORT",
+      "entry": 0.4642,
+      "sl": 0.4686571428571429,
+      "tp1": 0.4552857142857143,
+      "tp2": 0.4486,
+      "tp3": 0.4419142857142857,
+      "sl_pct": -0.9601772634948044,
+      "tp1_pct": 1.9203545269895965,
+      "tp2_pct": 3.360620422231797,
+      "tp3_pct": 4.8008863174739975,
+      "leverage": 16,
+      "rsi": 37.50000000000018,
+      "atr": 0.002785714285714284,
+      "volume_surge": 3.002320199652121,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(정밀)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-25T07:40:29+09:00",
+      "last_price": 0.4642,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 10
     }
   },
   "history": [
@@ -761,6 +761,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.2
+    },
+    {
+      "symbol": "CT_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.1539,
+      "exit": 0.15910000000000002,
+      "entry_time": "2026-10-25T03:45:50+09:00",
+      "exit_time": "2026-10-25T07:40:24+09:00",
+      "duration": "3시간 54분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -3.3788
     }
   ],
   "cooldown": {},
@@ -805,7 +818,8 @@
     "ATOM_USDT": 1792876552.7508776,
     "META_USDT": 1792877462.1624138,
     "ANTHROPIC_USDT": 1792878342.6301897,
-    "BZ_USDT": 1792879534.8706632
+    "BZ_USDT": 1792879534.8706632,
+    "WLD_USDT": 1792881629.4397125
   },
   "last_bars": {},
   "stats": {
