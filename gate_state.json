@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.0697,
+      "last_price": 0.06947,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:00:58+09:00",
-      "last_price": 0.001541,
+      "last_price": 0.001531,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -71,7 +71,7 @@
       "symbol": "UAI_USDT",
       "side": "SHORT",
       "entry": 0.30078,
-      "sl": 0.303257,
+      "sl": 0.30078,
       "tp1": 0.2978076,
       "tp2": 0.29582600000000003,
       "tp3": 0.293349,
@@ -93,8 +93,8 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:15:52+09:00",
-      "last_price": 0.301,
-      "tp1_hit": false,
+      "last_price": 0.29641,
+      "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
