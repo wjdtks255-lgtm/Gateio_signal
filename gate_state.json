@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.06977,
+      "last_price": 0.0697,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,45 +60,12 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:00:58+09:00",
-      "last_price": 0.001544,
+      "last_price": 0.001541,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 2
-    },
-    "GWEI_USDT": {
-      "symbol": "GWEI_USDT",
-      "side": "SHORT",
-      "entry": 0.020833,
-      "sl": 0.021097,
-      "tp1": 0.020516200000000002,
-      "tp2": 0.020305,
-      "tp3": 0.020041,
-      "sl_pct": -1.26722027552441,
-      "tp1_pct": 1.5206643306292853,
-      "tp2_pct": 2.53444055104882,
-      "tp3_pct": 3.80166082657323,
-      "leverage": 12,
-      "rsi": 47.10356933879468,
-      "atr": 0.00018857142857142881,
-      "volume_surge": 2.612118297195693,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 증가",
-        "EMA21 조건 충족",
-        "캔들 방향 확인"
-      ],
-      "entry_time": "2026-10-24T12:15:47+09:00",
-      "last_price": 0.020912,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 3
     },
     "UAI_USDT": {
       "symbol": "UAI_USDT",
@@ -126,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:15:52+09:00",
-      "last_price": 0.30119,
+      "last_price": 0.301,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -134,7 +101,21 @@
       "slot": 4
     }
   },
-  "history": [],
+  "history": [
+    {
+      "symbol": "GWEI_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.020833,
+      "exit": 0.021097,
+      "entry_time": "2026-10-24T12:15:47+09:00",
+      "exit_time": "2026-10-24T12:25:19+09:00",
+      "duration": "0시간 9분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -1.2672
+    }
+  ],
   "cooldown": {},
   "cooldowns": {},
   "last_signal": {
