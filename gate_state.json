@@ -27,7 +27,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T11:57:44+09:00",
-      "last_price": 0.07017,
+      "last_price": 0.07024,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T12:15:52+09:00",
-      "last_price": 0.29652,
+      "last_price": 0.29559,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:00:54+09:00",
-      "last_price": 0.005393,
+      "last_price": 0.005391,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,12 +126,45 @@
         "캔들 방향 확인"
       ],
       "entry_time": "2026-10-24T13:01:03+09:00",
-      "last_price": 18.69,
+      "last_price": 18.68,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 5
+    },
+    "CASHCAT_USDT": {
+      "symbol": "CASHCAT_USDT",
+      "side": "SHORT",
+      "entry": 0.09611,
+      "sl": 0.097237,
+      "tp1": 0.0947576,
+      "tp2": 0.09385600000000001,
+      "tp3": 0.092729,
+      "sl_pct": -1.172614712308816,
+      "tp1_pct": 1.407137654770579,
+      "tp2_pct": 2.3452294246176173,
+      "tp3_pct": 3.517844136926433,
+      "leverage": 13,
+      "rsi": 40.8119658119658,
+      "atr": 0.0008049999999999992,
+      "volume_surge": 1.2437827778717645,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 증가",
+        "EMA21 조건 충족",
+        "캔들 방향 확인"
+      ],
+      "entry_time": "2026-10-24T13:15:59+09:00",
+      "last_price": 0.09611,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 2
     }
   },
   "history": [
@@ -184,7 +217,8 @@
     "UAI_USDT": 1792811752.7239652,
     "NG_USDT": 1792813580.7691078,
     "US_USDT": 1792814454.0091486,
-    "UVXY_USDT": 1792814463.856478
+    "UVXY_USDT": 1792814463.856478,
+    "CASHCAT_USDT": 1792815359.8328047
   },
   "last_bars": {},
   "stats": {
