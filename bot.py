@@ -31,7 +31,6 @@ TOKEN = os.getenv("GATE_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_TOKEN", "")
 CHAT = os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID", "")
 STATE = Path("gate_state.json")
 
-# 💡 [변경] 동시 보유 슬롯 8개로 확장
 MAX_ACTIVE = getenv_int("MAX_ACTIVE", 8)
 MIN_TURNOVER = getenv_float("MIN_TURNOVER", 500000)
 MIN_SCORE = getenv_int("MIN_SCORE", 6)
@@ -43,7 +42,7 @@ TZ = timezone(timedelta(hours=9))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
                     filename="gate_signal_bot.log", filemode="a")
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.5"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.6"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
 COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
@@ -114,6 +113,15 @@ def save_json_with_lock(path, data):
 
 def save_state(st): save_json_with_lock(STATE, st)
 
+# 💡 [추가] 보유 중인 포지션들의 슬롯 번호를 1부터 순서대로 빈틈없이 재정렬하는 함수
+def reassign_slots(st):
+    ps = st.get("positions", {})
+    if not ps: return
+    # 기존 슬롯 번호 또는 진입 시간 순서대로 정렬하여 1부터 순차 재할당
+    sorted_items = sorted(ps.items(), key=lambda x: (x[1].get("slot", 999), x[1].get("entry_time", "")))
+    for idx, (sym, p) in enumerate(sorted_items, start=1):
+        p["slot"] = idx
+
 def load_state():
     if not STATE.exists(): return {"positions": {}, "last_signal": {}, "history": [], "pending_notifications": []}
     try:
@@ -123,15 +131,7 @@ def load_state():
         st.setdefault("last_signal", {})
         st.setdefault("history", [])
         st.setdefault("pending_notifications", [])
-        used = set()
-        for sym, pos in st["positions"].items():
-            if not isinstance(pos, dict): raise ValueError(f"{sym} 포지션 자료형 오류")
-            slot = pos.get("slot")
-            if not isinstance(slot, int) or slot < 1 or slot > MAX_ACTIVE or slot in used:
-                slot = next((i for i in range(1, MAX_ACTIVE + 1) if i not in used), None)
-                if slot is None: continue
-                pos["slot"] = slot
-            used.add(pos["slot"])
+        reassign_slots(st) # 불러올 때 깔끔하게 재정렬
         return st
     except Exception as e:
         logging.error(f"상태 파일 로드 실패: {e}")
@@ -321,6 +321,10 @@ def close_position(st, sym, reason, price):
     st["history"].append(record)
     st["history"] = st["history"][-5000:]
     del st["positions"][sym]
+    
+    # 💡 [추가] 포지션 종료 시 남은 종목들의 슬롯 번호를 1번부터 차례대로 자동 재정렬
+    reassign_slots(st)
+    
     save_state(st)
     chart = f"https://www.gate.io/futures/USDT/{sym}"
     labels = {"TP3":"TP3 목표 달성","TP2_BE":"TP2 이후 TP1 가격 방어 종료","TP1_BE":"TP1 본전 종료","SL":"초기 손절"}
@@ -434,12 +438,18 @@ def scan(st):
         try:
             sig = find_signal(t,btc)
             if not sig: continue
+            
+            # 신규 진입 시 남은 빈 자리 중 맨 앞 번호 또는 순차 번호 부여
             slot = get_next_slot(st["positions"])
             if slot is None:
                 logging.warning("사용 가능한 슬롯 없음")
                 break
             sig["slot"] = slot
             st["positions"][sym] = sig
+            
+            # 💡 [추가] 신규 진입 후 전체 슬롯 번호 재정렬 보정
+            reassign_slots(st)
+            
             st["last_signal"][sym] = time.time()
             save_state(st)
             chart = f"https://www.gate.io/futures/USDT/{sym}"
@@ -457,7 +467,7 @@ def scan(st):
         except Exception as e: logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT v5.5 시작")
+    logging.info("GATE.IO FUTURES BOT v5.6 시작")
     try: st = load_state()
     except RuntimeError: return
     for p in st["positions"].values():
