@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03632,
+      "last_price": 0.03753,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 196.96,
+      "last_price": 196.95,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004902,
+      "last_price": 0.004907,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:45:42+09:00",
-      "last_price": 1903.46,
+      "last_price": 1901.48,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,45 +192,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 111.5,
+      "last_price": 111.49,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 8
-    },
-    "PI_USDT": {
-      "symbol": "PI_USDT",
-      "side": "SHORT",
-      "entry": 0.0768,
-      "sl": 0.0773142857142857,
-      "tp1": 0.07577142857142857,
-      "tp2": 0.07500000000000001,
-      "tp3": 0.07422857142857145,
-      "sl_pct": -0.6696428571428428,
-      "tp1_pct": 1.3392857142857038,
-      "tp2_pct": 2.343749999999977,
-      "tp3_pct": 3.34821428571425,
-      "leverage": 20,
-      "rsi": 39.13043478260854,
-      "atr": 0.0003214285714285677,
-      "volume_surge": 1.3009626144572068,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-25T08:30:51+09:00",
-      "last_price": 0.0773,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 4
     },
     "TRX_USDT": {
       "symbol": "TRX_USDT",
@@ -773,6 +740,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -1.6012
+    },
+    {
+      "symbol": "PI_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.0768,
+      "exit": 0.0773142857142857,
+      "entry_time": "2026-10-25T08:30:51+09:00",
+      "exit_time": "2026-10-25T11:50:25+09:00",
+      "duration": "3시간 19분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.6696
     }
   ],
   "cooldown": {},
