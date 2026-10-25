@@ -27,45 +27,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.0463,
+      "last_price": 0.04733,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 1
-    },
-    "PLTR_USDT": {
-      "symbol": "PLTR_USDT",
-      "side": "SHORT",
-      "entry": 196.96,
-      "sl": 197.35392000000002,
-      "tp1": 196.17216000000002,
-      "tp2": 195.58128000000002,
-      "tp3": 194.9904,
-      "sl_pct": -0.20000000000000429,
-      "tp1_pct": 0.3999999999999942,
-      "tp2_pct": 0.6999999999999934,
-      "tp3_pct": 1.000000000000007,
-      "leverage": 20,
-      "rsi": 39.240506329113195,
-      "atr": 0.09357142857142467,
-      "volume_surge": 1.8305700658641835,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 197.18,
-      "tp1_hit": true,
-      "tp2_hit": true,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 2
     },
     "US_USDT": {
       "symbol": "US_USDT",
@@ -93,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004969,
+      "last_price": 0.004968,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -159,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 111.47,
+      "last_price": 111.44,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -192,7 +159,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T08:45:40+09:00",
-      "last_price": 0.32903,
+      "last_price": 0.32909,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -733,6 +700,19 @@
       "outcome": "TP3",
       "reason": "TP3",
       "return_pct": 1.7211
+    },
+    {
+      "symbol": "PLTR_USDT",
+      "side": "SHORT",
+      "asset": "주식",
+      "entry": 196.96,
+      "exit": 197.35392000000002,
+      "entry_time": "2026-10-24T22:20:57+09:00",
+      "exit_time": "2026-10-25T13:25:19+09:00",
+      "duration": "15시간 4분",
+      "outcome": "TP2_BE",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.2
     }
   ],
   "cooldown": {},
