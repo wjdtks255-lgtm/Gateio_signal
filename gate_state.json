@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03456,
+      "last_price": 0.03491,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004789,
+      "last_price": 0.004782,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00851,
+      "last_price": 0.00848,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -110,7 +110,7 @@
       "symbol": "BZ_USDT",
       "side": "SHORT",
       "entry": 111.71,
-      "sl": 111.71,
+      "sl": 111.26316,
       "tp1": 111.26316,
       "tp2": 110.92802999999999,
       "tp3": 110.5929,
@@ -132,9 +132,9 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 111.05,
+      "last_price": 110.96,
       "tp1_hit": true,
-      "tp2_hit": false,
+      "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 5,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T08:45:40+09:00",
-      "last_price": 0.32895,
+      "last_price": 0.32904,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -202,7 +202,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04545,
+      "last_price": 0.04556,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -237,7 +237,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T21:15:51+09:00",
-      "last_price": 0.001726,
+      "last_price": 0.001731,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -272,7 +272,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T22:00:42+09:00",
-      "last_price": 102.98,
+      "last_price": 102.84,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
