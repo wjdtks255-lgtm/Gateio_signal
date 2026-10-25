@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.0364,
+      "last_price": 0.0363,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,12 +62,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004784,
+      "last_price": 0.004781,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 3,
+      "slot": 2,
       "max_profit_pct": 6.11431985660227,
       "last_notified_tier": 6.0
     },
@@ -97,12 +97,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00846,
+      "last_price": 0.00845,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 4,
+      "slot": 3,
       "max_profit_pct": 7.005649717514133,
       "last_notified_tier": 7.0
     },
@@ -132,14 +132,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04593,
+      "last_price": 0.04584,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "max_profit_pct": 0.0,
       "last_notified_tier": 0,
       "status": "ACTIVE",
-      "slot": 7
+      "slot": 4
     },
     "CL_USDT": {
       "symbol": "CL_USDT",
@@ -167,14 +167,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T22:00:42+09:00",
-      "last_price": 102.37,
+      "last_price": 102.32,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "max_profit_pct": 0.0,
       "last_notified_tier": 0,
       "status": "ACTIVE",
-      "slot": 8
+      "slot": 5
     }
   },
   "history": [
