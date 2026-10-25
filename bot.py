@@ -42,7 +42,7 @@ TZ = timezone(timedelta(hours=9))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
                     filename="gate_signal_bot.log", filemode="a")
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.6"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.7"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
 COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
@@ -113,12 +113,11 @@ def save_json_with_lock(path, data):
 
 def save_state(st): save_json_with_lock(STATE, st)
 
-# 💡 [추가] 보유 중인 포지션들의 슬롯 번호를 1부터 순서대로 빈틈없이 재정렬하는 함수
+# 💡 [핵심] 진입 시간 순서대로 정렬하여 1부터 N번까지 빈틈없이 번호 부여
 def reassign_slots(st):
     ps = st.get("positions", {})
     if not ps: return
-    # 기존 슬롯 번호 또는 진입 시간 순서대로 정렬하여 1부터 순차 재할당
-    sorted_items = sorted(ps.items(), key=lambda x: (x[1].get("slot", 999), x[1].get("entry_time", "")))
+    sorted_items = sorted(ps.items(), key=lambda x: x[1].get("entry_time", ""))
     for idx, (sym, p) in enumerate(sorted_items, start=1):
         p["slot"] = idx
 
@@ -131,7 +130,8 @@ def load_state():
         st.setdefault("last_signal", {})
         st.setdefault("history", [])
         st.setdefault("pending_notifications", [])
-        reassign_slots(st) # 불러올 때 깔끔하게 재정렬
+        reassign_slots(st)
+        save_state(st)  # 💡 불러오자마자 정렬된 상태를 파일에 곧바로 저장하여 반영 고정
         return st
     except Exception as e:
         logging.error(f"상태 파일 로드 실패: {e}")
@@ -322,10 +322,9 @@ def close_position(st, sym, reason, price):
     st["history"] = st["history"][-5000:]
     del st["positions"][sym]
     
-    # 💡 [추가] 포지션 종료 시 남은 종목들의 슬롯 번호를 1번부터 차례대로 자동 재정렬
-    reassign_slots(st)
-    
+    reassign_slots(st)  # 종료 시 재정렬
     save_state(st)
+    
     chart = f"https://www.gate.io/futures/USDT/{sym}"
     labels = {"TP3":"TP3 목표 달성","TP2_BE":"TP2 이후 TP1 가격 방어 종료","TP1_BE":"TP1 본전 종료","SL":"초기 손절"}
     overview = get_status_overview_msg(st,"🔔 <b>GATE.IO 포지션 종료 및 현재 보유 현황</b>")
@@ -439,7 +438,6 @@ def scan(st):
             sig = find_signal(t,btc)
             if not sig: continue
             
-            # 신규 진입 시 남은 빈 자리 중 맨 앞 번호 또는 순차 번호 부여
             slot = get_next_slot(st["positions"])
             if slot is None:
                 logging.warning("사용 가능한 슬롯 없음")
@@ -447,11 +445,10 @@ def scan(st):
             sig["slot"] = slot
             st["positions"][sym] = sig
             
-            # 💡 [추가] 신규 진입 후 전체 슬롯 번호 재정렬 보정
-            reassign_slots(st)
-            
+            reassign_slots(st)  # 진입 시 정렬
             st["last_signal"][sym] = time.time()
             save_state(st)
+            
             chart = f"https://www.gate.io/futures/USDT/{sym}"
             overview = get_status_overview_msg(st,"🔔 <b>GATE.IO 신규 진입 및 현재 보유 현황</b>")
             msg = (f"🚨 <b>GATE.IO FUTURES SIGNAL</b>\n━━━━━━━━━━━━━━\n📌 슬롯: <b>#{slot}</b> | 계약: <b>{sym}</b> ({asset(sym)})\n"
@@ -467,7 +464,7 @@ def scan(st):
         except Exception as e: logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT v5.6 시작")
+    logging.info("GATE.IO FUTURES BOT v5.7 시작")
     try: st = load_state()
     except RuntimeError: return
     for p in st["positions"].values():
