@@ -30,18 +30,22 @@ BASE = "https://api.gateio.ws/api/v4"
 TOKEN = os.getenv("GATE_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_TOKEN", "")
 CHAT = os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID", "")
 STATE = Path("gate_state.json")
-MAX_ACTIVE = getenv_int("MAX_ACTIVE", 10)
+
+# 💡 [보완] 슬롯 수를 5개로 축소하여 에이스 종목 집중 추적
+MAX_ACTIVE = getenv_int("MAX_ACTIVE", 5)
 MIN_TURNOVER = getenv_float("MIN_TURNOVER", 500000)
 MIN_SCORE = getenv_int("MIN_SCORE", 6)
 COOLDOWN = getenv_int("COOLDOWN", 60)
-STOP_ATR = getenv_float("STOP_ATR", 1.6)
+
+# 💡 [보완] 손절 폭을 1.6에서 1.8로 넓혀 꼬리 털기 방어
+STOP_ATR = getenv_float("STOP_ATR", 1.8)
 TP_R = (2.0, 3.5, 5.0)
 TZ = timezone(timedelta(hours=9))
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
                     filename="gate_signal_bot.log", filemode="a")
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/4.7"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/4.9"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
 COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
@@ -237,30 +241,41 @@ def find_signal(t, btc):
     rv, av = rsi(a), atr(cs)
     if any(x is None for x in (e9, e21, e50, rv, av)) or av <= 0 or e21 <= 0: return None
     avg = sum(v[-21:-1]) / 20 if len(v) >= 21 else 0
+    
+    # 💡 [보완] 거래량 급증 기준을 1.3배에서 1.8배로 상향하여 짤짤이 횡보 노이즈 차단
     surge = v[-1] / avg if avg > 0 else 0
-    body = abs(last["c"]-last["o"]) >= av*.20
+    if surge < 1.8: return None
+    
+    body = abs(last["c"]-last["o"]) >= av*.25
     funding = num(t.get("funding_rate"))
     if abs(last["c"]-e21)/e21 > .04: return None
-    lc = [btc=="LONG", e9>e21>e50, 54<=rv<=70, surge>=1.3, last["c"]>e21, last["c"]>last["o"] and body]
-    sc = [btc=="SHORT", e9<e21<e50, 30<=rv<=46, surge>=1.3, last["c"]<e21, last["c"]<last["o"] and body]
+    
+    lc = [btc=="LONG", e9>e21>e50, 54<=rv<=70, surge>=1.8, last["c"]>e21, last["c"]>last["o"] and body]
+    sc = [btc=="SHORT", e9<e21<e50, 30<=rv<=46, surge>=1.8, last["c"]<e21, last["c"]<last["o"] and body]
     side = "LONG" if sum(lc) >= sum(sc) else "SHORT"
     if (btc=="LONG" and side=="SHORT") or (btc=="SHORT" and side=="LONG"): return None
     checks = lc if side=="LONG" else sc
     score = sum(checks)
     if score < MIN_SCORE: return None
     if (side=="LONG" and funding>.003) or (side=="SHORT" and funding<-.003): return None
+    
     entry = num(t.get("_price"), last["c"])
     if entry <= 0: return None
     dist = max(av*STOP_ATR, entry*.002)
     sl = entry-dist if side=="LONG" else entry+dist
     tps = [entry+dist*r if side=="LONG" else entry-dist*r for r in TP_R]
+    
     if side=="LONG":
         sl_pct, tp1_pct, tp2_pct, tp3_pct = (sl-entry)/entry*100, (tps[0]-entry)/entry*100, (tps[1]-entry)/entry*100, (tps[2]-entry)/entry*100
     else:
         sl_pct, tp1_pct, tp2_pct, tp3_pct = (entry-sl)/entry*100, (entry-tps[0])/entry*100, (entry-tps[1])/entry*100, (entry-tps[2])/entry*100
+        
+    # 💡 [보완] 최소 목표가(TP1) 강제 필터: 먹을 게 없는 짤짤이 종목 원천 차단 (TP1 기준 최소 1.5% 이상 수익 공간 확보 필수)
+    if abs(tp1_pct) < 1.5: return None
+
     risk_pct = abs(entry-sl)/entry
     rec_lev = max(2, min(20, round(.15/risk_pct))) if risk_pct>0 else 5
-    names = ["BTC 추세 일치", "EMA 추세 정렬", "RSI 조건 충족", "거래량 급증(정밀)", "EMA21 조건 충족", "캔들 방향/몸통 확인"]
+    names = ["BTC 추세 일치", "EMA 추세 정렬", "RSI 조건 충족", "거래량 급증(1.8배+)", "EMA21 조건 충족", "캔들 방향/몸통 확인"]
     return {"symbol":sym,"side":side,"entry":entry,"sl":sl,"tp1":tps[0],"tp2":tps[1],"tp3":tps[2],
         "sl_pct":sl_pct,"tp1_pct":tp1_pct,"tp2_pct":tp2_pct,"tp3_pct":tp3_pct,"leverage":rec_lev,
         "rsi":rv,"atr":av,"volume_surge":surge,"score":score,"reasons":[names[i] for i,x in enumerate(checks) if x],
@@ -332,7 +347,6 @@ def monitor(st):
         try:
             cs = candles(sym,"1m",5)
             if not cs: continue
-            # 💡 [보완 완료] 마감된 봉(cs[-2]) 대신 현재 진행 중인 실시간 캔들(cs[-1])을 사용하여 즉시 감지
             c = cs[-1]
             p["last_price"] = c["c"]
             long = p.get("side")=="LONG"
@@ -364,6 +378,7 @@ def monitor(st):
                            f"가상 손절가를 TP1 가격으로 이동 (수익 보전)\nTP3 대기\n🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n"
                            + get_status_overview_msg(st,"🔔 <b>GATE.IO TP2 도달 및 현재 보유 현황</b>"))
                     notify(st,f"TP2:{sym}:{p.get('entry_time')}",msg)
+                    notify(st,f"STATS:TP2:{sym}:{p.get('entry_time')}", stats_report(st))
                 else:
                     p["last_price"] = level
                     save_state(st)
@@ -416,7 +431,7 @@ def scan(st):
         except Exception as e: logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT v4.7 시작")
+    logging.info("GATE.IO FUTURES BOT v4.9 시작")
     try: st = load_state()
     except RuntimeError: return
     for p in st["positions"].values():
@@ -433,3 +448,4 @@ def main():
 
 if __name__=="__main__":
     main()
+
