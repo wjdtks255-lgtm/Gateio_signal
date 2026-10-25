@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03612,
+      "last_price": 0.03577,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004819,
+      "last_price": 0.0048,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -106,41 +106,6 @@
       "max_profit_pct": 7.005649717514133,
       "last_notified_tier": 7.0
     },
-    "BZ_USDT": {
-      "symbol": "BZ_USDT",
-      "side": "SHORT",
-      "entry": 111.71,
-      "sl": 111.26316,
-      "tp1": 111.26316,
-      "tp2": 110.92802999999999,
-      "tp3": 110.5929,
-      "sl_pct": -0.20000000000000395,
-      "tp1_pct": 0.39999999999999514,
-      "tp2_pct": 0.7000000000000011,
-      "tp3_pct": 0.9999999999999943,
-      "leverage": 20,
-      "rsi": 32.05128205128135,
-      "atr": 0.12214285714285669,
-      "volume_surge": 1.5336725652515126,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 110.77,
-      "tp1_hit": true,
-      "tp2_hit": true,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 5,
-      "max_profit_pct": 0.39387700295407546,
-      "last_notified_tier": 0
-    },
     "TRX_USDT": {
       "symbol": "TRX_USDT",
       "side": "SHORT",
@@ -167,7 +132,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T08:45:40+09:00",
-      "last_price": 0.32881,
+      "last_price": 0.32895,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -202,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04536,
+      "last_price": 0.04522,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -237,7 +202,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T22:00:42+09:00",
-      "last_price": 102.79,
+      "last_price": 102.69,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -845,6 +810,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.7673
+    },
+    {
+      "symbol": "BZ_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 111.71,
+      "exit": 110.5929,
+      "entry_time": "2026-10-25T07:05:34+09:00",
+      "exit_time": "2026-10-26T00:15:27+09:00",
+      "duration": "17시간 9분",
+      "outcome": "TP3",
+      "reason": "TP3",
+      "return_pct": 1.0
     }
   ],
   "cooldown": {},
