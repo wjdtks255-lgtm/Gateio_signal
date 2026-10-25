@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04289,
+      "last_price": 0.04079,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -60,7 +60,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T22:20:57+09:00",
-      "last_price": 196.99,
+      "last_price": 197.01,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004886,
+      "last_price": 0.004887,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,45 +126,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00887,
+      "last_price": 0.00888,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 4
-    },
-    "ANTHROPIC_USDT": {
-      "symbol": "ANTHROPIC_USDT",
-      "side": "SHORT",
-      "entry": 1913.33,
-      "sl": 1900.1580000000001,
-      "tp1": 1900.1580000000001,
-      "tp2": 1890.2790000000002,
-      "tp3": 1880.4,
-      "sl_pct": -0.34421662755510096,
-      "tp1_pct": 0.68843325511019,
-      "tp2_pct": 1.2047581964428355,
-      "tp3_pct": 1.7210831377754927,
-      "leverage": 20,
-      "rsi": 39.08153701968133,
-      "atr": 4.704285714285675,
-      "volume_surge": 1.9683387373641046,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(정밀)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-25T06:45:42+09:00",
-      "last_price": 1881.62,
-      "tp1_hit": true,
-      "tp2_hit": true,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 5
     },
     "BZ_USDT": {
       "symbol": "BZ_USDT",
@@ -225,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T08:45:40+09:00",
-      "last_price": 0.32874,
+      "last_price": 0.32872,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -753,6 +720,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.6696
+    },
+    {
+      "symbol": "ANTHROPIC_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 1913.33,
+      "exit": 1880.4,
+      "entry_time": "2026-10-25T06:45:42+09:00",
+      "exit_time": "2026-10-25T12:35:23+09:00",
+      "duration": "5시간 49분",
+      "outcome": "TP3",
+      "reason": "TP3",
+      "return_pct": 1.7211
     }
   ],
   "cooldown": {},
