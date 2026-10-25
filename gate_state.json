@@ -27,12 +27,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.04031,
+      "last_price": 0.04144,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 1
+      "slot": 1,
+      "max_profit_pct": 37.515078407720154,
+      "last_notified_tier": 35.0
     },
     "US_USDT": {
       "symbol": "US_USDT",
@@ -60,12 +62,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004978,
+      "last_price": 0.004963,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 3
+      "slot": 3,
+      "max_profit_pct": 1.155148376817365,
+      "last_notified_tier": 0
     },
     "MITO_USDT": {
       "symbol": "MITO_USDT",
@@ -98,13 +102,15 @@
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 4
+      "slot": 4,
+      "max_profit_pct": 0.0,
+      "last_notified_tier": 0
     },
     "BZ_USDT": {
       "symbol": "BZ_USDT",
       "side": "SHORT",
       "entry": 111.71,
-      "sl": 111.93342,
+      "sl": 111.71,
       "tp1": 111.26316,
       "tp2": 110.92802999999999,
       "tp3": 110.5929,
@@ -126,12 +132,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 111.32,
-      "tp1_hit": false,
+      "last_price": 111.27,
+      "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 5
+      "slot": 5,
+      "max_profit_pct": 0.39387700295407546,
+      "last_notified_tier": 0
     },
     "TRX_USDT": {
       "symbol": "TRX_USDT",
@@ -159,12 +167,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T08:45:40+09:00",
-      "last_price": 0.3286,
+      "last_price": 0.32855,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 2
+      "slot": 2,
+      "max_profit_pct": 0.14588335410144376,
+      "last_notified_tier": 0
     }
   },
   "history": [
