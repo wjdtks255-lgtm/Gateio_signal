@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.0443,
+      "last_price": 0.04289,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -93,7 +93,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004881,
+      "last_price": 0.004886,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -126,7 +126,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00888,
+      "last_price": 0.00887,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -137,7 +137,7 @@
       "symbol": "ANTHROPIC_USDT",
       "side": "SHORT",
       "entry": 1913.33,
-      "sl": 1913.33,
+      "sl": 1900.1580000000001,
       "tp1": 1900.1580000000001,
       "tp2": 1890.2790000000002,
       "tp3": 1880.4,
@@ -159,9 +159,9 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T06:45:42+09:00",
-      "last_price": 1898.75,
+      "last_price": 1881.62,
       "tp1_hit": true,
-      "tp2_hit": false,
+      "tp2_hit": true,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 5
@@ -192,7 +192,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T07:05:34+09:00",
-      "last_price": 111.43,
+      "last_price": 111.46,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -225,7 +225,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T08:45:40+09:00",
-      "last_price": 0.3288,
+      "last_price": 0.32874,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
