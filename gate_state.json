@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03639,
+      "last_price": 0.03648,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004564,
+      "last_price": 0.004632,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00845,
+      "last_price": 0.00843,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -132,7 +132,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04528,
+      "last_price": 0.04584,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1396.82,
+      "last_price": 1398.79,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -175,41 +175,6 @@
       "last_notified_tier": 0,
       "status": "ACTIVE",
       "slot": 5
-    },
-    "ADA_USDT": {
-      "symbol": "ADA_USDT",
-      "side": "SHORT",
-      "entry": 0.2039,
-      "sl": 0.20526285714285714,
-      "tp1": 0.2011742857142857,
-      "tp2": 0.19912999999999997,
-      "tp3": 0.19708571428571425,
-      "sl_pct": -0.6683948714355752,
-      "tp1_pct": 1.3367897428711641,
-      "tp2_pct": 2.339382050024534,
-      "tp3_pct": 3.3419743571779037,
-      "leverage": 20,
-      "rsi": 31.81818181818153,
-      "atr": 0.000757142857142859,
-      "volume_surge": 2.6016923890829893,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(1.8배+)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-26T06:45:31+09:00",
-      "last_price": 0.204,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "max_profit_pct": 0.0,
-      "last_notified_tier": 0,
-      "status": "ACTIVE",
-      "slot": 6
     },
     "BIRB_USDT": {
       "symbol": "BIRB_USDT",
@@ -237,14 +202,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.07477,
+      "last_price": 0.07547,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "max_profit_pct": 0.0,
       "last_notified_tier": 0,
       "status": "ACTIVE",
-      "slot": 7
+      "slot": 6
     },
     "ANIME_USDT": {
       "symbol": "ANIME_USDT",
@@ -272,14 +237,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:43+09:00",
-      "last_price": 0.002893,
+      "last_price": 0.002913,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "max_profit_pct": 0.0,
       "last_notified_tier": 0,
       "status": "ACTIVE",
-      "slot": 8
+      "slot": 7
     }
   },
   "history": [
@@ -919,6 +884,19 @@
       "outcome": "TP2_BE",
       "reason": "SL 또는 본절 청산",
       "return_pct": 0.4
+    },
+    {
+      "symbol": "ADA_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.2039,
+      "exit": 0.20526285714285714,
+      "entry_time": "2026-10-26T06:45:31+09:00",
+      "exit_time": "2026-10-26T07:05:22+09:00",
+      "duration": "0시간 19분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.6684
     }
   ],
   "cooldown": {},
