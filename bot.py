@@ -42,7 +42,7 @@ TZ = timezone(timedelta(hours=9))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
                     filename="gate_signal_bot.log", filemode="a")
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.0"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.2"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
 COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
@@ -167,7 +167,10 @@ def get_status_overview_msg(st, header_title="🔔 <b>GATE.IO 현재 보유 현�
         for sym, p in sorted(ps.items(), key=lambda x: x[1].get("slot", 99)):
             price = num(p.get("last_price"), num(p.get("entry")))
             icon = "🟢" if p.get("side") == "LONG" else "🔴"
-            lines.append(f"<b>#{p.get('slot', '?')}</b> {sym} ({asset(sym)}) {icon} {p.get('side')}\n  └ 수익률: <b>{pnl(p, price):+.2f}%</b> | 보유: {elapsed(p)}")
+            val = pnl(p, price)
+            # 💡 [보완] 수익률 상태에 따라 직관적인 그림(이모지) 기호 추가
+            pnl_icon = "📈" if val > 0 else ("📉" if val < 0 else "➖")
+            lines.append(f"<b>#{p.get('slot', '?')}</b> {sym} ({asset(sym)}) {icon} {p.get('side')}\n  └ 수익률: <b>{pnl_icon} {val:+.2f}%</b> | 보유: {elapsed(p)}")
     lines.extend(["━━━━━━━━━━━━━━", "※ 시그널 추적 전용 (자동 주문 미실행)"])
     return "\n".join(lines)
 
@@ -267,8 +270,7 @@ def find_signal(t, btc):
     return {"symbol":sym,"side":side,"entry":entry,"sl":sl,"tp1":tps[0],"tp2":tps[1],"tp3":tps[2],
         "sl_pct":sl_pct,"tp1_pct":tp1_pct,"tp2_pct":tp2_pct,"tp3_pct":tp3_pct,"leverage":rec_lev,
         "rsi":rv,"atr":av,"volume_surge":surge,"score":score,"reasons":[names[i] for i,x in enumerate(checks) if x],
-        "entry_time":stamp(),"last_price":entry,"tp1_hit":False,"tp2_hit":False,"tp3_hit":False,
-        "max_profit_pct":0.0,"last_notified_tier":0,"status":"ACTIVE"}
+        "entry_time":stamp(),"last_price":entry,"tp1_hit":False,"tp2_hit":False,"tp3_hit":False,"status":"ACTIVE"}
 
 def stats_report(st):
     counts = {"TP3":0,"TP2_BE":0,"TP1_BE":0,"SL":0}
@@ -329,42 +331,6 @@ def close_position(st, sym, reason, price):
     notify(st, f"CLOSE:{sym}:{record['exit_time']}", msg)
     notify(st, f"STATS:{record['exit_time']}:{sym}", stats_report(st))
 
-def check_dynamic_profit_alert(st, sym, p, current_profit):
-    p.setdefault("max_profit_pct", 0.0)
-    p.setdefault("last_notified_tier", 0)
-    
-    if current_profit > p["max_profit_pct"]:
-        p["max_profit_pct"] = current_profit
-        
-    max_p = p["max_profit_pct"]
-    current_tier = p["last_notified_tier"]
-    
-    # 목표 수익률 구간별 체크 및 단위 설정
-    # 15% 이상: 5% 단위 (15, 20, 25...)
-    # 10% 이상: 3% 단위 (10, 13, 16...)
-    # 5% 이상: 1% 단위 (5, 6, 7...)
-    # 3% 이상: 기존 TP1/TP2 등 기본 기능 활용 영역
-    
-    target_tier = current_tier
-    if max_p >= 15.0:
-        target_tier = 15.0 + math.floor((max_p - 15.0) / 5.0) * 5.0
-    elif max_p >= 10.0:
-        target_tier = 10.0 + math.floor((max_p - 10.0) / 3.0) * 3.0
-    elif max_p >= 5.0:
-        target_tier = 5.0 + math.floor((max_p - 5.0) / 1.0) * 1.0
-    elif max_p >= 3.0:
-        target_tier = 3.0
-        
-    if target_tier > current_tier:
-        p["last_notified_tier"] = target_tier
-        save_state(st)
-        chart = f"https://www.gate.io/futures/USDT/{sym}"
-        overview = get_status_overview_msg(st, f"🚀 <b>GATE.IO 수익률 {target_tier:.0f}% 달성 알림</b>")
-        msg = (f"🔥 <b>구간 목표 달성 | {sym} ({asset(sym)}) {p.get('side')}</b>\n"
-               f"현재 최고 수익률: <b>+{max_p:.2f}%</b> (도달 기준: {target_tier:.0f}% 구간)\n"
-               f"🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n{overview}")
-        notify(st, f"PROFIT_TIER:{sym}:{target_tier}", msg)
-
 def monitor(st):
     for sym in list(st["positions"]):
         p = st["positions"].get(sym)
@@ -377,16 +343,12 @@ def monitor(st):
             long = p.get("side")=="LONG"
             sl = num(p.get("sl"))
             
-            curr_pnl = pnl(p, c["c"])
-            if curr_pnl > 0:
-                check_dynamic_profit_alert(st, sym, p, curr_pnl)
-            
             # SL 우선 감지
             if (c["l"]<=sl if long else c["h"]>=sl):
                 close_position(st,sym,"SL 또는 본절 청산",sl)
                 continue
                 
-            # TP 우선 감지 (기존 기능 유지)
+            # TP 우선 감지
             for target,flag in (("tp1","tp1_hit"),("tp2","tp2_hit"),("tp3","tp3_hit")):
                 if p.get(flag): continue
                 level = num(p.get(target))
@@ -460,7 +422,7 @@ def scan(st):
         except Exception as e: logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT v5.0 시작")
+    logging.info("GATE.IO FUTURES BOT v5.2 시작")
     try: st = load_state()
     except RuntimeError: return
     for p in st["positions"].values():
@@ -469,7 +431,6 @@ def main():
         p.setdefault("status","ACTIVE"); p.setdefault("last_price",num(p.get("entry")))
         p.setdefault("sl_pct",0.0); p.setdefault("tp1_pct",0.0); p.setdefault("tp2_pct",0.0); p.setdefault("tp3_pct",0.0)
         p.setdefault("leverage",5)
-        p.setdefault("max_profit_pct", 0.0); p.setdefault("last_notified_tier", 0)
     retry_pending_notifications(st)
     monitor(st)
     scan(st)
