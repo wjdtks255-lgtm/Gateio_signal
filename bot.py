@@ -1,4 +1,10 @@
-import os, json, time, math, requests, fcntl, logging
+import os
+import json
+import time
+import math
+import requests
+import fcntl
+import logging
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
@@ -35,7 +41,7 @@ TZ = timezone(timedelta(hours=9))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
                     filename="gate_signal_bot.log", filemode="a")
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/4.6"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/4.7"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
 COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
@@ -115,17 +121,13 @@ def load_state():
         st.setdefault("last_signal", {})
         st.setdefault("history", [])
         st.setdefault("pending_notifications", [])
-        if not isinstance(st["positions"], dict) or not isinstance(st["last_signal"], dict) or not isinstance(st["history"], list) or not isinstance(st["pending_notifications"], list):
-            raise ValueError("상태 파일 자료형 오류")
         used = set()
         for sym, pos in st["positions"].items():
             if not isinstance(pos, dict): raise ValueError(f"{sym} 포지션 자료형 오류")
             slot = pos.get("slot")
             if not isinstance(slot, int) or slot < 1 or slot > MAX_ACTIVE or slot in used:
                 slot = next((i for i in range(1, MAX_ACTIVE + 1) if i not in used), None)
-                if slot is None:
-                    logging.error("활성 포지션이 슬롯 제한을 초과함: 초과 포지션은 유지하되 신규 진입을 차단합니다")
-                    continue
+                if slot is None: continue
                 pos["slot"] = slot
             used.add(pos["slot"])
         return st
@@ -329,16 +331,19 @@ def monitor(st):
         if not p: continue
         try:
             cs = candles(sym,"1m",5)
-            if len(cs)<2: continue
-            c = cs[-2]
+            if not cs: continue
+            # 💡 [보완 완료] 마감된 봉(cs[-2]) 대신 현재 진행 중인 실시간 캔들(cs[-1])을 사용하여 즉시 감지
+            c = cs[-1]
             p["last_price"] = c["c"]
             long = p.get("side")=="LONG"
             sl = num(p.get("sl"))
-            # SL 우선: 같은 봉에서 SL과 TP가 모두 닿았으면 보수적으로 SL 처리
+            
+            # SL 우선 감지 (실시간 캔들의 고가/저가 기준 즉시 판정)
             if (c["l"]<=sl if long else c["h"]>=sl):
                 close_position(st,sym,"SL 또는 본절 청산",sl)
                 continue
-            # 같은 1분봉에서 TP가 여러 개 닿아도 한 단계만 인정
+                
+            # TP 우선 감지 (실시간 캔들 기준 즉시 판정)
             for target,flag in (("tp1","tp1_hit"),("tp2","tp2_hit"),("tp3","tp3_hit")):
                 if p.get(flag): continue
                 level = num(p.get(target))
@@ -411,7 +416,7 @@ def scan(st):
         except Exception as e: logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT v4.6 시작")
+    logging.info("GATE.IO FUTURES BOT v4.7 시작")
     try: st = load_state()
     except RuntimeError: return
     for p in st["positions"].values():
