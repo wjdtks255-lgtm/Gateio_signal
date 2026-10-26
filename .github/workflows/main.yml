@@ -5,6 +5,9 @@ on:
     - cron: '*/5 * * * *'  # 5분마다 자동 실행
   workflow_dispatch:
 
+permissions:
+  contents: write  # GitHub Actions가 저장소에 커밋/푸시할 수 있도록 권한 명시
+
 jobs:
   run-bot:
     runs-on: ubuntu-latest
