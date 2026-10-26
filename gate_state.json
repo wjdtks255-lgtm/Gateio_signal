@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.02949,
+      "last_price": 0.0293,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004567,
+      "last_price": 0.004589,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.045,
+      "last_price": 0.04531,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -105,41 +105,6 @@
       "last_notified_tier": 0,
       "status": "ACTIVE",
       "slot": 3
-    },
-    "OPENAI_USDT": {
-      "symbol": "OPENAI_USDT",
-      "side": "SHORT",
-      "entry": 1397.45,
-      "sl": 1402.6082857142858,
-      "tp1": 1387.1334285714286,
-      "tp2": 1379.3960000000002,
-      "tp3": 1371.6585714285716,
-      "sl_pct": -0.36912130768798446,
-      "tp1_pct": 0.7382426153759689,
-      "tp2_pct": 1.2919245769079295,
-      "tp3_pct": 1.845606538439906,
-      "leverage": 20,
-      "rsi": 43.58108108108075,
-      "atr": 2.865714285714278,
-      "volume_surge": 2.3644909920930304,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(1.8배+)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1401.3,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "max_profit_pct": 0.0,
-      "last_notified_tier": 0,
-      "status": "ACTIVE",
-      "slot": 4
     },
     "BIRB_USDT": {
       "symbol": "BIRB_USDT",
@@ -167,14 +132,14 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.06987,
+      "last_price": 0.0712,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "max_profit_pct": 6.147047006830048,
       "last_notified_tier": 6.0,
       "status": "ACTIVE",
-      "slot": 5
+      "slot": 4
     },
     "CBRS_USDT": {
       "symbol": "CBRS_USDT",
@@ -207,7 +172,7 @@
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 6
+      "slot": 5
     },
     "DELL_USDT": {
       "symbol": "DELL_USDT",
@@ -235,12 +200,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T16:30:52+09:00",
-      "last_price": 455.64,
+      "last_price": 456.72,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 7
+      "slot": 6
     }
   },
   "history": [
@@ -997,6 +962,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -1.8817
+    },
+    {
+      "symbol": "OPENAI_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 1397.45,
+      "exit": 1402.6082857142858,
+      "entry_time": "2026-10-26T05:00:43+09:00",
+      "exit_time": "2026-10-26T18:20:25+09:00",
+      "duration": "13시간 19분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.3691
     }
   ],
   "cooldown": {},
