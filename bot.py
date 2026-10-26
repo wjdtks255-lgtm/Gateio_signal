@@ -16,8 +16,8 @@ def send_telegram_message(message):
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": message,
-        "parse_mode": "HTML",  # HTML 모드 유지
-        "disable_web_page_preview": True  # 큰 미리보기 박스 차단
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True
     }
     try:
         response = requests.post(url, json=payload, timeout=10)
@@ -27,16 +27,25 @@ def send_telegram_message(message):
         print(f"Error sending telegram message: {e}")
 
 def load_state():
-    if os.path.exists(STATE_FILE):
-        try:
-            with open(STATE_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return {
+    """상태 파일 로드 시 누락된 키가 있어도 에러가 나지 않도록 안전하게 보정"""
+    state = {
         "active_slots": {},
         "stats": {"wins": 0, "losses": 0, "total": 0}
     }
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, dict):
+                    if "active_slots" in data and isinstance(data["active_slots"], dict):
+                        state["active_slots"] = data["active_slots"]
+                    if "stats" in data and isinstance(data["stats"], dict):
+                        state["stats"]["wins"] = data["stats"].get("wins", 0)
+                        state["stats"]["losses"] = data["stats"].get("losses", 0)
+                        state["stats"]["total"] = data["stats"].get("total", 0)
+        except Exception as e:
+            print(f"Error loading state file: {e}")
+    return state
 
 def save_state(state):
     with open(STATE_FILE, "w", encoding="utf-8") as f:
@@ -116,7 +125,6 @@ def build_slot_status_message(active_slots, tickers_dict):
             dir_icon = "🟢" if direction == "LONG" else "🔴"
             display_name = f"[{category}] {sym}"
             
-            # 각 종목별 개별 링크가 정상 작동하도록 정돈된 HTML 구조
             lines.append(f"{i}️⃣ {dir_icon} <a href='{chart_link}'>{display_name}</a> | <code>{profit_pct:+.2f}%</code> | 보유: <code>{holding_str}</code>")
         else:
             lines.append(f"{i}️⃣ (빈 슬롯)")
@@ -139,8 +147,8 @@ def run_bot():
             pass
 
     state = load_state()
-    active_slots = state.setdefault("active_slots", {})
-    stats = state.setdefault("stats", {"wins": 0, "losses": 0, "total": 0})
+    active_slots = state["active_slots"]
+    stats = state["stats"]
     
     alerts_to_send = []
     slot_changed = False
