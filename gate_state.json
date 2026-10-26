@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03456,
+      "last_price": 0.03508,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004566,
+      "last_price": 0.004548,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00853,
+      "last_price": 0.00851,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -132,7 +132,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.0452,
+      "last_price": 0.04506,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1400.04,
+      "last_price": 1399.7,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -202,7 +202,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.0688,
+      "last_price": 0.06876,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -237,29 +237,29 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T10:00:53+09:00",
-      "last_price": 111.0,
+      "last_price": 111.1,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 7
     },
-    "GALA_USDT": {
-      "symbol": "GALA_USDT",
+    "Q_USDT": {
+      "symbol": "Q_USDT",
       "side": "SHORT",
-      "entry": 0.001724,
-      "sl": 0.0017447,
-      "tp1": 0.0016826,
-      "tp2": 0.00165155,
-      "tp3": 0.0016204999999999998,
-      "sl_pct": -1.2006960556844555,
-      "tp1_pct": 2.401392111368911,
-      "tp2_pct": 4.202436194895601,
-      "tp3_pct": 6.003480278422291,
-      "leverage": 12,
-      "rsi": 41.891891891892016,
-      "atr": 1.1500000000000024e-05,
-      "volume_surge": 2.0490830931884907,
+      "entry": 0.053347,
+      "sl": 0.056638685714285715,
+      "tp1": 0.046763628571428566,
+      "tp2": 0.04182609999999999,
+      "tp3": 0.03688857142857141,
+      "sl_pct": -6.170329567334089,
+      "tp1_pct": 12.340659134668178,
+      "tp2_pct": 21.596153485669312,
+      "tp3_pct": 30.85164783667046,
+      "leverage": 2,
+      "rsi": 42.94597208788173,
+      "atr": 0.0018287142857142872,
+      "volume_surge": 2.2464678236114297,
       "score": 6,
       "reasons": [
         "BTC 추세 일치",
@@ -269,8 +269,8 @@
         "EMA21 조건 충족",
         "캔들 방향/몸통 확인"
       ],
-      "entry_time": "2026-10-26T13:30:58+09:00",
-      "last_price": 0.001744,
+      "entry_time": "2026-10-26T14:15:31+09:00",
+      "last_price": 0.053347,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -967,6 +967,19 @@
       "outcome": "TP3",
       "reason": "TP3",
       "return_pct": 2.5267
+    },
+    {
+      "symbol": "GALA_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.001724,
+      "exit": 0.0017447,
+      "entry_time": "2026-10-26T13:30:58+09:00",
+      "exit_time": "2026-10-26T14:15:26+09:00",
+      "duration": "0시간 44분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -1.2007
     }
   ],
   "cooldown": {},
@@ -1025,7 +1038,8 @@
     "BIRB_USDT": 1792964732.732467,
     "ANIME_USDT": 1792964743.8646424,
     "MSTR_USDT": 1792969838.1036572,
-    "CBRS_USDT": 1792976453.1542585
+    "CBRS_USDT": 1792976453.1542585,
+    "Q_USDT": 1792991731.7776234
   },
   "last_bars": {},
   "stats": {
