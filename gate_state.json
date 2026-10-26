@@ -32,8 +32,8 @@
       "tp1": 0.052326,
       "tp2": 0.053352000000000004,
       "tp3": 0.054378,
-      "stop_loss": 0.050274,
-      "tp1_reached": false
+      "stop_loss": 0.0513,
+      "tp1_reached": true
     },
     "SUI3L_USDT": {
       "direction": "SHORT",
