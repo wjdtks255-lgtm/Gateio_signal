@@ -1,23 +1,16 @@
-name: Gate.io Signal Bot
+name: Gateio Signal Bot
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # 5분 주기 자동 실행
-  workflow_dispatch:       # cron-job.org / 수동 외부 트리거 수신
-  repository_dispatch:
-    types: [cron_trigger]
+    - cron: '*/5 * * * *'  # 5분마다 자동 실행
+  workflow_dispatch:
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -27,18 +20,19 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install requests
 
-      - name: Run Bot
+      - name: Run trading bot
         env:
           GATE_TELEGRAM_TOKEN: ${{ secrets.GATE_TELEGRAM_TOKEN }}
           GATE_TELEGRAM_CHAT_ID: ${{ secrets.GATE_TELEGRAM_CHAT_ID }}
         run: python bot.py
 
-      - name: Commit and push changes
+      - name: Commit and push changes if any
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin main --rebase || true
-          git add data/
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.io"
+          git pull --rebase
+          git add gate_state.json
           git diff --staged --quiet || git commit -m "Auto-update signal state [skip ci]"
-          git push origin main
+          git push
