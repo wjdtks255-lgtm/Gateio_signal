@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004554,
+      "last_price": 0.004549,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.06956,
+      "last_price": 0.06864,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -132,45 +132,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T10:00:53+09:00",
-      "last_price": 111.0,
+      "last_price": 111.1,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 4
-    },
-    "DELL_USDT": {
-      "symbol": "DELL_USDT",
-      "side": "SHORT",
-      "entry": 454.72,
-      "sl": 457.807,
-      "tp1": 448.54600000000005,
-      "tp2": 443.91550000000007,
-      "tp3": 439.2850000000001,
-      "sl_pct": -0.6788793103448252,
-      "tp1_pct": 1.3577586206896504,
-      "tp2_pct": 2.376077586206888,
-      "tp3_pct": 3.3943965517241255,
-      "leverage": 20,
-      "rsi": 44.46022727272722,
-      "atr": 1.7149999999999952,
-      "volume_surge": 3.9580607646460244,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(1.8배+)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-26T16:30:52+09:00",
-      "last_price": 457.49,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "status": "ACTIVE",
-      "slot": 5
     }
   },
   "history": [
@@ -953,6 +920,19 @@
       "outcome": "TP1_BE",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.0
+    },
+    {
+      "symbol": "DELL_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 454.72,
+      "exit": 457.807,
+      "entry_time": "2026-10-26T16:30:52+09:00",
+      "exit_time": "2026-10-26T18:55:24+09:00",
+      "duration": "2시간 24분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -0.6789
     }
   ],
   "cooldown": {},
