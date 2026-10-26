@@ -79,7 +79,7 @@
       "tp3": 0.5144392,
       "stop_loss": 0.47561359999999997,
       "tp1_reached": true,
-      "tp2_reached": false,
+      "tp2_reached": true,
       "tp3_reached": false
     },
     "TAG_USDT": {
