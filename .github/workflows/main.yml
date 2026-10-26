@@ -32,7 +32,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.io"
-          git pull --rebase
           git add gate_state.json
           git diff --staged --quiet || git commit -m "Auto-update signal state [skip ci]"
+          git pull --rebase || echo "Rebase skipped"
           git push
