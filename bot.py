@@ -16,7 +16,8 @@ def send_telegram_message(message):
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": message,
-        "parse_mode": "Markdown"
+        "parse_mode": "Markdown",
+        "disable_web_page_preview": True  # 👈 미리보기 박스를 완전히 차단하고 텍스트만 남깁니다.
     }
     try:
         response = requests.post(url, json=payload, timeout=10)
@@ -34,9 +35,7 @@ def load_state():
             pass
     return {
         "active_slots": {},
-        "stats": {"wins": 0, "losses": 0, "total": 0},
-        "history": [],  # 최근 매매 종료 내역 기록
-        "last_update_id": 0
+        "stats": {"wins": 0, "losses": 0, "total": 0}
     }
 
 def save_state(state):
@@ -89,13 +88,6 @@ def format_holding_time(entry_iso):
     except Exception:
         return "0시간 00분"
 
-def calculate_win_rate(stats):
-    total = stats.get("total", 0)
-    wins = stats.get("wins", 0)
-    if total == 0:
-        return 0.0
-    return round((wins / total) * 100, 2)
-
 def build_slot_status_message(active_slots, tickers_dict):
     active_symbols = list(active_slots.keys())
     active_count = len(active_symbols)
@@ -129,125 +121,6 @@ def build_slot_status_message(active_slots, tickers_dict):
             
     return "\n".join(lines)
 
-def process_telegram_commands(state, tickers_dict):
-    if not TELEGRAM_TOKEN:
-        return
-    
-    last_update_id = state.get("last_update_id", 0)
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates?offset={last_update_id + 1}&timeout=2"
-    
-    try:
-        response = requests.get(url, timeout=5)
-        if response.status_code != 200:
-            return
-        
-        data = response.json()
-        if not data.get("ok"):
-            return
-            
-        updates = data.get("result", [])
-        for update in updates:
-            update_id = update.get("update_id", 0)
-            state["last_update_id"] = max(state.get("last_update_id", 0), update_id)
-            
-            message = update.get("message", {})
-            text = message.get("text", "").strip()
-            chat = message.get("chat", {})
-            chat_id = str(chat.get("id", ""))
-            
-            # 디버그용 로그 (GitHub Actions 로그에서 확인 가능)
-            print(f"DEBUG - Received chat_id: '{chat_id}', text: '{text}' (Expected CHAT_ID: '{TELEGRAM_CHAT_ID}')")
-            
-            if chat_id != str(TELEGRAM_CHAT_ID):
-                print(f"DEBUG - Chat ID mismatch! Ignored.")
-                continue
-                
-            active_slots = state.get("active_slots", {})
-            stats = state.get("stats", {"wins": 0, "losses": 0, "total": 0})
-            history_list = state.get("history", [])
-            
-            parts = text.split()
-            command = parts[0] if parts else ""
-            
-            if command in ["/현황", "/슬롯", "/status"]:
-                status_msg = build_slot_status_message(active_slots, tickers_dict)
-                send_telegram_message(status_msg)
-                
-            elif command in ["/전적", "/통계", "/stats"]:
-                win_rate = calculate_win_rate(stats)
-                stats_msg = (
-                    f"📊 *[누적 승패 전적 및 승률 요약]*\n"
-                    f"• 승 / 패 / 총전적: `{stats['wins']}승 {stats['losses']}패 (총 {stats['total']}전)`\n"
-                    f"• 현재 승률: `{win_rate}%`\n"
-                    f"• 현재 운영 슬롯: `{len(active_slots)} / {MAX_SLOTS} 슬롯`"
-                )
-                send_telegram_message(stats_msg)
-                
-            elif command in ["/시세", "/price"]:
-                if len(parts) > 1:
-                    query = parts[1].upper()
-                    matched_price = None
-                    found_sym = ""
-                    
-                    for sym, price in tickers_dict.items():
-                        if query in sym.upper():
-                            found_sym = sym
-                            matched_price = price
-                            break
-                    
-                    if found_sym:
-                        category = get_asset_category(found_sym)
-                        chart_link = f"https://www.gate.io/trade/{found_sym}"
-                        price_msg = (
-                            f"📈 *[실시간 시세 조회]*\n"
-                            f"• 종목: `[{category}]` [`{found_sym}`]({chart_link})\n"
-                            f"• 현재가: `{matched_price}`"
-                        )
-                        send_telegram_message(price_msg)
-                    else:
-                        send_telegram_message(f"⚠️ `{query}`에 해당하는 종목을 찾을 수 없습니다.")
-                else:
-                    send_telegram_message("⚠️ 조회할 종목명을 입력해주세요. (예: `/시세 BTC_USDT`)")
-                    
-            elif command in ["/내역", "/히스토리", "/history"]:
-                history_lines = ["📜 *[최근 매매 내역 요약]*"]
-                if not history_list:
-                    history_lines.append("아직 기록된 종료 내역이 없습니다.")
-                else:
-                    for idx, h in enumerate(history_list[:5], 1):
-                        dir_icon = "🟢" if h.get("direction") == "LONG" else "🔴"
-                        history_lines.append(f"{idx}. {dir_icon} `[{h['category']}] {h['symbol']}` | `{h['result']}`")
-                send_telegram_message("\n".join(history_lines))
-                
-            elif command in ["/전략", "/규칙", "/strategy"]:
-                strategy_msg = (
-                    f"⚙️ *[Master 6.0 전략 핵심 요약]*\n\n"
-                    f"• *운영 방식*: 최대 `8개 슬롯` 동시 양방향(롱/숏) 운영\n"
-                    f"• *지원 자산*: `[코인]`, `[원자재]`, `[지수]`, `[외환]` 통합 스캔\n"
-                    f"• *익절/손절 라인*:\n"
-                    f"  - TP1: `2.0%` (본전 스탑 전환)\n"
-                    f"  - TP2: `4.0%` (중간 익절)\n"
-                    f"  - TP3: `6.0%` (최종 익절 마감)\n"
-                    f"  - SL: `-2.0%` (손절 마감)\n"
-                    f"• *리스크 관리*: 종목별 24시간 변동성 기반 추천 레버리지 자동 산정"
-                )
-                send_telegram_message(strategy_msg)
-                
-            elif command in ["/도움말", "/help"]:
-                help_msg = (
-                    f"🤖 *[Master 6.0 봇 공용 명령어 안내]*\n\n"
-                    f"• `/현황` 또는 `/슬롯` : 현재 1~8번 슬롯 현황판 조회\n"
-                    f"• `/전적` 또는 `/통계` : 누적 승패 전적 및 승률 조회\n"
-                    f"• `/시세 [종목명]` : 특정 종목 실시간 가격 조회\n"
-                    f"• `/내역` : 최근 종료된 매매 내역 보기\n"
-                    f"• `/전략` : Master 6.0 매매 규칙 요약\n"
-                    f"• `/도움말` : 명령어 안내 보기"
-                )
-                send_telegram_message(help_msg)
-                
-    except Exception as e:
-        print(f"Error processing telegram commands: {e}")
-
 def run_bot():
     print("Master 6.0 Bot Scan Initiated...")
     raw_tickers = fetch_gateio_tickers()
@@ -264,11 +137,8 @@ def run_bot():
             pass
 
     state = load_state()
-    process_telegram_commands(state, tickers_dict)
-
     active_slots = state.setdefault("active_slots", {})
     stats = state.setdefault("stats", {"wins": 0, "losses": 0, "total": 0})
-    history_list = state.setdefault("history", [])
     
     alerts_to_send = []
     slot_changed = False
@@ -305,10 +175,6 @@ def run_bot():
             alerts_to_send.append(msg)
             stats["losses"] += 1
             stats["total"] += 1
-            
-            history_list.insert(0, {"symbol": symbol, "category": category, "direction": direction, "result": "패배 (손실 마감)"})
-            state["history"] = history_list[:10]
-            
             del active_slots[symbol]
             slot_changed = True
             continue
@@ -327,10 +193,6 @@ def run_bot():
             alerts_to_send.append(msg)
             stats["wins"] += 1
             stats["total"] += 1
-            
-            history_list.insert(0, {"symbol": symbol, "category": category, "direction": direction, "result": "승리 (전량 익절)"})
-            state["history"] = history_list[:10]
-            
             del active_slots[symbol]
             slot_changed = True
             continue
