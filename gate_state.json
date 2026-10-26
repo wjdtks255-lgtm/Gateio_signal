@@ -69,7 +69,7 @@
       "tp3": 0.00210092,
       "stop_loss": 0.0019423599999999997,
       "tp1_reached": true,
-      "tp2_reached": false,
+      "tp2_reached": true,
       "tp3_reached": false
     },
     "LAPTOP_USDT": {
