@@ -90,7 +90,7 @@
       "tp3": 0.00056869,
       "stop_loss": 0.00052577,
       "tp1_reached": true,
-      "tp2_reached": false,
+      "tp2_reached": true,
       "tp3_reached": false
     },
     "BANK_USDT": {
