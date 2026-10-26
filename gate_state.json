@@ -68,17 +68,6 @@
       "stop_loss": 0.3129054,
       "tp1_reached": false
     },
-    "VERONA_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.12501,
-      "entry_time": "2026-10-26T21:10:39.528889+00:00",
-      "leverage": 7,
-      "tp1": 0.12751020000000002,
-      "tp2": 0.13001040000000003,
-      "tp3": 0.1325106,
-      "stop_loss": 0.12501,
-      "tp1_reached": true
-    },
     "LAPTOP_USDT": {
       "direction": "SHORT",
       "entry_price": 0.04903,
@@ -89,13 +78,24 @@
       "tp3": 0.046088199999999996,
       "stop_loss": 0.050010599999999995,
       "tp1_reached": false
+    },
+    "BMT_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.02829,
+      "entry_time": "2026-10-26T22:10:36.221633+00:00",
+      "leverage": 5,
+      "tp1": 0.027724199999999997,
+      "tp2": 0.0271584,
+      "tp3": 0.026592599999999997,
+      "stop_loss": 0.0288558,
+      "tp1_reached": false
     }
   },
   "stats": {
     "wins": 11,
-    "draws": 4,
+    "draws": 5,
     "losses": 15,
-    "total": 30
+    "total": 31
   },
   "history": [
     {
