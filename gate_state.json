@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03033,
+      "last_price": 0.0294,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004515,
+      "last_price": 0.004528,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04448,
+      "last_price": 0.04441,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -132,7 +132,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1399.3,
+      "last_price": 1398.57,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.06764,
+      "last_price": 0.06707,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -180,7 +180,7 @@
       "symbol": "CBRS_USDT",
       "side": "SHORT",
       "entry": 111.3,
-      "sl": 112.28999999999999,
+      "sl": 111.3,
       "tp1": 109.32,
       "tp2": 107.835,
       "tp3": 106.35,
@@ -202,8 +202,8 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T10:00:53+09:00",
-      "last_price": 109.6,
-      "tp1_hit": false,
+      "last_price": 109.1,
+      "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
@@ -235,7 +235,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T16:00:56+09:00",
-      "last_price": 0.1541,
+      "last_price": 0.1548,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -268,7 +268,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T16:30:52+09:00",
-      "last_price": 454.8,
+      "last_price": 454.95,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
