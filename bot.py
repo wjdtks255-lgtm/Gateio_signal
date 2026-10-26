@@ -330,6 +330,7 @@ def run_bot():
                     chart_link = f"https://www.gate.io/trade/{symbol}"
                     dir_tag = "🟢 롱 포지션" if direction == "LONG" else "🔴 숏 포지션"
                     
+                    # 💡 롱/숏 관계없이 수익 목표가(TP)는 플러스(+), 손절가(SL)는 마이너스(-)로 직관적 표기
                     msg = (
                         "<b>🚀 [Master 6.0 신규 시그널 포착]</b>\n"
                         f"• 방향: <code>{dir_tag}</code>\n"
@@ -338,10 +339,10 @@ def run_bot():
                         f"• 추천 레버리지: <code>{leverage}배</code> (변동성 분석 기반)\n"
                         f"• 탐색 이유: <code>{reason}</code>\n\n"
                         "<b>🎯 목표가 및 손절가</b>\n"
-                        f"• TP1 ({'+2.0%' if direction=='LONG' else '-2.0%'}): <code>{tp1:.4f}</code>\n"
-                        f"• TP2 ({'+4.0%' if direction=='LONG' else '-4.0%'}): <code>{tp2:.4f}</code>\n"
-                        f"• TP3 ({'+6.0%' if direction=='LONG' else '-6.0%'}): <code>{tp3:.4f}</code>\n"
-                        f"• 손절가 SL ({'-2.0%' if direction=='LONG' else '+2.0%'}): <code>{sl:.4f}</code>"
+                        f"• TP1 (+2.0%): <code>{tp1:.4f}</code>\n"
+                        f"• TP2 (+4.0%): <code>{tp2:.4f}</code>\n"
+                        f"• TP3 (+6.0%): <code>{tp3:.4f}</code>\n"
+                        f"• 손절가 SL (-2.0%): <code>{sl:.4f}</code>"
                     )
                     alerts_to_send.append(msg)
                     
