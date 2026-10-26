@@ -87,8 +87,8 @@
       "tp1": 0.1243278,
       "tp2": 0.1267656,
       "tp3": 0.1292034,
-      "stop_loss": 0.1194522,
-      "tp1_reached": false
+      "stop_loss": 0.12189,
+      "tp1_reached": true
     }
   },
   "stats": {
