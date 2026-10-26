@@ -78,7 +78,7 @@
       "tp3": 0.3044284,
       "stop_loss": 0.3303372,
       "tp1_reached": true,
-      "tp2_reached": false,
+      "tp2_reached": true,
       "tp3_reached": false
     },
     "UNI5S_USDT": {
