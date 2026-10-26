@@ -74,19 +74,6 @@
       "tp2_reached": false,
       "tp3_reached": false
     },
-    "BEAT_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.08138,
-      "entry_time": "2026-10-26T16:20:44.224496+00:00",
-      "leverage": 5,
-      "tp1": 0.0830076,
-      "tp2": 0.0846352,
-      "tp3": 0.0862628,
-      "stop_loss": 0.07975239999999999,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "tp3_reached": false
-    },
     "WLD3S_USDT": {
       "direction": "LONG",
       "entry_price": 0.61609,
@@ -99,14 +86,33 @@
       "tp1_reached": true,
       "tp2_reached": false,
       "tp3_reached": false
+    },
+    "PUMP3S_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.18165,
+      "entry_time": "2026-10-26T16:55:31.803795+00:00",
+      "leverage": 7,
+      "tp1": 0.185283,
+      "tp2": 0.188916,
+      "tp3": 0.19254900000000003,
+      "stop_loss": 0.178017,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
     }
   },
   "stats": {
     "wins": 4,
-    "losses": 8,
-    "total": 12
+    "losses": 9,
+    "total": 13
   },
   "history": [
+    {
+      "symbol": "BEAT_USDT",
+      "category": "코인",
+      "direction": "LONG",
+      "result": "패배 (손실 마감)"
+    },
     {
       "symbol": "PEPE5S_USDT",
       "category": "코인",
