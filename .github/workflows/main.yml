@@ -2,14 +2,17 @@ name: Gate.io Signal Bot
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *'  # 5분 주기 자동 실행
+  workflow_dispatch:       # cron-job.org / 수동 외부 트리거 수신
+  repository_dispatch:
+    types: [cron_trigger]
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
