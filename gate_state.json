@@ -14,5 +14,95 @@
     "time": 0
   },
   "slot_snapshot": {},
-  "pending_notifications": []
+  "pending_notifications": [],
+  "active_slots": {
+    "SKHYNIX3L_USDT": {
+      "entry_price": 0.04921,
+      "entry_time": "2026-10-26T13:31:56.354464+00:00",
+      "tp1": 0.050194199999999994,
+      "tp2": 0.0511784,
+      "tp3": 0.052162599999999996,
+      "stop_loss": 0.0482258,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    },
+    "PEPE5S_USDT": {
+      "entry_price": 0.004098,
+      "entry_time": "2026-10-26T13:31:56.354511+00:00",
+      "tp1": 0.00417996,
+      "tp2": 0.004261920000000001,
+      "tp3": 0.0043438800000000005,
+      "stop_loss": 0.00401604,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    },
+    "DOOD_USDT": {
+      "entry_price": 0.002291,
+      "entry_time": "2026-10-26T13:31:56.354534+00:00",
+      "tp1": 0.0023368200000000003,
+      "tp2": 0.00238264,
+      "tp3": 0.0024284600000000003,
+      "stop_loss": 0.00224518,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    },
+    "GRASS_USDT": {
+      "entry_price": 0.711,
+      "entry_time": "2026-10-26T13:31:56.354563+00:00",
+      "tp1": 0.72522,
+      "tp2": 0.73944,
+      "tp3": 0.75366,
+      "stop_loss": 0.69678,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    },
+    "OSMO_USDT": {
+      "entry_price": 0.05022,
+      "entry_time": "2026-10-26T13:31:56.354585+00:00",
+      "tp1": 0.0512244,
+      "tp2": 0.052228800000000006,
+      "tp3": 0.0532332,
+      "stop_loss": 0.0492156,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    },
+    "BR_USDT": {
+      "entry_price": 0.48532,
+      "entry_time": "2026-10-26T13:31:56.354615+00:00",
+      "tp1": 0.4950264,
+      "tp2": 0.5047328,
+      "tp3": 0.5144392,
+      "stop_loss": 0.47561359999999997,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    },
+    "TAG_USDT": {
+      "entry_price": 0.0005365,
+      "entry_time": "2026-10-26T13:31:56.354627+00:00",
+      "tp1": 0.00054723,
+      "tp2": 0.00055796,
+      "tp3": 0.00056869,
+      "stop_loss": 0.00052577,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    },
+    "BANK_USDT": {
+      "entry_price": 0.02675,
+      "entry_time": "2026-10-26T13:31:56.354655+00:00",
+      "tp1": 0.027285,
+      "tp2": 0.02782,
+      "tp3": 0.028355,
+      "stop_loss": 0.026215,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
+    }
+  }
 }
