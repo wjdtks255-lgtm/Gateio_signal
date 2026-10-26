@@ -16,8 +16,8 @@ def send_telegram_message(message):
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": message,
-        "parse_mode": "HTML",  # 👈 마크다운 대신 HTML 모드를 사용하여 언더바(_) 충돌 및 링크 깨짐 방지
-        "disable_web_page_preview": True
+        "parse_mode": "HTML",  # HTML 모드 유지
+        "disable_web_page_preview": True  # 큰 미리보기 박스 차단
     }
     try:
         response = requests.post(url, json=payload, timeout=10)
@@ -115,8 +115,9 @@ def build_slot_status_message(active_slots, tickers_dict):
             
             dir_icon = "🟢" if direction == "LONG" else "🔴"
             display_name = f"[{category}] {sym}"
-            # HTML 링크 형식 적용 (<a href="링크"><code>종목명</code></a>)
-            lines.append(f"{i}️⃣ {dir_icon} <a href='{chart_link}'><code>{display_name}</code></a> | <code>{profit_pct:+.2f}%</code> | 보유: <code>{holding_str}</code>")
+            
+            # 각 종목별 개별 링크가 정상 작동하도록 정돈된 HTML 구조
+            lines.append(f"{i}️⃣ {dir_icon} <a href='{chart_link}'>{display_name}</a> | <code>{profit_pct:+.2f}%</code> | 보유: <code>{holding_str}</code>")
         else:
             lines.append(f"{i}️⃣ (빈 슬롯)")
             
@@ -168,7 +169,7 @@ def run_bot():
             msg = (
                 f"<b>🛑 [손절가(SL) 도달]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'><code>{display_name}</code></a>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{info['entry_price']}</code>\n"
                 f"• 도달 가격: <code>{current_price}</code> (손절 마감)\n"
                 f"• 결과: <code>패배 (손실 마감)</code>"
@@ -186,7 +187,7 @@ def run_bot():
             msg = (
                 f"<b>🎯🎯🎯 [TP3 최종 목표가 도달]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'><code>{display_name}</code></a>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{info['entry_price']}</code>\n"
                 f"• TP3 최정상 도달: <code>{current_price}</code>\n"
                 f"• 결과: <code>승리 (전량 익절 마감)</code>"
@@ -204,7 +205,7 @@ def run_bot():
             msg = (
                 f"<b>🎯🎯 [TP2 2차 목표가 도달]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'><code>{display_name}</code></a>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{info['entry_price']}</code>\n"
                 f"• TP2 도달: <code>{current_price}</code>\n"
                 f"• 조치: <code>중간 익절 진행</code>"
@@ -218,7 +219,7 @@ def run_bot():
             msg = (
                 f"<b>🎯 [TP1 1차 목표가 도달]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'><code>{display_name}</code></a>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{info['entry_price']}</code>\n"
                 f"• TP1 도달: <code>{current_price}</code>\n"
                 f"• 조치: <code>본전 스탑(Break-even) 전환 완료</code>"
@@ -274,7 +275,7 @@ def run_bot():
                     msg = (
                         f"<b>🚀 [Master 6.0 신규 시그널 포착]</b>\n"
                         f"• 방향: <code>{dir_tag}</code>\n"
-                        f"• 종목: <a href='{chart_link}'><code>{display_name}</code></a>\n"
+                        f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                         f"• 진입가: <code>{last_price}</code>\n"
                         f"• 추천 레버리지: <code>{leverage}배</code> (변동성 분석 기반)\n"
                         f"• 탐색 이유: <code>{reason}</code>\n\n"
