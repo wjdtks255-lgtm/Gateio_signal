@@ -1,19 +1,35 @@
+
 name: Gateio Signal Bot
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # 5분마다 자동 실행
+    # 매시 2, 7, 12, 17 ... 57분 실행
+    - cron: '2-59/5 * * * *'
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'bot.py'
+      - '.github/workflows/**'
 
 permissions:
-  contents: write  # GitHub Actions가 저장소에 커밋/푸시할 수 있도록 권한 명시
+  contents: write
+
+concurrency:
+  group: gateio-signal-bot
+  cancel-in-progress: false
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
+    timeout-minutes: 4
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,17 +41,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
+      - name: Check configuration
+        env:
+          GATE_TELEGRAM_TOKEN: ${{ secrets.GATE_TELEGRAM_TOKEN }}
+          GATE_TELEGRAM_CHAT_ID: ${{ secrets.GATE_TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import os
+          print("Python workflow started")
+          print("Telegram token configured:", bool(os.getenv("GATE_TELEGRAM_TOKEN")))
+          print("Telegram chat ID configured:", bool(os.getenv("GATE_TELEGRAM_CHAT_ID")))
+          PY
+
       - name: Run trading bot
         env:
           GATE_TELEGRAM_TOKEN: ${{ secrets.GATE_TELEGRAM_TOKEN }}
           GATE_TELEGRAM_CHAT_ID: ${{ secrets.GATE_TELEGRAM_CHAT_ID }}
-        run: python bot.py
+          PYTHONUNBUFFERED: '1'
+        run: python -u bot.py
 
-      - name: Commit and push changes if any
+      - name: Commit and push state
+        if: success()
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.io"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add gate_state.json
-          git diff --staged --quiet || git commit -m "Auto-update signal state [skip ci]"
-          git pull --rebase || echo "Rebase skipped"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto-update signal state [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "State file unchanged; no commit needed."
+          fi
