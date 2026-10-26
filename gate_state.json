@@ -83,13 +83,13 @@
     },
     "DOOD_USDT": {
       "direction": "LONG",
-      "entry_price": 0.002047,
-      "entry_time": "2026-10-26T15:55:33.860416+00:00",
+      "entry_price": 0.001982,
+      "entry_time": "2026-10-26T16:00:53.302659+00:00",
       "leverage": 5,
-      "tp1": 0.0020879400000000004,
-      "tp2": 0.00212888,
-      "tp3": 0.0021698200000000003,
-      "stop_loss": 0.00200606,
+      "tp1": 0.00202164,
+      "tp2": 0.00206128,
+      "tp3": 0.00210092,
+      "stop_loss": 0.0019423599999999997,
       "tp1_reached": false,
       "tp2_reached": false,
       "tp3_reached": false
@@ -97,10 +97,16 @@
   },
   "stats": {
     "wins": 3,
-    "losses": 4,
-    "total": 7
+    "losses": 5,
+    "total": 8
   },
   "history": [
+    {
+      "symbol": "DOOD_USDT",
+      "category": "코인",
+      "direction": "LONG",
+      "result": "패배 (손실 마감)"
+    },
     {
       "symbol": "UNI5S_USDT",
       "category": "코인",
