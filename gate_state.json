@@ -59,17 +59,6 @@
       "stop_loss": 0.31069199999999997,
       "tp1_reached": false
     },
-    "UNI5S_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.3117,
-      "entry_time": "2026-10-26T17:20:38.679290+00:00",
-      "leverage": 5,
-      "tp1": 0.30546599999999996,
-      "tp2": 0.29923199999999994,
-      "tp3": 0.292998,
-      "stop_loss": 0.317934,
-      "tp1_reached": false
-    },
     "XNY_USDT": {
       "direction": "LONG",
       "entry_price": 0.006873,
@@ -91,13 +80,24 @@
       "tp3": 0.1253344,
       "stop_loss": 0.1158752,
       "tp1_reached": false
+    },
+    "BMT_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.02824,
+      "entry_time": "2026-10-26T17:30:44.266346+00:00",
+      "leverage": 7,
+      "tp1": 0.0276752,
+      "tp2": 0.0271104,
+      "tp3": 0.0265456,
+      "stop_loss": 0.028804800000000002,
+      "tp1_reached": false
     }
   },
   "stats": {
     "wins": 7,
     "draws": 1,
-    "losses": 11,
-    "total": 19
+    "losses": 12,
+    "total": 20
   },
   "history": [
     {
