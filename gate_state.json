@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03655,
+      "last_price": 0.03645,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004649,
+      "last_price": 0.004634,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -132,7 +132,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04568,
+      "last_price": 0.0456,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1397.35,
+      "last_price": 1397.48,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -202,12 +202,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.07183,
+      "last_price": 0.07089,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
-      "max_profit_pct": 3.803401633855625,
-      "last_notified_tier": 3.0,
+      "max_profit_pct": 5.062274005624756,
+      "last_notified_tier": 5.0,
       "status": "ACTIVE",
       "slot": 6
     },
@@ -237,7 +237,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:43+09:00",
-      "last_price": 0.002858,
+      "last_price": 0.002865,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -272,7 +272,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T08:10:38+09:00",
-      "last_price": 143.37,
+      "last_price": 143.5,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
