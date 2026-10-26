@@ -155,7 +155,11 @@ def process_telegram_commands(state, tickers_dict):
             chat = message.get("chat", {})
             chat_id = str(chat.get("id", ""))
             
+            # 디버그용 로그 (GitHub Actions 로그에서 확인 가능)
+            print(f"DEBUG - Received chat_id: '{chat_id}', text: '{text}' (Expected CHAT_ID: '{TELEGRAM_CHAT_ID}')")
+            
             if chat_id != str(TELEGRAM_CHAT_ID):
+                print(f"DEBUG - Chat ID mismatch! Ignored.")
                 continue
                 
             active_slots = state.get("active_slots", {})
@@ -183,7 +187,6 @@ def process_telegram_commands(state, tickers_dict):
                 if len(parts) > 1:
                     query = parts[1].upper()
                     matched_price = None
-                    matched_change = 0.0
                     found_sym = ""
                     
                     for sym, price in tickers_dict.items():
@@ -202,7 +205,7 @@ def process_telegram_commands(state, tickers_dict):
                         )
                         send_telegram_message(price_msg)
                     else:
-                        send_telegram_message(f"⚠️ `{query}`에 해당하는 종목을 찾을 수 없습니다. (예: `/시세 BTC_USDT`)")
+                        send_telegram_message(f"⚠️ `{query}`에 해당하는 종목을 찾을 수 없습니다.")
                 else:
                     send_telegram_message("⚠️ 조회할 종목명을 입력해주세요. (예: `/시세 BTC_USDT`)")
                     
@@ -303,7 +306,6 @@ def run_bot():
             stats["losses"] += 1
             stats["total"] += 1
             
-            # 히스토리 기록 추가
             history_list.insert(0, {"symbol": symbol, "category": category, "direction": direction, "result": "패배 (손실 마감)"})
             state["history"] = history_list[:10]
             
@@ -326,7 +328,6 @@ def run_bot():
             stats["wins"] += 1
             stats["total"] += 1
             
-            # 히스토리 기록 추가
             history_list.insert(0, {"symbol": symbol, "category": category, "direction": direction, "result": "승리 (전량 익절)"})
             state["history"] = history_list[:10]
             
