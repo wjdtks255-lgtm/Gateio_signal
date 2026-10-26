@@ -1,0 +1,43 @@
+{
+  "active_positions": [
+    {
+      "symbol": "STAMP_USDT",
+      "is_long": false,
+      "entry_price": 0.000284,
+      "current_price": 0.000284,
+      "pnl": 0.0,
+      "held_time": "방금 전 진입"
+    },
+    {
+      "symbol": "DOOD_USDT",
+      "is_long": false,
+      "entry_price": 0.00235,
+      "current_price": 0.00235,
+      "pnl": 0.0,
+      "held_time": "방금 전 진입"
+    },
+    {
+      "symbol": "KIMCHI_USDT",
+      "is_long": false,
+      "entry_price": 0.008536,
+      "current_price": 0.008536,
+      "pnl": 0.0,
+      "held_time": "방금 전 진입"
+    },
+    {
+      "symbol": "STONKS_USDT",
+      "is_long": false,
+      "entry_price": 0.001598,
+      "current_price": 0.001598,
+      "pnl": 0.0,
+      "held_time": "방금 전 진입"
+    }
+  ],
+  "stats": {
+    "total_closed": 61,
+    "tp3": 17,
+    "tp2_defense": 3,
+    "tp1_breakeven": 6,
+    "stop_loss": 35
+  }
+}
