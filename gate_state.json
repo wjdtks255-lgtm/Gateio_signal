@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03603,
+      "last_price": 0.03576,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.00453,
+      "last_price": 0.004542,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00848,
+      "last_price": 0.0085,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1397.21,
+      "last_price": 1398.07,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -202,7 +202,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.06893,
+      "last_price": 0.06991,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -243,6 +243,39 @@
       "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 7
+    },
+    "GALA_USDT": {
+      "symbol": "GALA_USDT",
+      "side": "SHORT",
+      "entry": 0.001724,
+      "sl": 0.0017447,
+      "tp1": 0.0016826,
+      "tp2": 0.00165155,
+      "tp3": 0.0016204999999999998,
+      "sl_pct": -1.2006960556844555,
+      "tp1_pct": 2.401392111368911,
+      "tp2_pct": 4.202436194895601,
+      "tp3_pct": 6.003480278422291,
+      "leverage": 12,
+      "rsi": 41.891891891892016,
+      "atr": 1.1500000000000024e-05,
+      "volume_surge": 2.0490830931884907,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(1.8배+)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-26T13:30:58+09:00",
+      "last_price": 0.001724,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
+      "status": "ACTIVE",
+      "slot": 8
     }
   },
   "history": [
@@ -950,7 +983,7 @@
     "BONK_USDT": 1792816250.884164,
     "AAVE_USDT": 1792818935.3371937,
     "MINIMAX_USDT": 1792818940.2524772,
-    "GALA_USDT": 1792930551.0767632,
+    "GALA_USDT": 1792989058.8790648,
     "JTO_USDT": 1792818951.2682505,
     "FLOKI_USDT": 1792818955.5271654,
     "HYPE_USDT": 1792855241.6819973,
