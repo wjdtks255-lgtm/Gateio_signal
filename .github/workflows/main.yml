@@ -2,20 +2,19 @@ name: Gate.io Signal Bot
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
-  repository_dispatch:
-    types: [trigger-bot]
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,27 +24,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests
 
       - name: Run Bot
         env:
           GATE_TELEGRAM_TOKEN: ${{ secrets.GATE_TELEGRAM_TOKEN }}
           GATE_TELEGRAM_CHAT_ID: ${{ secrets.GATE_TELEGRAM_CHAT_ID }}
-        run: |
-          python bot.py
+        run: python bot.py
 
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # 원격 저장소의 최신 상태를 먼저 동기화하여 충돌 방지
-          git pull --rebase || true
-          
-          git add gate_state.json
-          
-          # 변경 사항이 있을 때만 커밋 수행
-          git diff --staged --quiet || git commit -m "chore: update bot state [skip ci]"
-          
-          # 변경된 상태 푸시
-          git push
+          git pull origin main --rebase || true
+          git add data/
+          git diff --staged --quiet || git commit -m "Auto-update signal state [skip ci]"
+          git push origin main
