@@ -7,7 +7,7 @@
       "tp2": 0.0511784,
       "tp3": 0.052162599999999996,
       "stop_loss": 0.0482258,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
       "tp3_reached": false
     },
@@ -55,19 +55,6 @@
       "tp2_reached": true,
       "tp3_reached": false
     },
-    "PUMP3S_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.17422,
-      "entry_time": "2026-10-26T14:43:32.696445+00:00",
-      "leverage": 7,
-      "tp1": 0.17073560000000002,
-      "tp2": 0.16725120000000002,
-      "tp3": 0.1637668,
-      "stop_loss": 0.1777044,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "tp3_reached": false
-    },
     "DOOD_USDT": {
       "direction": "LONG",
       "entry_price": 0.002189,
@@ -93,11 +80,24 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "tp3_reached": false
+    },
+    "INTC3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.32386,
+      "entry_time": "2026-10-26T15:05:32.466254+00:00",
+      "leverage": 8,
+      "tp1": 0.31738279999999996,
+      "tp2": 0.31090559999999995,
+      "tp3": 0.3044284,
+      "stop_loss": 0.3303372,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
     }
   },
   "stats": {
-    "wins": 2,
+    "wins": 3,
     "losses": 2,
-    "total": 4
+    "total": 5
   }
 }
