@@ -30,7 +30,8 @@ def load_state():
     """상태 파일 로드 시 누락된 키가 있어도 에러가 나지 않도록 안전하게 보정"""
     state = {
         "active_slots": {},
-        "stats": {"wins": 0, "losses": 0, "total": 0}
+        "stats": {"wins": 0, "losses": 0, "total": 0},
+        "history": []
     }
     if os.path.exists(STATE_FILE):
         try:
@@ -43,6 +44,8 @@ def load_state():
                         state["stats"]["wins"] = data["stats"].get("wins", 0)
                         state["stats"]["losses"] = data["stats"].get("losses", 0)
                         state["stats"]["total"] = data["stats"].get("total", 0)
+                    if "history" in data and isinstance(data["history"], list):
+                        state["history"] = data["history"]
         except Exception as e:
             print(f"Error loading state file: {e}")
     return state
@@ -65,28 +68,23 @@ def get_asset_category(symbol):
     """종목명 패턴에 따라 주식, 지수, 원자재, 외환, 코인 군을 확실하게 분류"""
     upper_sym = symbol.upper()
     
-    # 1. 주식 연동 토큰/상품 감지
     stock_keywords = ['SKHYNIX', 'TSLA', 'AAPL', 'NVDA', 'MSFT', 'AMZN', 'META', 'NFLX', 'GOOGL', 'BABA', 'AMD', 'INTC', 'PLTR']
     if any(k in upper_sym for k in stock_keywords):
         return '주식'
     
-    # 2. 지수 상품 감지
     index_keywords = ['SPX', 'NAS', 'DJI', 'US30', 'US100', 'NIKKEI', 'VIX', 'DAX']
     if any(k in upper_sym for k in index_keywords):
         return '지수'
         
-    # 3. 원자재 상품 감지
     commodity_keywords = ['XAU', 'XAG', 'OIL', 'GOLD', 'SILVER', 'CRUDE', 'BRENT', 'COPPER', 'GAS']
     if any(k in upper_sym for k in commodity_keywords):
         return '원자재'
         
-    # 4. 외환 상품 감지
     forex_keywords = ['EUR', 'GBP', 'JPY', 'AUD', 'CHF', 'NZD', 'CAD']
     if any(k in upper_sym for k in forex_keywords):
         if not upper_sym.endswith('_USDT') or any(fx in upper_sym[:4] for fx in forex_keywords):
             return '외환'
             
-    # 5. 기본 코인
     return '코인'
 
 def calculate_recommended_leverage(category, change_24h):
@@ -114,7 +112,14 @@ def format_holding_time(entry_iso):
     except Exception:
         return "0시간 00분"
 
-def build_slot_status_message(active_slots, tickers_dict):
+def calculate_win_rate(stats):
+    total = stats.get("total", 0)
+    wins = stats.get("wins", 0)
+    if total == 0:
+        return 0.0
+    return round((wins / total) * 100, 2)
+
+def build_slot_status_message(active_slots, tickers_dict, stats, history_list):
     active_symbols = list(active_slots.keys())
     active_count = len(active_symbols)
     
@@ -146,6 +151,17 @@ def build_slot_status_message(active_slots, tickers_dict):
         else:
             lines.append(f"{i}️⃣ (빈 슬롯)")
             
+    # 누적 승무패 및 승률 통계 추가
+    win_rate = calculate_win_rate(stats)
+    lines.append(f"\n📈 <b>[누적 통계]</b> <code>{stats['wins']}승 {stats['losses']}패 (총 {stats['total']}전) | 승률: {win_rate}%</code>")
+    
+    # 전체 포지션 회수 (최근 종료 내역) 추가
+    if history_list:
+        lines.append(f"\n📜 <b>[최근 종료된 포지션 내역]</b>")
+        for idx, h in enumerate(history_list[:5], 1):
+            res_icon = "✅" if "승리" in h.get("result", "") else "❌"
+            lines.append(f"{idx}. {res_icon} <code>[{h['category']}] {h['symbol']}</code> ({h['direction']}) - <code>{h['result']}</code>")
+            
     return "\n".join(lines)
 
 def run_bot():
@@ -166,6 +182,7 @@ def run_bot():
     state = load_state()
     active_slots = state["active_slots"]
     stats = state["stats"]
+    history_list = state.setdefault("history", [])
     
     alerts_to_send = []
     slot_changed = False
@@ -202,6 +219,10 @@ def run_bot():
             alerts_to_send.append(msg)
             stats["losses"] += 1
             stats["total"] += 1
+            
+            history_list.insert(0, {"symbol": symbol, "category": category, "direction": direction, "result": "패배 (손실 마감)"})
+            state["history"] = history_list[:10]
+            
             del active_slots[symbol]
             slot_changed = True
             continue
@@ -220,6 +241,10 @@ def run_bot():
             alerts_to_send.append(msg)
             stats["wins"] += 1
             stats["total"] += 1
+            
+            history_list.insert(0, {"symbol": symbol, "category": category, "direction": direction, "result": "승리 (전량 익절)"})
+            state["history"] = history_list[:10]
+            
             del active_slots[symbol]
             slot_changed = True
             continue
@@ -323,7 +348,7 @@ def run_bot():
             send_telegram_message(alert)
         
         if slot_changed:
-            slot_status_msg = build_slot_status_message(active_slots, tickers_dict)
+            slot_status_msg = build_slot_status_message(active_slots, tickers_dict, stats, history_list)
             send_telegram_message(slot_status_msg)
             
         print("Sent signals/milestones and slot status to Telegram.")
