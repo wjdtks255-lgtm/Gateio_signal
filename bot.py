@@ -42,7 +42,7 @@ TZ = timezone(timedelta(hours=9))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
                     filename="gate_signal_bot.log", filemode="a")
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.7"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.8"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
 COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
@@ -113,7 +113,6 @@ def save_json_with_lock(path, data):
 
 def save_state(st): save_json_with_lock(STATE, st)
 
-# 💡 [핵심] 진입 시간 순서대로 정렬하여 1부터 N번까지 빈틈없이 번호 부여
 def reassign_slots(st):
     ps = st.get("positions", {})
     if not ps: return
@@ -131,7 +130,7 @@ def load_state():
         st.setdefault("history", [])
         st.setdefault("pending_notifications", [])
         reassign_slots(st)
-        save_state(st)  # 💡 불러오자마자 정렬된 상태를 파일에 곧바로 저장하여 반영 고정
+        save_state(st)
         return st
     except Exception as e:
         logging.error(f"상태 파일 로드 실패: {e}")
@@ -270,8 +269,7 @@ def find_signal(t, btc):
     return {"symbol":sym,"side":side,"entry":entry,"sl":sl,"tp1":tps[0],"tp2":tps[1],"tp3":tps[2],
         "sl_pct":sl_pct,"tp1_pct":tp1_pct,"tp2_pct":tp2_pct,"tp3_pct":tp3_pct,"leverage":rec_lev,
         "rsi":rv,"atr":av,"volume_surge":surge,"score":score,"reasons":[names[i] for i,x in enumerate(checks) if x],
-        "entry_time":stamp(),"last_price":entry,"tp1_hit":False,"tp2_hit":False,"tp3_hit":False,
-        "max_profit_pct":0.0,"last_notified_tier":0,"status":"ACTIVE"}
+        "entry_time":stamp(),"last_price":entry,"tp1_hit":False,"tp2_hit":False,"tp3_hit":False,"status":"ACTIVE"}
 
 def stats_report(st):
     counts = {"TP3":0,"TP2_BE":0,"TP1_BE":0,"SL":0}
@@ -322,7 +320,7 @@ def close_position(st, sym, reason, price):
     st["history"] = st["history"][-5000:]
     del st["positions"][sym]
     
-    reassign_slots(st)  # 종료 시 재정렬
+    reassign_slots(st)
     save_state(st)
     
     chart = f"https://www.gate.io/futures/USDT/{sym}"
@@ -334,36 +332,6 @@ def close_position(st, sym, reason, price):
         f"🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n{overview}")
     notify(st, f"CLOSE:{sym}:{record['exit_time']}", msg)
     notify(st, f"STATS:{record['exit_time']}:{sym}", stats_report(st))
-
-def check_dynamic_profit_alert(st, sym, p, current_profit):
-    p.setdefault("max_profit_pct", 0.0)
-    p.setdefault("last_notified_tier", 0)
-    
-    if current_profit > p["max_profit_pct"]:
-        p["max_profit_pct"] = current_profit
-        
-    max_p = p["max_profit_pct"]
-    current_tier = p["last_notified_tier"]
-    
-    target_tier = current_tier
-    if max_p >= 15.0:
-        target_tier = 15.0 + math.floor((max_p - 15.0) / 5.0) * 5.0
-    elif max_p >= 10.0:
-        target_tier = 10.0 + math.floor((max_p - 10.0) / 3.0) * 3.0
-    elif max_p >= 5.0:
-        target_tier = 5.0 + math.floor((max_p - 5.0) / 1.0) * 1.0
-    elif max_p >= 3.0:
-        target_tier = 3.0
-        
-    if target_tier > current_tier:
-        p["last_notified_tier"] = target_tier
-        save_state(st)
-        chart = f"https://www.gate.io/futures/USDT/{sym}"
-        overview = get_status_overview_msg(st, f"🚀 <b>GATE.IO 수익률 {target_tier:.0f}% 달성 알림</b>")
-        msg = (f"🔥 <b>수익 구간 돌파 | {sym} ({asset(sym)}) {p.get('side')}</b>\n"
-               f"현재 최고 수익률: <b>+{max_p:.2f}%</b> (기준: {target_tier:.0f}% 구간 달성)\n"
-               f"🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n{overview}")
-        notify(st, f"PROFIT_TIER:{sym}:{target_tier}", msg)
 
 def monitor(st):
     for sym in list(st["positions"]):
@@ -377,16 +345,12 @@ def monitor(st):
             long = p.get("side")=="LONG"
             sl = num(p.get("sl"))
             
-            curr_pnl = pnl(p, c["c"])
-            if curr_pnl >= 3.0:
-                check_dynamic_profit_alert(st, sym, p, curr_pnl)
-            
-            # SL 우선 감지
+            # SL 우선 감지 (손절가 도달)
             if (c["l"]<=sl if long else c["h"]>=sl):
                 close_position(st,sym,"SL 또는 본절 청산",sl)
                 continue
                 
-            # TP 우선 감지
+            # TP 우선 감지 (목표가 도달)
             for target,flag in (("tp1","tp1_hit"),("tp2","tp2_hit"),("tp3","tp3_hit")):
                 if p.get(flag): continue
                 level = num(p.get(target))
@@ -445,7 +409,7 @@ def scan(st):
             sig["slot"] = slot
             st["positions"][sym] = sig
             
-            reassign_slots(st)  # 진입 시 정렬
+            reassign_slots(st)
             st["last_signal"][sym] = time.time()
             save_state(st)
             
@@ -464,7 +428,7 @@ def scan(st):
         except Exception as e: logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT v5.7 시작")
+    logging.info("GATE.IO FUTURES BOT v5.8 시작")
     try: st = load_state()
     except RuntimeError: return
     for p in st["positions"].values():
@@ -473,7 +437,6 @@ def main():
         p.setdefault("status","ACTIVE"); p.setdefault("last_price",num(p.get("entry")))
         p.setdefault("sl_pct",0.0); p.setdefault("tp1_pct",0.0); p.setdefault("tp2_pct",0.0); p.setdefault("tp3_pct",0.0)
         p.setdefault("leverage",5)
-        p.setdefault("max_profit_pct", 0.0); p.setdefault("last_notified_tier", 0)
     retry_pending_notifications(st)
     monitor(st)
     scan(st)
