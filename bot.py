@@ -1,451 +1,242 @@
 import os
 import json
-import time
-import math
 import requests
-import fcntl
-import logging
-from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
-def getenv_float(key, default):
+TELEGRAM_TOKEN = os.getenv("GATE_TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("GATE_TELEGRAM_CHAT_ID")
+STATE_FILE = "gate_state.json"
+MAX_SLOTS = 8  # 최대 동시 운영 슬롯 8개
+
+def send_telegram_message(message):
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print("Telegram credentials missing.")
+        return
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": message,
+        "parse_mode": "Markdown"
+    }
     try:
-        v = float(os.getenv(key, default))
-        if not math.isfinite(v) or v < 0: raise ValueError
-        return v
-    except Exception:
-        return float(default)
-
-def getenv_int(key, default):
-    try:
-        v = int(os.getenv(key, default))
-        if v < 0: raise ValueError
-        return v
-    except Exception:
-        return int(default)
-
-BASE = "https://api.gateio.ws/api/v4"
-TOKEN = os.getenv("GATE_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_TOKEN", "")
-CHAT = os.getenv("GATE_TELEGRAM_CHAT_ID") or os.getenv("CHAT_ID", "")
-STATE = Path("gate_state.json")
-
-MAX_ACTIVE = getenv_int("MAX_ACTIVE", 8)
-MIN_TURNOVER = getenv_float("MIN_TURNOVER", 500000)
-MIN_SCORE = getenv_int("MIN_SCORE", 6)
-COOLDOWN = getenv_int("COOLDOWN", 60)
-STOP_ATR = getenv_float("STOP_ATR", 1.8)
-
-# TP1을 타이트하게 당겨 초고속 본전 방어 구현
-TP_R = (1.2, 2.5, 4.0)
-
-TZ = timezone(timedelta(hours=9))
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
-                    filename="gate_signal_bot.log", filemode="a")
-S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/Master6.0"})
-
-STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
-COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
-INDICES = set("""SPX NDX NASDAQ SP500 US30 US500 US100 DJ30 DXY VIX""".split())
-FX = set("""EURUSD GBPUSD USDJPY AUDUSD USDCAD USDCHF NZDUSD EUR GBP JPY AUD CAD CHF NZD""".split())
-
-def asset(sym):
-    b = sym.upper().replace("_USDT", "").replace("_USD", "")
-    if b in COMMODITIES or any(x in b for x in ("GOLD", "SILVER", "OIL", "XAU", "XAG", "PAXG", "XAUT")): return "원자재"
-    if b in INDICES or any(x in b for x in ("SP500", "NASDAQ", "US30", "SPX", "NDX", "DXY", "VIX")): return "지수"
-    if (b in FX or any(b.startswith(x) for x in ("EUR", "GBP", "USD", "AUD", "CAD", "CHF", "NZD"))) and "_" in sym: return "외환"
-    if b in STOCKS: return "주식"
-    if sym.endswith("_USDT"): return "코인"
-    return "기타·미확인"
-
-def now(): return datetime.now(TZ)
-def stamp(): return now().isoformat(timespec="seconds")
-
-def num(v, d=0.0):
-    try:
-        x = float(v)
-        return x if math.isfinite(x) else d
-    except Exception: return d
-
-def api(path, params=None, retries=3, delay=2):
-    for attempt in range(retries):
-        try:
-            r = S.get(BASE + path, params=params, timeout=15)
-            r.raise_for_status()
-            return r.json()
-        except Exception as e:
-            logging.warning(f"API 호출 실패 {attempt+1}회: {e}")
-            if attempt < retries - 1: time.sleep(delay)
-            else: raise
-
-def send(msg, retries=3):
-    if not TOKEN or not CHAT: return False
-    for attempt in range(retries):
-        try:
-            r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-                json={"chat_id": CHAT, "text": msg, "parse_mode": "HTML", "disable_web_page_preview": True}, timeout=15)
-            if r.ok and r.json().get("ok", False): return True
-        except Exception: pass
-        if attempt < retries - 1: time.sleep(1)
-    return False
-
-def save_json_with_lock(path, data):
-    lock_path = path.with_suffix(path.suffix + ".lock")
-    tmp = path.with_suffix(path.suffix + f".{os.getpid()}.tmp")
-    with open(lock_path, "a", encoding="utf-8") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        try:
-            with open(tmp, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(tmp, path)
-        finally:
-            if tmp.exists(): tmp.unlink()
-            fcntl.flock(lock, fcntl.LOCK_UN)
-
-def save_state(st): save_json_with_lock(STATE, st)
-
-def reassign_slots(st):
-    ps = st.get("positions", {})
-    if not ps: return
-    sorted_items = sorted(ps.items(), key=lambda x: x[1].get("entry_time", ""))
-    for idx, (sym, p) in enumerate(sorted_items, start=1):
-        p["slot"] = idx
+        response = requests.post(url, json=payload, timeout=10)
+        if response.status_code != 200:
+            print(f"Failed to send telegram message: {response.text}")
+    except Exception as e:
+        print(f"Error sending telegram message: {e}")
 
 def load_state():
-    if not STATE.exists(): return {"positions": {}, "last_signal": {}, "history": [], "pending_notifications": []}
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {
+        "active_slots": {},
+        "stats": {"wins": 0, "losses": 0, "total": 0}
+    }
+
+def save_state(state):
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(state, f, ensure_ascii=False, indent=2)
+
+def fetch_gateio_tickers():
+    url = "https://api.gateio.ws/api/v4/spot/tickers"
     try:
-        with open(STATE, encoding="utf-8") as f: st = json.load(f)
-        if not isinstance(st, dict): raise ValueError
-        st.setdefault("positions", {})
-        st.setdefault("last_signal", {})
-        st.setdefault("history", [])
-        st.setdefault("pending_notifications", [])
-        reassign_slots(st)
-        save_state(st)
-        return st
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            return response.json()
+    except Exception as e:
+        print(f"Error fetching Gate.io tickers: {e}")
+    return []
+
+def format_holding_time(entry_iso):
+    try:
+        entry_time = datetime.fromisoformat(entry_iso)
+        now = datetime.now(timezone.utc)
+        diff = now - entry_time
+        hours = int(diff.total_seconds() // 3600)
+        minutes = int((diff.total_seconds() % 3600) // 60)
+        return f"{hours}시간 {minutes:02d}분"
     except Exception:
-        return {"positions": {}, "last_signal": {}, "history": [], "pending_notifications": []}
+        return "0시간 00분"
 
-def get_next_slot(positions):
-    used = {p.get("slot") for p in positions.values() if isinstance(p, dict)}
-    return next((i for i in range(1, MAX_ACTIVE + 1) if i not in used), None)
-
-def elapsed(p):
-    try:
-        d = datetime.fromisoformat(p["entry_time"])
-        if d.tzinfo is None: d = d.replace(tzinfo=TZ)
-        sec = max(0, int((now() - d.astimezone(TZ)).total_seconds()))
-        days, sec = divmod(sec, 86400)
-        hours, sec = divmod(sec, 3600)
-        mins = sec // 60
-        return f"{days}일 {hours}시간 {mins}분" if days else f"{hours}시간 {mins}분"
-    except Exception: return "-"
-
-def pnl(p, price):
-    entry = num(p.get("entry"))
-    if entry <= 0: return 0
-    delta = price - entry
-    if p.get("side") == "SHORT": delta = -delta
-    return delta / entry * 100
-
-def get_status_overview_msg(st, header_title="🔔 <b>GATE.IO 현재 보유 현황</b>"):
-    lines = [header_title, "━━━━━━━━━━━━━━"]
-    ps = st.get("positions", {})
-    lines.append(f"📋 <b>전체 보유 종목 리스트 ({len(ps)}/{MAX_ACTIVE})</b>")
-    if not ps: lines.append("현재 보유 중인 종목이 없습니다.")
-    else:
-        for sym, p in sorted(ps.items(), key=lambda x: x[1].get("slot", 99)):
-            price = num(p.get("last_price"), num(p.get("entry")))
-            icon = "🟢" if p.get("side") == "LONG" else "🔴"
-            val = pnl(p, price)
-            pnl_icon = "📈" if val > 0 else ("📉" if val < 0 else "➖")
-            lines.append(f"<b>#{p.get('slot', '?')}</b> {sym} ({asset(sym)}) {icon} {p.get('side')}\n  └ 수익률: <b>{pnl_icon} {val:+.2f}%</b> | 보유: {elapsed(p)}")
-    lines.extend(["━━━━━━━━━━━━━━", "※ 시그널 추적 전용 (자동 주문 미실행)"])
+def build_slot_status_message(active_slots, tickers_dict):
+    active_symbols = list(active_slots.keys())
+    active_count = len(active_symbols)
+    
+    lines = [f"📊 *[현재 주시 중인 슬롯 현황 ({active_count} / {MAX_SLOTS} 슬롯)]*\n"]
+    
+    for i in range(1, MAX_SLOTS + 1):
+        if i <= active_count:
+            sym = active_symbols[i-1]
+            info = active_slots[sym]
+            entry_price = info.get("entry_price", 0)
+            
+            current_price = tickers_dict.get(sym, entry_price)
+            profit_pct = 0.0
+            if entry_price > 0:
+                profit_pct = ((current_price - entry_price) / entry_price) * 100
+            
+            holding_str = format_holding_time(info.get("entry_time"))
+            chart_link = f"https://www.gate.io/trade/{sym}"
+            
+            lines.append(f"{i}️⃣ [`{sym}`]({chart_link}) | `{profit_pct:+.2f}%` | 보유: `{holding_str}`")
+        else:
+            lines.append(f"{i}️⃣ (빈 슬롯)")
+            
     return "\n".join(lines)
 
-def candles(sym, interval, limit=120):
-    raw = api("/futures/usdt/candlesticks", {"contract": sym, "interval": interval, "limit": limit})
-    out = []
-    for x in raw:
-        if isinstance(x, dict): q = {k: num(x.get(k)) for k in ("t", "o", "h", "l", "c", "v")}
-        elif isinstance(x, (list, tuple)) and len(x) >= 6: q = dict(t=num(x[0]), v=num(x[1]), c=num(x[2]), h=num(x[3]), l=num(x[4]), o=num(x[5]))
-        else: continue
-        if min(q["o"], q["h"], q["l"], q["c"]) > 0 and q["h"] >= q["l"]: out.append(q)
-    return sorted(out, key=lambda x: x["t"])
+def run_bot():
+    print("Master 6.0 Bot Scan Initiated...")
+    raw_tickers = fetch_gateio_tickers()
+    if not raw_tickers:
+        print("Failed to fetch tickers.")
+        return
 
-def ema(a, n):
-    if len(a) < n: return None
-    e = sum(a[:n]) / n
-    k = 2 / (n + 1)
-    for x in a[n:]: e = x * k + e * (1-k)
-    return e
-
-def rsi(a, n=14):
-    if len(a) < n+1: return None
-    d = [a[i] - a[i-1] for i in range(1, len(a))]
-    g = sum(max(x, 0) for x in d[-n:]) / n
-    l = sum(max(-x, 0) for x in d[-n:]) / n
-    return 100 if l == 0 else 100 - 100/(1 + g/l)
-
-def atr(cs, n=14):
-    if len(cs) < n+1: return None
-    tr = []
-    for i in range(1, len(cs)):
-        c, prev = cs[i], cs[i-1]["c"]
-        tr.append(max(c["h"]-c["l"], abs(c["h"]-prev), abs(c["l"]-prev)))
-    return sum(tr[-n:]) / n
-
-def adx(cs, n=14):
-    if len(cs) < n * 2: return 25.0
-    try:
-        trs, p_dms, m_dms = [], [], []
-        for i in range(1, len(cs)):
-            c, prev = cs[i], cs[i-1]
-            tr = max(c["h"] - c["l"], abs(c["h"] - prev["c"]), abs(c["l"] - prev["c"]))
-            p_dm = max(0, c["h"] - prev["h"]) if (c["h"] - prev["h"]) > (prev["l"] - c["l"]) else 0
-            m_dm = max(0, prev["l"] - c["l"]) if (prev["l"] - c["l"]) > (c["h"] - prev["h"]) else 0
-            trs.append(tr); p_dms.append(p_dm); m_dms.append(m_dm)
-        atr_val = sum(trs[-n:]) / n
-        if atr_val == 0: return 0.0
-        p_di = 100 * (sum(p_dms[-n:]) / n) / atr_val
-        m_di = 100 * (sum(m_dms[-n:]) / n) / atr_val
-        dx = 100 * abs(p_di - m_di) / (p_di + m_di) if (p_di + m_di) > 0 else 0
-        return dx
-    except Exception: return 25.0
-
-def market():
-    rows = api("/futures/usdt/tickers")
-    out = []
-    for x in rows:
-        if not x.get("contract", "").endswith("_USDT") or x.get("in_delisting") is True: continue
-        price = num(x.get("last"))
-        turnover = num(x.get("volume_24h_quote"))
-        if turnover <= 0: turnover = num(x.get("volume_24h_usd"))
-        if price > 0 and turnover >= MIN_TURNOVER:
-            x["_price"], x["_turnover"] = price, turnover
-            out.append(x)
-    return sorted(out, key=lambda x: x["_turnover"], reverse=True)
-
-def btc_direction():
-    try:
-        cs = candles("BTC_USDT", "1h", 100)
-        a = [x["c"] for x in cs[:-1]]
-        e20, e50 = ema(a, 20), ema(a, 50)
-        if e20 is None or e50 is None: return "FLAT"
-        if a[-1] > e20 > e50: return "LONG"
-        if a[-1] < e20 < e50: return "SHORT"
-    except Exception: pass
-    return "FLAT"
-
-def find_signal(t, btc):
-    sym = t["contract"]
-    cs = candles(sym, "15m", 100)
-    if len(cs) < 60: return None
-    cs = cs[:-1]
-    a, v = [x["c"] for x in cs], [x["v"] for x in cs]
-    last = cs[-1]
-    e9, e21, e50 = ema(a, 9), ema(a, 21), ema(a, 50)
-    rv, av = rsi(a), atr(cs)
-    
-    if adx(cs) < 20.0: return None
-    if any(x is None for x in (e9, e21, e50, rv, av)) or av <= 0 or e21 <= 0: return None
-    
-    avg = sum(v[-21:-1]) / 20 if len(v) >= 21 else 0
-    surge = v[-1] / avg if avg > 0 else 0
-    if surge < 1.8: return None
-    
-    body = abs(last["c"]-last["o"]) >= av*.25
-    funding = num(t.get("funding_rate"))
-    if abs(last["c"]-e21)/e21 > .04: return None
-    
-    lc = [btc=="LONG", e9>e21>e50, 54<=rv<=70, surge>=1.8, last["c"]>e21, last["c"]>last["o"] and body]
-    sc = [btc=="SHORT", e9<e21<e50, 30<=rv<=46, surge>=1.8, last["c"]<e21, last["c"]<last["o"] and body]
-    side = "LONG" if sum(lc) >= sum(sc) else "SHORT"
-    if (btc=="LONG" and side=="SHORT") or (btc=="SHORT" and side=="LONG"): return None
-    
-    checks = lc if side=="LONG" else sc
-    score = sum(checks)
-    if score < MIN_SCORE: return None
-    if (side=="LONG" and funding>.003) or (side=="SHORT" and funding<-.003): return None
-    
-    entry = num(t.get("_price"), last["c"])
-    if entry <= 0: return None
-    
-    dist = max(av*STOP_ATR, entry*.002)
-    sl = entry-dist if side=="LONG" else entry+dist
-    tps = [entry+dist*r if side=="LONG" else entry-dist*r for r in TP_R]
-    
-    if side=="LONG":
-        sl_pct, tp1_pct, tp2_pct, tp3_pct = (sl-entry)/entry*100, (tps[0]-entry)/entry*100, (tps[1]-entry)/entry*100, (tps[2]-entry)/entry*100
-    else:
-        sl_pct, tp1_pct, tp2_pct, tp3_pct = (entry-sl)/entry*100, (entry-tps[0])/entry*100, (entry-tps[1])/entry*100, (entry-tps[2])/entry*100
-    
-    risk_pct = abs(entry-sl)/entry
-    rec_lev = max(2, min(20, round(.15/risk_pct))) if risk_pct>0 else 5
-    names = ["BTC 추세 일치", "EMA 추세 정렬", "RSI 조건 충족", "거래량 급증(1.8배+)", "EMA21 조건 충족", "캔들 방향/몸통 확인"]
-    
-    return {"symbol":sym,"side":side,"entry":entry,"sl":sl,"tp1":tps[0],"tp2":tps[1],"tp3":tps[2],
-        "sl_pct":sl_pct,"tp1_pct":tp1_pct,"tp2_pct":tp2_pct,"tp3_pct":tp3_pct,"leverage":rec_lev,
-        "rsi":rv,"atr":av,"volume_surge":surge,"score":score,"reasons":[names[i] for i,x in enumerate(checks) if x],
-        "entry_time":stamp(),"last_price":entry,"tp1_hit":False,"tp2_hit":False,"tp3_hit":False,"status":"ACTIVE"}
-
-def stats_report(st):
-    counts = {"TP3":0,"TP2_BE":0,"TP1_BE":0,"SL":0}
-    for x in st.get("history", []):
-        if x.get("outcome") in counts: counts[x["outcome"]] += 1
-    total = sum(counts.values())
-    wins, draws, losses = counts["TP3"]+counts["TP2_BE"], counts["TP1_BE"], counts["SL"]
-    decisive = wins+losses
-    rate = wins/decisive*100 if decisive else 0
-    return ("📈 <b>시그널 추적 통계 리포트</b>\n━━━━━━━━━━━━━━\n"
-        f"총 종료 시그널: {total}건\n\n🎯 TP3 달성 (승): {counts['TP3']}건\n"
-        f"🎯 TP2 이후 TP1방어 종료 (승): {counts['TP2_BE']}건\n🤝 TP1 본전 종료 (무): {counts['TP1_BE']}건\n"
-        f"🛑 초기 손절 종료 (패): {counts['SL']}건\n\n🏆 신호 기준 승률: <b>{rate:.1f}%</b>\n"
-        f"(승 {wins}건 / 패 {losses}건 | 무 {draws}건 제외)")
-
-def queue_notification(st, key, message):
-    st.setdefault("pending_notifications", [])
-    if not any(x.get("key")==key for x in st["pending_notifications"] if isinstance(x,dict)):
-        st["pending_notifications"].append({"key":key,"message":message,"created_at":stamp()})
-    st["pending_notifications"] = st["pending_notifications"][-200:]
-    save_state(st)
-
-def notify(st, key, message):
-    if not send(message): queue_notification(st, key, message)
-
-def retry_pending_notifications(st):
-    pending = st.setdefault("pending_notifications", [])
-    if not pending: return
-    remaining = []
-    for item in pending:
-        if not isinstance(item,dict) or not item.get("message"): continue
-        if not send(item["message"]): remaining.append(item)
-    st["pending_notifications"] = remaining[-200:]
-    save_state(st)
-
-def close_position(st, sym, reason, price):
-    p = st["positions"].get(sym)
-    if not p: return
-    if reason=="TP3": outcome="TP3"
-    elif "SL" in reason or "청산" in reason:
-        outcome = "TP2_BE" if p.get("tp2_hit") else ("TP1_BE" if p.get("tp1_hit") else "SL")
-    else: outcome="SL"
-    record = {"symbol":sym,"side":p.get("side"),"asset":asset(sym),"entry":num(p.get("entry")),"exit":price,
-        "entry_time":p.get("entry_time"),"exit_time":stamp(),"duration":elapsed(p),"outcome":outcome,
-        "reason":reason,"return_pct":round(pnl(p,price),4)}
-    st["history"].append(record)
-    st["history"] = st["history"][-5000:]
-    del st["positions"][sym]
-    reassign_slots(st)
-    save_state(st)
-    
-    chart = f"https://www.gate.io/futures/USDT/{sym}"
-    labels = {"TP3":"TP3 목표 달성","TP2_BE":"TP2 이후 TP1 가격 방어 종료","TP1_BE":"TP1 본전 종료","SL":"초기 손절"}
-    overview = get_status_overview_msg(st,"🔔 <b>GATE.IO 포지션 종료 및 현재 보유 현황</b>")
-    msg = (f"🏁 <b>시그널 종료 | {sym} ({asset(sym)}) {p.get('side')}</b>\n결과 분류: <b>{labels.get(outcome,outcome)}</b>\n"
-        f"진입: <code>{num(p.get('entry')):.8g}</code> → 종료: <code>{price:.8g}</code>\n"
-        f"실현 변동률: <b>{pnl(p,price):+.2f}%</b> (수수료 미반영)\n보유 시간: {elapsed(p)}\n"
-        f"🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n{overview}")
-    notify(st, f"CLOSE:{sym}:{record['exit_time']}", msg)
-    notify(st, f"STATS:{record['exit_time']}:{sym}", stats_report(st))
-
-def monitor(st):
-    for sym in list(st["positions"]):
-        p = st["positions"].get(sym)
-        if not p: continue
+    tickers_dict = {}
+    for t in raw_tickers:
+        sym = t.get("currency_pair", "")
         try:
-            cs = candles(sym,"1m",5)
-            if not cs: continue
-            c = cs[-1]
-            p["last_price"] = c["c"]
-            long = p.get("side")=="LONG"
-            sl = num(p.get("sl"))
-            
-            if (c["l"]<=sl if long else c["h"]>=sl):
-                close_position(st,sym,"SL 또는 본절 청산",sl)
+            tickers_dict[sym] = float(t.get("last", 0))
+        except Exception:
+            pass
+
+    state = load_state()
+    active_slots = state.setdefault("active_slots", {})
+    stats = state.setdefault("stats", {"wins": 0, "losses": 0, "total": 0})
+    
+    alerts_to_send = []
+    slot_changed = False
+
+    # 1. 활성 슬롯 모니터링 (SL 및 TP1, TP2, TP3 도달 체크)
+    for symbol, info in list(active_slots.items()):
+        current_price = tickers_dict.get(symbol, info["entry_price"])
+        chart_link = f"https://www.gate.io/trade/{symbol}"
+        
+        # 손절가(SL) 도달 체크
+        if current_price <= info["stop_loss"]:
+            msg = (
+                f"🛑 *[손절가(SL) 도달]*\n"
+                f"• 종목: [`{symbol}`]({chart_link})\n"
+                f"• 진입가: `{info['entry_price']}`\n"
+                f"• 도달 가격: `{current_price}` (SL -2.0% 도달)\n"
+                f"• 결과: `패배 (손실 마감)`"
+            )
+            alerts_to_send.append(msg)
+            stats["losses"] += 1
+            stats["total"] += 1
+            del active_slots[symbol]
+            slot_changed = True
+            continue
+
+        # TP3 최종 목표가 도달 체크
+        if current_price >= info["tp3"] and not info.get("tp3_reached"):
+            info["tp3_reached"] = True
+            msg = (
+                f"🎯🎯🎯 *[TP3 최종 목표가 도달]*\n"
+                f"• 종목: [`{symbol}`]({chart_link})\n"
+                f"• 진입가: `{info['entry_price']}`\n"
+                f"• TP3 (+6.0%): `{current_price}` (최종 도달 완료)\n"
+                f"• 결과: `승리 (전량 익절 마감)`"
+            )
+            alerts_to_send.append(msg)
+            stats["wins"] += 1
+            stats["total"] += 1
+            del active_slots[symbol]
+            slot_changed = True
+            continue
+
+        # TP2 목표가 도달 체크
+        if current_price >= info["tp2"] and not info.get("tp2_reached"):
+            info["tp2_reached"] = True
+            msg = (
+                f"🎯🎯 *[TP2 2차 목표가 도달]*\n"
+                f"• 종목: [`{symbol}`]({chart_link})\n"
+                f"• 진입가: `{info['entry_price']}`\n"
+                f"• TP2 (+4.0%): `{current_price}` (도달 완료)\n"
+                f"• 조치: `중간 익절 진행`"
+            )
+            alerts_to_send.append(msg)
+            slot_changed = True
+
+        # TP1 목표가 도달 체크
+        if current_price >= info["tp1"] and not info.get("tp1_reached"):
+            info["tp1_reached"] = True
+            msg = (
+                f"🎯 *[TP1 1차 목표가 도달]*\n"
+                f"• 종목: [`{symbol}`]({chart_link})\n"
+                f"• 진입가: `{info['entry_price']}`\n"
+                f"• TP1 (+2.0%): `{current_price}` (도달 완료)\n"
+                f"• 조치: `본전 스탑(Break-even) 전환 완료`"
+            )
+            alerts_to_send.append(msg)
+            slot_changed = True
+
+    # 2. 새로운 신규 시그널 탐색 및 슬롯 배정 (최대 8개 제한)
+    if len(active_slots) < MAX_SLOTS:
+        for t in raw_tickers:
+            symbol = t.get("currency_pair", "")
+            if not symbol.endswith("_USDT"):
                 continue
-                
-            for target,flag in (("tp1","tp1_hit"),("tp2","tp2_hit"),("tp3","tp3_hit")):
-                if p.get(flag): continue
-                level = num(p.get(target))
-                if not (c["h"]>=level if long else c["l"]<=level): continue
-                p[flag] = True
-                chart = f"https://www.gate.io/futures/USDT/{sym}"
-                if target=="tp1":
-                    p["sl"] = num(p.get("entry"))
-                    save_state(st)
-                    msg = (f"🎯 <b>TP1 도달 (시그널 추적) | {sym} ({asset(sym)})</b>\n변동률: {pnl(p,level):+.2f}%\n"
-                           f"가상 손절가를 진입가(본전)로 이동 완료\nTP2 대기\n🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n"
-                           + get_status_overview_msg(st,"🔔 <b>GATE.IO TP1 도달 및 현재 보유 현황</b>"))
-                    notify(st,f"TP1:{sym}:{p.get('entry_time')}",msg)
-                elif target=="tp2":
-                    p["sl"] = num(p.get("tp1"))
-                    save_state(st)
-                    msg = (f"🎯 <b>TP2 도달 (시그널 추적) | {sym} ({asset(sym)})</b>\n변동률: {pnl(p,level):+.2f}%\n"
-                           f"가상 손절가를 TP1 가격으로 이동 (수익 보전)\nTP3 대기\n🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n"
-                           + get_status_overview_msg(st,"🔔 <b>GATE.IO TP2 도달 및 현재 보유 현황</b>"))
-                    notify(st,f"TP2:{sym}:{p.get('entry_time')}",msg)
-                    notify(st,f"STATS:TP2:{sym}:{p.get('entry_time')}", stats_report(st))
-                else:
-                    p["last_price"] = level
-                    save_state(st)
-                    close_position(st,sym,"TP3",level)
-                    break
-                break
-            if sym in st["positions"]: save_state(st)
-        except Exception as e: logging.error(f"MONITOR ERROR {sym}: {e}")
-
-def scan(st):
-    if len(st["positions"])>=MAX_ACTIVE: return
-    btc = btc_direction()
-    if btc=="FLAT": return
-    try: tickers = market()
-    except Exception: return
-    for t in tickers:
-        if len(st["positions"])>=MAX_ACTIVE: break
-        sym = t["contract"]
-        if sym in st["positions"]: continue
-        if time.time()-num(st["last_signal"].get(sym)) < COOLDOWN*60: continue
-        try:
-            sig = find_signal(t,btc)
-            if not sig: continue
-            slot = get_next_slot(st["positions"])
-            if slot is None: break
-            sig["slot"] = slot
-            st["positions"][sym] = sig
-            reassign_slots(st)
-            st["last_signal"][sym] = time.time()
-            save_state(st)
             
-            chart = f"https://www.gate.io/futures/USDT/{sym}"
-            overview = get_status_overview_msg(st,"🔔 <b>GATE.IO 신규 진입 및 현재 보유 현황</b>")
-            msg = (f"🚨 <b>GATE.IO FUTURES SIGNAL</b>\n━━━━━━━━━━━━━━\n📌 슬롯: <b>#{slot}</b> | 계약: <b>{sym}</b> ({asset(sym)})\n"
-                f"📈 방향: <b>{sig['side']}</b>\n🕒 발생: {sig['entry_time']}\n💵 진입가: <code>{sig['entry']:.8g}</code>\n"
-                f"🛑 가상 손절가: <code>{sig['sl']:.8g}</code> (<b>{sig['sl_pct']:+.2f}%</b>)\n"
-                f"🎯 TP1: <code>{sig['tp1']:.8g}</code> (<b>{sig['tp1_pct']:+.2f}%</b>)\n"
-                f"🎯 TP2: <code>{sig['tp2']:.8g}</code> (<b>{sig['tp2_pct']:+.2f}%</b>)\n"
-                f"🎯 TP3: <code>{sig['tp3']:.8g}</code> (<b>{sig['tp3_pct']:+.2f}%</b>)\n━━━━━━━━━━━━━━\n"
-                f"⚡ 추천 레버리지: <b>{sig['leverage']}x</b>\n🧠 점수: {sig['score']}/6 | RSI: {sig['rsi']:.1f} | ADX: 추세통과 | 거래량: {sig['volume_surge']:.1f}배\n"
-                f"🔎 근거: {', '.join(sig['reasons'])}\n🔗 <a href='{chart}'>Gate.io 차트 보기</a>\n\n{overview}")
-            notify(st,f"ENTRY:{sym}:{sig['entry_time']}",msg)
-        except Exception: pass
+            try:
+                last_price = float(t.get("last", 0))
+                volume_24h = float(t.get("quote_volume", 0))
+                change_24h = float(t.get("change_percentage", 0))
+                
+                # Master 6.0 진입 조건 만족 시
+                if change_24h >= 4.0 and volume_24h > 50000:
+                    if symbol not in active_slots:
+                        now_iso = datetime.now(timezone.utc).isoformat()
+                        active_slots[symbol] = {
+                            "entry_price": last_price,
+                            "entry_time": now_iso,
+                            "tp1": last_price * 1.02,
+                            "tp2": last_price * 1.04,
+                            "tp3": last_price * 1.06,
+                            "stop_loss": last_price * 0.98,
+                            "tp1_reached": False,
+                            "tp2_reached": False,
+                            "tp3_reached": False
+                        }
+                        slot_changed = True
+                        
+                        chart_link = f"https://www.gate.io/trade/{symbol}"
+                        
+                        # 신규 시그널 알림
+                        msg = (
+                            f"🚀 *[Master 6.0 신규 시그널 포착]*\n"
+                            f"• 종목: [`{symbol}`]({chart_link})\n"
+                            f"• 진입가: `{last_price}`\n"
+                            f"• 탐색 이유: `1시간봉 추세 돌파 및 15분봉 거래량 급증`\n\n"
+                            f"🎯 *목표가 및 손절가*\n"
+                            f"• TP1 (+2.0%): `{active_slots[symbol]['tp1']:.4f}`\n"
+                            f"• TP2 (+4.0%): `{active_slots[symbol]['tp2']:.4f}`\n"
+                            f"• TP3 (+6.0%): `{active_slots[symbol]['tp3']:.4f}`\n"
+                            f"• 손절가 SL (-2.0%): `{active_slots[symbol]['stop_loss']:.4f}`"
+                        )
+                        alerts_to_send.append(msg)
+                        
+                        if len(active_slots) >= MAX_SLOTS:
+                            break
+            except Exception:
+                continue
 
-def main():
-    try: st = load_state()
-    except Exception: return
-    for p in st["positions"].values():
-        p.setdefault("entry_time",stamp())
-        p.setdefault("tp1_hit",False); p.setdefault("tp2_hit",False); p.setdefault("tp3_hit",False)
-        p.setdefault("status","ACTIVE"); p.setdefault("last_price",num(p.get("entry")))
-        p.setdefault("sl_pct",0.0); p.setdefault("tp1_pct",0.0); p.setdefault("tp2_pct",0.0); p.setdefault("tp3_pct",0.0)
-        p.setdefault("leverage",5)
-    retry_pending_notifications(st)
-    monitor(st)
-    scan(st)
-    save_state(st)
+    # 3. 알림 발송 (이벤트 알림 전송 후, 신규 추가 또는 TP/SL 도달로 슬롯 변동이 있을 때만 슬롯 현황판 별도 전송)
+    if alerts_to_send:
+        for alert in alerts_to_send:
+            send_telegram_message(alert)
+        
+        if slot_changed:
+            slot_status_msg = build_slot_status_message(active_slots, tickers_dict)
+            send_telegram_message(slot_status_msg)
+            
+        print("Sent signals/milestones and slot status to Telegram.")
 
-if __name__=="__main__":
-    main()
+    save_state(state)
+    print("Bot scan cycle completed successfully.")
+
+if __name__ == "__main__":
+    run_bot()
