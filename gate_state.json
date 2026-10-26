@@ -70,17 +70,6 @@
       "stop_loss": 0.00673554,
       "tp1_reached": false
     },
-    "VERONA_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.11824,
-      "entry_time": "2026-10-26T17:25:39.135994+00:00",
-      "leverage": 5,
-      "tp1": 0.1206048,
-      "tp2": 0.1229696,
-      "tp3": 0.1253344,
-      "stop_loss": 0.1158752,
-      "tp1_reached": false
-    },
     "BMT_USDT": {
       "direction": "SHORT",
       "entry_price": 0.02824,
@@ -91,13 +80,24 @@
       "tp3": 0.0265456,
       "stop_loss": 0.02824,
       "tp1_reached": true
+    },
+    "SKHYNIX3L_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.0513,
+      "entry_time": "2026-10-26T18:35:28.821632+00:00",
+      "leverage": 8,
+      "tp1": 0.052326,
+      "tp2": 0.053352000000000004,
+      "tp3": 0.054378,
+      "stop_loss": 0.050274,
+      "tp1_reached": false
     }
   },
   "stats": {
     "wins": 7,
     "draws": 1,
-    "losses": 12,
-    "total": 20
+    "losses": 13,
+    "total": 21
   },
   "history": [
     {
