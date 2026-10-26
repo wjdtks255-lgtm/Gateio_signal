@@ -96,7 +96,7 @@
       "tp2": 0.6407336,
       "tp3": 0.6530554000000001,
       "stop_loss": 0.6037682,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
       "tp3_reached": false
     }
