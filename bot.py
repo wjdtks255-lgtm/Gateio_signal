@@ -36,13 +36,16 @@ MIN_TURNOVER = getenv_float("MIN_TURNOVER", 500000)
 MIN_SCORE = getenv_int("MIN_SCORE", 6)
 COOLDOWN = getenv_int("COOLDOWN", 60)
 STOP_ATR = getenv_float("STOP_ATR", 1.8)
-TP_R = (2.0, 3.5, 5.0)
+
+# 💡 [변경 1] TP1을 더 가깝게 당겨서 빠르게 본전 방어선 구축 (기존 2.0, 3.5, 5.0 -> 1.2, 2.5, 4.0)
+TP_R = (1.2, 2.5, 4.0)
+
 TZ = timezone(timedelta(hours=9))
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s",
                     filename="gate_signal_bot.log", filemode="a")
 S = requests.Session()
-S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.8"})
+S.headers.update({"Accept": "application/json", "User-Agent": "GateSignalBot/5.9"})
 
 STOCKS = set("""AAPL NVDA TSLA MSFT AMZN META GOOGL GOOG AMD INTC COIN MSTR PLTR HOOD NFLX ORCL CRM AVGO QCOM MU TSM BABA SPY QQQ IWM DIA TLT XLF XLE GLD SLV""".split())
 COMMODITIES = set("""PAXG XAUT GOLD SILVER XAG XAU OIL WTI BRENT NATGAS NG COPPER HG""".split())
@@ -205,6 +208,27 @@ def atr(cs, n=14):
         tr.append(max(c["h"]-c["l"], abs(c["h"]-prev), abs(c["l"]-prev)))
     return sum(tr[-n:]) / n
 
+# 💡 [변경 2] 횡보장 필터링을 위한 ADX(추세 강도) 계산 함수 추가
+def adx(cs, n=14):
+    if len(cs) < n * 2: return 25.0  # 데이터 부족 시 기본 통과
+    try:
+        trs, p_dms, m_dms = [], [], []
+        for i in range(1, len(cs)):
+            c, prev = cs[i], cs[i-1]
+            tr = max(c["h"] - c["l"], abs(c["h"] - prev["c"]), abs(c["l"] - prev["c"]))
+            p_dm = max(0, c["h"] - prev["h"]) if (c["h"] - prev["h"]) > (prev["l"] - c["l"]) else 0
+            m_dm = max(0, prev["l"] - c["l"]) if (prev["l"] - c["l"]) > (c["h"] - prev["h"]) else 0
+            trs.append(tr); p_dms.append(p_dm); m_dms.append(m_dm)
+        
+        atr_val = sum(trs[-n:]) / n
+        if atr_val == 0: return 0.0
+        p_di = 100 * (sum(p_dms[-n:]) / n) / atr_val
+        m_di = 100 * (sum(m_dms[-n:]) / n) / atr_val
+        dx = 100 * abs(p_di - m_di) / (p_di + m_di) if (p_di + m_di) > 0 else 0
+        return dx
+    except Exception:
+        return 25.0
+
 def market():
     rows = api("/futures/usdt/tickers")
     out = []
@@ -238,6 +262,11 @@ def find_signal(t, btc):
     last = cs[-1]
     e9, e21, e50 = ema(a, 9), ema(a, 21), ema(a, 50)
     rv, av = rsi(a), atr(cs)
+    
+    # 💡 [적용] 힘없는 횡보장(ADX < 20) 필터링 추가
+    current_adx = adx(cs)
+    if current_adx < 20.0: return None
+
     if any(x is None for x in (e9, e21, e50, rv, av)) or av <= 0 or e21 <= 0: return None
     avg = sum(v[-21:-1]) / 20 if len(v) >= 21 else 0
     surge = v[-1] / avg if avg > 0 else 0
@@ -345,12 +374,12 @@ def monitor(st):
             long = p.get("side")=="LONG"
             sl = num(p.get("sl"))
             
-            # SL 우선 감지 (손절가 도달)
+            # SL 우선 감지
             if (c["l"]<=sl if long else c["h"]>=sl):
                 close_position(st,sym,"SL 또는 본절 청산",sl)
                 continue
                 
-            # TP 우선 감지 (목표가 도달)
+            # TP 우선 감지
             for target,flag in (("tp1","tp1_hit"),("tp2","tp2_hit"),("tp3","tp3_hit")):
                 if p.get(flag): continue
                 level = num(p.get(target))
@@ -428,7 +457,7 @@ def scan(st):
         except Exception as e: logging.error(f"SCAN ERROR {sym}: {e}")
 
 def main():
-    logging.info("GATE.IO FUTURES BOT v5.8 시작")
+    logging.info("GATE.IO FUTURES BOT v5.9 시작")
     try: st = load_state()
     except RuntimeError: return
     for p in st["positions"].values():
