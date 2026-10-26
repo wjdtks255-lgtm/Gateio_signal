@@ -59,19 +59,6 @@
       "tp2_reached": true,
       "tp3_reached": false
     },
-    "DOOD_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.001982,
-      "entry_time": "2026-10-26T16:00:53.302659+00:00",
-      "leverage": 5,
-      "tp1": 0.00202164,
-      "tp2": 0.00206128,
-      "tp3": 0.00210092,
-      "stop_loss": 0.0019423599999999997,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "tp3_reached": false
-    },
     "LAPTOP_USDT": {
       "direction": "SHORT",
       "entry_price": 0.05105,
@@ -97,14 +84,33 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "tp3_reached": false
+    },
+    "BEAT_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.08138,
+      "entry_time": "2026-10-26T16:20:44.224496+00:00",
+      "leverage": 5,
+      "tp1": 0.0830076,
+      "tp2": 0.0846352,
+      "tp3": 0.0862628,
+      "stop_loss": 0.07975239999999999,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "tp3_reached": false
     }
   },
   "stats": {
-    "wins": 3,
+    "wins": 4,
     "losses": 7,
-    "total": 10
+    "total": 11
   },
   "history": [
+    {
+      "symbol": "DOOD_USDT",
+      "category": "코인",
+      "direction": "LONG",
+      "result": "승리 (전량 익절)"
+    },
     {
       "symbol": "BANK_USDT",
       "category": "코인",
