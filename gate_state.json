@@ -1,16 +1,5 @@
 {
   "active_slots": {
-    "OSMO_USDT": {
-      "entry_price": 0.05022,
-      "entry_time": "2026-10-26T13:31:56.354585+00:00",
-      "tp1": 0.0512244,
-      "tp2": 0.052228800000000006,
-      "tp3": 0.0532332,
-      "stop_loss": 0.0492156,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "tp3_reached": false
-    },
     "TSLAG_USDT": {
       "direction": "LONG",
       "entry_price": 394.74,
@@ -89,13 +78,24 @@
       "tp3": 0.026592599999999997,
       "stop_loss": 0.0288558,
       "tp1_reached": false
+    },
+    "UNI3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.25855,
+      "entry_time": "2026-10-26T23:05:26.228648+00:00",
+      "leverage": 10,
+      "tp1": 0.253379,
+      "tp2": 0.24820799999999998,
+      "tp3": 0.24303699999999998,
+      "stop_loss": 0.263721,
+      "tp1_reached": false
     }
   },
   "stats": {
     "wins": 11,
-    "draws": 5,
+    "draws": 6,
     "losses": 15,
-    "total": 31
+    "total": 32
   },
   "history": [
     {
