@@ -56,8 +56,8 @@
       "tp1": 0.298508,
       "tp2": 0.29241599999999995,
       "tp3": 0.28632399999999997,
-      "stop_loss": 0.31069199999999997,
-      "tp1_reached": false
+      "stop_loss": 0.3046,
+      "tp1_reached": true
     },
     "XNY_USDT": {
       "direction": "LONG",
