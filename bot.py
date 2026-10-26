@@ -62,22 +62,39 @@ def fetch_gateio_tickers():
     return []
 
 def get_asset_category(symbol):
-    """종목명 패턴에 따라 자산 군별로 분류"""
+    """종목명 패턴에 따라 주식, 지수, 원자재, 외환, 코인 군을 확실하게 분류"""
     upper_sym = symbol.upper()
-    if any(k in upper_sym for k in ['XAU', 'XAG', 'OIL', 'GOLD', 'SILVER', 'CRUDE']):
-        return '원자재'
-    elif any(k in upper_sym for k in ['EUR', 'GBP', 'JPY', 'AUD', 'CHF', 'NZD', 'CAD']):
-        if '_USDT' in upper_sym and not any(f in upper_sym for f in ['EUR', 'GBP', 'JPY', 'AUD', 'CHF', 'NZD', 'CAD']):
-            return '코인'
-        return '외환'
-    elif any(k in upper_sym for k in ['SPX', 'NAS', 'DJI', 'US30', 'US100', 'NIKKEI']):
+    
+    # 1. 주식 연동 토큰/상품 감지
+    stock_keywords = ['SKHYNIX', 'TSLA', 'AAPL', 'NVDA', 'MSFT', 'AMZN', 'META', 'NFLX', 'GOOGL', 'BABA', 'AMD', 'INTC', 'PLTR']
+    if any(k in upper_sym for k in stock_keywords):
+        return '주식'
+    
+    # 2. 지수 상품 감지
+    index_keywords = ['SPX', 'NAS', 'DJI', 'US30', 'US100', 'NIKKEI', 'VIX', 'DAX']
+    if any(k in upper_sym for k in index_keywords):
         return '지수'
+        
+    # 3. 원자재 상품 감지
+    commodity_keywords = ['XAU', 'XAG', 'OIL', 'GOLD', 'SILVER', 'CRUDE', 'BRENT', 'COPPER', 'GAS']
+    if any(k in upper_sym for k in commodity_keywords):
+        return '원자재'
+        
+    # 4. 외환 상품 감지
+    forex_keywords = ['EUR', 'GBP', 'JPY', 'AUD', 'CHF', 'NZD', 'CAD']
+    if any(k in upper_sym for k in forex_keywords):
+        if not upper_sym.endswith('_USDT') or any(fx in upper_sym[:4] for fx in forex_keywords):
+            return '외환'
+            
+    # 5. 기본 코인
     return '코인'
 
 def calculate_recommended_leverage(category, change_24h):
     abs_change = abs(change_24h)
     if category == '코인':
         return 5 if abs_change > 10.0 else (7 if abs_change > 6.0 else 10)
+    elif category == '주식':
+        return 8
     elif category == '원자재':
         return 12
     elif category == '외환':
