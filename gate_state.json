@@ -24,17 +24,6 @@
       "stop_loss": 0.3046,
       "tp1_reached": true
     },
-    "SKHYNIX3L_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.0513,
-      "entry_time": "2026-10-26T18:35:28.821632+00:00",
-      "leverage": 8,
-      "tp1": 0.052326,
-      "tp2": 0.053352000000000004,
-      "tp3": 0.054378,
-      "stop_loss": 0.0513,
-      "tp1_reached": true
-    },
     "INTC3S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.30677,
@@ -89,13 +78,24 @@
       "tp3": 0.166051,
       "stop_loss": 0.180183,
       "tp1_reached": false
+    },
+    "TSLAX_USDT": {
+      "direction": "LONG",
+      "entry_price": 393.23,
+      "entry_time": "2026-10-26T23:50:35.039404+00:00",
+      "leverage": 8,
+      "tp1": 401.0946,
+      "tp2": 408.9592,
+      "tp3": 416.82380000000006,
+      "stop_loss": 385.3654,
+      "tp1_reached": false
     }
   },
   "stats": {
-    "wins": 11,
+    "wins": 12,
     "draws": 6,
     "losses": 17,
-    "total": 34
+    "total": 35
   },
   "history": [
     {
