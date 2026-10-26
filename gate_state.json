@@ -35,17 +35,6 @@
       "stop_loss": 0.0513,
       "tp1_reached": true
     },
-    "SUI3L_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.00798,
-      "entry_time": "2026-10-26T20:00:54.179108+00:00",
-      "leverage": 10,
-      "tp1": 0.0078204,
-      "tp2": 0.007660799999999999,
-      "tp3": 0.007501199999999999,
-      "stop_loss": 0.008139599999999999,
-      "tp1_reached": false
-    },
     "INTC3S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.30677,
@@ -89,13 +78,24 @@
       "tp3": 0.048316,
       "stop_loss": 0.052428,
       "tp1_reached": false
+    },
+    "PUMP3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.17665,
+      "entry_time": "2026-10-26T23:40:33.187424+00:00",
+      "leverage": 10,
+      "tp1": 0.173117,
+      "tp2": 0.16958399999999998,
+      "tp3": 0.166051,
+      "stop_loss": 0.180183,
+      "tp1_reached": false
     }
   },
   "stats": {
     "wins": 11,
     "draws": 6,
-    "losses": 16,
-    "total": 33
+    "losses": 17,
+    "total": 34
   },
   "history": [
     {
