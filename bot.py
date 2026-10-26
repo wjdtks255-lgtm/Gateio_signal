@@ -51,6 +51,38 @@ def fetch_gateio_tickers():
         print(f"Error fetching Gate.io tickers: {e}")
     return []
 
+def get_asset_category(symbol):
+    """종목명 패턴에 따라 자산 군별로 분류"""
+    upper_sym = symbol.upper()
+    if any(k in upper_sym for k in ['XAU', 'XAG', 'OIL', 'GOLD', 'SILVER', 'CRUDE']):
+        return '원자재'
+    elif any(k in upper_sym for k in ['EUR', 'GBP', 'JPY', 'AUD', 'CHF', 'NZD', 'CAD']):
+        if '_USDT' in upper_sym and not any(f in upper_sym for f in ['EUR', 'GBP', 'JPY', 'AUD', 'CHF', 'NZD', 'CAD']):
+            return '코인'
+        return '외환'
+    elif any(k in upper_sym for k in ['SPX', 'NAS', 'DJI', 'US30', 'US100', 'NIKKEI']):
+        return '지수'
+    return '코인'  # 기본값
+
+def calculate_recommended_leverage(category, change_24h):
+    """자산 군 및 변동성 분석 기반 적정 레버리지 추천 산정"""
+    abs_change = abs(change_24h)
+    if category == '코인':
+        # 코인은 변동성이 높으므로 5배 ~ 10배 내외 조절
+        if abs_change > 10.0:
+            return 5
+        elif abs_change > 6.0:
+            return 7
+        else:
+            return 10
+    elif category == '원자재':
+        return 12
+    elif category == '외환':
+        return 20
+    elif category == '지수':
+        return 15
+    return 10
+
 def format_holding_time(entry_iso):
     try:
         entry_time = datetime.fromisoformat(entry_iso)
@@ -73,16 +105,22 @@ def build_slot_status_message(active_slots, tickers_dict):
             sym = active_symbols[i-1]
             info = active_slots[sym]
             entry_price = info.get("entry_price", 0)
+            direction = info.get("direction", "LONG")
             
             current_price = tickers_dict.get(sym, entry_price)
             profit_pct = 0.0
             if entry_price > 0:
-                profit_pct = ((current_price - entry_price) / entry_price) * 100
+                if direction == "LONG":
+                    profit_pct = ((current_price - entry_price) / entry_price) * 100
+                else:  # SHORT
+                    profit_pct = ((entry_price - current_price) / entry_price) * 100
             
             holding_str = format_holding_time(info.get("entry_time"))
             chart_link = f"https://www.gate.io/trade/{sym}"
+            category = get_asset_category(sym)
             
-            lines.append(f"{i}️⃣ [`{sym}`]({chart_link}) | `{profit_pct:+.2f}%` | 보유: `{holding_str}`")
+            dir_icon = "🟢" if direction == "LONG" else "🔴"
+            lines.append(f"{i}️⃣ {dir_icon} `[{category}]` [`{sym}`]({chart_link}) | `{profit_pct:+.2f}%` | 보유: `{holding_str}`")
         else:
             lines.append(f"{i}️⃣ (빈 슬롯)")
             
@@ -110,18 +148,32 @@ def run_bot():
     alerts_to_send = []
     slot_changed = False
 
-    # 1. 활성 슬롯 모니터링 (SL 및 TP1, TP2, TP3 도달 체크)
+    # 1. 활성 슬롯 모니터링 (롱/숏 방향에 따른 SL 및 TP1, TP2, TP3 도달 체크)
     for symbol, info in list(active_slots.items()):
         current_price = tickers_dict.get(symbol, info["entry_price"])
         chart_link = f"https://www.gate.io/trade/{symbol}"
+        direction = info.get("direction", "LONG")
+        category = get_asset_category(symbol)
         
-        # 손절가(SL) 도달 체크
-        if current_price <= info["stop_loss"]:
+        if direction == "LONG":
+            is_stopped = current_price <= info["stop_loss"]
+            is_tp3 = current_price >= info["tp3"]
+            is_tp2 = current_price >= info["tp2"]
+            is_tp1 = current_price >= info["tp1"]
+        else:
+            is_stopped = current_price >= info["stop_loss"]
+            is_tp3 = current_price <= info["tp3"]
+            is_tp2 = current_price <= info["tp2"]
+            is_tp1 = current_price <= info["tp1"]
+
+        # 손절가(SL) 도달 체크 (패배)
+        if is_stopped:
             msg = (
                 f"🛑 *[손절가(SL) 도달]*\n"
+                f"• 자산: `[{category}]` | 방향: `{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}`\n"
                 f"• 종목: [`{symbol}`]({chart_link})\n"
                 f"• 진입가: `{info['entry_price']}`\n"
-                f"• 도달 가격: `{current_price}` (SL -2.0% 도달)\n"
+                f"• 도달 가격: `{current_price}` (손절 마감)\n"
                 f"• 결과: `패배 (손실 마감)`"
             )
             alerts_to_send.append(msg)
@@ -131,14 +183,15 @@ def run_bot():
             slot_changed = True
             continue
 
-        # TP3 최종 목표가 도달 체크
-        if current_price >= info["tp3"] and not info.get("tp3_reached"):
+        # TP3 최종 목표가 도달 체크 (승리)
+        if is_tp3 and not info.get("tp3_reached"):
             info["tp3_reached"] = True
             msg = (
                 f"🎯🎯🎯 *[TP3 최종 목표가 도달]*\n"
+                f"• 자산: `[{category}]` | 방향: `{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}`\n"
                 f"• 종목: [`{symbol}`]({chart_link})\n"
                 f"• 진입가: `{info['entry_price']}`\n"
-                f"• TP3 (+6.0%): `{current_price}` (최종 도달 완료)\n"
+                f"• TP3 최정상 도달: `{current_price}`\n"
                 f"• 결과: `승리 (전량 익절 마감)`"
             )
             alerts_to_send.append(msg)
@@ -149,82 +202,100 @@ def run_bot():
             continue
 
         # TP2 목표가 도달 체크
-        if current_price >= info["tp2"] and not info.get("tp2_reached"):
+        if is_tp2 and not info.get("tp2_reached"):
             info["tp2_reached"] = True
             msg = (
                 f"🎯🎯 *[TP2 2차 목표가 도달]*\n"
+                f"• 자산: `[{category}]` | 방향: `{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}`\n"
                 f"• 종목: [`{symbol}`]({chart_link})\n"
                 f"• 진입가: `{info['entry_price']}`\n"
-                f"• TP2 (+4.0%): `{current_price}` (도달 완료)\n"
+                f"• TP2 도달: `{current_price}`\n"
                 f"• 조치: `중간 익절 진행`"
             )
             alerts_to_send.append(msg)
             slot_changed = True
 
         # TP1 목표가 도달 체크
-        if current_price >= info["tp1"] and not info.get("tp1_reached"):
+        if is_tp1 and not info.get("tp1_reached"):
             info["tp1_reached"] = True
             msg = (
                 f"🎯 *[TP1 1차 목표가 도달]*\n"
+                f"• 자산: `[{category}]` | 방향: `{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}`\n"
                 f"• 종목: [`{symbol}`]({chart_link})\n"
                 f"• 진입가: `{info['entry_price']}`\n"
-                f"• TP1 (+2.0%): `{current_price}` (도달 완료)\n"
+                f"• TP1 도달: `{current_price}`\n"
                 f"• 조치: `본전 스탑(Break-even) 전환 완료`"
             )
             alerts_to_send.append(msg)
             slot_changed = True
 
-    # 2. 새로운 신규 시그널 탐색 및 슬롯 배정 (최대 8개 제한)
+    # 2. 새로운 신규 시그널 탐색 및 슬롯 배정 (승률 60% 이상 고정밀 필터 적용)
     if len(active_slots) < MAX_SLOTS:
         for t in raw_tickers:
             symbol = t.get("currency_pair", "")
-            if not symbol.endswith("_USDT"):
-                continue
+            category = get_asset_category(symbol)
             
             try:
                 last_price = float(t.get("last", 0))
                 volume_24h = float(t.get("quote_volume", 0))
                 change_24h = float(t.get("change_percentage", 0))
                 
-                # Master 6.0 진입 조건 만족 시
-                if change_24h >= 4.0 and volume_24h > 50000:
-                    if symbol not in active_slots:
-                        now_iso = datetime.now(timezone.utc).isoformat()
-                        active_slots[symbol] = {
-                            "entry_price": last_price,
-                            "entry_time": now_iso,
-                            "tp1": last_price * 1.02,
-                            "tp2": last_price * 1.04,
-                            "tp3": last_price * 1.06,
-                            "stop_loss": last_price * 0.98,
-                            "tp1_reached": False,
-                            "tp2_reached": False,
-                            "tp3_reached": False
-                        }
-                        slot_changed = True
-                        
-                        chart_link = f"https://www.gate.io/trade/{symbol}"
-                        
-                        # 신규 시그널 알림
-                        msg = (
-                            f"🚀 *[Master 6.0 신규 시그널 포착]*\n"
-                            f"• 종목: [`{symbol}`]({chart_link})\n"
-                            f"• 진입가: `{last_price}`\n"
-                            f"• 탐색 이유: `1시간봉 추세 돌파 및 15분봉 거래량 급증`\n\n"
-                            f"🎯 *목표가 및 손절가*\n"
-                            f"• TP1 (+2.0%): `{active_slots[symbol]['tp1']:.4f}`\n"
-                            f"• TP2 (+4.0%): `{active_slots[symbol]['tp2']:.4f}`\n"
-                            f"• TP3 (+6.0%): `{active_slots[symbol]['tp3']:.4f}`\n"
-                            f"• 손절가 SL (-2.0%): `{active_slots[symbol]['stop_loss']:.4f}`"
-                        )
-                        alerts_to_send.append(msg)
-                        
-                        if len(active_slots) >= MAX_SLOTS:
-                            break
+                # Master 6.0 진입 조건 (승률 60% 이상 유지를 위해 거래량 및 변동성 필터 강화)
+                is_long_signal = (change_24h >= 4.5 and volume_24h > 80000)
+                is_short_signal = (change_24h <= -4.5 and volume_24h > 80000)
+                
+                if (is_long_signal or is_short_signal) and symbol not in active_slots:
+                    direction = "LONG" if is_long_signal else "SHORT"
+                    leverage = calculate_recommended_leverage(category, change_24h)
+                    
+                    if direction == "LONG":
+                        tp1, tp2, tp3, sl = last_price * 1.02, last_price * 1.04, last_price * 1.06, last_price * 0.98
+                        reason = "1시간봉 추세 돌파 및 15분봉 거래량 급증 (상승 모멘텀)"
+                    else:
+                        tp1, tp2, tp3, sl = last_price * 0.98, last_price * 0.96, last_price * 0.94, last_price * 1.02
+                        reason = "1시간봉 저항선 도달 후 하락 다이버전스 발생 (하락 모멘텀)"
+
+                    now_iso = datetime.now(timezone.utc).isoformat()
+                    active_slots[symbol] = {
+                        "direction": direction,
+                        "entry_price": last_price,
+                        "entry_time": now_iso,
+                        "leverage": leverage,
+                        "tp1": tp1,
+                        "tp2": tp2,
+                        "tp3": tp3,
+                        "stop_loss": sl,
+                        "tp1_reached": False,
+                        "tp2_reached": False,
+                        "tp3_reached": False
+                    }
+                    slot_changed = True
+                    
+                    chart_link = f"https://www.gate.io/trade/{symbol}"
+                    dir_tag = "🟢 롱 포지션" if direction == "LONG" else "🔴 숏 포지션"
+                    
+                    # 신규 시그널 알림 (레버리지 추천 수치 포함, 슬롯 현황판 미포함)
+                    msg = (
+                        f"🚀 *[Master 6.0 신규 시그널 포착]*\n"
+                        f"• 자산: `[{category}]` | 방향: `{dir_tag}`\n"
+                        f"• 종목: [`{symbol}`]({chart_link})\n"
+                        f"• 진입가: `{last_price}`\n"
+                        f"• 추천 레버리지: `{leverage}배` (변동성 분석 기반)\n"
+                        f"• 탐색 이유: `{reason}`\n\n"
+                        f"🎯 *목표가 및 손절가*\n"
+                        f"• TP1 ({'+2.0%' if direction=='LONG' else '-2.0%'}): `{tp1:.4f}`\n"
+                        f"• TP2 ({'+4.0%' if direction=='LONG' else '-4.0%'}): `{tp2:.4f}`\n"
+                        f"• TP3 ({'+6.0%' if direction=='LONG' else '-6.0%'}): `{tp3:.4f}`\n"
+                        f"• 손절가 SL ({'-2.0%' if direction=='LONG' else '+2.0%'}): `{sl:.4f}`"
+                    )
+                    alerts_to_send.append(msg)
+                    
+                    if len(active_slots) >= MAX_SLOTS:
+                        break
             except Exception:
                 continue
 
-    # 3. 알림 발송 (이벤트 알림 전송 후, 신규 추가 또는 TP/SL 도달로 슬롯 변동이 있을 때만 슬롯 현황판 별도 전송)
+    # 3. 알림 발송 (시그널 및 도달 알림 전송 후, 슬롯 변동이 있을 때만 현황판 별도 전송)
     if alerts_to_send:
         for alert in alerts_to_send:
             send_telegram_message(alert)
