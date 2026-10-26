@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03649,
+      "last_price": 0.03722,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.00451,
+      "last_price": 0.004504,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00838,
+      "last_price": 0.00835,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -132,7 +132,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04477,
+      "last_price": 0.04474,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1399.3,
+      "last_price": 1399.26,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -202,7 +202,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.06985,
+      "last_price": 0.0704,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -210,41 +210,6 @@
       "last_notified_tier": 6.0,
       "status": "ACTIVE",
       "slot": 6
-    },
-    "MSTR_USDT": {
-      "symbol": "MSTR_USDT",
-      "side": "SHORT",
-      "entry": 144.26,
-      "sl": 142.802,
-      "tp1": 142.802,
-      "tp2": 141.7085,
-      "tp3": 140.615,
-      "sl_pct": -0.5053375849161132,
-      "tp1_pct": 1.0106751698322463,
-      "tp2_pct": 1.7686815472064359,
-      "tp3_pct": 2.5266879245806058,
-      "leverage": 20,
-      "rsi": 35.58052434456934,
-      "atr": 0.4049999999999991,
-      "volume_surge": 2.0006237838542393,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(1.8배+)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-26T08:10:38+09:00",
-      "last_price": 140.84,
-      "tp1_hit": true,
-      "tp2_hit": true,
-      "tp3_hit": false,
-      "max_profit_pct": 0.0,
-      "last_notified_tier": 0,
-      "status": "ACTIVE",
-      "slot": 7
     },
     "CBRS_USDT": {
       "symbol": "CBRS_USDT",
@@ -272,12 +237,12 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T10:00:53+09:00",
-      "last_price": 110.3,
+      "last_price": 110.4,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
       "status": "ACTIVE",
-      "slot": 8
+      "slot": 7
     }
   },
   "history": [
@@ -956,6 +921,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -1.2385
+    },
+    {
+      "symbol": "MSTR_USDT",
+      "side": "SHORT",
+      "asset": "주식",
+      "entry": 144.26,
+      "exit": 140.615,
+      "entry_time": "2026-10-26T08:10:38+09:00",
+      "exit_time": "2026-10-26T12:50:24+09:00",
+      "duration": "4시간 39분",
+      "outcome": "TP3",
+      "reason": "TP3",
+      "return_pct": 2.5267
     }
   ],
   "cooldown": {},
