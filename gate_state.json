@@ -27,7 +27,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-24T20:21:19+09:00",
-      "last_price": 0.03732,
+      "last_price": 0.03601,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -62,7 +62,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:15:38+09:00",
-      "last_price": 0.004558,
+      "last_price": 0.004592,
       "tp1_hit": true,
       "tp2_hit": true,
       "tp3_hit": false,
@@ -97,7 +97,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T01:55:50+09:00",
-      "last_price": 0.00852,
+      "last_price": 0.00858,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -132,7 +132,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-25T15:21:48+09:00",
-      "last_price": 0.04552,
+      "last_price": 0.04563,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -167,7 +167,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T05:00:43+09:00",
-      "last_price": 1395.15,
+      "last_price": 1395.84,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -202,7 +202,7 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T06:45:32+09:00",
-      "last_price": 0.07022,
+      "last_price": 0.07113,
       "tp1_hit": false,
       "tp2_hit": false,
       "tp3_hit": false,
@@ -210,41 +210,6 @@
       "last_notified_tier": 6.0,
       "status": "ACTIVE",
       "slot": 6
-    },
-    "ANIME_USDT": {
-      "symbol": "ANIME_USDT",
-      "side": "SHORT",
-      "entry": 0.002886,
-      "sl": 0.0029217428571428573,
-      "tp1": 0.0028145142857142857,
-      "tp2": 0.0027609,
-      "tp3": 0.002707285714285714,
-      "sl_pct": -1.23849123849124,
-      "tp1_pct": 2.47698247698248,
-      "tp2_pct": 4.334719334719333,
-      "tp3_pct": 6.1924561924562,
-      "leverage": 12,
-      "rsi": 31.468531468531424,
-      "atr": 1.985714285714286e-05,
-      "volume_surge": 2.5441393205418636,
-      "score": 6,
-      "reasons": [
-        "BTC 추세 일치",
-        "EMA 추세 정렬",
-        "RSI 조건 충족",
-        "거래량 급증(1.8배+)",
-        "EMA21 조건 충족",
-        "캔들 방향/몸통 확인"
-      ],
-      "entry_time": "2026-10-26T06:45:43+09:00",
-      "last_price": 0.002864,
-      "tp1_hit": false,
-      "tp2_hit": false,
-      "tp3_hit": false,
-      "max_profit_pct": 0.0,
-      "last_notified_tier": 0,
-      "status": "ACTIVE",
-      "slot": 7
     },
     "MSTR_USDT": {
       "symbol": "MSTR_USDT",
@@ -272,12 +237,45 @@
         "캔들 방향/몸통 확인"
       ],
       "entry_time": "2026-10-26T08:10:38+09:00",
-      "last_price": 142.56,
+      "last_price": 143.19,
       "tp1_hit": true,
       "tp2_hit": false,
       "tp3_hit": false,
       "max_profit_pct": 0.0,
       "last_notified_tier": 0,
+      "status": "ACTIVE",
+      "slot": 7
+    },
+    "CBRS_USDT": {
+      "symbol": "CBRS_USDT",
+      "side": "SHORT",
+      "entry": 111.3,
+      "sl": 112.28999999999999,
+      "tp1": 109.32,
+      "tp2": 107.835,
+      "tp3": 106.35,
+      "sl_pct": -0.8894878706199415,
+      "tp1_pct": 1.7789757412398959,
+      "tp2_pct": 3.1132075471698144,
+      "tp3_pct": 4.447439353099733,
+      "leverage": 17,
+      "rsi": 33.33333333333333,
+      "atr": 0.5500000000000002,
+      "volume_surge": 4.016597276193679,
+      "score": 6,
+      "reasons": [
+        "BTC 추세 일치",
+        "EMA 추세 정렬",
+        "RSI 조건 충족",
+        "거래량 급증(1.8배+)",
+        "EMA21 조건 충족",
+        "캔들 방향/몸통 확인"
+      ],
+      "entry_time": "2026-10-26T10:00:53+09:00",
+      "last_price": 111.3,
+      "tp1_hit": false,
+      "tp2_hit": false,
+      "tp3_hit": false,
       "status": "ACTIVE",
       "slot": 8
     }
@@ -945,6 +943,19 @@
       "outcome": "SL",
       "reason": "SL 또는 본절 청산",
       "return_pct": -0.4397
+    },
+    {
+      "symbol": "ANIME_USDT",
+      "side": "SHORT",
+      "asset": "코인",
+      "entry": 0.002886,
+      "exit": 0.0029217428571428573,
+      "entry_time": "2026-10-26T06:45:43+09:00",
+      "exit_time": "2026-10-26T10:00:38+09:00",
+      "duration": "3시간 14분",
+      "outcome": "SL",
+      "reason": "SL 또는 본절 청산",
+      "return_pct": -1.2385
     }
   ],
   "cooldown": {},
@@ -1002,7 +1013,8 @@
     "ADA_USDT": 1792964731.8693392,
     "BIRB_USDT": 1792964732.732467,
     "ANIME_USDT": 1792964743.8646424,
-    "MSTR_USDT": 1792969838.1036572
+    "MSTR_USDT": 1792969838.1036572,
+    "CBRS_USDT": 1792976453.1542585
   },
   "last_bars": {},
   "stats": {
