@@ -81,21 +81,21 @@
     },
     "VERONA_USDT": {
       "direction": "LONG",
-      "entry_price": 0.11628,
-      "entry_time": "2026-10-26T19:05:33.261185+00:00",
+      "entry_price": 0.12189,
+      "entry_time": "2026-10-26T19:25:32.790858+00:00",
       "leverage": 5,
-      "tp1": 0.11860559999999999,
-      "tp2": 0.1209312,
-      "tp3": 0.1232568,
-      "stop_loss": 0.11628,
-      "tp1_reached": true
+      "tp1": 0.1243278,
+      "tp2": 0.1267656,
+      "tp3": 0.1292034,
+      "stop_loss": 0.1194522,
+      "tp1_reached": false
     }
   },
   "stats": {
-    "wins": 7,
+    "wins": 8,
     "draws": 2,
     "losses": 13,
-    "total": 22
+    "total": 23
   },
   "history": [
     {
