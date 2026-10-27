@@ -92,7 +92,7 @@
       "tp3": 0.0255116,
       "stop_loss": 0.02714,
       "tp1_reached": true,
-      "tp2_reached": false
+      "tp2_reached": true
     }
   },
   "stats": {
