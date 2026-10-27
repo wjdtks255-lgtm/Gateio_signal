@@ -21,8 +21,9 @@
       "tp1": 0.0480494,
       "tp2": 0.047068799999999994,
       "tp3": 0.046088199999999996,
-      "stop_loss": 0.04903,
-      "tp1_reached": true
+      "stop_loss": 0.0480494,
+      "tp1_reached": true,
+      "tp2_reached": true
     },
     "TSLAX_USDT": {
       "direction": "LONG",
