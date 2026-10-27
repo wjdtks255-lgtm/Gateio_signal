@@ -83,15 +83,15 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "LAPTOP_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.04469,
-      "entry_time": "2026-10-27T14:35:28.100927+00:00",
-      "leverage": 5,
-      "tp1": 0.04342357142857143,
-      "tp2": 0.04215714285714286,
-      "tp3": 0.04089071428571429,
-      "stop_loss": 0.04595642857142857,
+    "KGEN_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.10459,
+      "entry_time": "2026-10-27T14:55:34.758255+00:00",
+      "leverage": 10,
+      "tp1": 0.10800571428571429,
+      "tp2": 0.11142142857142857,
+      "tp3": 0.11483714285714286,
+      "stop_loss": 0.10117428571428572,
       "tp1_reached": false,
       "tp2_reached": false
     }
@@ -99,12 +99,13 @@
   "stats": {
     "wins": 19,
     "draws": 9,
-    "losses": 32,
-    "total": 60
+    "losses": 33,
+    "total": 61
   },
   "closed_symbols": {
     "BEAT_USDT": "2026-10-27T12:55:32.537550+00:00",
     "SKHY3S_USDT": "2026-10-27T14:20:39.743710+00:00",
-    "PEPE5S_USDT": "2026-10-27T14:35:28.100927+00:00"
+    "PEPE5S_USDT": "2026-10-27T14:35:28.100927+00:00",
+    "LAPTOP_USDT": "2026-10-27T14:55:34.758255+00:00"
   }
 }
