@@ -46,18 +46,6 @@
       "stop_loss": 385.3654,
       "tp1_reached": false
     },
-    "WET_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.04911,
-      "entry_time": "2026-10-27T01:50:33.223912+00:00",
-      "leverage": 10,
-      "tp1": 0.0500922,
-      "tp2": 0.051074400000000006,
-      "tp3": 0.0520566,
-      "stop_loss": 0.0481278,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "VERONA_USDT": {
       "direction": "LONG",
       "entry_price": 0.11745,
@@ -93,13 +81,26 @@
       "stop_loss": 0.3197802,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "SKHYNIX3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 1.1918,
+      "entry_time": "2026-10-27T04:00:51.730111+00:00",
+      "leverage": 8,
+      "tp1": 1.1300642857142857,
+      "tp2": 1.0683285714285713,
+      "tp3": 1.006592857142857,
+      "stop_loss": 1.2535357142857142,
+      "tp1_reached": false
     }
   },
   "stats": {
     "wins": 14,
     "draws": 8,
-    "losses": 23,
-    "total": 45
+    "losses": 24,
+    "total": 46
   },
-  "closed_symbols": {}
+  "closed_symbols": {
+    "WET_USDT": "2026-10-27T04:00:51.730111+00:00"
+  }
 }
