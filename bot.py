@@ -193,12 +193,14 @@ def build_slot_status_message(active_slots, tickers_dict, stats):
             category = get_asset_category(sym)
             dir_icon = "🟢" if direction == "LONG" else "🔴"
             display_name = f"[{category}] {sym}"
+            
             if info.get("tp2_reached", False):
                 status_badge = "🎯 TP2 도달 (TP1 방어중)"
             elif info.get("tp1_reached", False):
                 status_badge = "🎯 TP1 도달 (본전 방어중)"
             else:
                 status_badge = "📈 홀딩 진행중"
+                
             lines.append(f"{i}️⃣ {dir_icon} <a href='{chart_link}'>{display_name}</a> | <code>{profit_pct:+.2f}%</code> | 보유: <code>{holding_str}</code>\n    └ 상태: <code>{status_badge}</code>")
         else:
             lines.append(f"{i}️⃣ (빈 슬롯)")
@@ -227,6 +229,9 @@ def calculate_win_rate(stats):
 
 def manage_positions(active_slots, tickers_dict, stats, closed_symbols):
     now_utc = datetime.now(timezone.utc)
+    slot_changed = False
+    alerts_to_send = []
+
     for symbol, info in list(active_slots.items()):
         current_price = tickers_dict.get(symbol, info["entry_price"])
         direction = info.get("direction", "LONG")
@@ -237,65 +242,124 @@ def manage_positions(active_slots, tickers_dict, stats, closed_symbols):
         stop_loss = info["stop_loss"]
         tp1_reached = info.get("tp1_reached", False)
         tp2_reached = info.get("tp2_reached", False)
+        chart_link = f"https://www.gate.io/trade/{symbol}"
+        category = get_asset_category(symbol)
+        display_name = f"[{category}] {symbol}"
 
         if entry_price <= 0:
             continue
 
+        if entry_price > 0:
+            if direction == "LONG":
+                current_profit_pct = ((current_price - entry_price) / entry_price) * 100
+            else:
+                current_profit_pct = ((entry_price - current_price) / entry_price) * 100
+        else:
+            current_profit_pct = 0.0
+
         if direction == "LONG":
-            current_profit_pct = ((current_price - entry_price) / entry_price) * 100
             is_stopped = current_price <= stop_loss
             is_tp1 = current_price >= tp1
             is_tp2 = current_price >= tp2
             is_tp3 = current_price >= tp3
         else:
-            current_profit_pct = ((entry_price - current_price) / entry_price) * 100
             is_stopped = current_price >= stop_loss
             is_tp1 = current_price <= tp1
             is_tp2 = current_price <= tp2
             is_tp3 = current_price <= tp3
 
-        alerts_to_send = []
-
-        if is_tp1 and not tp1_reached:
-            info["tp1_reached"] = True
-            # TP1 도달 후 손절가를 TP1보다 살짝 여유 있게 조정 (15% ATR 범위)
-            atr_gap = abs(tp1 - entry_price) * 0.15
-            if direction == "LONG":
-                info["stop_loss"] = tp1 - atr_gap
-            else:
-                info["stop_loss"] = tp1 + atr_gap
-            alerts_to_send.append(f"<b>🎯 [TP1 1차 목표가 도달]</b> • 종목: {symbol} • 손절가 조정 완료")
-
-        if is_tp2 and not tp2_reached:
-            info["tp2_reached"] = True
-            info["stop_loss"] = tp1
-            alerts_to_send.append(f"<b>🎯🎯 [TP2 2차 목표가 도달]</b> • 종목: {symbol} • 스탑로스 TP1 가격으로 상향 조정")
-
-        if is_tp3:
-            alerts_to_send.append(f"<b>🎯🎯🎯 [TP3 최종 목표가 도달]</b> • 종목: {symbol}")
-            stats["wins"] += 1
-            stats["total"] += 1
-            closed_symbols[symbol] = now_utc.isoformat()
-            del active_slots[symbol]
-
-        elif is_stopped:
+        if is_stopped:
             if tp2_reached:
-                alerts_to_send.append(f"<b>🎯 [트레일링 스탑 도달 - TP1 수익 확보 청산]</b> • 종목: {symbol}")
+                msg = (
+                    "<b>🎯 [트레일링 스탑 도달 - TP1 수익 확보 청산]</b>\n"
+                    f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
+                    f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                    f"• 진입가: <code>{entry_price}</code>\n"
+                    f"• 청산 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, TP1 가격 방어)\n"
+                    "• 결과: <code>승리 (TP1 수익 확보 익절 마감)</code>"
+                )
+                alerts_to_send.append(msg)
                 stats["wins"] += 1
             elif tp1_reached:
-                alerts_to_send.append(f"<b>🏳️ [본전 청산 - 무승부]</b> • 종목: {symbol}")
+                msg = (
+                    "<b>🏳️ [본전 청산 - 무승부]</b>\n"
+                    f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
+                    f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                    f"• 진입가: <code>{entry_price}</code>\n"
+                    f"• 청산 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, 본전 스탑)\n"
+                    "• 결과: <code>무 (본전 마감)</code>"
+                )
+                alerts_to_send.append(msg)
                 stats["draws"] += 1
             else:
-                alerts_to_send.append(f"<b>🛑 [손절가 도달]</b> • 종목: {symbol}")
+                msg = (
+                    "<b>🛑 [손절가(SL) 도달]</b>\n"
+                    f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
+                    f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                    f"• 진입가: <code>{entry_price}</code>\n"
+                    f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, 손절 마감)\n"
+                    "• 결과: <code>패배 (손실 마감)</code>"
+                )
+                alerts_to_send.append(msg)
                 stats["losses"] += 1
             stats["total"] += 1
             closed_symbols[symbol] = now_utc.isoformat()
             del active_slots[symbol]
+            slot_changed = True
+            continue
 
-        for alert in alerts_to_send:
-            send_telegram_message(alert)
+        if is_tp3:
+            msg = (
+                "<b>🎯🎯🎯 [TP3 최종 목표가 도달 - 포지션 회수]</b>\n"
+                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                f"• 진입가: <code>{entry_price}</code>\n"
+                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
+                "• 결과: <code>승리 (TP3 익절 마감)</code>"
+            )
+            alerts_to_send.append(msg)
+            stats["wins"] += 1
+            stats["total"] += 1
+            closed_symbols[symbol] = now_utc.isoformat()
+            del active_slots[symbol]
+            slot_changed = True
+            continue
+
+        if is_tp2 and not tp2_reached:
+            info["tp2_reached"] = True
+            info["stop_loss"] = tp1
+            slot_changed = True
+            msg = (
+                "<b>🎯🎯 [TP2 2차 목표가 도달]</b>\n"
+                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                f"• 진입가: <code>{entry_price}</code>\n"
+                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
+                "• 조치: <code>스탑로스를 TP1 가격으로 상향 (TP3 최종 목표가를 향해 홀딩 유지)</code>"
+            )
+            alerts_to_send.append(msg)
+
+        if is_tp1 and not tp1_reached:
+            info["tp1_reached"] = True
+            info["stop_loss"] = entry_price
+            slot_changed = True
+            msg = (
+                "<b>🎯 [TP1 1차 목표가 도달]</b>\n"
+                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                f"• 진입가: <code>{entry_price}</code>\n"
+                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
+                "• 조치: <code>본전 스탑(Break-even) 전환 완료 (손실 원천 차단 및 홀딩 유지)</code>"
+            )
+            alerts_to_send.append(msg)
+
+    for alert in alerts_to_send:
+        send_telegram_message(alert)
+
+    return slot_changed
 
 def identify_new_signals(tickers, active_slots, closed_symbols, now_utc):
+    slot_changed = False
     for t in tickers:
         symbol = t.get("currency_pair", "")
         if symbol in active_slots or symbol in closed_symbols:
@@ -331,6 +395,18 @@ def identify_new_signals(tickers, active_slots, closed_symbols, now_utc):
                 tp2 = last_price - (atr * 3.0)
                 tp3 = last_price - (atr * 4.5)
                 sl = last_price + (atr * 1.5)
+
+            if direction == "LONG":
+                tp1_pct = ((tp1 - last_price) / last_price) * 100
+                tp2_pct = ((tp2 - last_price) / last_price) * 100
+                tp3_pct = ((tp3 - last_price) / last_price) * 100
+                sl_pct = ((sl - last_price) / last_price) * 100
+            else:
+                tp1_pct = ((last_price - tp1) / last_price) * 100
+                tp2_pct = ((last_price - tp2) / last_price) * 100
+                tp3_pct = ((last_price - tp3) / last_price) * 100
+                sl_pct = ((last_price - sl) / last_price) * 100
+
             active_slots[symbol] = {
                 "direction": direction,
                 "entry_price": last_price,
@@ -343,15 +419,31 @@ def identify_new_signals(tickers, active_slots, closed_symbols, now_utc):
                 "tp1_reached": False,
                 "tp2_reached": False,
             }
+            slot_changed = True
+
+            chart_link = f"https://www.gate.io/trade/{symbol}"
+            display_name = f"[{category}] {symbol}"
+            dir_tag = "🟢 롱 포지션" if direction == "LONG" else "🔴 숏 포지션"
+
             msg = (
-                f"<b>🚀 신규 시그널 포착</b>\n종목: {symbol}\n진입가: {last_price}\n방향: {direction}\n레버리지: {leverage}배\n"
-                f"TP1: {tp1:.4f}, TP2: {tp2:.4f}, TP3: {tp3:.4f}, SL: {sl:.4f}"
+                "<b>🚀 [Master 6.0 신규 시그널 포착 (ATR 필터 적용)]</b>\n"
+                f"• 방향: <code>{dir_tag}</code>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                f"• 진입가: <code>{last_price}</code>\n"
+                f"• 추천 레버리지: <code>{leverage}배</code> (변동성 분석)\n"
+                "• 탐색 이유: <code>1시간봉 완성 캔들 모멘텀 및 RSI 필터 통과</code>\n\n"
+                "<b>🎯 ATR 가변형 목표가 및 손절가</b>\n"
+                f"• TP1: <code>{tp1:.4f} ({tp1_pct:+.2f}%)</code>\n"
+                f"• TP2: <code>{tp2:.4f} ({tp2_pct:+.2f}%)</code>\n"
+                f"• TP3: <code>{tp3:.4f} ({tp3_pct:+.2f}%)</code>\n"
+                f"• 손절가 SL: <code>{sl:.4f} ({sl_pct:+.2f}%)</code>"
             )
             send_telegram_message(msg)
             if len(active_slots) >= MAX_SLOTS:
                 break
         except Exception:
             continue
+    return slot_changed
 
 def run_bot():
     print("Bot 시작...")
@@ -365,18 +457,27 @@ def run_bot():
     stats = state["stats"]
     closed_symbols = state.setdefault("closed_symbols", {})
     now_utc = datetime.now(timezone.utc)
+    
     expired_symbols = [sym for sym, t_str in closed_symbols.items()
                        if (now_utc - datetime.fromisoformat(t_str)) >= timedelta(hours=3)]
     for sym in expired_symbols:
         del closed_symbols[sym]
 
-    manage_positions(active_slots, tickers_dict, stats, closed_symbols)
+    # 1. 포지션 관리 및 청산 체크
+    changed_positions = manage_positions(active_slots, tickers_dict, stats, closed_symbols)
 
+    # 2. 신규 시그널 탐색
+    changed_new = False
     if len(active_slots) < MAX_SLOTS:
-        identify_new_signals(raw_tickers, active_slots, closed_symbols, now_utc)
+        changed_new = identify_new_signals(raw_tickers, active_slots, closed_symbols, now_utc)
 
-    slot_status_msg = build_slot_status_message(active_slots, tickers_dict, stats)
-    send_telegram_message(slot_status_msg)
+    # 3. 💡 슬롯 현황판은 포지션 추가/청산 등의 변화(changed)가 있을 때만 전송
+    if changed_positions or changed_new:
+        slot_status_msg = build_slot_status_message(active_slots, tickers_dict, stats)
+        send_telegram_message(slot_status_msg)
+        print("Slot status updated and sent to Telegram.")
+    else:
+        print("No slot changes. Status message skipped.")
 
     save_state(state)
     print("Bot 사이클 종료")
