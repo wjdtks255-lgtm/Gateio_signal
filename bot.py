@@ -152,7 +152,15 @@ def build_slot_status_message(active_slots, tickers_dict, stats):
             dir_icon = "🟢" if direction == "LONG" else "🔴"
             display_name = f"[{category}] {sym}"
             
-            lines.append(f"{i}️⃣ {dir_icon} <a href='{chart_link}'>{display_name}</a> | <code>{profit_pct:+.2f}%</code> | 보유: <code>{holding_str}</code>")
+            # 💡 슬롯별 현재 도달 상태(본전 방어 / TP1 방어 / 진행중) 표시
+            if info.get("tp2_reached", False):
+                status_badge = "🎯 TP2 도달 (TP1 방어중)"
+            elif info.get("tp1_reached", False):
+                status_badge = "🎯 TP1 도달 (본전 방어중)"
+            else:
+                status_badge = "📈 홀딩 진행중"
+            
+            lines.append(f"{i}️⃣ {dir_icon} <a href='{chart_link}'>{display_name}</a> | <code>{profit_pct:+.2f}%</code> | 보유: <code>{holding_str}</code>\n    └ 상태: <code>{status_badge}</code>")
         else:
             lines.append(f"{i}️⃣ (빈 슬롯)")
             
@@ -418,7 +426,6 @@ def run_bot():
                         sl = last_price + (atr * 1.5)
                         reason = "1시간봉 완성 캔들 하방 돌파 확인 (ATR 가변형 모멘텀)"
 
-                    # 진입가 기준 가변 ATR 퍼센트 계산
                     if direction == "LONG":
                         tp1_pct = ((tp1 - last_price) / last_price) * 100
                         tp2_pct = ((tp2 - last_price) / last_price) * 100
