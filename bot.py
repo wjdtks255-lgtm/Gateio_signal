@@ -194,6 +194,7 @@ def run_bot():
         tp3 = info["tp3"]
         stop_loss = info["stop_loss"]
         tp1_reached = info.get("tp1_reached", False)
+        tp2_reached = info.get("tp2_reached", False)
         
         if direction == "LONG":
             is_stopped = current_price <= stop_loss
@@ -237,7 +238,7 @@ def run_bot():
             slot_changed = True
             continue
 
-        # TP3 도달 (승리)
+        # TP3 최종 목표가 도달 체크 (승리 및 최종 포지션 회수)
         if is_tp3:
             msg = (
                 "<b>🎯🎯🎯 [TP3 최종 목표가 도달 - 포지션 회수]</b>\n"
@@ -254,24 +255,22 @@ def run_bot():
             slot_changed = True
             continue
 
-        # TP2 도달 (승리)
-        if is_tp2:
+        # TP2 도달 체크 (중간 익절 진행 - 포지션은 유지)
+        if is_tp2 and not tp2_reached:
+            info["tp2_reached"] = True
+            slot_changed = True
+            
             msg = (
-                "<b>🎯🎯 [TP2 2차 목표가 도달 - 포지션 회수]</b>\n"
+                "<b>🎯🎯 [TP2 2차 목표가 도달]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
                 f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{entry_price}</code>\n"
                 f"• 도달 가격: <code>{current_price}</code>\n"
-                "• 결과: <code>승리 (TP2 익절 마감)</code>"
+                "• 조치: <code>중간 익절 진행 (TP3 최종 목표가를 향해 홀딩 유지)</code>"
             )
             alerts_to_send.append(msg)
-            stats["wins"] += 1
-            stats["total"] += 1
-            del active_slots[symbol]
-            slot_changed = True
-            continue
 
-        # TP1 도달 (본전 스탑 상향)
+        # TP1 도달 체크 (본전 스탑 상향 - 포지션은 유지)
         if is_tp1 and not tp1_reached:
             info["tp1_reached"] = True
             info["stop_loss"] = entry_price
@@ -283,7 +282,7 @@ def run_bot():
                 f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{entry_price}</code>\n"
                 f"• 도달 가격: <code>{current_price}</code>\n"
-                "• 조치: <code>본전 스탑(Break-even) 전환 완료 (손실 원천 차단)</code>"
+                "• 조치: <code>본전 스탑(Break-even) 전환 완료 (손실 원천 차단 및 홀딩 유지)</code>"
             )
             alerts_to_send.append(msg)
 
@@ -323,14 +322,14 @@ def run_bot():
                         "tp2": tp2,
                         "tp3": tp3,
                         "stop_loss": sl,
-                        "tp1_reached": False
+                        "tp1_reached": False,
+                        "tp2_reached": False
                     }
                     slot_changed = True
                     
                     chart_link = f"https://www.gate.io/trade/{symbol}"
                     dir_tag = "🟢 롱 포지션" if direction == "LONG" else "🔴 숏 포지션"
                     
-                    # 💡 롱/숏 관계없이 수익 목표가(TP)는 플러스(+), 손절가(SL)는 마이너스(-)로 직관적 표기
                     msg = (
                         "<b>🚀 [Master 6.0 신규 시그널 포착]</b>\n"
                         f"• 방향: <code>{dir_tag}</code>\n"
