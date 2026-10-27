@@ -71,18 +71,6 @@
       "tp1_reached": true,
       "tp2_reached": false
     },
-    "BEAT_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.08092,
-      "entry_time": "2026-10-27T10:45:41.661545+00:00",
-      "leverage": 5,
-      "tp1": 0.08534714285714287,
-      "tp2": 0.08977428571428572,
-      "tp3": 0.09420142857142859,
-      "stop_loss": 0.08534714285714287,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "UAI_USDT": {
       "direction": "SHORT",
       "entry_price": 0.23664,
@@ -94,18 +82,31 @@
       "stop_loss": 0.2424342857142857,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "DOOD_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.002034,
+      "entry_time": "2026-10-27T12:55:32.537550+00:00",
+      "leverage": 7,
+      "tp1": 0.0016705714285714284,
+      "tp2": 0.0013071428571428568,
+      "tp3": 0.0009437142857142854,
+      "stop_loss": 0.002397428571428571,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 18,
+    "wins": 19,
     "draws": 9,
     "losses": 30,
-    "total": 57
+    "total": 58
   },
   "closed_symbols": {
     "ADA5L_USDT": "2026-10-27T10:10:36.785355+00:00",
     "UNI3S_USDT": "2026-10-27T10:20:36.865167+00:00",
     "CRCLON_USDT": "2026-10-27T10:45:41.661545+00:00",
-    "SOL5S_USDT": "2026-10-27T10:50:32.548466+00:00"
+    "SOL5S_USDT": "2026-10-27T10:50:32.548466+00:00",
+    "BEAT_USDT": "2026-10-27T12:55:32.537550+00:00"
   }
 }
