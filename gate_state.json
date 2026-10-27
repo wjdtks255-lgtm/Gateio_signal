@@ -79,9 +79,9 @@
       "tp1": 0.08534714285714287,
       "tp2": 0.08977428571428572,
       "tp3": 0.09420142857142859,
-      "stop_loss": 0.08092,
+      "stop_loss": 0.08534714285714287,
       "tp1_reached": true,
-      "tp2_reached": false
+      "tp2_reached": true
     },
     "UAI_USDT": {
       "direction": "SHORT",
