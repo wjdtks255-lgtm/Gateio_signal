@@ -31,7 +31,7 @@ def load_state():
     state = {
         "active_slots": {},
         "stats": {"wins": 0, "draws": 0, "losses": 0, "total": 0},
-        "closed_symbols": {}  # {종목명: 청산시간ISO} 형태의 쿨다운 관리 딕셔너리
+        "closed_symbols": {}
     }
     if os.path.exists(STATE_FILE):
         try:
@@ -49,7 +49,6 @@ def load_state():
                         if isinstance(data["closed_symbols"], dict):
                             state["closed_symbols"] = data["closed_symbols"]
                         elif isinstance(data["closed_symbols"], list):
-                            # 구버전 리스트 형식 데이터 호환 처리
                             state["closed_symbols"] = {sym: datetime.now(timezone.utc).isoformat() for sym in data["closed_symbols"]}
         except Exception as e:
             print(f"Error loading state file: {e}")
@@ -162,8 +161,64 @@ def build_slot_status_message(active_slots, tickers_dict, stats):
             
     return "\n".join(lines)
 
+def fetch_atr_and_validate_breakout(symbol, direction):
+    url = "https://api.gateio.ws/api/v4/spot/candlesticks"
+    params = {"currency_pair": symbol, "interval": "1h", "limit": 20}
+    try:
+        response = requests.get(url, params=params, timeout=10)
+        if response.status_code == 200:
+            candles = response.json()
+            if not candles or len(candles) < 15:
+                return None, False
+            
+            parsed = []
+            for c in candles:
+                try:
+                    parsed.append({
+                        "close": float(c[2]),
+                        "high": float(c[3]),
+                        "low": float(c[4]),
+                        "open": float(c[5])
+                    })
+                except Exception:
+                    continue
+            
+            if len(parsed) < 15:
+                return None, False
+
+            latest = parsed[-2]
+            body = abs(latest["close"] - latest["open"])
+            total_range = latest["high"] - latest["low"]
+            
+            if total_range == 0:
+                return None, False
+                
+            is_strong_body = (body / total_range) >= 0.35
+            
+            if direction == "LONG":
+                is_valid_breakout = (latest["close"] > latest["open"]) and is_strong_body
+            else:
+                is_valid_breakout = (latest["close"] < latest["open"]) and is_strong_body
+                
+            if not is_valid_breakout:
+                return None, False
+
+            tr_list = []
+            for i in range(1, len(parsed)):
+                high = parsed[i]["high"]
+                low = parsed[i]["low"]
+                prev_close = parsed[i-1]["close"]
+                tr = max(high - low, abs(high - prev_close), abs(low - prev_close))
+                tr_list.append(tr)
+            
+            atr = sum(tr_list[-14:]) / 14.0
+            return atr, True
+    except Exception as e:
+        print(f"Error in ATR/Breakout validation for {symbol}: {e}")
+    return None, False
+
 def run_bot():
-    print("Master 6.0 Bot Scan Initiated...")
+    print("Master 6.0 Bot Scan Initiated (ATR & Breakout Filter Enabled)...")
     raw_tickers = fetch_gateio_tickers()
     if not raw_tickers:
         print("Failed to fetch tickers.")
@@ -184,7 +239,6 @@ def run_bot():
     
     now_utc = datetime.now(timezone.utc)
 
-    # 1. 만료된 쿨다운(3시간 경과) 종목은 정리
     expired_symbols = []
     for sym, closed_time_str in closed_symbols.items():
         try:
@@ -200,7 +254,6 @@ def run_bot():
     alerts_to_send = []
     slot_changed = False
 
-    # 2. 활성 슬롯 모니터링 (SL, TP1~3 체크)
     for symbol, info in list(active_slots.items()):
         current_price = tickers_dict.get(symbol, info["entry_price"])
         chart_link = f"https://www.gate.io/trade/{symbol}"
@@ -214,6 +267,15 @@ def run_bot():
         stop_loss = info["stop_loss"]
         tp1_reached = info.get("tp1_reached", False)
         
+        # 실시간 수익률 계산
+        if entry_price > 0:
+            if direction == "LONG":
+                current_profit_pct = ((current_price - entry_price) / entry_price) * 100
+            else:
+                current_profit_pct = ((entry_price - current_price) / entry_price) * 100
+        else:
+            current_profit_pct = 0.0
+
         if direction == "LONG":
             is_stopped = current_price <= stop_loss
             is_tp3 = current_price >= tp3
@@ -225,7 +287,6 @@ def run_bot():
             is_tp2 = current_price <= tp2
             is_tp1 = current_price <= tp1
 
-        # 손절(패배) 또는 본전 스탑(무) 도달 체크
         if is_stopped:
             if tp1_reached:
                 msg = (
@@ -233,7 +294,7 @@ def run_bot():
                     f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
                     f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                     f"• 진입가: <code>{entry_price}</code>\n"
-                    f"• 청산 가격: <code>{current_price}</code> (본전 스탑)\n"
+                    f"• 청산 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, 본전 스탑)\n"
                     "• 결과: <code>무 (본전 마감)</code>"
                 )
                 alerts_to_send.append(msg)
@@ -245,60 +306,52 @@ def run_bot():
                     f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
                     f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                     f"• 진입가: <code>{entry_price}</code>\n"
-                    f"• 도달 가격: <code>{current_price}</code> (손절 마감)\n"
+                    f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, 손절 마감)\n"
                     "• 결과: <code>패배 (손실 마감)</code>"
                 )
                 alerts_to_send.append(msg)
                 stats["losses"] += 1
                 stats["total"] += 1
             
-            # 3시간 쿨다운 등록
             closed_symbols[symbol] = now_utc.isoformat()
             del active_slots[symbol]
             slot_changed = True
             continue
 
-        # TP3 도달 (승리)
         if is_tp3:
             msg = (
                 "<b>🎯🎯🎯 [TP3 최종 목표가 도달 - 포지션 회수]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
                 f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{entry_price}</code>\n"
-                f"• 도달 가격: <code>{current_price}</code>\n"
+                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
                 "• 결과: <code>승리 (TP3 익절 마감)</code>"
             )
             alerts_to_send.append(msg)
             stats["wins"] += 1
             stats["total"] += 1
-            
-            # 3시간 쿨다운 등록
             closed_symbols[symbol] = now_utc.isoformat()
             del active_slots[symbol]
             slot_changed = True
             continue
 
-        # TP2 도달 (승리)
         if is_tp2:
             msg = (
                 "<b>🎯🎯 [TP2 2차 목표가 도달 - 포지션 회수]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
                 f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{entry_price}</code>\n"
-                f"• 도달 가격: <code>{current_price}</code>\n"
+                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
                 "• 결과: <code>승리 (TP2 익절 마감)</code>"
             )
             alerts_to_send.append(msg)
             stats["wins"] += 1
             stats["total"] += 1
-            
-            # 3시간 쿨다운 등록
             closed_symbols[symbol] = now_utc.isoformat()
             del active_slots[symbol]
             slot_changed = True
             continue
 
-        # TP1 도달 (본전 스탑 상향)
         if is_tp1 and not tp1_reached:
             info["tp1_reached"] = True
             info["stop_loss"] = entry_price
@@ -309,17 +362,16 @@ def run_bot():
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
                 f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{entry_price}</code>\n"
-                f"• 도달 가격: <code>{current_price}</code>\n"
+                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
                 "• 조치: <code>본전 스탑(Break-even) 전환 완료 (손실 원천 차단)</code>"
             )
             alerts_to_send.append(msg)
 
-    # 3. 새로운 신규 시그널 탐색 및 슬롯 배정 (3시간 쿨다운 종목 제외)
+    # 4. 새로운 신규 시그널 탐색
     if len(active_slots) < MAX_SLOTS:
         for t in raw_tickers:
             symbol = t.get("currency_pair", "")
             
-            # 활성 슬롯에 있거나 3시간 쿨다운 중인 종목은 건너뜀
             if symbol in active_slots or symbol in closed_symbols:
                 continue
                 
@@ -331,19 +383,30 @@ def run_bot():
                 volume_24h = float(t.get("quote_volume", 0))
                 change_24h = float(t.get("change_percentage", 0))
                 
-                is_long_signal = (change_24h >= 4.5 and volume_24h > 80000)
-                is_short_signal = (change_24h <= -4.5 and volume_24h > 80000)
+                is_long_candidate = (change_24h >= 4.5 and volume_24h > 80000)
+                is_short_candidate = (change_24h <= -4.5 and volume_24h > 80000)
                 
-                if is_long_signal or is_short_signal:
-                    direction = "LONG" if is_long_signal else "SHORT"
+                if is_long_candidate or is_short_candidate:
+                    direction = "LONG" if is_long_candidate else "SHORT"
+                    
+                    atr, is_valid_signal = fetch_atr_and_validate_breakout(symbol, direction)
+                    if not is_valid_signal or not atr:
+                        continue
+                    
                     leverage = calculate_recommended_leverage(category, change_24h)
                     
                     if direction == "LONG":
-                        tp1, tp2, tp3, sl = last_price * 1.02, last_price * 1.04, last_price * 1.06, last_price * 0.98
-                        reason = "1시간봉 추세 돌파 및 15분봉 거래량 급증 (상승 모멘텀)"
+                        tp1 = last_price + (atr * 1.5)
+                        tp2 = last_price + (atr * 3.0)
+                        tp3 = last_price + (atr * 4.5)
+                        sl = last_price - (atr * 1.5)
+                        reason = "1시간봉 완성 캔들 강한 돌파 확인 (ATR 가변형 모멘텀)"
                     else:
-                        tp1, tp2, tp3, sl = last_price * 0.98, last_price * 0.96, last_price * 0.94, last_price * 1.02
-                        reason = "1시간봉 저항선 도달 후 하락 다이버전스 발생 (하락 모멘텀)"
+                        tp1 = last_price - (atr * 1.5)
+                        tp2 = last_price - (atr * 3.0)
+                        tp3 = last_price - (atr * 4.5)
+                        sl = last_price + (atr * 1.5)
+                        reason = "1시간봉 완성 캔들 하방 돌파 확인 (ATR 가변형 모멘텀)"
 
                     active_slots[symbol] = {
                         "direction": direction,
@@ -362,17 +425,17 @@ def run_bot():
                     dir_tag = "🟢 롱 포지션" if direction == "LONG" else "🔴 숏 포지션"
                     
                     msg = (
-                        "<b>🚀 [Master 6.0 신규 시그널 포착]</b>\n"
+                        "<b>🚀 [Master 6.0 신규 시그널 포착 (ATR 필터 적용)]</b>\n"
                         f"• 방향: <code>{dir_tag}</code>\n"
                         f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                         f"• 진입가: <code>{last_price}</code>\n"
-                        f"• 추천 레버리지: <code>{leverage}배</code> (변동성 분석 기반)\n"
+                        f"• 추천 레버리지: <code>{leverage}배</code> (변동성 분석)\n"
                         f"• 탐색 이유: <code>{reason}</code>\n\n"
-                        "<b>🎯 목표가 및 손절가</b>\n"
-                        f"• TP1 (+2.0%): <code>{tp1:.4f}</code>\n"
-                        f"• TP2 (+4.0%): <code>{tp2:.4f}</code>\n"
-                        f"• TP3 (+6.0%): <code>{tp3:.4f}</code>\n"
-                        f"• 손절가 SL (-2.0%): <code>{sl:.4f}</code>"
+                        "<b>🎯 ATR 가변형 목표가 및 손절가</b>\n"
+                        f"• TP1 (+): <code>{tp1:.4f}</code>\n"
+                        f"• TP2 (+): <code>{tp2:.4f}</code>\n"
+                        f"• TP3 (+): <code>{tp3:.4f}</code>\n"
+                        f"• 손절가 SL (-): <code>{sl:.4f}</code>"
                     )
                     alerts_to_send.append(msg)
                     
@@ -381,7 +444,7 @@ def run_bot():
             except Exception:
                 continue
 
-    # 4. 알림 발송
+    # 5. 알림 발송
     if alerts_to_send:
         for alert in alerts_to_send:
             send_telegram_message(alert)
