@@ -7,6 +7,7 @@ TELEGRAM_TOKEN = os.getenv("GATE_TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("GATE_TELEGRAM_CHAT_ID")
 STATE_FILE = "gate_state.json"
 MAX_SLOTS = 8
+MAX_HOLDING_HOURS = 18  # 18시간 이상 미달성 시 수익권이면 슬롯 회전(청산)
 
 def send_telegram_message(message):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
@@ -242,6 +243,8 @@ def manage_positions(active_slots, tickers_dict, stats, closed_symbols):
         stop_loss = info["stop_loss"]
         tp1_reached = info.get("tp1_reached", False)
         tp2_reached = info.get("tp2_reached", False)
+        entry_time = datetime.fromisoformat(info.get("entry_time", now_utc.isoformat()))
+        
         chart_link = f"https://www.gate.io/trade/{symbol}"
         category = get_asset_category(symbol)
         display_name = f"[{category}] {symbol}"
@@ -249,24 +252,37 @@ def manage_positions(active_slots, tickers_dict, stats, closed_symbols):
         if entry_price <= 0:
             continue
 
-        if entry_price > 0:
-            if direction == "LONG":
-                current_profit_pct = ((current_price - entry_price) / entry_price) * 100
-            else:
-                current_profit_pct = ((entry_price - current_price) / entry_price) * 100
-        else:
-            current_profit_pct = 0.0
-
         if direction == "LONG":
+            current_profit_pct = ((current_price - entry_price) / entry_price) * 100
             is_stopped = current_price <= stop_loss
             is_tp1 = current_price >= tp1
             is_tp2 = current_price >= tp2
             is_tp3 = current_price >= tp3
         else:
+            current_profit_pct = ((entry_price - current_price) / entry_price) * 100
             is_stopped = current_price >= stop_loss
             is_tp1 = current_price <= tp1
             is_tp2 = current_price <= tp2
             is_tp3 = current_price <= tp3
+
+        # 💡 [추가] 장기 체류(18시간 이상)하면서 수익권(+0.5% 이상)인 경우 슬롯 회전을 위해 강제 익절 청산
+        holding_hours = (now_utc - entry_time).total_seconds() / 3600
+        if holding_hours >= MAX_HOLDING_HOURS and current_profit_pct >= 0.5:
+            msg = (
+                "<b>⏳ [시간 제한 회전 청산 - 익절 마감]</b>\n"
+                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
+                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
+                f"• 보유 시간: <code>{int(holding_hours)}시간 초과</code>\n"
+                f"• 청산 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
+                "• 결과: <code>승리 (장기 체류 수익 확보 회전)</code>"
+            )
+            alerts_to_send.append(msg)
+            stats["wins"] += 1
+            stats["total"] += 1
+            closed_symbols[symbol] = now_utc.isoformat()
+            del active_slots[symbol]
+            slot_changed = True
+            continue
 
         if is_stopped:
             if tp2_reached:
@@ -463,7 +479,7 @@ def run_bot():
     for sym in expired_symbols:
         del closed_symbols[sym]
 
-    # 1. 포지션 관리 및 청산 체크
+    # 1. 포지션 관리 및 청산 체크 (시간 제한 회전 청산 포함)
     changed_positions = manage_positions(active_slots, tickers_dict, stats, closed_symbols)
 
     # 2. 신규 시그널 탐색
@@ -471,7 +487,7 @@ def run_bot():
     if len(active_slots) < MAX_SLOTS:
         changed_new = identify_new_signals(raw_tickers, active_slots, closed_symbols, now_utc)
 
-    # 3. 💡 슬롯 현황판은 포지션 추가/청산 등의 변화(changed)가 있을 때만 전송
+    # 3. 슬롯 현황판은 포지션 추가/청산 등의 변화가 있을 때만 전송
     if changed_positions or changed_new:
         slot_status_msg = build_slot_status_message(active_slots, tickers_dict, stats)
         send_telegram_message(slot_status_msg)
