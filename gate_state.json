@@ -33,7 +33,8 @@
       "tp2": 0.29449919999999996,
       "tp3": 0.28836379999999995,
       "stop_loss": 0.30677,
-      "tp1_reached": true
+      "tp1_reached": true,
+      "tp2_reached": true
     },
     "LAPTOP_USDT": {
       "direction": "SHORT",
