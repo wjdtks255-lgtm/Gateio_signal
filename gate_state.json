@@ -35,18 +35,6 @@
       "stop_loss": 1.2535357142857142,
       "tp1_reached": false
     },
-    "INTC3S_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.30406,
-      "entry_time": "2026-10-27T10:10:36.785355+00:00",
-      "leverage": 8,
-      "tp1": 0.29530214285714285,
-      "tp2": 0.2865442857142857,
-      "tp3": 0.27778642857142855,
-      "stop_loss": 0.29530214285714285,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "UAI_USDT": {
       "direction": "SHORT",
       "entry_price": 0.23664,
@@ -83,29 +71,43 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "ARC_USDT": {
+    "CL3L_USDT": {
       "direction": "SHORT",
-      "entry_price": 0.04989,
-      "entry_time": "2026-10-27T15:25:46.818551+00:00",
+      "entry_price": 0.70418,
+      "entry_time": "2026-10-27T16:05:34.888493+00:00",
       "leverage": 7,
-      "tp1": 0.048125357142857136,
-      "tp2": 0.04636071428571428,
-      "tp3": 0.04459607142857142,
-      "stop_loss": 0.05165464285714286,
+      "tp1": 0.6833021428571429,
+      "tp2": 0.6624242857142857,
+      "tp3": 0.6415464285714285,
+      "stop_loss": 0.7250578571428572,
+      "tp1_reached": false,
+      "tp2_reached": false
+    },
+    "DGAI_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.7948,
+      "entry_time": "2026-10-27T16:05:34.888493+00:00",
+      "leverage": 7,
+      "tp1": 0.778735,
+      "tp2": 0.76267,
+      "tp3": 0.7466049999999999,
+      "stop_loss": 0.810865,
       "tp1_reached": false,
       "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 19,
+    "wins": 20,
     "draws": 9,
-    "losses": 34,
-    "total": 62
+    "losses": 35,
+    "total": 64
   },
   "closed_symbols": {
     "SKHY3S_USDT": "2026-10-27T14:20:39.743710+00:00",
     "PEPE5S_USDT": "2026-10-27T14:35:28.100927+00:00",
     "LAPTOP_USDT": "2026-10-27T14:55:34.758255+00:00",
-    "SOL5S_USDT": "2026-10-27T15:25:46.818551+00:00"
+    "SOL5S_USDT": "2026-10-27T15:25:46.818551+00:00",
+    "INTC3S_USDT": "2026-10-27T16:05:34.888493+00:00",
+    "ARC_USDT": "2026-10-27T16:05:34.888493+00:00"
   }
 }
