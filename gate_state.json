@@ -56,9 +56,9 @@
       "tp1": 0.029057,
       "tp2": 0.028464,
       "tp3": 0.027870999999999996,
-      "stop_loss": 0.02965,
+      "stop_loss": 0.029057,
       "tp1_reached": true,
-      "tp2_reached": false
+      "tp2_reached": true
     },
     "INTC3S_USDT": {
       "direction": "SHORT",
