@@ -58,18 +58,6 @@
       "stop_loss": 385.3654,
       "tp1_reached": false
     },
-    "SKHYNIX3L_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.05679,
-      "entry_time": "2026-10-27T01:10:35.051751+00:00",
-      "leverage": 8,
-      "tp1": 0.0579258,
-      "tp2": 0.0590616,
-      "tp3": 0.060197400000000005,
-      "stop_loss": 0.0556542,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "WET_USDT": {
       "direction": "LONG",
       "entry_price": 0.04911,
@@ -93,13 +81,25 @@
       "stop_loss": 0.115101,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "BMT_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.02965,
+      "entry_time": "2026-10-27T02:40:33.201272+00:00",
+      "leverage": 5,
+      "tp1": 0.029057,
+      "tp2": 0.028464,
+      "tp3": 0.027870999999999996,
+      "stop_loss": 0.030243,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 13,
     "draws": 6,
-    "losses": 21,
-    "total": 40
+    "losses": 22,
+    "total": 41
   },
   "history": [
     {
