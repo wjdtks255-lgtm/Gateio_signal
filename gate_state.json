@@ -35,17 +35,6 @@
       "stop_loss": 1.2535357142857142,
       "tp1_reached": false
     },
-    "ADA5L_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.01912,
-      "entry_time": "2026-10-27T04:10:36.794249+00:00",
-      "leverage": 7,
-      "tp1": 0.020167857142857144,
-      "tp2": 0.02121571428571429,
-      "tp3": 0.02226357142857143,
-      "stop_loss": 0.01807214285714286,
-      "tp1_reached": false
-    },
     "UNI3S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.26112,
@@ -93,18 +82,31 @@
       "stop_loss": 0.4585053571428571,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "INTC3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.30406,
+      "entry_time": "2026-10-27T10:10:36.785355+00:00",
+      "leverage": 8,
+      "tp1": 0.29530214285714285,
+      "tp2": 0.2865442857142857,
+      "tp3": 0.27778642857142855,
+      "stop_loss": 0.31281785714285715,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 18,
     "draws": 8,
-    "losses": 27,
-    "total": 53
+    "losses": 28,
+    "total": 54
   },
   "closed_symbols": {
     "VERONA_USDT": "2026-10-27T07:20:33.901266+00:00",
     "OSMO_USDT": "2026-10-27T07:20:33.901266+00:00",
     "BMT_USDT": "2026-10-27T07:35:32.282572+00:00",
-    "XAG3L_USDT": "2026-10-27T09:10:37.564267+00:00"
+    "XAG3L_USDT": "2026-10-27T09:10:37.564267+00:00",
+    "ADA5L_USDT": "2026-10-27T10:10:36.785355+00:00"
   }
 }
