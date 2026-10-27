@@ -13,18 +13,6 @@
       "tp2_reached": false,
       "tp3_reached": false
     },
-    "LAPTOP_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.04903,
-      "entry_time": "2026-10-26T21:40:32.782205+00:00",
-      "leverage": 5,
-      "tp1": 0.0480494,
-      "tp2": 0.047068799999999994,
-      "tp3": 0.046088199999999996,
-      "stop_loss": 0.0480494,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "TSLAX_USDT": {
       "direction": "LONG",
       "entry_price": 393.23,
@@ -93,17 +81,30 @@
       "stop_loss": 0.27173785714285714,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "OSMO_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.06424,
+      "entry_time": "2026-10-27T06:50:34.951757+00:00",
+      "leverage": 5,
+      "tp1": 0.06767392857142858,
+      "tp2": 0.07110785714285715,
+      "tp3": 0.07454178571428573,
+      "stop_loss": 0.06080607142857143,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 15,
+    "wins": 16,
     "draws": 8,
     "losses": 25,
-    "total": 48
+    "total": 49
   },
   "closed_symbols": {
     "WET_USDT": "2026-10-27T04:00:51.730111+00:00",
     "MAGMA_USDT": "2026-10-27T04:10:36.794249+00:00",
-    "INTC3S_USDT": "2026-10-27T06:20:34.222959+00:00"
+    "INTC3S_USDT": "2026-10-27T06:20:34.222959+00:00",
+    "LAPTOP_USDT": "2026-10-27T06:50:34.951757+00:00"
   }
 }
