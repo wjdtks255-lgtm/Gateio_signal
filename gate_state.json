@@ -32,8 +32,8 @@
       "tp1": 0.0480494,
       "tp2": 0.047068799999999994,
       "tp3": 0.046088199999999996,
-      "stop_loss": 0.050010599999999995,
-      "tp1_reached": false
+      "stop_loss": 0.04903,
+      "tp1_reached": true
     },
     "TSLAX_USDT": {
       "direction": "LONG",
@@ -90,9 +90,9 @@
       "tp1": 0.0265678,
       "tp2": 0.0260256,
       "tp3": 0.025483399999999996,
-      "stop_loss": 0.0276522,
-      "tp1_reached": false,
-      "tp2_reached": false
+      "stop_loss": 0.02711,
+      "tp1_reached": true,
+      "tp2_reached": true
     }
   },
   "stats": {
