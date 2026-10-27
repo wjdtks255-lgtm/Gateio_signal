@@ -287,10 +287,8 @@ def run_bot():
             is_tp2 = current_price <= tp2
             is_tp1 = current_price <= tp1
 
-        # 1. 스탑로스(트레일링 스탑 포함) 도달 체크
         if is_stopped:
             if tp2_reached:
-                # TP2까지 갔다가 밀려서 TP1 가격(스탑로스)에 도달한 경우 -> TP1 수익 확보 승리
                 msg = (
                     "<b>🎯 [트레일링 스탑 도달 - TP1 수익 확보 청산]</b>\n"
                     f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
@@ -303,7 +301,6 @@ def run_bot():
                 stats["wins"] += 1
                 stats["total"] += 1
             elif tp1_reached:
-                # TP1 갔다가 밀려서 본전에 도달한 경우 -> 무(본전)
                 msg = (
                     "<b>🏳️ [본전 청산 - 무승부]</b>\n"
                     f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
@@ -316,7 +313,6 @@ def run_bot():
                 stats["draws"] += 1
                 stats["total"] += 1
             else:
-                # 초기 손절가 도달 -> 패배
                 msg = (
                     "<b>🛑 [손절가(SL) 도달]</b>\n"
                     f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
@@ -334,7 +330,6 @@ def run_bot():
             slot_changed = True
             continue
 
-        # 2. TP3 최종 목표가 도달 (포지션 최종 회수 및 승리)
         if is_tp3:
             msg = (
                 "<b>🎯🎯🎯 [TP3 최종 목표가 도달 - 포지션 회수]</b>\n"
@@ -352,10 +347,9 @@ def run_bot():
             slot_changed = True
             continue
 
-        # 3. TP2 도달 (종료하지 않고 스탑로스를 TP1 가격으로 상향한 뒤 홀딩 유지)
         if is_tp2 and not tp2_reached:
             info["tp2_reached"] = True
-            info["stop_loss"] = tp1  # 스탑로스를 TP1 가격으로 상향 트레일링
+            info["stop_loss"] = tp1
             slot_changed = True
             
             msg = (
@@ -368,10 +362,9 @@ def run_bot():
             )
             alerts_to_send.append(msg)
 
-        # 4. TP1 도달 (본전 스탑 상향 및 홀딩 유지)
         if is_tp1 and not tp1_reached:
             info["tp1_reached"] = True
-            info["stop_loss"] = entry_price  # 본전으로 스탑로스 상향
+            info["stop_loss"] = entry_price
             slot_changed = True
             
             msg = (
@@ -384,7 +377,7 @@ def run_bot():
             )
             alerts_to_send.append(msg)
 
-    # 5. 새로운 신규 시그널 탐색
+    # 4. 새로운 신규 시그널 탐색
     if len(active_slots) < MAX_SLOTS:
         for t in raw_tickers:
             symbol = t.get("currency_pair", "")
@@ -425,6 +418,18 @@ def run_bot():
                         sl = last_price + (atr * 1.5)
                         reason = "1시간봉 완성 캔들 하방 돌파 확인 (ATR 가변형 모멘텀)"
 
+                    # 진입가 기준 가변 ATR 퍼센트 계산
+                    if direction == "LONG":
+                        tp1_pct = ((tp1 - last_price) / last_price) * 100
+                        tp2_pct = ((tp2 - last_price) / last_price) * 100
+                        tp3_pct = ((tp3 - last_price) / last_price) * 100
+                        sl_pct = ((sl - last_price) / last_price) * 100
+                    else:
+                        tp1_pct = ((last_price - tp1) / last_price) * 100
+                        tp2_pct = ((last_price - tp2) / last_price) * 100
+                        tp3_pct = ((last_price - tp3) / last_price) * 100
+                        sl_pct = ((last_price - sl) / last_price) * 100
+
                     active_slots[symbol] = {
                         "direction": direction,
                         "entry_price": last_price,
@@ -450,10 +455,10 @@ def run_bot():
                         f"• 추천 레버리지: <code>{leverage}배</code> (변동성 분석)\n"
                         f"• 탐색 이유: <code>{reason}</code>\n\n"
                         "<b>🎯 ATR 가변형 목표가 및 손절가</b>\n"
-                        f"• TP1 (+): <code>{tp1:.4f}</code>\n"
-                        f"• TP2 (+): <code>{tp2:.4f}</code>\n"
-                        f"• TP3 (+): <code>{tp3:.4f}</code>\n"
-                        f"• 손절가 SL (-): <code>{sl:.4f}</code>"
+                        f"• TP1: <code>{tp1:.4f} ({tp1_pct:+.2f}%)</code>\n"
+                        f"• TP2: <code>{tp2:.4f} ({tp2_pct:+.2f}%)</code>\n"
+                        f"• TP3: <code>{tp3:.4f} ({tp3_pct:+.2f}%)</code>\n"
+                        f"• 손절가 SL: <code>{sl:.4f} ({sl_pct:+.2f}%)</code>"
                     )
                     alerts_to_send.append(msg)
                     
@@ -462,7 +467,7 @@ def run_bot():
             except Exception:
                 continue
 
-    # 6. 알림 발송
+    # 5. 알림 발송
     if alerts_to_send:
         for alert in alerts_to_send:
             send_telegram_message(alert)
