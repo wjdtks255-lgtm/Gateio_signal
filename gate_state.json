@@ -8,8 +8,8 @@
       "tp1": 402.63480000000004,
       "tp2": 410.5296,
       "tp3": 418.42440000000005,
-      "stop_loss": 386.8452,
-      "tp1_reached": false,
+      "stop_loss": 394.74,
+      "tp1_reached": true,
       "tp2_reached": false,
       "tp3_reached": false
     },
@@ -21,8 +21,8 @@
       "tp1": 401.0946,
       "tp2": 408.9592,
       "tp3": 416.82380000000006,
-      "stop_loss": 385.3654,
-      "tp1_reached": false
+      "stop_loss": 393.23,
+      "tp1_reached": true
     },
     "SKHYNIX3S_USDT": {
       "direction": "SHORT",
