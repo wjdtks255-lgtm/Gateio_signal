@@ -27,11 +27,11 @@ def send_telegram_message(message):
         print(f"Error sending telegram message: {e}")
 
 def load_state():
-    """상태 파일 로드 시 승무패(wins, draws, losses) 통계 안전 보정"""
+    """상태 파일 로드 시 승무패 및 3시간 쿨다운(closed_symbols) 안전 보정"""
     state = {
         "active_slots": {},
         "stats": {"wins": 0, "draws": 0, "losses": 0, "total": 0},
-        "history": []
+        "closed_symbols": {}  # {종목명: 청산시간ISO} 형태의 쿨다운 관리 딕셔너리
     }
     if os.path.exists(STATE_FILE):
         try:
@@ -45,8 +45,12 @@ def load_state():
                         state["stats"]["draws"] = data["stats"].get("draws", 0)
                         state["stats"]["losses"] = data["stats"].get("losses", 0)
                         state["stats"]["total"] = data["stats"].get("total", 0)
-                    if "history" in data and isinstance(data["history"], list):
-                        state["history"] = data["history"]
+                    if "closed_symbols" in data:
+                        if isinstance(data["closed_symbols"], dict):
+                            state["closed_symbols"] = data["closed_symbols"]
+                        elif isinstance(data["closed_symbols"], list):
+                            # 구버전 리스트 형식 데이터 호환 처리
+                            state["closed_symbols"] = {sym: datetime.now(timezone.utc).isoformat() for sym in data["closed_symbols"]}
         except Exception as e:
             print(f"Error loading state file: {e}")
     return state
@@ -176,12 +180,27 @@ def run_bot():
     state = load_state()
     active_slots = state["active_slots"]
     stats = state["stats"]
-    history_list = state.setdefault("history", [])
+    closed_symbols = state.setdefault("closed_symbols", {})
     
+    now_utc = datetime.now(timezone.utc)
+
+    # 1. 만료된 쿨다운(3시간 경과) 종목은 정리
+    expired_symbols = []
+    for sym, closed_time_str in closed_symbols.items():
+        try:
+            closed_time = datetime.fromisoformat(closed_time_str)
+            if now_utc - closed_time >= timedelta(hours=3):
+                expired_symbols.append(sym)
+        except Exception:
+            expired_symbols.append(sym)
+            
+    for sym in expired_symbols:
+        del closed_symbols[sym]
+
     alerts_to_send = []
     slot_changed = False
 
-    # 1. 활성 슬롯 모니터링 (SL, TP1~3 체크)
+    # 2. 활성 슬롯 모니터링 (SL, TP1~3 체크)
     for symbol, info in list(active_slots.items()):
         current_price = tickers_dict.get(symbol, info["entry_price"])
         chart_link = f"https://www.gate.io/trade/{symbol}"
@@ -194,7 +213,6 @@ def run_bot():
         tp3 = info["tp3"]
         stop_loss = info["stop_loss"]
         tp1_reached = info.get("tp1_reached", False)
-        tp2_reached = info.get("tp2_reached", False)
         
         if direction == "LONG":
             is_stopped = current_price <= stop_loss
@@ -234,11 +252,13 @@ def run_bot():
                 stats["losses"] += 1
                 stats["total"] += 1
             
+            # 3시간 쿨다운 등록
+            closed_symbols[symbol] = now_utc.isoformat()
             del active_slots[symbol]
             slot_changed = True
             continue
 
-        # TP3 최종 목표가 도달 체크 (승리 및 최종 포지션 회수)
+        # TP3 도달 (승리)
         if is_tp3:
             msg = (
                 "<b>🎯🎯🎯 [TP3 최종 목표가 도달 - 포지션 회수]</b>\n"
@@ -251,26 +271,34 @@ def run_bot():
             alerts_to_send.append(msg)
             stats["wins"] += 1
             stats["total"] += 1
+            
+            # 3시간 쿨다운 등록
+            closed_symbols[symbol] = now_utc.isoformat()
             del active_slots[symbol]
             slot_changed = True
             continue
 
-        # TP2 도달 체크 (중간 익절 진행 - 포지션은 유지)
-        if is_tp2 and not tp2_reached:
-            info["tp2_reached"] = True
-            slot_changed = True
-            
+        # TP2 도달 (승리)
+        if is_tp2:
             msg = (
-                "<b>🎯🎯 [TP2 2차 목표가 도달]</b>\n"
+                "<b>🎯🎯 [TP2 2차 목표가 도달 - 포지션 회수]</b>\n"
                 f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
                 f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{entry_price}</code>\n"
                 f"• 도달 가격: <code>{current_price}</code>\n"
-                "• 조치: <code>중간 익절 진행 (TP3 최종 목표가를 향해 홀딩 유지)</code>"
+                "• 결과: <code>승리 (TP2 익절 마감)</code>"
             )
             alerts_to_send.append(msg)
+            stats["wins"] += 1
+            stats["total"] += 1
+            
+            # 3시간 쿨다운 등록
+            closed_symbols[symbol] = now_utc.isoformat()
+            del active_slots[symbol]
+            slot_changed = True
+            continue
 
-        # TP1 도달 체크 (본전 스탑 상향 - 포지션은 유지)
+        # TP1 도달 (본전 스탑 상향)
         if is_tp1 and not tp1_reached:
             info["tp1_reached"] = True
             info["stop_loss"] = entry_price
@@ -282,14 +310,19 @@ def run_bot():
                 f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
                 f"• 진입가: <code>{entry_price}</code>\n"
                 f"• 도달 가격: <code>{current_price}</code>\n"
-                "• 조치: <code>본전 스탑(Break-even) 전환 완료 (손실 원천 차단 및 홀딩 유지)</code>"
+                "• 조치: <code>본전 스탑(Break-even) 전환 완료 (손실 원천 차단)</code>"
             )
             alerts_to_send.append(msg)
 
-    # 2. 새로운 신규 시그널 탐색 및 슬롯 배정
+    # 3. 새로운 신규 시그널 탐색 및 슬롯 배정 (3시간 쿨다운 종목 제외)
     if len(active_slots) < MAX_SLOTS:
         for t in raw_tickers:
             symbol = t.get("currency_pair", "")
+            
+            # 활성 슬롯에 있거나 3시간 쿨다운 중인 종목은 건너뜀
+            if symbol in active_slots or symbol in closed_symbols:
+                continue
+                
             category = get_asset_category(symbol)
             display_name = f"[{category}] {symbol}"
             
@@ -301,7 +334,7 @@ def run_bot():
                 is_long_signal = (change_24h >= 4.5 and volume_24h > 80000)
                 is_short_signal = (change_24h <= -4.5 and volume_24h > 80000)
                 
-                if (is_long_signal or is_short_signal) and symbol not in active_slots:
+                if is_long_signal or is_short_signal:
                     direction = "LONG" if is_long_signal else "SHORT"
                     leverage = calculate_recommended_leverage(category, change_24h)
                     
@@ -312,18 +345,16 @@ def run_bot():
                         tp1, tp2, tp3, sl = last_price * 0.98, last_price * 0.96, last_price * 0.94, last_price * 1.02
                         reason = "1시간봉 저항선 도달 후 하락 다이버전스 발생 (하락 모멘텀)"
 
-                    now_iso = datetime.now(timezone.utc).isoformat()
                     active_slots[symbol] = {
                         "direction": direction,
                         "entry_price": last_price,
-                        "entry_time": now_iso,
+                        "entry_time": now_utc.isoformat(),
                         "leverage": leverage,
                         "tp1": tp1,
                         "tp2": tp2,
                         "tp3": tp3,
                         "stop_loss": sl,
-                        "tp1_reached": False,
-                        "tp2_reached": False
+                        "tp1_reached": False
                     }
                     slot_changed = True
                     
@@ -350,7 +381,7 @@ def run_bot():
             except Exception:
                 continue
 
-    # 3. 알림 발송
+    # 4. 알림 발송
     if alerts_to_send:
         for alert in alerts_to_send:
             send_telegram_message(alert)
