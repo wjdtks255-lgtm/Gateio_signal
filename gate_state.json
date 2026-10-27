@@ -84,22 +84,22 @@
     },
     "Q3S_USDT": {
       "direction": "SHORT",
-      "entry_price": 0.02711,
-      "entry_time": "2026-10-27T02:45:40.105827+00:00",
+      "entry_price": 0.02714,
+      "entry_time": "2026-10-27T03:00:53.771467+00:00",
       "leverage": 5,
-      "tp1": 0.0265678,
-      "tp2": 0.0260256,
-      "tp3": 0.025483399999999996,
-      "stop_loss": 0.02711,
-      "tp1_reached": true,
-      "tp2_reached": true
+      "tp1": 0.0265972,
+      "tp2": 0.0260544,
+      "tp3": 0.0255116,
+      "stop_loss": 0.0276828,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 13,
-    "draws": 7,
+    "draws": 8,
     "losses": 22,
-    "total": 42
+    "total": 43
   },
   "history": [
     {
