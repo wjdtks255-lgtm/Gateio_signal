@@ -8,8 +8,8 @@
       "tp1": 0.778735,
       "tp2": 0.76267,
       "tp3": 0.7466049999999999,
-      "stop_loss": 0.810865,
-      "tp1_reached": false,
+      "stop_loss": 0.7948,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "PEPE5S_USDT": {
