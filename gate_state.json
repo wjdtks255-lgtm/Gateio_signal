@@ -103,7 +103,5 @@
     "losses": 38,
     "total": 72
   },
-  "closed_symbols": {
-    "KGEN_USDT": "2026-10-28T02:25:30.206842+00:00"
-  }
+  "closed_symbols": {}
 }
