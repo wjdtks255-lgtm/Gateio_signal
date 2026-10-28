@@ -1,17 +1,5 @@
 {
   "active_slots": {
-    "SNDKG_USDT": {
-      "direction": "LONG",
-      "entry_price": 1338.68,
-      "entry_time": "2026-10-28T02:25:30.206816+00:00",
-      "leverage": 10,
-      "tp1": 1363.8189285714286,
-      "tp2": 1388.9578571428572,
-      "tp3": 1414.0967857142857,
-      "stop_loss": 1363.8189285714286,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "VERONA_USDT": {
       "direction": "SHORT",
       "entry_price": 0.11848,
@@ -95,16 +83,29 @@
       "stop_loss": 0.05466178571428571,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "UAI_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.24764,
+      "entry_time": "2026-10-28T20:25:35.047898+00:00",
+      "leverage": 10,
+      "tp1": 0.25944392857142856,
+      "tp2": 0.27124785714285715,
+      "tp3": 0.2830517857142857,
+      "stop_loss": 0.23583607142857144,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 28,
+    "wins": 29,
     "draws": 13,
     "losses": 44,
-    "total": 85
+    "total": 86
   },
   "closed_symbols": {
     "PEPE5S_USDT": "2026-10-28T18:00:55.719005+00:00",
-    "XAG3S_USDT": "2026-10-28T18:45:36.906965+00:00"
+    "XAG3S_USDT": "2026-10-28T18:45:36.906965+00:00",
+    "SNDKG_USDT": "2026-10-28T20:25:35.047920+00:00"
   }
 }
