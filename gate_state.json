@@ -56,8 +56,8 @@
       "tp1": 0.2621328571428571,
       "tp2": 0.2524557142857143,
       "tp3": 0.2427785714285714,
-      "stop_loss": 0.2814871428571429,
-      "tp1_reached": false,
+      "stop_loss": 0.27181,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "MAGMA_USDT": {
