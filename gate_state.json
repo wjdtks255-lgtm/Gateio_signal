@@ -56,8 +56,8 @@
       "tp1": 0.497425,
       "tp2": 0.52045,
       "tp3": 0.5434749999999999,
-      "stop_loss": 0.45137499999999997,
-      "tp1_reached": false,
+      "stop_loss": 0.4744,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "BLUR_USDT": {
