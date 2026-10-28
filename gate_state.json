@@ -80,8 +80,8 @@
       "tp1": 0.30707357142857145,
       "tp2": 0.31807714285714284,
       "tp3": 0.3290807142857143,
-      "stop_loss": 0.28506642857142855,
-      "tp1_reached": false,
+      "stop_loss": 0.29607,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "BCH_USDT": {
