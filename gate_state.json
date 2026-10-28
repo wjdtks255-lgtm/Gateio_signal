@@ -56,8 +56,8 @@
       "tp1": 0.00268025,
       "tp2": 0.0022055,
       "tp3": 0.00173075,
-      "stop_loss": 0.0036297499999999997,
-      "tp1_reached": false,
+      "stop_loss": 0.003155,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "SKHY3L_USDT": {
