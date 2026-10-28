@@ -1,17 +1,5 @@
 {
   "active_slots": {
-    "PEPE5S_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.003155,
-      "entry_time": "2026-10-27T23:56:44.466456+00:00",
-      "leverage": 5,
-      "tp1": 0.00268025,
-      "tp2": 0.0022055,
-      "tp3": 0.00173075,
-      "stop_loss": 0.00268025,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "SNDKG_USDT": {
       "direction": "LONG",
       "entry_price": 1338.68,
@@ -95,15 +83,28 @@
       "stop_loss": 0.6713610714285714,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "BANK_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.02737,
+      "entry_time": "2026-10-28T18:00:55.718984+00:00",
+      "leverage": 7,
+      "tp1": 0.026435714285714285,
+      "tp2": 0.02550142857142857,
+      "tp3": 0.024567142857142853,
+      "stop_loss": 0.028304285714285712,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 27,
+    "wins": 28,
     "draws": 13,
     "losses": 43,
-    "total": 83
+    "total": 84
   },
   "closed_symbols": {
-    "SPCX3L_USDT": "2026-10-28T15:50:36.553160+00:00"
+    "SPCX3L_USDT": "2026-10-28T15:50:36.553160+00:00",
+    "PEPE5S_USDT": "2026-10-28T18:00:55.719005+00:00"
   }
 }
