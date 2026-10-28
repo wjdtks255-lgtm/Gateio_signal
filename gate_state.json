@@ -12,18 +12,6 @@
       "tp1_reached": true,
       "tp2_reached": true
     },
-    "BCH_USDT": {
-      "direction": "LONG",
-      "entry_price": 295.78,
-      "entry_time": "2026-10-28T00:20:41.075213+00:00",
-      "leverage": 10,
-      "tp1": 301.33321428571423,
-      "tp2": 306.88642857142855,
-      "tp3": 312.4396428571428,
-      "stop_loss": 295.78,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "INTC3S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.27181,
@@ -45,18 +33,6 @@
       "tp2": 1388.9578571428572,
       "tp3": 1414.0967857142857,
       "stop_loss": 1338.68,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
-    "DOGE3L_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.07907,
-      "entry_time": "2026-10-28T07:25:30.816903+00:00",
-      "leverage": 7,
-      "tp1": 0.08052714285714287,
-      "tp2": 0.08198428571428572,
-      "tp3": 0.08344142857142858,
-      "stop_loss": 0.07907,
       "tp1_reached": true,
       "tp2_reached": false
     },
@@ -95,16 +71,42 @@
       "stop_loss": 0.08623321428571429,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "BNB3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.003076,
+      "entry_time": "2026-10-28T12:15:36.109997+00:00",
+      "leverage": 7,
+      "tp1": 0.003013964285714286,
+      "tp2": 0.002951928571428572,
+      "tp3": 0.0028898928571428574,
+      "stop_loss": 0.0031380357142857143,
+      "tp1_reached": false,
+      "tp2_reached": false
+    },
+    "DNA_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.1891,
+      "entry_time": "2026-10-28T12:15:36.109997+00:00",
+      "leverage": 10,
+      "tp1": 0.18390035714285713,
+      "tp2": 0.1787007142857143,
+      "tp3": 0.17350107142857144,
+      "stop_loss": 0.19429964285714285,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 27,
-    "draws": 10,
+    "draws": 12,
     "losses": 39,
-    "total": 76
+    "total": 78
   },
   "closed_symbols": {
     "DGAI_USDT": "2026-10-28T10:10:45.753556+00:00",
-    "COAI_USDT": "2026-10-28T11:25:28.917332+00:00"
+    "COAI_USDT": "2026-10-28T11:25:28.917332+00:00",
+    "BCH_USDT": "2026-10-28T12:15:36.110020+00:00",
+    "DOGE3L_USDT": "2026-10-28T12:15:36.110020+00:00"
   }
 }
