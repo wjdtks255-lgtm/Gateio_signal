@@ -48,18 +48,6 @@
       "tp1_reached": true,
       "tp2_reached": true
     },
-    "SKHY3L_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.29607,
-      "entry_time": "2026-10-27T23:56:44.466456+00:00",
-      "leverage": 7,
-      "tp1": 0.30707357142857145,
-      "tp2": 0.31807714285714284,
-      "tp3": 0.3290807142857143,
-      "stop_loss": 0.30707357142857145,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "BCH_USDT": {
       "direction": "LONG",
       "entry_price": 295.78,
@@ -95,13 +83,25 @@
       "stop_loss": 0.26863964285714287,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "COAI_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.257,
+      "entry_time": "2026-10-28T02:05:37.197424+00:00",
+      "leverage": 10,
+      "tp1": 0.26257142857142857,
+      "tp2": 0.2681428571428571,
+      "tp3": 0.27371428571428574,
+      "stop_loss": 0.25142857142857145,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 24,
+    "wins": 25,
     "draws": 9,
     "losses": 37,
-    "total": 70
+    "total": 71
   },
   "closed_symbols": {
     "TSLAG_USDT": "2026-10-27T23:56:44.466466+00:00",
@@ -109,6 +109,7 @@
     "SKHYNIX3S_USDT": "2026-10-27T23:56:44.466466+00:00",
     "DOOD_USDT": "2026-10-28T00:20:41.075232+00:00",
     "SKHYNIX3L_USDT": "2026-10-28T01:25:32.711880+00:00",
-    "CL3L_USDT": "2026-10-28T01:55:34.815457+00:00"
+    "CL3L_USDT": "2026-10-28T01:55:34.815457+00:00",
+    "SKHY3L_USDT": "2026-10-28T02:05:37.197449+00:00"
   }
 }
