@@ -32,8 +32,8 @@
       "tp1": 301.33321428571423,
       "tp2": 306.88642857142855,
       "tp3": 312.4396428571428,
-      "stop_loss": 290.2267857142857,
-      "tp1_reached": false,
+      "stop_loss": 295.78,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "INTC3S_USDT": {
