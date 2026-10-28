@@ -84,15 +84,15 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "SPCX3L_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.2986,
-      "entry_time": "2026-10-28T14:40:36.800492+00:00",
-      "leverage": 5,
-      "tp1": 0.2907464285714285,
-      "tp2": 0.2828928571428571,
-      "tp3": 0.2750392857142857,
-      "stop_loss": 0.30645357142857144,
+    "XAG3S_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.68456,
+      "entry_time": "2026-10-28T15:50:36.553139+00:00",
+      "leverage": 12,
+      "tp1": 0.6977589285714285,
+      "tp2": 0.7109578571428571,
+      "tp3": 0.7241567857142857,
+      "stop_loss": 0.6713610714285714,
       "tp1_reached": false,
       "tp2_reached": false
     }
@@ -100,12 +100,13 @@
   "stats": {
     "wins": 27,
     "draws": 13,
-    "losses": 42,
-    "total": 82
+    "losses": 43,
+    "total": 83
   },
   "closed_symbols": {
     "INTC3S_USDT": "2026-10-28T13:35:32.420888+00:00",
     "BNB3S_USDT": "2026-10-28T13:45:40.263018+00:00",
-    "PEARL_USDT": "2026-10-28T14:40:36.800513+00:00"
+    "PEARL_USDT": "2026-10-28T14:40:36.800513+00:00",
+    "SPCX3L_USDT": "2026-10-28T15:50:36.553160+00:00"
   }
 }
