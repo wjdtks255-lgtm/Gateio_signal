@@ -60,18 +60,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "PEPE5S_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.001734,
-      "entry_time": "2026-10-29T20:45:41.371835+00:00",
-      "leverage": 7,
-      "tp1": 0.0012753214285714286,
-      "tp2": 0.0008166428571428573,
-      "tp3": 0.0003579642857142859,
-      "stop_loss": 0.0021926785714285715,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "SNDKG_USDT": {
       "direction": "SHORT",
       "entry_price": 1288.27,
@@ -95,19 +83,32 @@
       "stop_loss": 0.4465239285714286,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "HNT_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.3558,
+      "entry_time": "2026-10-29T22:10:41.376929+00:00",
+      "leverage": 7,
+      "tp1": 0.3467571428571429,
+      "tp2": 0.3377142857142857,
+      "tp3": 0.32867142857142856,
+      "stop_loss": 0.36484285714285714,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 39,
     "draws": 16,
-    "losses": 55,
-    "total": 110
+    "losses": 56,
+    "total": 111
   },
   "closed_symbols": {
     "GOOGLG_USDT": "2026-10-29T20:40:45.907706+00:00",
     "KAT_USDT": "2026-10-29T20:45:41.371853+00:00",
     "ETHW_USDT": "2026-10-29T20:45:41.371853+00:00",
     "KGEN_USDT": "2026-10-29T22:00:48.834895+00:00",
-    "SKHYNIX3L_USDT": "2026-10-29T22:05:35.618905+00:00"
+    "SKHYNIX3L_USDT": "2026-10-29T22:05:35.618905+00:00",
+    "PEPE5S_USDT": "2026-10-29T22:10:41.376950+00:00"
   }
 }
