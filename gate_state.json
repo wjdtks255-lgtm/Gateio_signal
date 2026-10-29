@@ -48,18 +48,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "WLD3S_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.70257,
-      "entry_time": "2026-10-29T12:45:39.362959+00:00",
-      "leverage": 10,
-      "tp1": 0.7401578571428571,
-      "tp2": 0.7777457142857143,
-      "tp3": 0.8153335714285714,
-      "stop_loss": 0.664982142857143,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "SKHY3S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.29103,
@@ -95,20 +83,32 @@
       "stop_loss": 0.026885,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "ETHW_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.2345,
+      "entry_time": "2026-10-29T14:40:42.212034+00:00",
+      "leverage": 7,
+      "tp1": 0.22888571428571428,
+      "tp2": 0.22327142857142857,
+      "tp3": 0.21765714285714285,
+      "stop_loss": 0.2401142857142857,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 36,
     "draws": 16,
-    "losses": 51,
-    "total": 103
+    "losses": 52,
+    "total": 104
   },
   "closed_symbols": {
-    "BEAT_USDT": "2026-10-29T11:35:38.921787+00:00",
     "BANK_USDT": "2026-10-29T12:05:39.223799+00:00",
     "OSMO_USDT": "2026-10-29T12:45:39.362980+00:00",
     "INTC3S_USDT": "2026-10-29T13:05:38.432588+00:00",
     "HYPE_USDT": "2026-10-29T13:20:40.771915+00:00",
-    "UAI_USDT": "2026-10-29T14:25:38.280199+00:00"
+    "UAI_USDT": "2026-10-29T14:25:38.280199+00:00",
+    "WLD3S_USDT": "2026-10-29T14:40:42.212058+00:00"
   }
 }
