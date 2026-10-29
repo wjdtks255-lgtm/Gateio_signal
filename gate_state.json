@@ -60,18 +60,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "COAI_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.2451,
-      "entry_time": "2026-10-29T07:50:40.592036+00:00",
-      "leverage": 7,
-      "tp1": 0.24065357142857144,
-      "tp2": 0.2362071428571429,
-      "tp3": 0.23176071428571432,
-      "stop_loss": 0.24954642857142859,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "INTC3S_USDT": {
       "direction": "LONG",
       "entry_price": 0.29388,
@@ -95,16 +83,29 @@
       "stop_loss": 0.041160357142857144,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "BEAT_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.10268,
+      "entry_time": "2026-10-29T11:15:41.763538+00:00",
+      "leverage": 5,
+      "tp1": 0.10785285714285714,
+      "tp2": 0.11302571428571427,
+      "tp3": 0.11819857142857142,
+      "stop_loss": 0.09750714285714285,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 32,
     "draws": 16,
-    "losses": 48,
-    "total": 96
+    "losses": 49,
+    "total": 97
   },
   "closed_symbols": {
     "AIA_USDT": "2026-10-29T10:20:40.816081+00:00",
-    "APT_USDT": "2026-10-29T10:55:33.214568+00:00"
+    "APT_USDT": "2026-10-29T10:55:33.214568+00:00",
+    "COAI_USDT": "2026-10-29T11:15:41.763557+00:00"
   }
 }
