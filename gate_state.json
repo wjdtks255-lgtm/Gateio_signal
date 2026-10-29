@@ -24,18 +24,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "BMT_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.02615,
-      "entry_time": "2026-10-29T14:25:38.280174+00:00",
-      "leverage": 5,
-      "tp1": 0.025415,
-      "tp2": 0.02468,
-      "tp3": 0.023945,
-      "stop_loss": 0.025415,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "AMZNX_USDT": {
       "direction": "SHORT",
       "entry_price": 232.16,
@@ -95,17 +83,30 @@
       "stop_loss": 0.36484285714285714,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "CASHCAT_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.09101,
+      "entry_time": "2026-10-29T23:55:29.674855+00:00",
+      "leverage": 5,
+      "tp1": 0.08550178571428571,
+      "tp2": 0.07999357142857143,
+      "tp3": 0.07448535714285714,
+      "stop_loss": 0.09651821428571428,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 39,
+    "wins": 40,
     "draws": 16,
     "losses": 56,
-    "total": 111
+    "total": 112
   },
   "closed_symbols": {
     "KGEN_USDT": "2026-10-29T22:00:48.834895+00:00",
     "SKHYNIX3L_USDT": "2026-10-29T22:05:35.618905+00:00",
-    "PEPE5S_USDT": "2026-10-29T22:10:41.376950+00:00"
+    "PEPE5S_USDT": "2026-10-29T22:10:41.376950+00:00",
+    "BMT_USDT": "2026-10-29T23:55:29.674874+00:00"
   }
 }
