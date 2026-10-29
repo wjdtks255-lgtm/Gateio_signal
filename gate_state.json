@@ -20,9 +20,9 @@
       "tp1": 0.08028678571428571,
       "tp2": 0.07731357142857143,
       "tp3": 0.07434035714285714,
-      "stop_loss": 0.08326,
+      "stop_loss": 0.08028678571428571,
       "tp1_reached": true,
-      "tp2_reached": false
+      "tp2_reached": true
     },
     "DNA_USDT": {
       "direction": "SHORT",
