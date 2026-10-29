@@ -1,17 +1,5 @@
 {
   "active_slots": {
-    "SKHYNIX3L_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.07284,
-      "entry_time": "2026-10-29T01:35:35.918793+00:00",
-      "leverage": 8,
-      "tp1": 0.0807375,
-      "tp2": 0.08863500000000002,
-      "tp3": 0.09653250000000002,
-      "stop_loss": 0.0649425,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "XAG3L_USDT": {
       "direction": "SHORT",
       "entry_price": 0.03988,
@@ -95,18 +83,31 @@
       "stop_loss": 1323.0110714285713,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "INTC3S_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.48689,
+      "entry_time": "2026-10-29T22:05:35.618884+00:00",
+      "leverage": 8,
+      "tp1": 0.5272560714285714,
+      "tp2": 0.5676221428571429,
+      "tp3": 0.6079882142857143,
+      "stop_loss": 0.4465239285714286,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 39,
     "draws": 16,
-    "losses": 54,
-    "total": 109
+    "losses": 55,
+    "total": 110
   },
   "closed_symbols": {
     "GOOGLG_USDT": "2026-10-29T20:40:45.907706+00:00",
     "KAT_USDT": "2026-10-29T20:45:41.371853+00:00",
     "ETHW_USDT": "2026-10-29T20:45:41.371853+00:00",
-    "KGEN_USDT": "2026-10-29T22:00:48.834895+00:00"
+    "KGEN_USDT": "2026-10-29T22:00:48.834895+00:00",
+    "SKHYNIX3L_USDT": "2026-10-29T22:05:35.618905+00:00"
   }
 }
