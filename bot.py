@@ -193,8 +193,6 @@ def build_slot_status_message(active_slots, tickers_dict, stats):
             chart_link = f"https://www.gate.io/trade/{sym}"
             category = get_asset_category(sym)
             dir_icon = "🟢" if direction == "LONG" else "🔴"
-            
-            # [복원] 카테고리 분류(주식, 코인, 원자재, 외환, 지수)를 다시 명확하게 표시
             display_name = f"[{category}] {sym}"
             
             if info.get("tp2_reached", False):
@@ -267,6 +265,7 @@ def manage_positions(active_slots, tickers_dict, stats, closed_symbols):
             is_tp2 = current_price <= tp2
             is_tp3 = current_price <= tp3
 
+        # 장기 체류(18시간 이상)하면서 수익권(+0.5% 이상)인 경우 슬롯 회전을 위해 강제 익절 청산
         holding_hours = (now_utc - entry_time).total_seconds() / 3600
         if holding_hours >= MAX_HOLDING_HOURS and current_profit_pct >= 0.5:
             msg = (
@@ -478,7 +477,7 @@ def run_bot():
     expired_symbols = [sym for sym, t_str in closed_symbols.items()
                        if (now_utc - datetime.fromisoformat(t_str)) >= timedelta(hours=3)]
     for sym in expired_symbols:
-        closed_symbols.pop(sym, None)
+        del closed_symbols[sym]
 
     # 1. 포지션 관리 및 청산 체크 (시간 제한 회전 청산 포함)
     changed_positions = manage_positions(active_slots, tickers_dict, stats, closed_symbols)
