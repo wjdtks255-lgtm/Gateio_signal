@@ -68,8 +68,8 @@
       "tp1": 0.025415,
       "tp2": 0.02468,
       "tp3": 0.023945,
-      "stop_loss": 0.026885,
-      "tp1_reached": false,
+      "stop_loss": 0.02615,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "ETHW_USDT": {
