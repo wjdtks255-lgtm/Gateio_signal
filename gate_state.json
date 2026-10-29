@@ -72,18 +72,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "INTC3S_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.29889,
-      "entry_time": "2026-10-29T02:30:46.336986+00:00",
-      "leverage": 8,
-      "tp1": 0.31305321428571425,
-      "tp2": 0.3272164285714285,
-      "tp3": 0.34137964285714284,
-      "stop_loss": 0.2847267857142857,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "GOOGLG_USDT": {
       "direction": "SHORT",
       "entry_price": 293.69,
@@ -95,16 +83,29 @@
       "stop_loss": 301.33035714285717,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "AIA_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.07558,
+      "entry_time": "2026-10-29T05:25:36.108245+00:00",
+      "leverage": 10,
+      "tp1": 0.07828107142857142,
+      "tp2": 0.08098214285714285,
+      "tp3": 0.08368321428571428,
+      "stop_loss": 0.07287892857142857,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 31,
     "draws": 15,
-    "losses": 45,
-    "total": 91
+    "losses": 46,
+    "total": 92
   },
   "closed_symbols": {
     "NIL_USDT": "2026-10-29T02:30:46.337005+00:00",
-    "DNA_USDT": "2026-10-29T02:35:37.274027+00:00"
+    "DNA_USDT": "2026-10-29T02:35:37.274027+00:00",
+    "INTC3S_USDT": "2026-10-29T05:25:36.108265+00:00"
   }
 }
