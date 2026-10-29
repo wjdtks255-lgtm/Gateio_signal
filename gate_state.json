@@ -44,8 +44,8 @@
       "tp1": 0.25944392857142856,
       "tp2": 0.27124785714285715,
       "tp3": 0.2830517857142857,
-      "stop_loss": 0.23583607142857144,
-      "tp1_reached": false,
+      "stop_loss": 0.24764,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "SKHYNIX3L_USDT": {
