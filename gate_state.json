@@ -8,9 +8,9 @@
       "tp1": 0.25944392857142856,
       "tp2": 0.27124785714285715,
       "tp3": 0.2830517857142857,
-      "stop_loss": 0.24764,
+      "stop_loss": 0.25944392857142856,
       "tp1_reached": true,
-      "tp2_reached": false
+      "tp2_reached": true
     },
     "SKHYNIX3L_USDT": {
       "direction": "LONG",
