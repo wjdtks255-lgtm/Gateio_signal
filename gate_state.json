@@ -103,7 +103,5 @@
     "losses": 52,
     "total": 104
   },
-  "closed_symbols": {
-    "WLD3S_USDT": "2026-10-29T14:40:42.212058+00:00"
-  }
+  "closed_symbols": {}
 }
