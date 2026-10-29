@@ -8,8 +8,8 @@
       "tp1": 0.026435714285714285,
       "tp2": 0.02550142857142857,
       "tp3": 0.024567142857142853,
-      "stop_loss": 0.028304285714285712,
-      "tp1_reached": false,
+      "stop_loss": 0.02737,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "OSMO_USDT": {
