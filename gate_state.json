@@ -80,8 +80,8 @@
       "tp1": 88.03,
       "tp2": 89.86,
       "tp3": 91.69,
-      "stop_loss": 84.37,
-      "tp1_reached": false,
+      "stop_loss": 86.2,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "XAG3S_USDT": {
