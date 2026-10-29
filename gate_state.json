@@ -32,8 +32,8 @@
       "tp1": 286.0496428571428,
       "tp2": 278.4092857142857,
       "tp3": 270.76892857142855,
-      "stop_loss": 301.33035714285717,
-      "tp1_reached": false,
+      "stop_loss": 293.69,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "XAG3L_USDT": {
