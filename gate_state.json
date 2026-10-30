@@ -56,8 +56,8 @@
       "tp1": 0.05249428571428571,
       "tp2": 0.048478571428571426,
       "tp3": 0.04446285714285714,
-      "stop_loss": 0.06052571428571429,
-      "tp1_reached": false,
+      "stop_loss": 0.05651,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "DOOD_USDT": {
