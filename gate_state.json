@@ -44,8 +44,8 @@
       "tp1": 0.0005833714285714285,
       "tp2": 0.0005613428571428571,
       "tp3": 0.0005393142857142857,
-      "stop_loss": 0.0006274285714285714,
-      "tp1_reached": false,
+      "stop_loss": 0.0006054,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "SNDKG_USDT": {
