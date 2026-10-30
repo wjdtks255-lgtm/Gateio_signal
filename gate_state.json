@@ -32,8 +32,8 @@
       "tp1": 226.12785714285715,
       "tp2": 220.09571428571428,
       "tp3": 214.06357142857144,
-      "stop_loss": 238.19214285714284,
-      "tp1_reached": false,
+      "stop_loss": 232.16,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "BOME_USDT": {
