@@ -72,18 +72,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "LAPTOP_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.04235,
-      "entry_time": "2026-10-30T04:55:34.792734+00:00",
-      "leverage": 10,
-      "tp1": 0.04176928571428571,
-      "tp2": 0.04118857142857142,
-      "tp3": 0.04060785714285714,
-      "stop_loss": 0.04235,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "BMT_USDT": {
       "direction": "SHORT",
       "entry_price": 0.02362,
@@ -95,13 +83,27 @@
       "stop_loss": 0.0245725,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "SKHYNIX3L_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.05651,
+      "entry_time": "2026-10-30T11:35:36.446976+00:00",
+      "leverage": 8,
+      "tp1": 0.05249428571428571,
+      "tp2": 0.048478571428571426,
+      "tp3": 0.04446285714285714,
+      "stop_loss": 0.06052571428571429,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 42,
-    "draws": 18,
+    "draws": 19,
     "losses": 56,
-    "total": 116
+    "total": 117
   },
-  "closed_symbols": {}
+  "closed_symbols": {
+    "LAPTOP_USDT": "2026-10-30T11:35:36.446987+00:00"
+  }
 }
