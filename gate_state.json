@@ -103,7 +103,5 @@
     "losses": 56,
     "total": 116
   },
-  "closed_symbols": {
-    "XAG3S_USDT": "2026-10-30T06:10:40.277818+00:00"
-  }
+  "closed_symbols": {}
 }
