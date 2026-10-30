@@ -32,8 +32,8 @@
       "tp1": 0.5272560714285714,
       "tp2": 0.5676221428571429,
       "tp3": 0.6079882142857143,
-      "stop_loss": 0.4465239285714286,
-      "tp1_reached": false,
+      "stop_loss": 0.48689,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "CASHCAT_USDT": {
