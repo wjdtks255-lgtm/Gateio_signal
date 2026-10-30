@@ -36,18 +36,6 @@
       "tp1_reached": true,
       "tp2_reached": false
     },
-    "BOME_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.0006054,
-      "entry_time": "2026-10-29T20:45:41.371835+00:00",
-      "leverage": 7,
-      "tp1": 0.0005833714285714285,
-      "tp2": 0.0005613428571428571,
-      "tp3": 0.0005393142857142857,
-      "stop_loss": 0.0006054,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "SNDKG_USDT": {
       "direction": "SHORT",
       "entry_price": 1288.27,
@@ -95,15 +83,28 @@
       "stop_loss": 1.7158214285714285e-05,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "ZEC3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.0127,
+      "entry_time": "2026-10-30T03:40:41.681067+00:00",
+      "leverage": 5,
+      "tp1": 0.011287857142857143,
+      "tp2": 0.009875714285714286,
+      "tp3": 0.008463571428571428,
+      "stop_loss": 0.014112142857142856,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 40,
-    "draws": 17,
+    "draws": 18,
     "losses": 56,
-    "total": 113
+    "total": 114
   },
   "closed_symbols": {
-    "HNT_USDT": "2026-10-30T02:25:41.821012+00:00"
+    "HNT_USDT": "2026-10-30T02:25:41.821012+00:00",
+    "BOME_USDT": "2026-10-30T03:40:41.681084+00:00"
   }
 }
