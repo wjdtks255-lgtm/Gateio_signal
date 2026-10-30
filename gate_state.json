@@ -8,9 +8,9 @@
       "tp1": 0.7559114285714286,
       "tp2": 0.7806828571428571,
       "tp3": 0.8054542857142857,
-      "stop_loss": 0.73114,
+      "stop_loss": 0.7559114285714286,
       "tp1_reached": true,
-      "tp2_reached": false
+      "tp2_reached": true
     },
     "AMZNX_USDT": {
       "direction": "SHORT",
