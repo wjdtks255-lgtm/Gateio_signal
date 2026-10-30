@@ -36,18 +36,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "LRCXG_USDT": {
-      "direction": "SHORT",
-      "entry_price": 240.24,
-      "entry_time": "2026-10-30T15:10:43.539204+00:00",
-      "leverage": 7,
-      "tp1": 235.75178571428572,
-      "tp2": 231.26357142857145,
-      "tp3": 226.77535714285716,
-      "stop_loss": 240.24,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "PEPE5S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.001196,
@@ -95,17 +83,30 @@
       "stop_loss": 235.78642857142856,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "CRCL3L_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.1592,
+      "entry_time": "2026-10-30T21:20:39.347110+00:00",
+      "leverage": 5,
+      "tp1": 0.14813214285714285,
+      "tp2": 0.1370642857142857,
+      "tp3": 0.12599642857142856,
+      "stop_loss": 0.17026785714285717,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 46,
-    "draws": 20,
+    "draws": 21,
     "losses": 58,
-    "total": 124
+    "total": 125
   },
   "closed_symbols": {
     "CASHCAT_USDT": "2026-10-30T18:30:49.622636+00:00",
     "ZEC3S_USDT": "2026-10-30T18:30:49.622636+00:00",
-    "RATS_USDT": "2026-10-30T20:30:46.053816+00:00"
+    "RATS_USDT": "2026-10-30T20:30:46.053816+00:00",
+    "LRCXG_USDT": "2026-10-30T21:20:39.347130+00:00"
   }
 }
