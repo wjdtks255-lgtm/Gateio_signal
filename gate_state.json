@@ -72,18 +72,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "HNT_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.3558,
-      "entry_time": "2026-10-29T22:10:41.376929+00:00",
-      "leverage": 7,
-      "tp1": 0.3467571428571429,
-      "tp2": 0.3377142857142857,
-      "tp3": 0.32867142857142856,
-      "stop_loss": 0.3558,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "CASHCAT_USDT": {
       "direction": "SHORT",
       "entry_price": 0.09101,
@@ -95,15 +83,28 @@
       "stop_loss": 0.09651821428571428,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "RATS_USDT": {
+      "direction": "SHORT",
+      "entry_price": 1.6435e-05,
+      "entry_time": "2026-10-30T02:25:41.820994+00:00",
+      "leverage": 7,
+      "tp1": 1.5711785714285717e-05,
+      "tp2": 1.4988571428571432e-05,
+      "tp3": 1.4265357142857148e-05,
+      "stop_loss": 1.7158214285714285e-05,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 40,
-    "draws": 16,
+    "draws": 17,
     "losses": 56,
-    "total": 112
+    "total": 113
   },
   "closed_symbols": {
-    "BMT_USDT": "2026-10-29T23:55:29.674874+00:00"
+    "BMT_USDT": "2026-10-29T23:55:29.674874+00:00",
+    "HNT_USDT": "2026-10-30T02:25:41.821012+00:00"
   }
 }
