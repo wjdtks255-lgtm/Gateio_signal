@@ -1,17 +1,5 @@
 {
   "active_slots": {
-    "SNDKG_USDT": {
-      "direction": "SHORT",
-      "entry_price": 1288.27,
-      "entry_time": "2026-10-29T22:00:48.834872+00:00",
-      "leverage": 7,
-      "tp1": 1253.5289285714287,
-      "tp2": 1218.787857142857,
-      "tp3": 1184.0467857142858,
-      "stop_loss": 1253.5289285714287,
-      "tp1_reached": true,
-      "tp2_reached": true
-    },
     "CASHCAT_USDT": {
       "direction": "SHORT",
       "entry_price": 0.09101,
@@ -95,17 +83,30 @@
       "stop_loss": 244.7282142857143,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "PEPE5S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.001196,
+      "entry_time": "2026-10-30T15:40:40.961128+00:00",
+      "leverage": 5,
+      "tp1": 0.0008021428571428572,
+      "tp2": 0.00040828571428571444,
+      "tp3": 1.4428571428571702e-05,
+      "stop_loss": 0.0015898571428571429,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 43,
+    "wins": 44,
     "draws": 20,
     "losses": 57,
-    "total": 120
+    "total": 121
   },
   "closed_symbols": {
     "AMZNX_USDT": "2026-10-30T13:30:49.450474+00:00",
     "INTC3S_USDT": "2026-10-30T13:35:34.161421+00:00",
-    "ETH3S_USDT": "2026-10-30T15:10:43.539232+00:00"
+    "ETH3S_USDT": "2026-10-30T15:10:43.539232+00:00",
+    "SNDKG_USDT": "2026-10-30T15:40:40.961148+00:00"
   }
 }
