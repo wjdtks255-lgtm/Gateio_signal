@@ -84,15 +84,15 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "ETH3S_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.17229,
-      "entry_time": "2026-10-30T13:35:34.161401+00:00",
-      "leverage": 5,
-      "tp1": 0.17828464285714285,
-      "tp2": 0.1842792857142857,
-      "tp3": 0.19027392857142858,
-      "stop_loss": 0.16629535714285715,
+    "LRCXG_USDT": {
+      "direction": "SHORT",
+      "entry_price": 240.24,
+      "entry_time": "2026-10-30T15:10:43.539204+00:00",
+      "leverage": 7,
+      "tp1": 235.75178571428572,
+      "tp2": 231.26357142857145,
+      "tp3": 226.77535714285716,
+      "stop_loss": 244.7282142857143,
       "tp1_reached": false,
       "tp2_reached": false
     }
@@ -100,11 +100,12 @@
   "stats": {
     "wins": 43,
     "draws": 20,
-    "losses": 56,
-    "total": 119
+    "losses": 57,
+    "total": 120
   },
   "closed_symbols": {
     "AMZNX_USDT": "2026-10-30T13:30:49.450474+00:00",
-    "INTC3S_USDT": "2026-10-30T13:35:34.161421+00:00"
+    "INTC3S_USDT": "2026-10-30T13:35:34.161421+00:00",
+    "ETH3S_USDT": "2026-10-30T15:10:43.539232+00:00"
   }
 }
