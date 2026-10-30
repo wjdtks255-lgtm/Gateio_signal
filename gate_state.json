@@ -56,8 +56,8 @@
       "tp1": 1.5711785714285717e-05,
       "tp2": 1.4988571428571432e-05,
       "tp3": 1.4265357142857148e-05,
-      "stop_loss": 1.7158214285714285e-05,
-      "tp1_reached": false,
+      "stop_loss": 1.6435e-05,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "ZEC3S_USDT": {
