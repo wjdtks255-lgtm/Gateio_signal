@@ -1,17 +1,5 @@
 {
   "active_slots": {
-    "CASHCAT_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.09101,
-      "entry_time": "2026-10-29T23:55:29.674855+00:00",
-      "leverage": 5,
-      "tp1": 0.08550178571428571,
-      "tp2": 0.07999357142857143,
-      "tp3": 0.07448535714285714,
-      "stop_loss": 0.09651821428571428,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "RATS_USDT": {
       "direction": "SHORT",
       "entry_price": 1.6435e-05,
@@ -23,18 +11,6 @@
       "stop_loss": 1.5711785714285717e-05,
       "tp1_reached": true,
       "tp2_reached": true
-    },
-    "ZEC3S_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.0127,
-      "entry_time": "2026-10-30T03:40:41.681067+00:00",
-      "leverage": 5,
-      "tp1": 0.011287857142857143,
-      "tp2": 0.009875714285714286,
-      "tp3": 0.008463571428571428,
-      "stop_loss": 0.014112142857142856,
-      "tp1_reached": false,
-      "tp2_reached": false
     },
     "BMT_USDT": {
       "direction": "SHORT",
@@ -95,15 +71,41 @@
       "stop_loss": 0.0015898571428571429,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "BTC_USDT": {
+      "direction": "SHORT",
+      "entry_price": 76873.8,
+      "entry_time": "2026-10-30T18:30:49.622619+00:00",
+      "leverage": 10,
+      "tp1": 76078.99285714286,
+      "tp2": 75284.18571428572,
+      "tp3": 74489.37857142858,
+      "stop_loss": 77668.60714285714,
+      "tp1_reached": false,
+      "tp2_reached": false
+    },
+    "BNB5L_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.015231,
+      "entry_time": "2026-10-30T18:30:49.622619+00:00",
+      "leverage": 5,
+      "tp1": 0.014514321428571429,
+      "tp2": 0.013797642857142857,
+      "tp3": 0.013080964285714286,
+      "stop_loss": 0.01594767857142857,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 44,
+    "wins": 45,
     "draws": 20,
-    "losses": 57,
-    "total": 121
+    "losses": 58,
+    "total": 123
   },
   "closed_symbols": {
-    "SNDKG_USDT": "2026-10-30T15:40:40.961148+00:00"
+    "SNDKG_USDT": "2026-10-30T15:40:40.961148+00:00",
+    "CASHCAT_USDT": "2026-10-30T18:30:49.622636+00:00",
+    "ZEC3S_USDT": "2026-10-30T18:30:49.622636+00:00"
   }
 }
