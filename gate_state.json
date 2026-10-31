@@ -80,8 +80,8 @@
       "tp1": 0.03865821428571429,
       "tp2": 0.03747642857142857,
       "tp3": 0.03629464285714286,
-      "stop_loss": 0.04102178571428571,
-      "tp1_reached": false,
+      "stop_loss": 0.03984,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "INX_USDT": {
