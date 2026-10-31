@@ -103,7 +103,5 @@
     "losses": 62,
     "total": 133
   },
-  "closed_symbols": {
-    "LINK_USDT": "2026-10-31T04:35:34.581765+00:00"
-  }
+  "closed_symbols": {}
 }
