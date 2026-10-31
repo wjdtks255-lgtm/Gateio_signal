@@ -48,18 +48,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "LINK_USDT": {
-      "direction": "LONG",
-      "entry_price": 11.642,
-      "entry_time": "2026-10-31T00:40:38.865004+00:00",
-      "leverage": 5,
-      "tp1": 11.885428571428571,
-      "tp2": 12.128857142857141,
-      "tp3": 12.372285714285713,
-      "stop_loss": 11.398571428571428,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "ETH3S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.16663,
@@ -95,17 +83,30 @@
       "stop_loss": 0.5954160714285714,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "UAI_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.27452,
+      "entry_time": "2026-10-31T04:35:34.581743+00:00",
+      "leverage": 10,
+      "tp1": 0.2813375,
+      "tp2": 0.288155,
+      "tp3": 0.2949725,
+      "stop_loss": 0.26770249999999995,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 48,
     "draws": 23,
-    "losses": 61,
-    "total": 132
+    "losses": 62,
+    "total": 133
   },
   "closed_symbols": {
     "DOOD_USDT": "2026-10-31T01:55:36.918412+00:00",
     "KAIA_USDT": "2026-10-31T02:30:48.998557+00:00",
-    "TRX_GUSD": "2026-10-31T02:55:32.470859+00:00"
+    "TRX_GUSD": "2026-10-31T02:55:32.470859+00:00",
+    "LINK_USDT": "2026-10-31T04:35:34.581765+00:00"
   }
 }
