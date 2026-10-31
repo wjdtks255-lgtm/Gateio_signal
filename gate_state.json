@@ -84,27 +84,28 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "WET_USDT": {
+    "LINK_USDT": {
       "direction": "LONG",
-      "entry_price": 0.05411,
-      "entry_time": "2026-10-31T00:15:35.121432+00:00",
-      "leverage": 7,
-      "tp1": 0.05510964285714286,
-      "tp2": 0.056109285714285716,
-      "tp3": 0.057108928571428574,
-      "stop_loss": 0.05411,
-      "tp1_reached": true,
+      "entry_price": 11.642,
+      "entry_time": "2026-10-31T00:40:38.865004+00:00",
+      "leverage": 5,
+      "tp1": 11.885428571428571,
+      "tp2": 12.128857142857141,
+      "tp3": 12.372285714285713,
+      "stop_loss": 11.398571428571428,
+      "tp1_reached": false,
       "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 47,
+    "wins": 48,
     "draws": 21,
     "losses": 59,
-    "total": 127
+    "total": 128
   },
   "closed_symbols": {
     "BNB5L_USDT": "2026-10-31T00:10:37.844372+00:00",
-    "BMT_USDT": "2026-10-31T00:15:35.121455+00:00"
+    "BMT_USDT": "2026-10-31T00:15:35.121455+00:00",
+    "WET_USDT": "2026-10-31T00:40:38.865024+00:00"
   }
 }
