@@ -80,9 +80,9 @@
       "tp1": 11.716142857142858,
       "tp2": 11.868285714285715,
       "tp3": 12.020428571428573,
-      "stop_loss": 11.564,
+      "stop_loss": 11.716142857142858,
       "tp1_reached": true,
-      "tp2_reached": false
+      "tp2_reached": true
     },
     "BMT_USDT": {
       "direction": "SHORT",
