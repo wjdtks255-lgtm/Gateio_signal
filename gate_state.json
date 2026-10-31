@@ -72,18 +72,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "LAPTOP_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.03984,
-      "entry_time": "2026-10-31T11:25:38.233715+00:00",
-      "leverage": 10,
-      "tp1": 0.03865821428571429,
-      "tp2": 0.03747642857142857,
-      "tp3": 0.03629464285714286,
-      "stop_loss": 0.03984,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "INX_USDT": {
       "direction": "LONG",
       "entry_price": 0.004724,
@@ -95,13 +83,27 @@
       "stop_loss": 0.004581928571428571,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "LINK_USDT": {
+      "direction": "LONG",
+      "entry_price": 11.564,
+      "entry_time": "2026-10-31T16:00:51.511652+00:00",
+      "leverage": 10,
+      "tp1": 11.716142857142858,
+      "tp2": 11.868285714285715,
+      "tp3": 12.020428571428573,
+      "stop_loss": 11.411857142857142,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 50,
-    "draws": 23,
+    "draws": 24,
     "losses": 63,
-    "total": 136
+    "total": 137
   },
-  "closed_symbols": {}
+  "closed_symbols": {
+    "LAPTOP_USDT": "2026-10-31T16:00:51.511664+00:00"
+  }
 }
