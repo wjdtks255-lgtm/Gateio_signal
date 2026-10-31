@@ -103,7 +103,5 @@
     "losses": 63,
     "total": 136
   },
-  "closed_symbols": {
-    "PEPE5S_USDT": "2026-10-31T11:50:44.092609+00:00"
-  }
+  "closed_symbols": {}
 }
