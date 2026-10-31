@@ -1,17 +1,5 @@
 {
   "active_slots": {
-    "DOOD_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.001976,
-      "entry_time": "2026-10-30T13:30:49.450456+00:00",
-      "leverage": 7,
-      "tp1": 0.002111642857142857,
-      "tp2": 0.0022472857142857143,
-      "tp3": 0.0023829285714285714,
-      "stop_loss": 0.001976,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "PEPE5S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.001196,
@@ -95,18 +83,31 @@
       "stop_loss": 0.327525,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "ETH3S_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.16663,
+      "entry_time": "2026-10-31T01:55:36.918392+00:00",
+      "leverage": 10,
+      "tp1": 0.16205285714285714,
+      "tp2": 0.1574757142857143,
+      "tp3": 0.15289857142857144,
+      "stop_loss": 0.17120714285714286,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 48,
-    "draws": 22,
+    "draws": 23,
     "losses": 59,
-    "total": 129
+    "total": 130
   },
   "closed_symbols": {
     "BNB5L_USDT": "2026-10-31T00:10:37.844372+00:00",
     "BMT_USDT": "2026-10-31T00:15:35.121455+00:00",
     "WET_USDT": "2026-10-31T00:40:38.865024+00:00",
-    "SKHYNIX3L_USDT": "2026-10-31T01:15:42.581100+00:00"
+    "SKHYNIX3L_USDT": "2026-10-31T01:15:42.581100+00:00",
+    "DOOD_USDT": "2026-10-31T01:55:36.918412+00:00"
   }
 }
