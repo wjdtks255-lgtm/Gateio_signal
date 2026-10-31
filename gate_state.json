@@ -60,18 +60,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "TRX_GUSD": {
-      "direction": "SHORT",
-      "entry_price": 0.3234,
-      "entry_time": "2026-10-31T01:15:42.581081+00:00",
-      "leverage": 5,
-      "tp1": 0.31927500000000003,
-      "tp2": 0.31515000000000004,
-      "tp3": 0.31102500000000005,
-      "stop_loss": 0.327525,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "ETH3S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.16663,
@@ -95,13 +83,25 @@
       "stop_loss": 0.8411592857142858,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "INTC3S_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.62978,
+      "entry_time": "2026-10-31T02:55:32.470838+00:00",
+      "leverage": 8,
+      "tp1": 0.6641439285714286,
+      "tp2": 0.6985078571428571,
+      "tp3": 0.7328717857142857,
+      "stop_loss": 0.5954160714285714,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 48,
     "draws": 23,
-    "losses": 60,
-    "total": 131
+    "losses": 61,
+    "total": 132
   },
   "closed_symbols": {
     "BNB5L_USDT": "2026-10-31T00:10:37.844372+00:00",
@@ -109,6 +109,7 @@
     "WET_USDT": "2026-10-31T00:40:38.865024+00:00",
     "SKHYNIX3L_USDT": "2026-10-31T01:15:42.581100+00:00",
     "DOOD_USDT": "2026-10-31T01:55:36.918412+00:00",
-    "KAIA_USDT": "2026-10-31T02:30:48.998557+00:00"
+    "KAIA_USDT": "2026-10-31T02:30:48.998557+00:00",
+    "TRX_GUSD": "2026-10-31T02:55:32.470859+00:00"
   }
 }
