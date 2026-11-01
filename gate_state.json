@@ -20,8 +20,8 @@
       "tp1": 0.0014034642857142857,
       "tp2": 0.0015349285714285712,
       "tp3": 0.001666392857142857,
-      "stop_loss": 0.0011405357142857142,
-      "tp1_reached": false,
+      "stop_loss": 0.001272,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "NMR_USDT": {
