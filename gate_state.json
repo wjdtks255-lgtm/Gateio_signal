@@ -44,8 +44,8 @@
       "tp1": 0.054618214285714284,
       "tp2": 0.05322642857142856,
       "tp3": 0.05183464285714285,
-      "stop_loss": 0.05740178571428571,
-      "tp1_reached": false,
+      "stop_loss": 0.05601,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "PEARL_USDT": {
