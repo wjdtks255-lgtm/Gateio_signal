@@ -84,15 +84,15 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "DOGE5S_USDT": {
+    "AIN_USDT": {
       "direction": "LONG",
-      "entry_price": 0.05656,
-      "entry_time": "2026-11-01T19:15:42.347271+00:00",
-      "leverage": 7,
-      "tp1": 0.05790785714285714,
-      "tp2": 0.05925571428571429,
-      "tp3": 0.06060357142857143,
-      "stop_loss": 0.055212142857142855,
+      "entry_price": 0.27801,
+      "entry_time": "2026-11-01T21:45:35.941628+00:00",
+      "leverage": 5,
+      "tp1": 0.30813749999999995,
+      "tp2": 0.338265,
+      "tp3": 0.36839249999999996,
+      "stop_loss": 0.24788249999999998,
       "tp1_reached": false,
       "tp2_reached": false
     }
@@ -100,10 +100,11 @@
   "stats": {
     "wins": 55,
     "draws": 29,
-    "losses": 75,
-    "total": 159
+    "losses": 76,
+    "total": 160
   },
   "closed_symbols": {
-    "UNI5S_USDT": "2026-11-01T19:15:42.347294+00:00"
+    "UNI5S_USDT": "2026-11-01T19:15:42.347294+00:00",
+    "DOGE5S_USDT": "2026-11-01T21:45:35.941650+00:00"
   }
 }
