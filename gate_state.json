@@ -48,18 +48,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "AVAX5L_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.06222,
-      "entry_time": "2026-10-31T19:35:32.498385+00:00",
-      "leverage": 5,
-      "tp1": 0.06441214285714285,
-      "tp2": 0.06660428571428571,
-      "tp3": 0.06879642857142856,
-      "stop_loss": 0.06002785714285714,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "PEPE5S_USDT": {
       "direction": "LONG",
       "entry_price": 0.001272,
@@ -95,16 +83,29 @@
       "stop_loss": 0.01516,
       "tp1_reached": true,
       "tp2_reached": false
+    },
+    "STEEM_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.05123,
+      "entry_time": "2026-11-01T00:20:37.503015+00:00",
+      "leverage": 10,
+      "tp1": 0.052425714285714284,
+      "tp2": 0.05362142857142858,
+      "tp3": 0.05481714285714286,
+      "stop_loss": 0.05003428571428571,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 52,
     "draws": 24,
-    "losses": 66,
-    "total": 142
+    "losses": 67,
+    "total": 143
   },
   "closed_symbols": {
     "BMT_USDT": "2026-10-31T22:05:34.283563+00:00",
-    "LINK_USDT": "2026-10-31T23:20:40.878038+00:00"
+    "LINK_USDT": "2026-10-31T23:20:40.878038+00:00",
+    "AVAX5L_USDT": "2026-11-01T00:20:37.503033+00:00"
   }
 }
