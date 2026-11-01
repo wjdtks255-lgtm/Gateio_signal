@@ -36,18 +36,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "UNI5S_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.2053,
-      "entry_time": "2026-11-01T14:00:53.726077+00:00",
-      "leverage": 5,
-      "tp1": 0.1852214285714286,
-      "tp2": 0.16514285714285715,
-      "tp3": 0.14506428571428576,
-      "stop_loss": 0.22537857142857143,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "WET_USDT": {
       "direction": "SHORT",
       "entry_price": 0.05601,
@@ -95,18 +83,30 @@
       "stop_loss": 0.7163321428571429,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "DOGE5S_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.05656,
+      "entry_time": "2026-11-01T19:15:42.347271+00:00",
+      "leverage": 7,
+      "tp1": 0.05790785714285714,
+      "tp2": 0.05925571428571429,
+      "tp3": 0.06060357142857143,
+      "stop_loss": 0.055212142857142855,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 55,
     "draws": 29,
-    "losses": 74,
-    "total": 158
+    "losses": 75,
+    "total": 159
   },
   "closed_symbols": {
-    "UNI5L_USDT": "2026-11-01T16:10:38.364306+00:00",
     "BNB3S_USDT": "2026-11-01T16:25:34.004381+00:00",
     "SKHYNIX3L_USDT": "2026-11-01T18:25:34.615615+00:00",
-    "SKHYNIX3S_USDT": "2026-11-01T18:35:37.830519+00:00"
+    "SKHYNIX3S_USDT": "2026-11-01T18:35:37.830519+00:00",
+    "UNI5S_USDT": "2026-11-01T19:15:42.347294+00:00"
   }
 }
