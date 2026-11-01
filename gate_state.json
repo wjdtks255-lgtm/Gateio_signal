@@ -60,18 +60,6 @@
       "tp1_reached": true,
       "tp2_reached": false
     },
-    "AVAAI_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.006971,
-      "entry_time": "2026-11-01T11:10:42.703606+00:00",
-      "leverage": 10,
-      "tp1": 0.0070987142857142855,
-      "tp2": 0.007226428571428571,
-      "tp3": 0.007354142857142857,
-      "stop_loss": 0.006971,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "UNI5S_USDT": {
       "direction": "SHORT",
       "entry_price": 0.2053,
@@ -95,16 +83,29 @@
       "stop_loss": 0.0035840357142857145,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "WET_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.05601,
+      "entry_time": "2026-11-01T16:00:51.853324+00:00",
+      "leverage": 10,
+      "tp1": 0.054618214285714284,
+      "tp2": 0.05322642857142856,
+      "tp3": 0.05183464285714285,
+      "stop_loss": 0.05740178571428571,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 54,
-    "draws": 27,
+    "draws": 28,
     "losses": 71,
-    "total": 152
+    "total": 153
   },
   "closed_symbols": {
     "PEPE5S_USDT": "2026-11-01T14:00:53.726093+00:00",
-    "GUN_USDT": "2026-11-01T15:20:40.155561+00:00"
+    "GUN_USDT": "2026-11-01T15:20:40.155561+00:00",
+    "AVAAI_USDT": "2026-11-01T16:00:51.853342+00:00"
   }
 }
