@@ -36,30 +36,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "BLUR_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.008096,
-      "entry_time": "2026-10-31T22:05:34.283541+00:00",
-      "leverage": 5,
-      "tp1": 0.007948892857142857,
-      "tp2": 0.007801785714285715,
-      "tp3": 0.007654678571428573,
-      "stop_loss": 0.008096,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
-    "LAPTOP_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.04395,
-      "entry_time": "2026-11-01T01:30:41.460006+00:00",
-      "leverage": 7,
-      "tp1": 0.04539,
-      "tp2": 0.046830000000000004,
-      "tp3": 0.04827,
-      "stop_loss": 0.042510000000000006,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "NMR_USDT": {
       "direction": "LONG",
       "entry_price": 10.026,
@@ -95,16 +71,42 @@
       "stop_loss": 0.0021165,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "AKE_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.009474,
+      "entry_time": "2026-11-01T07:30:47.796918+00:00",
+      "leverage": 5,
+      "tp1": 0.008330678571428572,
+      "tp2": 0.007187357142857143,
+      "tp3": 0.0060440357142857145,
+      "stop_loss": 0.010617321428571427,
+      "tp1_reached": false,
+      "tp2_reached": false
+    },
+    "UNI5L_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.02946,
+      "entry_time": "2026-11-01T07:30:47.796918+00:00",
+      "leverage": 5,
+      "tp1": 0.0310275,
+      "tp2": 0.032595,
+      "tp3": 0.0341625,
+      "stop_loss": 0.0278925,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 52,
-    "draws": 26,
-    "losses": 69,
-    "total": 147
+    "draws": 27,
+    "losses": 70,
+    "total": 149
   },
   "closed_symbols": {
     "INTC3S_USDT": "2026-11-01T06:20:38.770712+00:00",
-    "XAG3S_USDT": "2026-11-01T07:10:39.551389+00:00"
+    "XAG3S_USDT": "2026-11-01T07:10:39.551389+00:00",
+    "BLUR_USDT": "2026-11-01T07:30:47.796942+00:00",
+    "LAPTOP_USDT": "2026-11-01T07:30:47.796942+00:00"
   }
 }
