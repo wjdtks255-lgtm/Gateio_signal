@@ -103,8 +103,5 @@
     "losses": 70,
     "total": 149
   },
-  "closed_symbols": {
-    "BLUR_USDT": "2026-11-01T07:30:47.796942+00:00",
-    "LAPTOP_USDT": "2026-11-01T07:30:47.796942+00:00"
-  }
+  "closed_symbols": {}
 }
