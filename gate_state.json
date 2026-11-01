@@ -80,8 +80,8 @@
       "tp1": 0.6913078571428571,
       "tp2": 0.6787957142857144,
       "tp3": 0.6662835714285715,
-      "stop_loss": 0.7163321428571429,
-      "tp1_reached": false,
+      "stop_loss": 0.70382,
+      "tp1_reached": true,
       "tp2_reached": false
     },
     "AIN_USDT": {
