@@ -36,18 +36,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "INTC3S_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.62978,
-      "entry_time": "2026-10-31T02:55:32.470838+00:00",
-      "leverage": 8,
-      "tp1": 0.6641439285714286,
-      "tp2": 0.6985078571428571,
-      "tp3": 0.7328717857142857,
-      "stop_loss": 0.5954160714285714,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "PEPE5S_USDT": {
       "direction": "LONG",
       "entry_price": 0.001272,
@@ -95,13 +83,27 @@
       "stop_loss": 9.790928571428571,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "UAI_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.24933,
+      "entry_time": "2026-11-01T06:20:38.770703+00:00",
+      "leverage": 5,
+      "tp1": 0.2280289285714286,
+      "tp2": 0.20672785714285716,
+      "tp3": 0.18542678571428572,
+      "stop_loss": 0.2706310714285714,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 52,
     "draws": 26,
-    "losses": 67,
-    "total": 145
+    "losses": 68,
+    "total": 146
   },
-  "closed_symbols": {}
+  "closed_symbols": {
+    "INTC3S_USDT": "2026-11-01T06:20:38.770712+00:00"
+  }
 }
