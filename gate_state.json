@@ -103,7 +103,5 @@
     "losses": 67,
     "total": 145
   },
-  "closed_symbols": {
-    "STEEM_USDT": "2026-11-01T02:15:37.921173+00:00"
-  }
+  "closed_symbols": {}
 }
