@@ -72,18 +72,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "STEEM_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.05123,
-      "entry_time": "2026-11-01T00:20:37.503015+00:00",
-      "leverage": 10,
-      "tp1": 0.052425714285714284,
-      "tp2": 0.05362142857142858,
-      "tp3": 0.05481714285714286,
-      "stop_loss": 0.05123,
-      "tp1_reached": true,
-      "tp2_reached": false
-    },
     "LAPTOP_USDT": {
       "direction": "LONG",
       "entry_price": 0.04395,
@@ -95,17 +83,30 @@
       "stop_loss": 0.042510000000000006,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "NMR_USDT": {
+      "direction": "LONG",
+      "entry_price": 10.026,
+      "entry_time": "2026-11-01T02:15:37.921149+00:00",
+      "leverage": 7,
+      "tp1": 10.261071428571428,
+      "tp2": 10.496142857142857,
+      "tp3": 10.731214285714284,
+      "stop_loss": 9.790928571428571,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
     "wins": 52,
-    "draws": 25,
+    "draws": 26,
     "losses": 67,
-    "total": 144
+    "total": 145
   },
   "closed_symbols": {
     "LINK_USDT": "2026-10-31T23:20:40.878038+00:00",
     "AVAX5L_USDT": "2026-11-01T00:20:37.503033+00:00",
-    "SUN_USDT": "2026-11-01T01:30:41.460024+00:00"
+    "SUN_USDT": "2026-11-01T01:30:41.460024+00:00",
+    "STEEM_USDT": "2026-11-01T02:15:37.921173+00:00"
   }
 }
