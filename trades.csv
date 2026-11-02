@@ -1,0 +1,2 @@
+closed_at,symbol,direction,category,leverage,entry_time,entry_price,exit_price,exit_reason,holding_hours,gross_r,net_r,mfe_r,mae_r
+2026-11-02T03:09:48.180236+00:00,NMR_USDT,LONG,코인,7,2026-11-01T02:15:37.921149+00:00,10.026,9.885,TIME_STOP,24.9,-0.6,-0.642,0.821,-0.647
