@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 0.01666,
       "max_adv": 0.01324,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -32,7 +32,7 @@
       "tp2_reached": true,
       "max_fav": 0.16786,
       "max_adv": 0.18112,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     },
     "LSK_USDT": {
       "direction": "SHORT",
@@ -47,9 +47,9 @@
       "initial_stop": 0.19672499999999998,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.1775,
+      "max_fav": 0.1772,
       "max_adv": 0.1911,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     },
     "BZ_USDT": {
       "direction": "SHORT",
@@ -66,7 +66,7 @@
       "tp2_reached": true,
       "max_fav": 103.33,
       "max_adv": 106.43,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     },
     "Q_USDT": {
       "direction": "SHORT",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 0.025138,
       "max_adv": 0.026775,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     },
     "ZEC_USDT": {
       "direction": "SHORT",
@@ -98,9 +98,9 @@
       "initial_stop": 1199.2671428571427,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1128.25,
+      "max_fav": 1126.58,
       "max_adv": 1167.33,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     },
     "SOXL_USDT": {
       "direction": "SHORT",
@@ -115,9 +115,9 @@
       "initial_stop": 73.32321428571427,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 69.17,
+      "max_fav": 69.06,
       "max_adv": 70.99,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -132,9 +132,9 @@
       "initial_stop": 1118.527857142857,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1086.06,
+      "max_fav": 1085.78,
       "max_adv": 1092.76,
-      "last_candle_ts": 1793648100
+      "last_candle_ts": 1793648400
     }
   },
   "stats": {
