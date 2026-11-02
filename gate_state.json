@@ -14,7 +14,7 @@
       "risk": 0.030127499999999974,
       "max_fav": 0.2939,
       "max_adv": 0.26156,
-      "last_candle_ts": 1793630400
+      "last_candle_ts": 1793630700
     },
     "BMT_USDT": {
       "direction": "SHORT",
@@ -30,7 +30,7 @@
       "risk": 0.0005121428571428568,
       "max_fav": 0.02079,
       "max_adv": 0.02179,
-      "last_candle_ts": 1793630400
+      "last_candle_ts": 1793630700
     },
     "ESPORTS_USDT": {
       "direction": "LONG",
@@ -47,7 +47,7 @@
       "tp2_reached": false,
       "max_fav": 0.01639,
       "max_adv": 0.01423,
-      "last_candle_ts": 1793630400
+      "last_candle_ts": 1793630700
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -64,7 +64,7 @@
       "tp2_reached": false,
       "max_fav": 4.0304,
       "max_adv": 4.1543,
-      "last_candle_ts": 1793630400
+      "last_candle_ts": 1793630700
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -81,7 +81,7 @@
       "tp2_reached": false,
       "max_fav": 0.17603,
       "max_adv": 0.18112,
-      "last_candle_ts": 1793630400
+      "last_candle_ts": 1793630700
     },
     "LSK_USDT": {
       "direction": "SHORT",
@@ -98,7 +98,7 @@
       "tp2_reached": false,
       "max_fav": 0.1849,
       "max_adv": 0.1881,
-      "last_candle_ts": 1793630400
+      "last_candle_ts": 1793630700
     },
     "CL_USDT": {
       "direction": "SHORT",
@@ -115,7 +115,7 @@
       "tp2_reached": false,
       "max_fav": 97.2,
       "max_adv": 97.54,
-      "last_candle_ts": 1793630400
+      "last_candle_ts": 1793630700
     },
     "BZ_USDT": {
       "direction": "SHORT",
@@ -130,9 +130,9 @@
       "initial_stop": 107.815,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 106.38,
-      "max_adv": 106.42,
-      "last_candle_ts": 1793630400
+      "max_fav": 106.17,
+      "max_adv": 106.43,
+      "last_candle_ts": 1793630700
     }
   },
   "stats": {
@@ -158,7 +158,6 @@
     ]
   },
   "closed_symbols": {
-    "BTW_USDT": "2026-11-02T11:45:40.670614+00:00",
     "LINK_USDT": "2026-11-02T13:40:31.257953+00:00",
     "SKHYNIX_USDT": "2026-11-02T14:35:37.885746+00:00",
     "KORU_USDT": "2026-11-02T14:40:30.937121+00:00"
