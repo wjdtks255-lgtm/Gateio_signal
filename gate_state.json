@@ -12,18 +12,6 @@
       "tp1_reached": false,
       "tp2_reached": false
     },
-    "AKE_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.009474,
-      "entry_time": "2026-11-01T07:30:47.796918+00:00",
-      "leverage": 5,
-      "tp1": 0.008330678571428572,
-      "tp2": 0.007187357142857143,
-      "tp3": 0.0060440357142857145,
-      "stop_loss": 0.010617321428571427,
-      "tp1_reached": false,
-      "tp2_reached": false
-    },
     "WET_USDT": {
       "direction": "SHORT",
       "entry_price": 0.05601,
@@ -95,16 +83,29 @@
       "stop_loss": 0.022192142857142858,
       "tp1_reached": false,
       "tp2_reached": false
+    },
+    "TRUMP5L_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.004663,
+      "entry_time": "2026-11-02T01:30:48.089125+00:00",
+      "leverage": 5,
+      "tp1": 0.005524321428571428,
+      "tp2": 0.006385642857142857,
+      "tp3": 0.007246964285714285,
+      "stop_loss": 0.0038016785714285713,
+      "tp1_reached": false,
+      "tp2_reached": false
     }
   },
   "stats": {
-    "wins": 55,
+    "wins": 56,
     "draws": 30,
     "losses": 77,
-    "total": 162
+    "total": 163
   },
   "closed_symbols": {
     "DGAI_USDT": "2026-11-02T01:05:38.159147+00:00",
-    "CRCL3L_USDT": "2026-11-02T01:20:40.574022+00:00"
+    "CRCL3L_USDT": "2026-11-02T01:20:40.574022+00:00",
+    "AKE_USDT": "2026-11-02T01:30:48.089142+00:00"
   }
 }
