@@ -103,7 +103,5 @@
     "losses": 76,
     "total": 160
   },
-  "closed_symbols": {
-    "DOGE5S_USDT": "2026-11-01T21:45:35.941650+00:00"
-  }
+  "closed_symbols": {}
 }
