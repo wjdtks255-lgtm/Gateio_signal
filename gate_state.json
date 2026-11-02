@@ -79,7 +79,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1102.48,
-      "max_adv": 1102.48,
+      "max_adv": 1101.96,
       "last_candle_ts": 1793589900
     },
     "SOXS_USDT": {
@@ -96,7 +96,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 48.58,
-      "max_adv": 48.58,
+      "max_adv": 48.6,
       "last_candle_ts": 1793589900
     },
     "KORU_USDT": {
@@ -113,7 +113,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 11.754,
-      "max_adv": 11.754,
+      "max_adv": 11.747,
       "last_candle_ts": 1793589900
     },
     "SAMSUNG_USDT": {
@@ -130,7 +130,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 170.46,
-      "max_adv": 170.46,
+      "max_adv": 170.36,
       "last_candle_ts": 1793589900
     }
   },
