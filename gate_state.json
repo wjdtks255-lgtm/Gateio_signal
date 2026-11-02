@@ -14,7 +14,7 @@
       "risk": 0.0005121428571428568,
       "max_fav": 0.02079,
       "max_adv": 0.02179,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     },
     "ESPORTS_USDT": {
       "direction": "LONG",
@@ -31,7 +31,7 @@
       "tp2_reached": false,
       "max_fav": 0.01666,
       "max_adv": 0.01423,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -46,9 +46,9 @@
       "initial_stop": 4.178028571428571,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 3.985,
+      "max_fav": 3.9658,
       "max_adv": 4.1543,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -59,13 +59,13 @@
       "tp1": 0.17298535714285715,
       "tp2": 0.1687007142857143,
       "tp3": 0.16441607142857145,
-      "stop_loss": 0.18155464285714287,
+      "stop_loss": 0.17727,
       "initial_stop": 0.18155464285714287,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.1733,
+      "max_fav": 0.17227,
       "max_adv": 0.18112,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     },
     "LSK_USDT": {
       "direction": "SHORT",
@@ -80,9 +80,9 @@
       "initial_stop": 0.19672499999999998,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.1845,
+      "max_fav": 0.1825,
       "max_adv": 0.1911,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     },
     "CL_USDT": {
       "direction": "SHORT",
@@ -99,7 +99,7 @@
       "tp2_reached": false,
       "max_fav": 96.79,
       "max_adv": 97.71,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     },
     "BZ_USDT": {
       "direction": "SHORT",
@@ -114,9 +114,9 @@
       "initial_stop": 107.815,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 105.29,
+      "max_fav": 105.04,
       "max_adv": 106.43,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     },
     "Q_USDT": {
       "direction": "SHORT",
@@ -133,7 +133,7 @@
       "tp2_reached": false,
       "max_fav": 0.02535,
       "max_adv": 0.02628,
-      "last_candle_ts": 1793636100
+      "last_candle_ts": 1793636400
     }
   },
   "stats": {
