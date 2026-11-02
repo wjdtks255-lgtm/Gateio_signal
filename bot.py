@@ -580,6 +580,16 @@ def manage_positions(state, tickers, now):
             if entry <= 0 or risk <= 0:
                 continue
 
+            # 선물 시장에 없는 종목(구버전 현물 슬롯 등)은 즉시 정리
+            if symbol not in tickers:
+                del active[symbol]
+                alerts.append(
+                    f"🧹 <b>슬롯 정리</b>\n<code>{symbol}</code>은(는) 선물 시장에 없는 종목이라 "
+                    "통계 없이 슬롯에서 제거했습니다."
+                )
+                changed = True
+                continue
+
             close = None
             # 1) 마지막 점검 이후 완성된 5분봉으로 TP/SL 터치 판정
             for candle in fetch_completed_5m(symbol, info["last_candle_ts"] + 300, now_ts):
