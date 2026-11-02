@@ -1,502 +1,879 @@
-import os
-import json
-import requests
-from datetime import datetime, timezone, timedelta
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
 
+진입 기준 (기존과 동일):
+  24시간 변동률 ±4.5% 이상 + 거래대금 + RSI(14, 1시간봉) + 직전 완성 1시간봉 몸통 35% 이상
+청산 기준:
+  TP1 1R / TP2 2R / TP3 3R (1R = 1.5 ATR), 단계적 스탑 이동, 타임스탑
+판정:
+  5분봉 고가/저가로 TP/SL 터치를 판정하고, 결과는 수수료 반영 R 배수로 기록
+"""
+
+import csv
+import json
+import os
+import re
+import time
+from datetime import datetime, timedelta, timezone
+
+import requests
+
+# ──────────────────────────── 설정 ────────────────────────────
 TELEGRAM_TOKEN = os.getenv("GATE_TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("GATE_TELEGRAM_CHAT_ID")
+
 STATE_FILE = "gate_state.json"
+TRADES_FILE = "trades.csv"
+BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
+
 MAX_SLOTS = 8
-MAX_HOLDING_HOURS = 18  # 18시간 이상 미달성 시 수익권이면 슬롯 회전(청산)
+
+# 진입 조건
+MIN_CHANGE_PCT = 4.5          # 24시간 변동률 기준(%)
+MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT). 기존 80,000에서 상향
+RSI_PERIOD = 14
+ATR_PERIOD = 14
+BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이
+LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외
+
+# 목표가/손절가 (ATR 배수). 1R = ATR_SL * ATR
+ATR_SL = 1.5
+ATR_TP_MULTS = (1.5, 3.0, 4.5)   # TP1, TP2, TP3 → 각각 1R, 2R, 3R
+
+# 비용/리스크 가정
+FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%
+RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)
+MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실이 이 비율을 넘지 않도록 레버리지 상한
+
+# 보유 시간 규칙
+ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산
+ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%, 레버리지 미반영 가격 기준)
+TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산
+COOLDOWN_HOURS = 3            # 청산 후 같은 종목 재진입 금지 시간
+
+# 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부
+DRAW_BAND_R = 0.1
+
+# 실행 시간 관리 (GitHub Actions timeout 대비)
+MAX_CANDIDATES = 40
+SCAN_BUDGET_SEC = 150
+
+# 알림 옵션
+FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림
+DAILY_REPORT_ENABLED = True
+DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회
+
+CSV_FIELDS = [
+    "closed_at", "symbol", "direction", "category", "leverage",
+    "entry_time", "entry_price", "exit_price", "exit_reason",
+    "holding_hours", "gross_r", "net_r", "mfe_r", "mae_r",
+]
+
+REASON_LABEL = {
+    "SL": "손절",
+    "BREAKEVEN": "본전",
+    "TP1_PROTECT": "TP1 방어",
+    "TP3": "TP3",
+    "ROTATE": "회전",
+    "TIME_STOP": "타임스탑",
+}
+
+NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣"]
+
+
+# ──────────────────────────── 공통 유틸 ────────────────────────────
+def utcnow():
+    return datetime.now(timezone.utc)
+
+
+def parse_iso(s, default=None):
+    try:
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    except Exception:
+        return default
+
+
+def fmt_price(p):
+    if p >= 1000:
+        return f"{p:.2f}"
+    if p >= 1:
+        return f"{p:.4f}"
+    if p >= 0.01:
+        return f"{p:.5f}"
+    return f"{p:.8f}"
+
+
+def fmt_hours(hours):
+    h = int(hours)
+    m = int((hours - h) * 60)
+    return f"{h}시간 {m:02d}분"
+
+
+def dir_tag(direction):
+    return "🟢 롱" if direction == "LONG" else "🔴 숏"
+
+
+def chart_link(symbol):
+    return f"https://www.gate.io/futures/USDT/{symbol}"
+
+
+def pct_move(direction, entry, price):
+    if entry <= 0:
+        return 0.0
+    if direction == "LONG":
+        return (price - entry) / entry * 100
+    return (entry - price) / entry * 100
+
+
+def r_move(direction, entry, price, risk):
+    if risk <= 0:
+        return 0.0
+    if direction == "LONG":
+        return (price - entry) / risk
+    return (entry - price) / risk
+
 
 def send_telegram_message(message):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram credentials missing.")
-        return
+        return False
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
-        "text": message,
+        "text": message[:4000],
         "parse_mode": "HTML",
-        "disable_web_page_preview": True
+        "disable_web_page_preview": True,
     }
     try:
         response = requests.post(url, json=payload, timeout=10)
         if response.status_code != 200:
             print(f"Failed to send telegram message: {response.text}")
+            return False
+        return True
     except Exception as e:
         print(f"Error sending telegram message: {e}")
+        return False
+
+
+# ──────────────────────────── 상태 저장/불러오기 ────────────────────────────
+def default_state():
+    return {
+        "active_slots": {},
+        "stats": {
+            "wins": 0, "draws": 0, "losses": 0, "total": 0,
+            "r_count": 0, "sum_r": 0.0, "win_r": 0.0, "loss_r": 0.0,
+            "recent_r": [],
+        },
+        "closed_symbols": {},
+        "fail_count": 0,
+        "last_report_date": "",
+    }
+
 
 def load_state():
-    state = {
-        "active_slots": {},
-        "stats": {"wins": 0, "draws": 0, "losses": 0, "total": 0},
-        "closed_symbols": {}
-    }
-    if os.path.exists(STATE_FILE):
+    state = default_state()
+    if not os.path.exists(STATE_FILE):
+        return state
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error loading state file: {e}")
         try:
-            with open(STATE_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                if isinstance(data, dict):
-                    state["active_slots"] = data.get("active_slots", {})
-                    state["stats"] = data.get("stats", {"wins": 0, "draws": 0, "losses": 0, "total": 0})
-                    closed = data.get("closed_symbols", {})
-                    if isinstance(closed, list):
-                        state["closed_symbols"] = {sym: datetime.now(timezone.utc).isoformat() for sym in closed}
-                    elif isinstance(closed, dict):
-                        state["closed_symbols"] = closed
-        except Exception as e:
-            print(f"Error loading state file: {e}")
+            os.replace(STATE_FILE, STATE_FILE + ".corrupt")
+        except Exception:
+            pass
+        return state
+
+    if not isinstance(data, dict):
+        return state
+    if isinstance(data.get("active_slots"), dict):
+        state["active_slots"] = data["active_slots"]
+    if isinstance(data.get("stats"), dict):
+        state["stats"].update(data["stats"])
+    closed = data.get("closed_symbols", {})
+    if isinstance(closed, list):
+        state["closed_symbols"] = {sym: utcnow().isoformat() for sym in closed}
+    elif isinstance(closed, dict):
+        state["closed_symbols"] = closed
+    try:
+        state["fail_count"] = int(data.get("fail_count", 0))
+    except Exception:
+        state["fail_count"] = 0
+    state["last_report_date"] = str(data.get("last_report_date", ""))
     return state
 
+
 def save_state(state):
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
+    tmp = STATE_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(state, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, STATE_FILE)
 
-def fetch_gateio_tickers():
-    url = "https://api.gateio.ws/api/v4/spot/tickers"
+
+def append_trade_csv(row):
+    exists = os.path.exists(TRADES_FILE) and os.path.getsize(TRADES_FILE) > 0
+    with open(TRADES_FILE, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+        if not exists:
+            writer.writeheader()
+        writer.writerow(row)
+
+
+# ──────────────────────────── Gate.io API ────────────────────────────
+def api_get(path, params=None):
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(f"{BASE_URL}{path}", params=params, timeout=10)
         if response.status_code == 200:
             return response.json()
+        print(f"API error {response.status_code} {path}: {response.text[:200]}")
     except Exception as e:
-        print(f"Error fetching Gate.io tickers: {e}")
-    return []
+        print(f"API request failed {path}: {e}")
+    return None
 
-def fetch_candles(symbol, interval="1h", limit=20):
-    url = "https://api.gateio.ws/api/v4/spot/candlesticks"
-    params = {"currency_pair": symbol, "interval": interval, "limit": limit}
-    try:
-        response = requests.get(url, params=params, timeout=10)
-        if response.status_code == 200:
-            return response.json()
-    except Exception as e:
-        print(f"Error fetching candles for {symbol}: {e}")
-    return []
 
-def calculate_rsi(symbol, interval="1h", period=14):
-    candles = fetch_candles(symbol, interval, period + 1)
-    if not candles or len(candles) < period + 1:
+def fetch_tickers():
+    data = api_get("/tickers")
+    return data if isinstance(data, list) else []
+
+
+def parse_candles(raw):
+    out = []
+    for c in raw or []:
+        try:
+            out.append({
+                "t": int(c["t"]),
+                "o": float(c["o"]),
+                "h": float(c["h"]),
+                "l": float(c["l"]),
+                "c": float(c["c"]),
+            })
+        except (KeyError, TypeError, ValueError):
+            continue
+    out.sort(key=lambda x: x["t"])
+    return out
+
+
+def fetch_completed_5m(symbol, from_ts, now_ts):
+    """from_ts 이후에 완성된 5분봉만 반환"""
+    if from_ts >= now_ts:
+        return []
+    raw = api_get("/candlesticks", {
+        "contract": symbol, "interval": "5m",
+        "from": int(from_ts), "to": int(now_ts),
+    })
+    return [c for c in parse_candles(raw)
+            if c["t"] >= from_ts and c["t"] + 300 <= now_ts]
+
+
+# ──────────────────────────── 지표 ────────────────────────────
+def wilder_rsi(closes, period=RSI_PERIOD):
+    if len(closes) < period + 1:
         return None
-    closes = [float(c[2]) for c in candles]
-    gains = 0.0
-    losses = 0.0
+    gains, losses = [], []
     for i in range(1, len(closes)):
-        diff = closes[i] - closes[i-1]
-        if diff > 0:
-            gains += diff
-        else:
-            losses -= diff
-    avg_gain = gains / period
-    avg_loss = losses / period
+        diff = closes[i] - closes[i - 1]
+        gains.append(max(diff, 0.0))
+        losses.append(max(-diff, 0.0))
+    avg_gain = sum(gains[:period]) / period
+    avg_loss = sum(losses[:period]) / period
+    for i in range(period, len(gains)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
     if avg_loss == 0:
         return 100.0
     rs = avg_gain / avg_loss
-    rsi = 100 - (100 / (1 + rs))
-    return rsi
+    return 100 - (100 / (1 + rs))
 
-def fetch_atr_and_validate_breakout(symbol, direction):
-    candles = fetch_candles(symbol, interval="1h", limit=20)
-    if not candles or len(candles) < 15:
-        return None, False
 
-    parsed = []
-    for c in candles:
-        try:
-            parsed.append({
-                "close": float(c[2]),
-                "high": float(c[3]),
-                "low": float(c[4]),
-                "open": float(c[5])
-            })
-        except Exception:
-            continue
+def calc_atr(candles, period=ATR_PERIOD):
+    if len(candles) < period + 1:
+        return None
+    trs = []
+    for i in range(1, len(candles)):
+        high, low, prev_close = candles[i]["h"], candles[i]["l"], candles[i - 1]["c"]
+        trs.append(max(high - low, abs(high - prev_close), abs(low - prev_close)))
+    return sum(trs[-period:]) / period
 
-    if len(parsed) < 15:
-        return None, False
 
-    latest = parsed[-2]
-    body = abs(latest["close"] - latest["open"])
-    total_range = latest["high"] - latest["low"]
-    if total_range == 0:
-        return None, False
+def analyze_signal(symbol, direction, now_ts):
+    """1시간봉 한 번 조회로 RSI, 직전봉 몸통, ATR을 모두 계산. 통과하지 못하면 None"""
+    raw = api_get("/candlesticks", {"contract": symbol, "interval": "1h", "limit": 60})
+    candles = [c for c in parse_candles(raw) if c["t"] + 3600 <= now_ts]  # 완성봉만
+    if len(candles) < 20:
+        return None
 
-    is_strong_body = (body / total_range) >= 0.35
-    if direction == "LONG":
-        is_valid_breakout = (latest["close"] > latest["open"]) and is_strong_body
-    else:
-        is_valid_breakout = (latest["close"] < latest["open"]) and is_strong_body
+    last = candles[-1]
+    total_range = last["h"] - last["l"]
+    if total_range <= 0:
+        return None
+    body_ratio = abs(last["c"] - last["o"]) / total_range
+    if body_ratio < BODY_RATIO_MIN:
+        return None
+    if direction == "LONG" and not last["c"] > last["o"]:
+        return None
+    if direction == "SHORT" and not last["c"] < last["o"]:
+        return None
 
-    if not is_valid_breakout:
-        return None, False
+    rsi = wilder_rsi([c["c"] for c in candles])
+    if rsi is None:
+        return None
+    if direction == "LONG" and rsi < 50:
+        return None
+    if direction == "SHORT" and rsi > 50:
+        return None
 
-    tr_list = []
-    for i in range(1, len(parsed)):
-        high = parsed[i]["high"]
-        low = parsed[i]["low"]
-        prev_close = parsed[i-1]["close"]
-        tr = max(high - low, abs(high - prev_close), abs(low - prev_close))
-        tr_list.append(tr)
+    atr = calc_atr(candles)
+    if not atr or atr <= 0:
+        return None
+    return {"rsi": rsi, "atr": atr, "body_ratio": body_ratio}
 
-    atr = sum(tr_list[-14:]) / 14.0
-    return atr, True
+
+# ──────────────────────────── 분류/레버리지 ────────────────────────────
+STOCK_BASES = {"SKHYNIX", "TSLA", "AAPL", "NVDA", "MSFT", "AMZN", "META", "NFLX",
+               "GOOGL", "BABA", "AMD", "INTC", "PLTR", "COIN", "MSTR"}
+INDEX_BASES = {"SPX", "NAS", "NDX", "DJI", "US30", "US100", "NIKKEI", "VIX", "DAX"}
+COMMODITY_BASES = {"XAU", "XAUT", "XAG", "XAGT", "OIL", "USOIL", "UKOIL", "GOLD",
+                   "SILVER", "CRUDE", "BRENT", "COPPER"}
+FOREX_BASES = {"EUR", "GBP", "JPY", "AUD", "CHF", "NZD", "CAD"}
+
 
 def get_asset_category(symbol):
-    upper_sym = symbol.upper()
-    stock_keywords = ['SKHYNIX', 'TSLA', 'AAPL', 'NVDA', 'MSFT', 'AMZN', 'META', 'NFLX', 'GOOGL', 'BABA', 'AMD', 'INTC', 'PLTR']
-    if any(k in upper_sym for k in stock_keywords):
-        return '주식'
-    index_keywords = ['SPX', 'NAS', 'DJI', 'US30', 'US100', 'NIKKEI', 'VIX', 'DAX']
-    if any(k in upper_sym for k in index_keywords):
-        return '지수'
-    commodity_keywords = ['XAU', 'XAG', 'OIL', 'GOLD', 'SILVER', 'CRUDE', 'BRENT', 'COPPER', 'GAS']
-    if any(k in upper_sym for k in commodity_keywords):
-        return '원자재'
-    forex_keywords = ['EUR', 'GBP', 'JPY', 'AUD', 'CHF', 'NZD', 'CAD']
-    if any(k in upper_sym for k in forex_keywords):
-        if not upper_sym.endswith('_USDT') or any(fx in upper_sym[:4] for fx in forex_keywords):
-            return '외환'
-    return '코인'
+    base = symbol.upper().split("_")[0]
+    if base in STOCK_BASES:
+        return "주식"
+    if base in INDEX_BASES:
+        return "지수"
+    if base in COMMODITY_BASES:
+        return "원자재"
+    if base in FOREX_BASES:
+        return "외환"
+    return "코인"
+
 
 def calculate_recommended_leverage(category, change_24h):
     abs_change = abs(change_24h)
-    if category == '코인':
+    if category == "코인":
         return 5 if abs_change > 10.0 else (7 if abs_change > 6.0 else 10)
-    elif category == '주식':
-        return 8
-    elif category == '원자재':
-        return 12
-    elif category == '외환':
-        return 20
-    elif category == '지수':
-        return 15
-    return 10
+    return {"주식": 8, "원자재": 12, "외환": 20, "지수": 15}.get(category, 10)
 
-def build_slot_status_message(active_slots, tickers_dict, stats):
-    active_symbols = list(active_slots.keys())
-    active_count = len(active_symbols)
-    lines = [f"<b>📊 [현재 주시 중인 슬롯 현황 ({active_count} / {MAX_SLOTS} 슬롯)]</b>\n"]
-    for i in range(1, MAX_SLOTS + 1):
-        if i <= active_count:
-            sym = active_symbols[i-1]
-            info = active_slots[sym]
-            entry_price = info.get("entry_price", 0)
-            direction = info.get("direction", "LONG")
-            current_price = tickers_dict.get(sym, entry_price)
-            profit_pct = 0.0
-            if entry_price > 0:
-                if direction == "LONG":
-                    profit_pct = ((current_price - entry_price) / entry_price) * 100
-                else:
-                    profit_pct = ((entry_price - current_price) / entry_price) * 100
-            holding_str = format_holding_time(info.get("entry_time"))
-            chart_link = f"https://www.gate.io/trade/{sym}"
-            category = get_asset_category(sym)
-            dir_icon = "🟢" if direction == "LONG" else "🔴"
-            display_name = f"[{category}] {sym}"
-            
-            if info.get("tp2_reached", False):
-                status_badge = "🎯 TP2 도달 (TP1 방어중)"
-            elif info.get("tp1_reached", False):
-                status_badge = "🎯 TP1 도달 (본전 방어중)"
-            else:
-                status_badge = "📈 홀딩 진행중"
-                
-            lines.append(f"{i}️⃣ {dir_icon} <a href='{chart_link}'>{display_name}</a> | <code>{profit_pct:+.2f}%</code> | 보유: <code>{holding_str}</code>\n    └ 상태: <code>{status_badge}</code>")
-        else:
-            lines.append(f"{i}️⃣ (빈 슬롯)")
-    win_rate = calculate_win_rate(stats)
-    lines.append(f"\n📈 <b>[누적 통계]</b> <code>{stats['wins']}승 {stats['draws']}무 {stats['losses']}패 (총 {stats['total']}전) | 승률: {win_rate}%</code>")
+
+# ──────────────────────────── 통계 ────────────────────────────
+def record_stats(stats, net_r, outcome):
+    stats["total"] += 1
+    stats[{"win": "wins", "draw": "draws", "loss": "losses"}[outcome]] += 1
+    stats["r_count"] += 1
+    stats["sum_r"] += net_r
+    if net_r > 0:
+        stats["win_r"] += net_r
+    else:
+        stats["loss_r"] += -net_r
+    stats["recent_r"] = (stats.get("recent_r", []) + [round(net_r, 3)])[-50:]
+
+
+def build_stats_line(stats):
+    total = stats.get("total", 0)
+    wins, draws, losses = stats.get("wins", 0), stats.get("draws", 0), stats.get("losses", 0)
+    wr_all = round(wins / total * 100, 1) if total else 0.0
+    decisive = wins + losses
+    wr_dec = round(wins / decisive * 100, 1) if decisive else 0.0
+    lines = [
+        "📈 <b>[누적 통계]</b>",
+        f"<code>{total}전 {wins}승 {draws}무 {losses}패</code>",
+        f"<code>승률 {wr_all}% (무승부 포함) | {wr_dec}% (무승부 제외)</code>",
+    ]
+    n = stats.get("r_count", 0)
+    if n > 0:
+        avg_r = stats["sum_r"] / n
+        pf = f"{stats['win_r'] / stats['loss_r']:.2f}" if stats.get("loss_r", 0) > 0 else "-"
+        recent = stats.get("recent_r", [])[-20:]
+        lines.append(
+            f"<code>평균 R {avg_r:+.2f} | PF {pf} | 최근 {len(recent)}전 {sum(recent):+.1f}R"
+            f" (R 기록 {n}전)</code>"
+        )
+    else:
+        lines.append("<code>R 통계: 기록 대기 중 (청산이 쌓이면 표시)</code>")
     return "\n".join(lines)
 
-def format_holding_time(entry_iso):
-    try:
-        entry_time = datetime.fromisoformat(entry_iso)
-        now = datetime.now(timezone.utc)
-        diff = now - entry_time
-        hours = int(diff.total_seconds() // 3600)
-        minutes = int((diff.total_seconds() % 3600) // 60)
-        return f"{hours}시간 {minutes:02d}분"
-    except Exception:
-        return "0시간 00분"
 
-def calculate_win_rate(stats):
-    wins = stats.get("wins", 0)
-    losses = stats.get("losses", 0)
-    decisive_total = wins + losses
-    if decisive_total == 0:
-        return 0.0
-    return round((wins / decisive_total) * 100, 2)
+# ──────────────────────────── 포지션 관리 ────────────────────────────
+def migrate_slot(info):
+    """이전 버전 상태 파일의 슬롯을 새 구조로 보정"""
+    entry = float(info.get("entry_price", 0) or 0)
+    if "risk" not in info:
+        info["risk"] = abs(float(info.get("tp1", entry)) - entry)
+    info.setdefault("direction", "LONG")
+    info.setdefault("leverage", 10)
+    info.setdefault("tp1_reached", False)
+    info.setdefault("tp2_reached", False)
+    info.setdefault("max_fav", entry)
+    info.setdefault("max_adv", entry)
+    if "last_candle_ts" not in info:
+        dt = parse_iso(info.get("entry_time", ""), utcnow())
+        info["last_candle_ts"] = int(dt.timestamp()) // 300 * 300
+    # 예전 버전의 TP 순서 버그로 낮아진 스탑 복구
+    if info["direction"] == "LONG":
+        if info["tp1_reached"]:
+            info["stop_loss"] = max(info["stop_loss"], entry)
+        if info["tp2_reached"]:
+            info["stop_loss"] = max(info["stop_loss"], info["tp1"])
+    else:
+        if info["tp1_reached"]:
+            info["stop_loss"] = min(info["stop_loss"], entry)
+        if info["tp2_reached"]:
+            info["stop_loss"] = min(info["stop_loss"], info["tp1"])
 
-def manage_positions(active_slots, tickers_dict, stats, closed_symbols):
-    now_utc = datetime.now(timezone.utc)
-    slot_changed = False
-    alerts_to_send = []
 
-    for symbol, info in list(active_slots.items()):
-        current_price = tickers_dict.get(symbol, info["entry_price"])
-        direction = info.get("direction", "LONG")
-        entry_price = info["entry_price"]
-        tp1 = info["tp1"]
-        tp2 = info["tp2"]
-        tp3 = info["tp3"]
-        stop_loss = info["stop_loss"]
-        tp1_reached = info.get("tp1_reached", False)
-        tp2_reached = info.get("tp2_reached", False)
-        entry_time = datetime.fromisoformat(info.get("entry_time", now_utc.isoformat()))
-        
-        chart_link = f"https://www.gate.io/trade/{symbol}"
-        category = get_asset_category(symbol)
-        display_name = f"[{category}] {symbol}"
-
-        if entry_price <= 0:
-            continue
-
-        if direction == "LONG":
-            current_profit_pct = ((current_price - entry_price) / entry_price) * 100
-            is_stopped = current_price <= stop_loss
-            is_tp1 = current_price >= tp1
-            is_tp2 = current_price >= tp2
-            is_tp3 = current_price >= tp3
-        else:
-            current_profit_pct = ((entry_price - current_price) / entry_price) * 100
-            is_stopped = current_price >= stop_loss
-            is_tp1 = current_price <= tp1
-            is_tp2 = current_price <= tp2
-            is_tp3 = current_price <= tp3
-
-        # 장기 체류(18시간 이상)하면서 수익권(+0.5% 이상)인 경우 슬롯 회전을 위해 강제 익절 청산
-        holding_hours = (now_utc - entry_time).total_seconds() / 3600
-        if holding_hours >= MAX_HOLDING_HOURS and current_profit_pct >= 0.5:
-            msg = (
-                "<b>⏳ [시간 제한 회전 청산 - 익절 마감]</b>\n"
-                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                f"• 보유 시간: <code>{int(holding_hours)}시간 초과</code>\n"
-                f"• 청산 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
-                "• 결과: <code>승리 (장기 체류 수익 확보 회전)</code>"
-            )
-            alerts_to_send.append(msg)
-            stats["wins"] += 1
-            stats["total"] += 1
-            closed_symbols[symbol] = now_utc.isoformat()
-            del active_slots[symbol]
-            slot_changed = True
-            continue
-
-        if is_stopped:
-            if tp2_reached:
-                msg = (
-                    "<b>🎯 [트레일링 스탑 도달 - TP1 수익 확보 청산]</b>\n"
-                    f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                    f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                    f"• 진입가: <code>{entry_price}</code>\n"
-                    f"• 청산 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, TP1 가격 방어)\n"
-                    "• 결과: <code>승리 (TP1 수익 확보 익절 마감)</code>"
-                )
-                alerts_to_send.append(msg)
-                stats["wins"] += 1
-            elif tp1_reached:
-                msg = (
-                    "<b>🏳️ [본전 청산 - 무승부]</b>\n"
-                    f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                    f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                    f"• 진입가: <code>{entry_price}</code>\n"
-                    f"• 청산 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, 본전 스탑)\n"
-                    "• 결과: <code>무 (본전 마감)</code>"
-                )
-                alerts_to_send.append(msg)
-                stats["draws"] += 1
-            else:
-                msg = (
-                    "<b>🛑 [손절가(SL) 도달]</b>\n"
-                    f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                    f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                    f"• 진입가: <code>{entry_price}</code>\n"
-                    f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>, 손절 마감)\n"
-                    "• 결과: <code>패배 (손실 마감)</code>"
-                )
-                alerts_to_send.append(msg)
-                stats["losses"] += 1
-            stats["total"] += 1
-            closed_symbols[symbol] = now_utc.isoformat()
-            del active_slots[symbol]
-            slot_changed = True
-            continue
-
-        if is_tp3:
-            msg = (
-                "<b>🎯🎯🎯 [TP3 최종 목표가 도달 - 포지션 회수]</b>\n"
-                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                f"• 진입가: <code>{entry_price}</code>\n"
-                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
-                "• 결과: <code>승리 (TP3 익절 마감)</code>"
-            )
-            alerts_to_send.append(msg)
-            stats["wins"] += 1
-            stats["total"] += 1
-            closed_symbols[symbol] = now_utc.isoformat()
-            del active_slots[symbol]
-            slot_changed = True
-            continue
-
-        if is_tp2 and not tp2_reached:
-            info["tp2_reached"] = True
-            info["stop_loss"] = tp1
-            slot_changed = True
-            msg = (
-                "<b>🎯🎯 [TP2 2차 목표가 도달]</b>\n"
-                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                f"• 진입가: <code>{entry_price}</code>\n"
-                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
-                "• 조치: <code>스탑로스를 TP1 가격으로 상향 (TP3 최종 목표가를 향해 홀딩 유지)</code>"
-            )
-            alerts_to_send.append(msg)
-
-        if is_tp1 and not tp1_reached:
+def step(info, high, low):
+    """
+    캔들 하나(고가/저가)를 적용. 반환: (이벤트 리스트, 청산 정보 또는 None)
+    한 캔들 안에서 순서를 알 수 없으므로 스탑을 먼저 확인(보수적)하고,
+    TP1 → TP2 순서로 처리해 스탑이 항상 올바르게 이동하도록 함.
+    스탑 이동은 다음 캔들부터 적용됨.
+    """
+    direction, entry = info["direction"], info["entry_price"]
+    events = []
+    if direction == "LONG":
+        info["max_fav"] = max(info["max_fav"], high)
+        info["max_adv"] = min(info["max_adv"], low)
+        if low <= info["stop_loss"]:
+            return events, ("STOP", info["stop_loss"])
+        if high >= info["tp3"]:
+            return events, ("TP3", info["tp3"])
+        if high >= info["tp1"] and not info["tp1_reached"]:
             info["tp1_reached"] = True
-            info["stop_loss"] = entry_price
-            slot_changed = True
-            msg = (
-                "<b>🎯 [TP1 1차 목표가 도달]</b>\n"
-                f"• 방향: <code>{'🟢 롱 포지션' if direction=='LONG' else '🔴 숏 포지션'}</code>\n"
-                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                f"• 진입가: <code>{entry_price}</code>\n"
-                f"• 도달 가격: <code>{current_price}</code> (<code>{current_profit_pct:+.2f}%</code>)\n"
-                "• 조치: <code>본전 스탑(Break-even) 전환 완료 (손실 원천 차단 및 홀딩 유지)</code>"
-            )
-            alerts_to_send.append(msg)
+            info["stop_loss"] = max(info["stop_loss"], entry)
+            events.append("TP1")
+        if high >= info["tp2"] and not info["tp2_reached"]:
+            info["tp2_reached"] = True
+            info["stop_loss"] = max(info["stop_loss"], info["tp1"])
+            events.append("TP2")
+    else:
+        info["max_fav"] = min(info["max_fav"], low)
+        info["max_adv"] = max(info["max_adv"], high)
+        if high >= info["stop_loss"]:
+            return events, ("STOP", info["stop_loss"])
+        if low <= info["tp3"]:
+            return events, ("TP3", info["tp3"])
+        if low <= info["tp1"] and not info["tp1_reached"]:
+            info["tp1_reached"] = True
+            info["stop_loss"] = min(info["stop_loss"], entry)
+            events.append("TP1")
+        if low <= info["tp2"] and not info["tp2_reached"]:
+            info["tp2_reached"] = True
+            info["stop_loss"] = min(info["stop_loss"], info["tp1"])
+            events.append("TP2")
+    return events, None
 
-    for alert in alerts_to_send:
+
+def stop_reason(info):
+    if info.get("tp2_reached"):
+        return "TP1_PROTECT"
+    if info.get("tp1_reached"):
+        return "BREAKEVEN"
+    return "SL"
+
+
+def finalize_trade(state, symbol, info, reason, exit_price, now):
+    """청산 처리: R 계산, 통계/CSV 기록, 슬롯 제거. 알림용 dict 반환"""
+    direction, entry, risk = info["direction"], info["entry_price"], info["risk"]
+    gross_r = r_move(direction, entry, exit_price, risk)
+    net_r = gross_r - (FEE_ROUNDTRIP * entry / risk)
+    if net_r > DRAW_BAND_R:
+        outcome = "win"
+    elif net_r < -DRAW_BAND_R:
+        outcome = "loss"
+    else:
+        outcome = "draw"
+
+    entry_dt = parse_iso(info.get("entry_time", ""), now)
+    hours = max((now - entry_dt).total_seconds() / 3600, 0)
+    mfe_r = r_move(direction, entry, info["max_fav"], risk)
+    mae_r = r_move(direction, entry, info["max_adv"], risk)
+
+    record_stats(state["stats"], net_r, outcome)
+    append_trade_csv({
+        "closed_at": now.isoformat(),
+        "symbol": symbol,
+        "direction": direction,
+        "category": get_asset_category(symbol),
+        "leverage": info.get("leverage", ""),
+        "entry_time": info.get("entry_time", ""),
+        "entry_price": entry,
+        "exit_price": exit_price,
+        "exit_reason": reason,
+        "holding_hours": round(hours, 2),
+        "gross_r": round(gross_r, 3),
+        "net_r": round(net_r, 3),
+        "mfe_r": round(mfe_r, 3),
+        "mae_r": round(mae_r, 3),
+    })
+    state["closed_symbols"][symbol] = now.isoformat()
+    del state["active_slots"][symbol]
+    return {"reason": reason, "exit_price": exit_price, "net_r": net_r,
+            "outcome": outcome, "hours": hours}
+
+
+def build_event_message(symbol, info, event):
+    direction, entry = info["direction"], info["entry_price"]
+    lev = info.get("leverage", 1)
+    level = info["tp1"] if event == "TP1" else info["tp2"]
+    pct = pct_move(direction, entry, level)
+    if event == "TP1":
+        title = "🎯 <b>TP1 도달</b>"
+        action = f"🔒 스탑을 본전(<code>{fmt_price(entry)}</code>)으로 이동\n   이제 손실이 나지 않는 구간입니다"
+    else:
+        title = "🎯🎯 <b>TP2 도달</b>"
+        action = (f"🔒 스탑을 TP1(<code>{fmt_price(info['tp1'])}</code>)으로 이동\n"
+                  f"   최소 +1R 확보, TP3(<code>{fmt_price(info['tp3'])}</code>) 목표로 홀딩")
+    return (
+        f"{title} | {dir_tag(direction)}\n"
+        f"<a href='{chart_link(symbol)}'>[{get_asset_category(symbol)}] {symbol}</a>\n\n"
+        f"진입 <code>{fmt_price(entry)}</code> → <code>{fmt_price(level)}</code>\n"
+        f"수익 <code>{pct:+.2f}%</code> ({lev}배: <code>{pct * lev:+.1f}%</code>)\n\n"
+        f"{action}"
+    )
+
+
+def build_close_message(symbol, info, trade):
+    direction, entry = info["direction"], info["entry_price"]
+    lev = info.get("leverage", 1)
+    exit_price = trade["exit_price"]
+    pct = pct_move(direction, entry, exit_price)
+    reason = trade["reason"]
+    head = {
+        "SL": ("🛑 <b>손절 청산</b>", ""),
+        "BREAKEVEN": ("🏳️ <b>본전 청산</b>", "TP1 도달 후 되돌아와 본전 스탑 체결\n"),
+        "TP1_PROTECT": ("✅ <b>수익 청산 (TP1 방어)</b>", "TP2 도달 후 스탑(TP1)에서 체결\n"),
+        "TP3": ("🏆 <b>TP3 최종 목표 도달</b>", ""),
+        "ROTATE": ("🔄 <b>회전 청산</b>", "장기 보유 수익 확보, 슬롯 회전\n"),
+        "TIME_STOP": ("⏳ <b>타임스탑 청산</b>", f"{TIME_STOP_HOURS}시간 초과, 슬롯 회전을 위해 청산\n"),
+    }[reason]
+    outcome_label = {"win": "승", "draw": "무", "loss": "패"}[trade["outcome"]]
+    return (
+        f"{head[0]} | {dir_tag(direction)}\n"
+        f"<a href='{chart_link(symbol)}'>[{get_asset_category(symbol)}] {symbol}</a>\n\n"
+        f"진입 <code>{fmt_price(entry)}</code> → 청산 <code>{fmt_price(exit_price)}</code>\n"
+        f"{head[1]}"
+        f"가격 변동 <code>{pct:+.2f}%</code> ({lev}배: <code>{pct * lev:+.1f}%</code>)\n\n"
+        f"결과 <code>{trade['net_r']:+.2f}R</code> (수수료 포함) | <b>{outcome_label}</b>\n"
+        f"보유 <code>{fmt_hours(trade['hours'])}</code>"
+    )
+
+
+def manage_positions(state, tickers, now):
+    """보유 포지션 점검. 변화가 있으면 True"""
+    active = state["active_slots"]
+    now_ts = int(now.timestamp())
+    changed = False
+    alerts = []
+
+    for symbol, info in list(active.items()):
+        try:
+            migrate_slot(info)
+            entry, risk = info["entry_price"], info["risk"]
+            if entry <= 0 or risk <= 0:
+                continue
+
+            close = None
+            # 1) 마지막 점검 이후 완성된 5분봉으로 TP/SL 터치 판정
+            for candle in fetch_completed_5m(symbol, info["last_candle_ts"] + 300, now_ts):
+                events, close = step(info, candle["h"], candle["l"])
+                for ev in events:
+                    alerts.append(build_event_message(symbol, info, ev))
+                    changed = True
+                info["last_candle_ts"] = candle["t"]
+                if close:
+                    break
+
+            # 2) 진행 중인 구간은 현재가로 확인
+            price = tickers.get(symbol)
+            if not close and price:
+                events, close = step(info, price, price)
+                for ev in events:
+                    alerts.append(build_event_message(symbol, info, ev))
+                    changed = True
+
+            if close:
+                kind, exit_price = close
+                reason = stop_reason(info) if kind == "STOP" else "TP3"
+                trade = finalize_trade(state, symbol, info, reason, exit_price, now)
+                alerts.append(build_close_message(symbol, info, trade))
+                changed = True
+                continue
+
+            # 3) 보유 시간 규칙
+            entry_dt = parse_iso(info.get("entry_time", ""), now)
+            holding_h = (now - entry_dt).total_seconds() / 3600
+            if holding_h >= TIME_STOP_HOURS:
+                if price:
+                    trade = finalize_trade(state, symbol, info, "TIME_STOP", price, now)
+                    alerts.append(build_close_message(symbol, info, trade))
+                else:
+                    del active[symbol]
+                    alerts.append(
+                        f"⚠️ <b>슬롯 정리</b>\n<code>{symbol}</code> 가격 조회가 불가능해 "
+                        f"{fmt_hours(holding_h)} 보유 포지션을 통계 없이 제거했습니다."
+                    )
+                changed = True
+            elif holding_h >= ROTATE_HOURS and price:
+                if pct_move(info["direction"], entry, price) >= ROTATE_MIN_PROFIT_PCT:
+                    trade = finalize_trade(state, symbol, info, "ROTATE", price, now)
+                    alerts.append(build_close_message(symbol, info, trade))
+                    changed = True
+        except Exception as e:
+            print(f"Error managing {symbol}: {e}")
+
+    for alert in alerts:
         send_telegram_message(alert)
+    return changed
 
-    return slot_changed
 
-def identify_new_signals(tickers, active_slots, closed_symbols, now_utc):
-    slot_changed = False
-    for t in tickers:
-        symbol = t.get("currency_pair", "")
-        if symbol in active_slots or symbol in closed_symbols:
+# ──────────────────────────── 신규 시그널 ────────────────────────────
+def identify_new_signals(state, raw_tickers, now, start_time):
+    active = state["active_slots"]
+    closed = state["closed_symbols"]
+    now_ts = int(now.timestamp())
+    changed = False
+
+    candidates = []
+    for t in raw_tickers:
+        symbol = t.get("contract", "")
+        if not symbol.endswith("_USDT") or LEVERAGED_TOKEN_RE.search(symbol):
+            continue
+        if symbol in active or symbol in closed:
             continue
         try:
             last_price = float(t.get("last", 0))
-            volume_24h = float(t.get("quote_volume", 0))
-            change_24h = float(t.get("change_percentage", 0))
-            is_long_candidate = (change_24h >= 4.5 and volume_24h > 80000)
-            is_short_candidate = (change_24h <= -4.5 and volume_24h > 80000)
-            if not (is_long_candidate or is_short_candidate):
+            change = float(t.get("change_percentage", 0))
+            volume = float(t.get("volume_24h_quote") or t.get("volume_24h_settle") or 0)
+        except (TypeError, ValueError):
+            continue
+        if last_price <= 0 or volume < MIN_QUOTE_VOLUME or abs(change) < MIN_CHANGE_PCT:
+            continue
+        candidates.append((volume, symbol, last_price, change))
+
+    candidates.sort(reverse=True)  # 거래대금 큰 종목부터
+    for volume, symbol, last_price, change in candidates[:MAX_CANDIDATES]:
+        if len(active) >= MAX_SLOTS:
+            break
+        if time.time() - start_time > SCAN_BUDGET_SEC:
+            print("스캔 시간 예산 초과, 남은 후보는 다음 실행으로 넘김")
+            break
+        try:
+            direction = "LONG" if change > 0 else "SHORT"
+            analysis = analyze_signal(symbol, direction, now_ts)
+            if not analysis:
                 continue
-            rsi = calculate_rsi(symbol)
-            if rsi is None:
+
+            atr = analysis["atr"]
+            risk = atr * ATR_SL
+            sign = 1 if direction == "LONG" else -1
+            tp1, tp2, tp3 = (last_price + sign * atr * m for m in ATR_TP_MULTS)
+            sl = last_price - sign * risk
+            if sl <= 0 or tp1 <= 0 or (direction == "SHORT" and tp3 <= 0):
                 continue
-            if is_long_candidate and rsi < 50:
-                continue
-            if is_short_candidate and rsi > 50:
-                continue
-            direction = "LONG" if is_long_candidate else "SHORT"
-            atr, valid = fetch_atr_and_validate_breakout(symbol, direction)
-            if not valid or not atr:
-                continue
+
             category = get_asset_category(symbol)
-            leverage = calculate_recommended_leverage(category, change_24h)
-            if direction == "LONG":
-                tp1 = last_price + (atr * 1.5)
-                tp2 = last_price + (atr * 3.0)
-                tp3 = last_price + (atr * 4.5)
-                sl = last_price - (atr * 1.5)
-            else:
-                tp1 = last_price - (atr * 1.5)
-                tp2 = last_price - (atr * 3.0)
-                tp3 = last_price - (atr * 4.5)
-                sl = last_price + (atr * 1.5)
+            sl_frac = risk / last_price
+            leverage = calculate_recommended_leverage(category, change)
+            leverage = max(1, min(leverage, int(MAX_MARGIN_LOSS / sl_frac) or 1))
 
-            if direction == "LONG":
-                tp1_pct = ((tp1 - last_price) / last_price) * 100
-                tp2_pct = ((tp2 - last_price) / last_price) * 100
-                tp3_pct = ((tp3 - last_price) / last_price) * 100
-                sl_pct = ((sl - last_price) / last_price) * 100
-            else:
-                tp1_pct = ((last_price - tp1) / last_price) * 100
-                tp2_pct = ((last_price - tp2) / last_price) * 100
-                tp3_pct = ((last_price - tp3) / last_price) * 100
-                sl_pct = ((last_price - sl) / last_price) * 100
+            notional_frac = (RISK_PER_TRADE_PCT / 100) / sl_frac
+            margin_frac = min(notional_frac / leverage, 1.0)
+            actual_loss_pct = margin_frac * leverage * sl_frac * 100
 
-            active_slots[symbol] = {
+            active[symbol] = {
                 "direction": direction,
                 "entry_price": last_price,
-                "entry_time": now_utc.isoformat(),
+                "entry_time": now.isoformat(),
                 "leverage": leverage,
-                "tp1": tp1,
-                "tp2": tp2,
-                "tp3": tp3,
+                "risk": risk,
+                "tp1": tp1, "tp2": tp2, "tp3": tp3,
                 "stop_loss": sl,
+                "initial_stop": sl,
                 "tp1_reached": False,
                 "tp2_reached": False,
+                "max_fav": last_price,
+                "max_adv": last_price,
+                "last_candle_ts": now_ts // 300 * 300,
             }
-            slot_changed = True
+            changed = True
 
-            chart_link = f"https://www.gate.io/trade/{symbol}"
-            display_name = f"[{category}] {symbol}"
-            dir_tag = "🟢 롱 포지션" if direction == "LONG" else "🔴 숏 포지션"
+            def pct_of(price):
+                return pct_move(direction, last_price, price)
 
             msg = (
-                "<b>🚀 [Master 6.0 신규 시그널 포착 (ATR 필터 적용)]</b>\n"
-                f"• 방향: <code>{dir_tag}</code>\n"
-                f"• 종목: <a href='{chart_link}'>{display_name}</a>\n"
-                f"• 진입가: <code>{last_price}</code>\n"
-                f"• 추천 레버리지: <code>{leverage}배</code> (변동성 분석)\n"
-                "• 탐색 이유: <code>1시간봉 완성 캔들 모멘텀 및 RSI 필터 통과</code>\n\n"
-                "<b>🎯 ATR 가변형 목표가 및 손절가</b>\n"
-                f"• TP1: <code>{tp1:.4f} ({tp1_pct:+.2f}%)</code>\n"
-                f"• TP2: <code>{tp2:.4f} ({tp2_pct:+.2f}%)</code>\n"
-                f"• TP3: <code>{tp3:.4f} ({tp3_pct:+.2f}%)</code>\n"
-                f"• 손절가 SL: <code>{sl:.4f} ({sl_pct:+.2f}%)</code>"
+                f"🚀 <b>신규 시그널</b> | {dir_tag(direction)}\n"
+                f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
+                f"진입가 <code>{fmt_price(last_price)}</code>\n"
+                f"레버리지 <code>{leverage}배</code>\n\n"
+                "🎯 <b>목표가</b>\n"
+                f"TP1 <code>{fmt_price(tp1)} ({pct_of(tp1):+.2f}%)</code> → 1R\n"
+                f"TP2 <code>{fmt_price(tp2)} ({pct_of(tp2):+.2f}%)</code> → 2R\n"
+                f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code> → 3R\n"
+                f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code> → -1R\n\n"
+                f"⚠️ 손절 시 증거금 손실 <code>-{sl_frac * leverage * 100:.1f}%</code> ({leverage}배 기준)\n"
+                f"💰 권장 증거금: 계좌의 약 <code>{margin_frac * 100:.1f}%</code> "
+                f"(손절 시 계좌 <code>-{actual_loss_pct:.1f}%</code>)\n\n"
+                "📌 <b>진입 근거</b>\n"
+                f"• 24시간 변동 <code>{change:+.1f}%</code> / 거래대금 <code>{volume / 1e6:.1f}M USDT</code>\n"
+                f"• RSI(14) <code>{analysis['rsi']:.1f}</code> / 직전 1시간봉 몸통 <code>{analysis['body_ratio'] * 100:.0f}%</code>\n"
+                f"• ATR <code>{atr / last_price * 100:.2f}%</code>"
             )
             send_telegram_message(msg)
-            if len(active_slots) >= MAX_SLOTS:
-                break
-        except Exception:
+        except Exception as e:
+            print(f"Error processing candidate {symbol}: {e}")
             continue
-    return slot_changed
+    return changed
 
+
+# ──────────────────────────── 슬롯 현황 / 리포트 ────────────────────────────
+def build_slot_status_message(state, tickers):
+    active = state["active_slots"]
+    symbols = list(active.keys())
+    longs = sum(1 for s in symbols if active[s].get("direction") == "LONG")
+    shorts = len(symbols) - longs
+    lines = [f"<b>📊 슬롯 현황 ({len(symbols)} / {MAX_SLOTS}) | 🟢 롱 {longs} / 🔴 숏 {shorts}</b>\n"]
+
+    for i in range(MAX_SLOTS):
+        icon = NUM_EMOJI[i] if i < len(NUM_EMOJI) else f"{i + 1}."
+        if i >= len(symbols):
+            lines.append(f"{icon} (빈 슬롯)")
+            continue
+        sym = symbols[i]
+        info = active[sym]
+        migrate_slot(info)
+        direction, entry = info["direction"], info["entry_price"]
+        lev = info.get("leverage", 1)
+        price = tickers.get(sym, entry)
+        pct = pct_move(direction, entry, price)
+        entry_dt = parse_iso(info.get("entry_time", ""), utcnow())
+        hold = fmt_hours(max((utcnow() - entry_dt).total_seconds() / 3600, 0))
+        icon_dir = "🟢" if direction == "LONG" else "🔴"
+
+        def dist(level):
+            return abs(level - price) / price * 100 if price > 0 else 0.0
+
+        if info["tp2_reached"]:
+            status = f"🎯🎯 TP2 도달 | 스탑 TP1 방어 | TP3까지 {dist(info['tp3']):.1f}%"
+        elif info["tp1_reached"]:
+            status = f"🎯 TP1 도달 | 스탑 본전 | TP2까지 {dist(info['tp2']):.1f}%"
+        else:
+            status = f"📈 홀딩 | TP1까지 {dist(info['tp1']):.1f}% / SL까지 {dist(info['stop_loss']):.1f}%"
+
+        lines.append(
+            f"{icon} {icon_dir} <a href='{chart_link(sym)}'>[{get_asset_category(sym)}] {sym}</a>\n"
+            f"   <code>{pct:+.2f}% ({lev}배 {pct * lev:+.1f}%) | 보유 {hold}</code>\n"
+            f"   <code>{status}</code>"
+        )
+    lines.append("\n" + build_stats_line(state["stats"]))
+    return "\n".join(lines)
+
+
+def build_daily_report(now, stats):
+    since = now - timedelta(hours=24)
+    rows = []
+    if os.path.exists(TRADES_FILE):
+        with open(TRADES_FILE, "r", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                dt = parse_iso(row.get("closed_at", ""))
+                if dt and dt >= since:
+                    rows.append(row)
+
+    lines = [f"📋 <b>일일 리포트</b> | {now.strftime('%m/%d')}\n"]
+    if not rows:
+        lines.append("최근 24시간 청산 거래가 없습니다.")
+    else:
+        nets = [float(r["net_r"]) for r in rows]
+        wins = sum(1 for n in nets if n > DRAW_BAND_R)
+        losses = sum(1 for n in nets if n < -DRAW_BAND_R)
+        draws = len(nets) - wins - losses
+        lines.append(f"최근 24시간 <code>{len(nets)}전 {wins}승 {draws}무 {losses}패 | 합계 {sum(nets):+.2f}R</code>\n")
+
+        lines.append("<b>청산 유형별</b>")
+        for key, label in REASON_LABEL.items():
+            vals = [float(r["net_r"]) for r in rows if r["exit_reason"] == key]
+            if vals:
+                lines.append(f"• {label} <code>{len(vals)}건 평균 {sum(vals) / len(vals):+.2f}R</code>")
+
+        by_dir = {"LONG": 0.0, "SHORT": 0.0}
+        for r in rows:
+            by_dir[r["direction"]] = by_dir.get(r["direction"], 0.0) + float(r["net_r"])
+        lines.append(f"\n방향별 <code>롱 {by_dir['LONG']:+.2f}R / 숏 {by_dir['SHORT']:+.2f}R</code>")
+
+    lines.append("\n" + build_stats_line(stats))
+    return "\n".join(lines)
+
+
+def maybe_send_daily_report(state, now):
+    if not DAILY_REPORT_ENABLED:
+        return False
+    today = now.strftime("%Y-%m-%d")
+    if now.hour < DAILY_REPORT_HOUR_UTC or state.get("last_report_date") == today:
+        return False
+    send_telegram_message(build_daily_report(now, state["stats"]))
+    state["last_report_date"] = today
+    return True
+
+
+# ──────────────────────────── 메인 ────────────────────────────
 def run_bot():
+    start_time = time.time()
     print("Bot 시작...")
-    raw_tickers = fetch_gateio_tickers()
+    state = load_state()
+    now = utcnow()
+
+    raw_tickers = fetch_tickers()
     if not raw_tickers:
         print("티커 정보 불러오기 실패")
+        state["fail_count"] += 1
+        n = state["fail_count"]
+        if n == FAIL_ALERT_THRESHOLD or (n > FAIL_ALERT_THRESHOLD and (n - FAIL_ALERT_THRESHOLD) % 12 == 0):
+            send_telegram_message(
+                "⚠️ <b>봇 오류 경고</b>\n"
+                f"Gate.io 시세 조회가 {n}회 연속 실패했습니다.\n"
+                "포지션 TP/SL 감시가 중단된 상태입니다."
+            )
+        save_state(state)
         return
-    tickers_dict = {t["currency_pair"]: float(t.get("last", 0)) for t in raw_tickers if "currency_pair" in t}
-    state = load_state()
-    active_slots = state["active_slots"]
-    stats = state["stats"]
-    closed_symbols = state.setdefault("closed_symbols", {})
-    now_utc = datetime.now(timezone.utc)
-    
-    expired_symbols = [sym for sym, t_str in closed_symbols.items()
-                       if (now_utc - datetime.fromisoformat(t_str)) >= timedelta(hours=3)]
-    for sym in expired_symbols:
-        del closed_symbols[sym]
+    state["fail_count"] = 0
 
-    # 1. 포지션 관리 및 청산 체크 (시간 제한 회전 청산 포함)
-    changed_positions = manage_positions(active_slots, tickers_dict, stats, closed_symbols)
+    tickers = {}
+    for t in raw_tickers:
+        try:
+            tickers[t["contract"]] = float(t.get("last", 0))
+        except (KeyError, TypeError, ValueError):
+            continue
 
-    # 2. 신규 시그널 탐색
+    # 재진입 금지 기간이 지난 종목 정리
+    cooldown = timedelta(hours=COOLDOWN_HOURS)
+    state["closed_symbols"] = {
+        sym: ts for sym, ts in state["closed_symbols"].items()
+        if (now - parse_iso(ts, now - cooldown * 2)) < cooldown
+    }
+
+    changed_positions = manage_positions(state, tickers, now)
+
     changed_new = False
-    if len(active_slots) < MAX_SLOTS:
-        changed_new = identify_new_signals(raw_tickers, active_slots, closed_symbols, now_utc)
+    if len(state["active_slots"]) < MAX_SLOTS:
+        changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
-    # 3. 슬롯 현황판은 포지션 추가/청산 등의 변화가 있을 때만 전송
     if changed_positions or changed_new:
-        slot_status_msg = build_slot_status_message(active_slots, tickers_dict, stats)
-        send_telegram_message(slot_status_msg)
+        send_telegram_message(build_slot_status_message(state, tickers))
         print("Slot status updated and sent to Telegram.")
     else:
         print("No slot changes. Status message skipped.")
 
+    maybe_send_daily_report(state, now)
     save_state(state)
     print("Bot 사이클 종료")
+
 
 if __name__ == "__main__":
     run_bot()
