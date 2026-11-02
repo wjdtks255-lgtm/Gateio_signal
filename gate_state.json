@@ -14,7 +14,7 @@
       "risk": 0.0005121428571428568,
       "max_fav": 0.0205,
       "max_adv": 0.02179,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     },
     "ESPORTS_USDT": {
       "direction": "LONG",
@@ -31,7 +31,7 @@
       "tp2_reached": false,
       "max_fav": 0.01666,
       "max_adv": 0.01423,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -48,7 +48,7 @@
       "tp2_reached": true,
       "max_fav": 3.9051,
       "max_adv": 4.1543,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -65,7 +65,7 @@
       "tp2_reached": true,
       "max_fav": 0.16786,
       "max_adv": 0.18112,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     },
     "LSK_USDT": {
       "direction": "SHORT",
@@ -82,7 +82,7 @@
       "tp2_reached": false,
       "max_fav": 0.1824,
       "max_adv": 0.1911,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     },
     "CL_USDT": {
       "direction": "SHORT",
@@ -97,9 +97,9 @@
       "initial_stop": 98.60821428571428,
       "tp1_reached": true,
       "tp2_reached": true,
-      "max_fav": 95.33,
+      "max_fav": 95.23,
       "max_adv": 97.71,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     },
     "BZ_USDT": {
       "direction": "SHORT",
@@ -114,9 +114,9 @@
       "initial_stop": 107.815,
       "tp1_reached": true,
       "tp2_reached": true,
-      "max_fav": 103.4,
+      "max_fav": 103.33,
       "max_adv": 106.43,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     },
     "Q_USDT": {
       "direction": "SHORT",
@@ -133,7 +133,7 @@
       "tp2_reached": false,
       "max_fav": 0.025138,
       "max_adv": 0.026775,
-      "last_candle_ts": 1793642700
+      "last_candle_ts": 1793643000
     }
   },
   "stats": {
