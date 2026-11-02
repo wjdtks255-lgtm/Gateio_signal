@@ -41,6 +41,8 @@ LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 
 # 목표가/손절가 (ATR 배수). 1R = ATR_SL * ATR
 ATR_SL = 1.5
 ATR_TP_MULTS = (1.5, 3.0, 4.5)   # TP1, TP2, TP3 → 각각 1R, 2R, 3R
+MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외 (비정상 변동성 차단)
+MAX_PER_THEME = 1             # 같은 테마에서 같은 방향으로 동시에 가질 수 있는 최대 슬롯 수
 
 # 비용/리스크 가정
 FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%
@@ -334,9 +336,10 @@ def analyze_signal(symbol, direction, now_ts):
     return {"rsi": rsi, "atr": atr, "body_ratio": body_ratio}
 
 
-# ──────────────────────────── 분류/레버리지 ────────────────────────────
+# ──────────────────────────── 분류/레버리지/테마 ────────────────────────────
 STOCK_BASES = {"SKHYNIX", "TSLA", "AAPL", "NVDA", "MSFT", "AMZN", "META", "NFLX",
-               "GOOGL", "BABA", "AMD", "INTC", "PLTR", "COIN", "MSTR"}
+               "GOOGL", "BABA", "AMD", "INTC", "PLTR", "COIN", "MSTR",
+               "SOXL", "SOXS", "TQQQ", "SQQQ"}
 INDEX_BASES = {"SPX", "NAS", "NDX", "DJI", "US30", "US100", "NIKKEI", "VIX", "DAX"}
 COMMODITY_BASES = {"XAU", "XAUT", "XAG", "XAGT", "OIL", "USOIL", "UKOIL", "GOLD",
                    "SILVER", "CRUDE", "BRENT", "COPPER"}
@@ -354,6 +357,34 @@ def get_asset_category(symbol):
     if base in FOREX_BASES:
         return "외환"
     return "코인"
+
+
+# 같은 위험에 노출되는 종목 묶음. 값은 방향(+1 = 기초자산과 같은 방향, -1 = 인버스)
+THEMES = {
+    "반도체": {"SOXL": 1, "SOXS": -1, "SKHYNIX": 1, "NVDA": 1, "AMD": 1, "INTC": 1,
+             "MU": 1, "TSM": 1},
+    "미국지수": {"NAS": 1, "NDX": 1, "SPX": 1, "US100": 1, "US30": 1, "DJI": 1,
+             "TQQQ": 1, "SQQQ": -1},
+    "금": {"XAU": 1, "XAUT": 1, "GOLD": 1, "PAXG": 1},
+}
+
+
+def theme_exposure(symbol, direction):
+    """(테마 이름, 실제 노출 방향 +1/-1). 해당 없으면 (None, 0)"""
+    base = symbol.upper().split("_")[0]
+    for theme, members in THEMES.items():
+        if base in members:
+            return theme, members[base] * (1 if direction == "LONG" else -1)
+    return None, 0
+
+
+def count_theme_slots(active, theme, sign):
+    count = 0
+    for sym, info in active.items():
+        t, s = theme_exposure(sym, info.get("direction", "LONG"))
+        if t == theme and s == sign:
+            count += 1
+    return count
 
 
 def calculate_recommended_leverage(category, change_24h):
@@ -677,6 +708,9 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             break
         try:
             direction = "LONG" if change > 0 else "SHORT"
+            theme, theme_sign = theme_exposure(symbol, direction)
+            if theme and count_theme_slots(active, theme, theme_sign) >= MAX_PER_THEME:
+                continue
             analysis = analyze_signal(symbol, direction, now_ts)
             if not analysis:
                 continue
@@ -689,8 +723,12 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             if sl <= 0 or tp1 <= 0 or (direction == "SHORT" and tp3 <= 0):
                 continue
 
-            category = get_asset_category(symbol)
             sl_frac = risk / last_price
+            if sl_frac * 100 > MAX_SL_PCT:
+                print(f"{symbol} 손절 거리 {sl_frac * 100:.1f}% > {MAX_SL_PCT}%, 제외")
+                continue
+
+            category = get_asset_category(symbol)
             leverage = calculate_recommended_leverage(category, change)
             leverage = max(1, min(leverage, int(MAX_MARGIN_LOSS / sl_frac) or 1))
 
