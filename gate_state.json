@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 0.01666,
       "max_adv": 0.01324,
-      "last_candle_ts": 1793647800
+      "last_candle_ts": 1793648100
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -32,7 +32,7 @@
       "tp2_reached": true,
       "max_fav": 0.16786,
       "max_adv": 0.18112,
-      "last_candle_ts": 1793647800
+      "last_candle_ts": 1793648100
     },
     "LSK_USDT": {
       "direction": "SHORT",
@@ -43,13 +43,13 @@
       "tp1": 0.179475,
       "tp2": 0.17084999999999997,
       "tp3": 0.16222499999999998,
-      "stop_loss": 0.19672499999999998,
+      "stop_loss": 0.1881,
       "initial_stop": 0.19672499999999998,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.1801,
+      "max_fav": 0.1775,
       "max_adv": 0.1911,
-      "last_candle_ts": 1793647800
+      "last_candle_ts": 1793648100
     },
     "BZ_USDT": {
       "direction": "SHORT",
@@ -66,7 +66,7 @@
       "tp2_reached": true,
       "max_fav": 103.33,
       "max_adv": 106.43,
-      "last_candle_ts": 1793647800
+      "last_candle_ts": 1793648100
     },
     "Q_USDT": {
       "direction": "SHORT",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 0.025138,
       "max_adv": 0.026775,
-      "last_candle_ts": 1793647800
+      "last_candle_ts": 1793648100
     },
     "ZEC_USDT": {
       "direction": "SHORT",
@@ -94,13 +94,13 @@
       "tp1": 1146.0385714285712,
       "tp2": 1114.1014285714284,
       "tp3": 1082.1642857142856,
-      "stop_loss": 1199.2671428571427,
+      "stop_loss": 1167.33,
       "initial_stop": 1199.2671428571427,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1151.18,
+      "max_fav": 1128.25,
       "max_adv": 1167.33,
-      "last_candle_ts": 1793647800
+      "last_candle_ts": 1793648100
     },
     "SOXL_USDT": {
       "direction": "SHORT",
@@ -115,9 +115,9 @@
       "initial_stop": 73.32321428571427,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 69.92,
+      "max_fav": 69.17,
       "max_adv": 70.99,
-      "last_candle_ts": 1793647800
+      "last_candle_ts": 1793648100
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -132,7 +132,7 @@
       "initial_stop": 1118.527857142857,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1092.76,
+      "max_fav": 1086.06,
       "max_adv": 1092.76,
       "last_candle_ts": 1793648100
     }
