@@ -14,7 +14,7 @@
       "risk": 0.030127499999999974,
       "max_fav": 0.2939,
       "max_adv": 0.2628,
-      "last_candle_ts": 1793598900
+      "last_candle_ts": 1793599200
     },
     "BMT_USDT": {
       "direction": "SHORT",
@@ -30,7 +30,7 @@
       "risk": 0.0005121428571428568,
       "max_fav": 0.02133,
       "max_adv": 0.02179,
-      "last_candle_ts": 1793598900
+      "last_candle_ts": 1793599200
     },
     "ZBCN_USDT": {
       "direction": "LONG",
@@ -45,8 +45,8 @@
       "tp2_reached": false,
       "risk": 7.157142857142865e-05,
       "max_fav": 0.002106,
-      "max_adv": 0.0020694,
-      "last_candle_ts": 1793598900
+      "max_adv": 0.0020671,
+      "last_candle_ts": 1793599200
     },
     "SOXL_USDT": {
       "direction": "LONG",
@@ -63,7 +63,7 @@
       "tp2_reached": false,
       "max_fav": 82.9,
       "max_adv": 81.55,
-      "last_candle_ts": 1793598900
+      "last_candle_ts": 1793599200
     },
     "SKHYNIX_USDT": {
       "direction": "LONG",
@@ -80,7 +80,7 @@
       "tp2_reached": false,
       "max_fav": 1114.88,
       "max_adv": 1097.1,
-      "last_candle_ts": 1793598900
+      "last_candle_ts": 1793599200
     },
     "SOXS_USDT": {
       "direction": "SHORT",
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 48.21,
       "max_adv": 49.1,
-      "last_candle_ts": 1793598900
+      "last_candle_ts": 1793599200
     },
     "KORU_USDT": {
       "direction": "LONG",
@@ -114,7 +114,7 @@
       "tp2_reached": false,
       "max_fav": 12.078,
       "max_adv": 11.692,
-      "last_candle_ts": 1793598900
+      "last_candle_ts": 1793599200
     },
     "SAMSUNG_USDT": {
       "direction": "LONG",
@@ -131,7 +131,7 @@
       "tp2_reached": false,
       "max_fav": 172.96,
       "max_adv": 169.79,
-      "last_candle_ts": 1793598900
+      "last_candle_ts": 1793599200
     }
   },
   "stats": {
