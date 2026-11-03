@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 99.9,
-      "last_candle_ts": 1793713800
+      "last_candle_ts": 1793714100
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -32,7 +32,7 @@
       "tp2_reached": false,
       "max_fav": 323.72,
       "max_adv": 327.09,
-      "last_candle_ts": 1793713800
+      "last_candle_ts": 1793714100
     },
     "BZ_USDT": {
       "direction": "SHORT",
@@ -50,7 +50,7 @@
       "tp2_reached": false,
       "max_fav": 100.88,
       "max_adv": 102.88,
-      "last_candle_ts": 1793713800
+      "last_candle_ts": 1793714100
     },
     "LAB_USDT": {
       "direction": "LONG",
@@ -68,7 +68,7 @@
       "tp2_reached": false,
       "max_fav": 0.04703,
       "max_adv": 0.04677,
-      "last_candle_ts": 1793713800
+      "last_candle_ts": 1793714100
     },
     "BOME_USDT": {
       "direction": "LONG",
@@ -84,9 +84,9 @@
       "initial_stop": 0.00061085,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.00064,
+      "max_fav": 0.0006426,
       "max_adv": 0.0006263,
-      "last_candle_ts": 1793713800
+      "last_candle_ts": 1793714100
     },
     "LIT_USDT": {
       "direction": "LONG",
@@ -98,13 +98,13 @@
       "tp1": 3.293,
       "tp2": 3.3785,
       "tp3": 3.464,
-      "stop_loss": 3.1505,
+      "stop_loss": 3.2474000000000003,
       "initial_stop": 3.1505,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 3.242,
+      "max_fav": 3.325,
       "max_adv": 3.192,
-      "last_candle_ts": 1793713800
+      "last_candle_ts": 1793714100
     },
     "ZRO_USDT": {
       "direction": "LONG",
@@ -120,9 +120,27 @@
       "initial_stop": 1.7998214285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.849,
+      "max_fav": 1.868,
       "max_adv": 1.849,
       "last_candle_ts": 1793714100
+    },
+    "MUBARAK_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.03871,
+      "entry_time": "2026-11-03T14:00:49.042253+00:00",
+      "leverage": 5,
+      "risk": 0.0010992857142857163,
+      "atr": 0.0007328571428571443,
+      "tp1": 0.037977142857142855,
+      "tp2": 0.03687785714285714,
+      "tp3": 0.035778571428571423,
+      "stop_loss": 0.03980928571428572,
+      "initial_stop": 0.03980928571428572,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.03871,
+      "max_adv": 0.03871,
+      "last_candle_ts": 1793714400
     }
   },
   "stats": {
