@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 100.5,
-      "last_candle_ts": 1793717100
+      "last_candle_ts": 1793717400
     },
     "LAB_USDT": {
       "direction": "LONG",
@@ -33,7 +33,7 @@
       "tp2_reached": false,
       "max_fav": 0.04703,
       "max_adv": 0.04594,
-      "last_candle_ts": 1793717100
+      "last_candle_ts": 1793717400
     },
     "ZRO_USDT": {
       "direction": "LONG",
@@ -51,7 +51,7 @@
       "tp2_reached": false,
       "max_fav": 1.917,
       "max_adv": 1.849,
-      "last_candle_ts": 1793717100
+      "last_candle_ts": 1793717400
     },
     "MUBARAK_USDT": {
       "direction": "SHORT",
@@ -68,8 +68,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.03857,
-      "max_adv": 0.03903,
-      "last_candle_ts": 1793717100
+      "max_adv": 0.03919,
+      "last_candle_ts": 1793717400
     },
     "STRK_USDT": {
       "direction": "LONG",
@@ -87,7 +87,7 @@
       "tp2_reached": false,
       "max_fav": 0.04426,
       "max_adv": 0.04325,
-      "last_candle_ts": 1793717100
+      "last_candle_ts": 1793717400
     },
     "HANA_USDT": {
       "direction": "SHORT",
@@ -105,7 +105,7 @@
       "tp2_reached": false,
       "max_fav": 0.01434,
       "max_adv": 0.01457,
-      "last_candle_ts": 1793717100
+      "last_candle_ts": 1793717400
     },
     "MAGMA_USDT": {
       "direction": "SHORT",
@@ -123,7 +123,7 @@
       "tp2_reached": false,
       "max_fav": 0.41137,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793717100
+      "last_candle_ts": 1793717400
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -141,7 +141,7 @@
       "tp2_reached": false,
       "max_fav": 0.3393,
       "max_adv": 0.3442,
-      "last_candle_ts": 1793717100
+      "last_candle_ts": 1793717400
     }
   },
   "stats": {
@@ -201,7 +201,6 @@
     ]
   },
   "closed_symbols": {
-    "ENA_USDT": "2026-11-03T11:55:27.482052+00:00",
     "SNDK_USDT": "2026-11-03T12:25:25.016569+00:00",
     "MVLL_USDT": "2026-11-03T12:25:25.016569+00:00",
     "PLTR_USDT": "2026-11-03T12:35:29.385535+00:00",
