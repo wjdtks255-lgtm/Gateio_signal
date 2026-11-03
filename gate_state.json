@@ -14,8 +14,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 95.2,
-      "max_adv": 99.9,
-      "last_candle_ts": 1793716500
+      "max_adv": 100.5,
+      "last_candle_ts": 1793716800
     },
     "LAB_USDT": {
       "direction": "LONG",
@@ -33,7 +33,7 @@
       "tp2_reached": false,
       "max_fav": 0.04703,
       "max_adv": 0.04594,
-      "last_candle_ts": 1793716500
+      "last_candle_ts": 1793716800
     },
     "ZRO_USDT": {
       "direction": "LONG",
@@ -49,9 +49,9 @@
       "initial_stop": 1.7998214285714285,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1.91,
+      "max_fav": 1.915,
       "max_adv": 1.849,
-      "last_candle_ts": 1793716500
+      "last_candle_ts": 1793716800
     },
     "MUBARAK_USDT": {
       "direction": "SHORT",
@@ -69,7 +69,7 @@
       "tp2_reached": false,
       "max_fav": 0.03857,
       "max_adv": 0.03897,
-      "last_candle_ts": 1793716500
+      "last_candle_ts": 1793716800
     },
     "STRK_USDT": {
       "direction": "LONG",
@@ -87,7 +87,7 @@
       "tp2_reached": false,
       "max_fav": 0.04426,
       "max_adv": 0.04325,
-      "last_candle_ts": 1793716500
+      "last_candle_ts": 1793716800
     },
     "HANA_USDT": {
       "direction": "SHORT",
@@ -104,8 +104,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.01434,
-      "max_adv": 0.01446,
-      "last_candle_ts": 1793716500
+      "max_adv": 0.01447,
+      "last_candle_ts": 1793716800
     },
     "MAGMA_USDT": {
       "direction": "SHORT",
@@ -123,7 +123,7 @@
       "tp2_reached": false,
       "max_fav": 0.41993,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793716500
+      "last_candle_ts": 1793716800
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -140,8 +140,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.3393,
-      "max_adv": 0.3427,
-      "last_candle_ts": 1793716500
+      "max_adv": 0.3438,
+      "last_candle_ts": 1793716800
     }
   },
   "stats": {
