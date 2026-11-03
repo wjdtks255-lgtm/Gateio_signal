@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 99.9,
-      "last_candle_ts": 1793715300
+      "last_candle_ts": 1793715600
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -32,7 +32,7 @@
       "tp2_reached": false,
       "max_fav": 323.72,
       "max_adv": 327.09,
-      "last_candle_ts": 1793715300
+      "last_candle_ts": 1793715600
     },
     "LAB_USDT": {
       "direction": "LONG",
@@ -49,8 +49,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.04703,
-      "max_adv": 0.04641,
-      "last_candle_ts": 1793715300
+      "max_adv": 0.04594,
+      "last_candle_ts": 1793715600
     },
     "ZRO_USDT": {
       "direction": "LONG",
@@ -62,13 +62,13 @@
       "tp1": 1.8817857142857144,
       "tp2": 1.9309642857142857,
       "tp3": 1.9801428571428572,
-      "stop_loss": 1.7998214285714285,
+      "stop_loss": 1.855557142857143,
       "initial_stop": 1.7998214285714285,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1.876,
+      "max_fav": 1.896,
       "max_adv": 1.849,
-      "last_candle_ts": 1793715300
+      "last_candle_ts": 1793715600
     },
     "MUBARAK_USDT": {
       "direction": "SHORT",
@@ -86,7 +86,7 @@
       "tp2_reached": false,
       "max_fav": 0.03857,
       "max_adv": 0.03897,
-      "last_candle_ts": 1793715300
+      "last_candle_ts": 1793715600
     },
     "STRK_USDT": {
       "direction": "LONG",
@@ -103,8 +103,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.04426,
-      "max_adv": 0.04338,
-      "last_candle_ts": 1793715300
+      "max_adv": 0.04326,
+      "last_candle_ts": 1793715600
     },
     "HANA_USDT": {
       "direction": "SHORT",
@@ -121,8 +121,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.01434,
-      "max_adv": 0.01441,
-      "last_candle_ts": 1793715300
+      "max_adv": 0.01442,
+      "last_candle_ts": 1793715600
     },
     "MAGMA_USDT": {
       "direction": "SHORT",
@@ -139,7 +139,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.41993,
-      "max_adv": 0.41993,
+      "max_adv": 0.42447,
       "last_candle_ts": 1793715600
     }
   },
