@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 0.04427,
       "max_adv": 0.04317,
-      "last_candle_ts": 1793722500
+      "last_candle_ts": 1793722800
     },
     "MAGMA_USDT": {
       "direction": "SHORT",
@@ -32,9 +32,9 @@
       "initial_stop": 0.4376867857142857,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.39782,
+      "max_fav": 0.39619,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793722500
+      "last_candle_ts": 1793722800
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -50,9 +50,9 @@
       "initial_stop": 0.34604999999999997,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.3376,
+      "max_fav": 0.3374,
       "max_adv": 0.3442,
-      "last_candle_ts": 1793722500
+      "last_candle_ts": 1793722800
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -68,9 +68,9 @@
       "initial_stop": 3.936642857142857,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 3.8209,
+      "max_fav": 3.7967,
       "max_adv": 3.8708,
-      "last_candle_ts": 1793722500
+      "last_candle_ts": 1793722800
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 57.43,
       "max_adv": 57.77,
-      "last_candle_ts": 1793722500
+      "last_candle_ts": 1793722800
     },
     "BE_USDT": {
       "direction": "LONG",
@@ -105,8 +105,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 220.9,
-      "max_adv": 214.7,
-      "last_candle_ts": 1793722500
+      "max_adv": 214.2,
+      "last_candle_ts": 1793722800
     },
     "MVLL_USDT": {
       "direction": "SHORT",
@@ -122,9 +122,9 @@
       "initial_stop": 14.231428571428571,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 13.24,
+      "max_fav": 13.11,
       "max_adv": 13.67,
-      "last_candle_ts": 1793722500
+      "last_candle_ts": 1793722800
     },
     "INTW_USDT": {
       "direction": "SHORT",
@@ -140,7 +140,7 @@
       "initial_stop": 6.766071428571428,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 6.51,
+      "max_fav": 6.49,
       "max_adv": 6.51,
       "last_candle_ts": 1793722800
     }
