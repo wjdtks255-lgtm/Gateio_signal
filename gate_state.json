@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 99.9,
-      "last_candle_ts": 1793714100
+      "last_candle_ts": 1793714400
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -32,25 +32,7 @@
       "tp2_reached": false,
       "max_fav": 323.72,
       "max_adv": 327.09,
-      "last_candle_ts": 1793714100
-    },
-    "BZ_USDT": {
-      "direction": "SHORT",
-      "entry_price": 102.72,
-      "entry_time": "2026-11-03T13:30:44.204951+00:00",
-      "leverage": 10,
-      "risk": 1.4121428571428578,
-      "atr": 0.941428571428572,
-      "tp1": 101.77857142857142,
-      "tp2": 100.36642857142857,
-      "tp3": 98.95428571428572,
-      "stop_loss": 102.53171428571429,
-      "initial_stop": 104.13214285714285,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 100.88,
-      "max_adv": 102.88,
-      "last_candle_ts": 1793714100
+      "last_candle_ts": 1793714400
     },
     "LAB_USDT": {
       "direction": "LONG",
@@ -67,8 +49,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.04703,
-      "max_adv": 0.04677,
-      "last_candle_ts": 1793714100
+      "max_adv": 0.04646,
+      "last_candle_ts": 1793714400
     },
     "BOME_USDT": {
       "direction": "LONG",
@@ -84,9 +66,9 @@
       "initial_stop": 0.00061085,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.0006426,
+      "max_fav": 0.0006429,
       "max_adv": 0.0006263,
-      "last_candle_ts": 1793714100
+      "last_candle_ts": 1793714400
     },
     "LIT_USDT": {
       "direction": "LONG",
@@ -102,9 +84,9 @@
       "initial_stop": 3.1505,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 3.325,
+      "max_fav": 3.368,
       "max_adv": 3.192,
-      "last_candle_ts": 1793714100
+      "last_candle_ts": 1793714400
     },
     "ZRO_USDT": {
       "direction": "LONG",
@@ -120,9 +102,9 @@
       "initial_stop": 1.7998214285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.868,
+      "max_fav": 1.873,
       "max_adv": 1.849,
-      "last_candle_ts": 1793714100
+      "last_candle_ts": 1793714400
     },
     "MUBARAK_USDT": {
       "direction": "SHORT",
@@ -138,19 +120,37 @@
       "initial_stop": 0.03980928571428572,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.03871,
+      "max_fav": 0.03868,
       "max_adv": 0.03871,
       "last_candle_ts": 1793714400
+    },
+    "STRK_USDT": {
+      "direction": "LONG",
+      "entry_price": 0.04426,
+      "entry_time": "2026-11-03T14:05:30.147290+00:00",
+      "leverage": 7,
+      "risk": 0.001254642857142856,
+      "atr": 0.0008364285714285708,
+      "tp1": 0.04509642857142857,
+      "tp2": 0.04635107142857143,
+      "tp3": 0.047605714285714286,
+      "stop_loss": 0.043005357142857144,
+      "initial_stop": 0.043005357142857144,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.04426,
+      "max_adv": 0.04426,
+      "last_candle_ts": 1793714700
     }
   },
   "stats": {
     "wins": 64,
-    "draws": 40,
+    "draws": 41,
     "losses": 101,
-    "total": 205,
-    "r_count": 40,
-    "sum_r": -14.571412979163037,
-    "win_r": 8.955049673292145,
+    "total": 206,
+    "r_count": 41,
+    "sum_r": -14.510820161762938,
+    "win_r": 9.015642490692244,
     "loss_r": 23.52646265245518,
     "recent_r": [
       -0.642,
@@ -192,11 +192,11 @@
       -1.032,
       -1.047,
       -1.05,
-      0.058
+      0.058,
+      0.061
     ]
   },
   "closed_symbols": {
-    "ZEC_USDT": "2026-11-03T11:05:24.372755+00:00",
     "ENA_USDT": "2026-11-03T11:55:27.482052+00:00",
     "SNDK_USDT": "2026-11-03T12:25:25.016569+00:00",
     "MVLL_USDT": "2026-11-03T12:25:25.016569+00:00",
@@ -210,7 +210,8 @@
     "SOXL_USDT": "2026-11-03T13:30:44.204951+00:00",
     "AAOI_USDT": "2026-11-03T13:35:33.688403+00:00",
     "LITE_USDT": "2026-11-03T13:40:28.056293+00:00",
-    "CL_USDT": "2026-11-03T13:55:25.926944+00:00"
+    "CL_USDT": "2026-11-03T13:55:25.926944+00:00",
+    "BZ_USDT": "2026-11-03T14:05:30.147290+00:00"
   },
   "fail_count": 0,
   "last_report_date": "2026-11-03"
