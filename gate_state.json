@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 99.9,
-      "last_candle_ts": 1793712600
+      "last_candle_ts": 1793712900
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -32,24 +32,7 @@
       "tp2_reached": false,
       "max_fav": 323.74,
       "max_adv": 327.09,
-      "last_candle_ts": 1793712600
-    },
-    "LITE_USDT": {
-      "direction": "SHORT",
-      "entry_price": 698.09,
-      "entry_time": "2026-11-03T12:35:29.385535+00:00",
-      "leverage": 5,
-      "risk": 14.013214285714295,
-      "tp1": 688.7478571428571,
-      "tp2": 674.7346428571428,
-      "tp3": 660.7214285714285,
-      "stop_loss": 712.1032142857143,
-      "initial_stop": 712.1032142857143,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 698.09,
-      "max_adv": 711.97,
-      "last_candle_ts": 1793712600
+      "last_candle_ts": 1793712900
     },
     "CL_USDT": {
       "direction": "SHORT",
@@ -65,9 +48,9 @@
       "initial_stop": 96.18428571428572,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 94.86,
-      "max_adv": 94.92,
-      "last_candle_ts": 1793712600
+      "max_fav": 94.14,
+      "max_adv": 95.13,
+      "last_candle_ts": 1793712900
     },
     "BZ_USDT": {
       "direction": "SHORT",
@@ -83,9 +66,9 @@
       "initial_stop": 104.13214285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 102.64,
-      "max_adv": 102.72,
-      "last_candle_ts": 1793712600
+      "max_fav": 101.87,
+      "max_adv": 102.88,
+      "last_candle_ts": 1793712900
     },
     "LAB_USDT": {
       "direction": "LONG",
@@ -102,8 +85,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.04703,
-      "max_adv": 0.04688,
-      "last_candle_ts": 1793712600
+      "max_adv": 0.0468,
+      "last_candle_ts": 1793712900
     },
     "BOME_USDT": {
       "direction": "LONG",
@@ -115,13 +98,13 @@
       "tp1": 0.0006366,
       "tp2": 0.00065205,
       "tp3": 0.0006675,
-      "stop_loss": 0.00061085,
+      "stop_loss": 0.00062836,
       "initial_stop": 0.00061085,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.0006279,
+      "max_fav": 0.0006389,
       "max_adv": 0.0006263,
-      "last_candle_ts": 1793712600
+      "last_candle_ts": 1793712900
     },
     "LIT_USDT": {
       "direction": "LONG",
@@ -137,7 +120,7 @@
       "initial_stop": 3.1505,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 3.236,
+      "max_fav": 3.239,
       "max_adv": 3.236,
       "last_candle_ts": 1793712900
     }
@@ -145,12 +128,12 @@
   "stats": {
     "wins": 64,
     "draws": 39,
-    "losses": 100,
-    "total": 203,
-    "r_count": 38,
-    "sum_r": -13.579851795689981,
+    "losses": 101,
+    "total": 204,
+    "r_count": 39,
+    "sum_r": -14.629668346394674,
     "win_r": 8.896794306060508,
-    "loss_r": 22.47664610175049,
+    "loss_r": 23.52646265245518,
     "recent_r": [
       -0.642,
       -0.087,
@@ -189,7 +172,8 @@
       -1.031,
       -1.069,
       -1.032,
-      -1.047
+      -1.047,
+      -1.05
     ]
   },
   "closed_symbols": {
@@ -205,7 +189,8 @@
     "SNXX_USDT": "2026-11-03T13:30:44.204951+00:00",
     "TQQQX_USDT": "2026-11-03T13:30:44.204951+00:00",
     "SOXL_USDT": "2026-11-03T13:30:44.204951+00:00",
-    "AAOI_USDT": "2026-11-03T13:35:33.688403+00:00"
+    "AAOI_USDT": "2026-11-03T13:35:33.688403+00:00",
+    "LITE_USDT": "2026-11-03T13:40:28.056293+00:00"
   },
   "fail_count": 0,
   "last_report_date": "2026-11-03"
