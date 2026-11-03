@@ -1,23 +1,5 @@
 {
   "active_slots": {
-    "ZRO_USDT": {
-      "direction": "LONG",
-      "entry_price": 1.849,
-      "entry_time": "2026-11-03T13:55:25.926944+00:00",
-      "leverage": 10,
-      "risk": 0.04917857142857146,
-      "atr": 0.03278571428571431,
-      "tp1": 1.8817857142857144,
-      "tp2": 1.9309642857142857,
-      "tp3": 1.9801428571428572,
-      "stop_loss": 1.855557142857143,
-      "initial_stop": 1.7998214285714285,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 1.917,
-      "max_adv": 1.849,
-      "last_candle_ts": 1793719200
-    },
     "STRK_USDT": {
       "direction": "LONG",
       "entry_price": 0.04426,
@@ -33,8 +15,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.04426,
-      "max_adv": 0.0432,
-      "last_candle_ts": 1793719200
+      "max_adv": 0.04317,
+      "last_candle_ts": 1793719500
     },
     "HANA_USDT": {
       "direction": "SHORT",
@@ -52,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.01434,
       "max_adv": 0.01457,
-      "last_candle_ts": 1793719200
+      "last_candle_ts": 1793719500
     },
     "MAGMA_USDT": {
       "direction": "SHORT",
@@ -64,13 +46,13 @@
       "tp1": 0.4080921428571429,
       "tp2": 0.39033535714285716,
       "tp3": 0.3725785714285715,
-      "stop_loss": 0.4376867857142857,
+      "stop_loss": 0.4175624285714286,
       "initial_stop": 0.4376867857142857,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.40812,
+      "max_fav": 0.40802,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793719200
+      "last_candle_ts": 1793719500
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -88,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 0.3376,
       "max_adv": 0.3442,
-      "last_candle_ts": 1793719200
+      "last_candle_ts": 1793719500
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -105,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 3.8218,
-      "max_adv": 3.8531,
-      "last_candle_ts": 1793719200
+      "max_adv": 3.8534,
+      "last_candle_ts": 1793719500
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -122,9 +104,9 @@
       "initial_stop": 59.03178571428572,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 57.44,
+      "max_fav": 57.43,
       "max_adv": 57.6,
-      "last_candle_ts": 1793719200
+      "last_candle_ts": 1793719500
     },
     "BE_USDT": {
       "direction": "LONG",
@@ -141,18 +123,36 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 220.9,
-      "max_adv": 217.8,
-      "last_candle_ts": 1793719200
+      "max_adv": 217.7,
+      "last_candle_ts": 1793719500
+    },
+    "MVLL_USDT": {
+      "direction": "SHORT",
+      "entry_price": 13.49,
+      "entry_time": "2026-11-03T15:30:42.102846+00:00",
+      "leverage": 5,
+      "risk": 0.7414285714285715,
+      "atr": 0.4942857142857144,
+      "tp1": 12.995714285714286,
+      "tp2": 12.254285714285714,
+      "tp3": 11.512857142857143,
+      "stop_loss": 14.231428571428571,
+      "initial_stop": 14.231428571428571,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 13.49,
+      "max_adv": 13.49,
+      "last_candle_ts": 1793719800
     }
   },
   "stats": {
     "wins": 64,
-    "draws": 43,
+    "draws": 44,
     "losses": 105,
-    "total": 212,
-    "r_count": 47,
-    "sum_r": -18.468541261627102,
-    "win_r": 9.20392398731406,
+    "total": 213,
+    "r_count": 48,
+    "sum_r": -18.372805604401247,
+    "win_r": 9.299659644539915,
     "loss_r": 27.672465248941158,
     "recent_r": [
       -0.642,
@@ -201,7 +201,8 @@
       -1.047,
       -1.027,
       -1.037,
-      -1.035
+      -1.035,
+      0.096
     ]
   },
   "closed_symbols": {
@@ -222,7 +223,8 @@
     "AAPL_USDT": "2026-11-03T14:30:44.048649+00:00",
     "CBRS_USDT": "2026-11-03T15:10:35.780148+00:00",
     "LAB_USDT": "2026-11-03T15:15:30.619560+00:00",
-    "MUBARAK_USDT": "2026-11-03T15:15:30.619560+00:00"
+    "MUBARAK_USDT": "2026-11-03T15:15:30.619560+00:00",
+    "ZRO_USDT": "2026-11-03T15:30:42.102846+00:00"
   },
   "fail_count": 0,
   "last_report_date": "2026-11-03"
