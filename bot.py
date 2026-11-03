@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 수익형 본전 방어(Profit-Lock Breakeven) 및 숏/롱 최적화 버전
+- 오더블럭(Order Block) 리테스트 및 수익형 본전 방어(Profit-Lock) 고도화 버전
 """
 
 import csv
@@ -25,42 +25,42 @@ BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
 MAX_SLOTS = 8
 
 # 진입 조건 (코인 및 주식형 토큰 마켓 집중)
-MIN_CHANGE_PCT = 4.5          # 24시간 변동률 기준(%)
-MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)[span_0](start_span)[span_0](end_span)
+MIN_CHANGE_PCT = 4.5          # 24시간 변동률 기준(%)[span_2](start_span)[span_2](end_span)
+MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)[span_3](start_span)[span_3](end_span)
 RSI_PERIOD = 14
 ATR_PERIOD = 14
-BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이[span_1](start_span)[span_1](end_span)
-LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외[span_2](start_span)[span_2](end_span)
+BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이[span_4](start_span)[span_4](end_span)
+LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외[span_5](start_span)[span_5](end_span)
 
 # 목표가/손절가 (ATR 배수)
 ATR_SL = 1.5
 ATR_TP_MULTS = (1.0, 2.5, 4.0)   # TP1을 1.0 ATR로 당겨 승률 및 본전 방어 속도 극대화
-MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외[span_3](start_span)[span_3](end_span)
-MAX_PER_THEME = 1             # 같은 테마에서 같은 방향으로 동시에 가질 수 있는 최대 슬롯 수[span_4](start_span)[span_4](end_span)
+MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외[span_6](start_span)[span_6](end_span)
+MAX_PER_THEME = 1             # 같은 테마에서 같은 방향 최대 슬롯[span_7](start_span)[span_7](end_span)
 
 # 비용/리스크 가정 및 수익형 본전 방어 오프셋
-FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%[span_5](start_span)[span_5](end_span)
+FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%[span_8](start_span)[span_8](end_span)
 PROFIT_LOCK_ATR = 0.2         # TP1 달성 시 스탑로스를 진입가보다 이만큼 유리한 방향(+0.2 ATR)으로 설정
-RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)[span_6](start_span)[span_6](end_span)
-MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실이 이 비율을 넘지 않도록 레버리지 상한[span_7](start_span)[span_7](end_span)
+RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)[span_9](start_span)[span_9](end_span)
+MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실 상한[span_10](start_span)[span_10](end_span)
 
 # 보유 시간 규칙
-ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산[span_8](start_span)[span_8](end_span)
-ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%, 레버리지 미반영 가격 기준)[span_9](start_span)[span_9](end_span)
-TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산[span_10](start_span)[span_10](end_span)
-COOLDOWN_HOURS = 3            # 청산 후 같은 종목 재진입 금지 시간[span_11](start_span)[span_11](end_span)
+ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산[span_11](start_span)[span_11](end_span)
+ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%)[span_12](start_span)[span_12](end_span)
+TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산[span_13](start_span)[span_13](end_span)
+COOLDOWN_HOURS = 3            # 청산 후 같은 종목 재진입 금지 시간[span_14](start_span)[span_14](end_span)
 
 # 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부
 DRAW_BAND_R = 0.1
 
-# 실행 시간 관리 (GitHub Actions timeout 대비)
+# 실행 시간 관리
 MAX_CANDIDATES = 40
 SCAN_BUDGET_SEC = 150
 
 # 알림 옵션
-FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림[span_12](start_span)[span_12](end_span)
+FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림[span_15](start_span)[span_15](end_span)
 DAILY_REPORT_ENABLED = True
-DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회[span_13](start_span)[span_13](end_span)
+DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회[span_16](start_span)[span_16](end_span)
 
 CSV_FIELDS = [
     "closed_at", "symbol", "direction", "category", "leverage",
@@ -70,7 +70,7 @@ CSV_FIELDS = [
 
 REASON_LABEL = {
     "SL": "손절",
-    "PROFIT_LOCK": "수익 방어",  # 본전 대신 약수익 구간 청산
+    "PROFIT_LOCK": "수익 방어",
     "TP1_PROTECT": "TP1 방어",
     "TP3": "TP3",
     "ROTATE": "회전",
@@ -267,7 +267,7 @@ def fetch_completed_5m(symbol, from_ts, now_ts):
             if c["t"] >= from_ts and c["t"] + 300 <= now_ts]
 
 
-# ──────────────────────────── 지표 ────────────────────────────
+# ──────────────────────────── 지표 및 오더블럭(OB) 분석 ────────────────────────────
 def wilder_rsi(closes, period=RSI_PERIOD):
     if len(closes) < period + 1:
         return None
@@ -295,6 +295,41 @@ def calc_atr(candles, period=ATR_PERIOD):
         high, low, prev_close = candles[i]["h"], candles[i]["l"], candles[i - 1]["c"]
         trs.append(max(high - low, abs(high - prev_close), abs(low - prev_close)))
     return sum(trs[-period:]) / period
+
+
+def find_order_block(candles, direction):
+    """
+    스마트 머니 컨셉(SMC) 오더블럭(OB) 탐지 로직:
+    - 롱: 직전 급등(Impulse)이 발생하기 전의 마지막 음봉(Demand Zone) 탐색[span_17](start_span)[span_17](end_span)
+    - 숏: 직전 급락이 발생하기 전의 마지막 양봉(Supply Zone) 탐색[span_18](start_span)[span_18](end_span)
+    """
+    if len(candles) < 5:
+        return None
+    
+    # 최근 3개 봉 이내에 강한 모멘텀(큰 몸통)이 발생했는지 확인
+    last = candles[-1]
+    if direction == "LONG":
+        # 마지막 직전 봉들 중 음봉(시가 > 종가)이면서, 이후 가격이 반등한 구간 찾기
+        for i in range(len(candles) - 2, max(0, len(candles) - 6), -1):
+            c = candles[i]
+            if c["o"] > c["c"]:  # 음봉 (Demand OB 후보)[span_19](start_span)[span_19](end_span)
+                ob_high = c["o"]
+                ob_low = c["l"]
+                # 현재가가 이 오더블럭 존 근처이거나 리테스트 중인지 확인
+                if last["c"] >= ob_low:
+                    return {"zone_high": ob_high, "zone_low": ob_low}
+    else:
+        # 마지막 직전 봉들 중 양봉(종가 > 시가)이면서, 이후 하락한 구간 찾기
+        for i in range(len(candles) - 2, max(0, len(candles) - 6), -1):
+            c = candles[i]
+            if c["c"] > c["o"]:  # 양봉 (Supply OB 후보)[span_20](start_span)[span_20](end_span)
+                ob_high = c["h"]
+                ob_low = c["o"]
+                if last["c"] <= ob_high:
+                    return {"zone_high": ob_high, "zone_low": ob_low}
+                    
+    # 명확한 블럭을 못 찾을 경우 최근 봉의 시/종가 기준 기본 존 반환
+    return {"zone_high": last["h"], "zone_low": last["l"]}
 
 
 def analyze_signal(symbol, direction, now_ts):
@@ -326,7 +361,11 @@ def analyze_signal(symbol, direction, now_ts):
     atr = calc_atr(candles)
     if not atr or atr <= 0:
         return None
-    return {"rsi": rsi, "atr": atr, "body_ratio": body_ratio}
+        
+    # 오더블럭(OB) 존 탐색 연동
+    ob = find_order_block(candles, direction)
+
+    return {"rsi": rsi, "atr": atr, "body_ratio": body_ratio, "order_block": ob}
 
 
 # ──────────────────────────── 분류/레버리지/테마 ────────────────────────────
@@ -699,6 +738,9 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             notional_frac = (RISK_PER_TRADE_PCT / 100) / sl_frac
             margin_frac = min(notional_frac / leverage, 1.0)
 
+            ob = analysis.get("order_block")
+            ob_text = f"• 오더블럭(OB) 존: <code>{fmt_price(ob['zone_low'])} ~ {fmt_price(ob['zone_high'])}</code>[span_21](start_span)[span_21](end_span)" if ob else ""
+
             active[symbol] = {
                 "direction": direction,
                 "entry_price": last_price,
@@ -721,15 +763,16 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 return pct_move(direction, last_price, price)
 
             msg = (
-                f"🚀 <b>신규 시그널 (수익 방어형)</b> | {dir_tag(direction)}\n"
+                f"🏛️ <b>신규 시그널 (오더블럭 & 수익방어형)</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(last_price)}</code> | 레버리지 <code>{leverage}배</code>\n\n"
-                "🎯 <b>목표가</b>\n"
+                "🎯 <b>목표가 및 방어선</b>\n"
                 f"TP1 <code>{fmt_price(tp1)} ({pct_of(tp1):+.2f}%)</code> → 도달 시 스탑을 <b>+{PROFIT_LOCK_ATR} ATR</b>로 락\n"
                 f"TP2 <code>{fmt_price(tp2)} ({pct_of(tp2):+.2f}%)</code>\n"
                 f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code>\n"
                 f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code>\n\n"
-                f"📌 <b>진입 근거</b>\n"
+                f"📌 <b>진입 근거 (스마트 머니)</b>\n"
+                f"{ob_text}\n"
                 f"• 변동 <code>{change:+.1f}%</code> / 거래대금 <code>{volume / 1e6:.1f}M USDT</code>\n"
                 f"• RSI <code>{analysis['rsi']:.1f}</code> / 몸통 <code>{analysis['body_ratio'] * 100:.0f}%</code>"
             )
@@ -792,7 +835,7 @@ def build_daily_report(now, stats):
                 if dt and dt >= since:
                     rows.append(row)
 
-    lines = [f"📋 <b>일일 리포트 (수익 방어 분석)</b> | {now.strftime('%m/%d')}\n"]
+    lines = [f"📋 <b>일일 리포트 (오더블럭 수익 방어 분석)</b> | {now.strftime('%m/%d')}\n"]
     if not rows:
         lines.append("최근 24시간 청산 거래가 없습니다.")
     else:
