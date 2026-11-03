@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 0.04426,
       "max_adv": 0.04317,
-      "last_candle_ts": 1793720700
+      "last_candle_ts": 1793721000
     },
     "HANA_USDT": {
       "direction": "SHORT",
@@ -33,8 +33,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.01434,
-      "max_adv": 0.0148,
-      "last_candle_ts": 1793720700
+      "max_adv": 0.01485,
+      "last_candle_ts": 1793721000
     },
     "MAGMA_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 0.40494,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793720700
+      "last_candle_ts": 1793721000
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 0.3376,
       "max_adv": 0.3442,
-      "last_candle_ts": 1793720700
+      "last_candle_ts": 1793721000
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 3.8218,
       "max_adv": 3.8708,
-      "last_candle_ts": 1793720700
+      "last_candle_ts": 1793721000
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 57.43,
       "max_adv": 57.65,
-      "last_candle_ts": 1793720700
+      "last_candle_ts": 1793721000
     },
     "BE_USDT": {
       "direction": "LONG",
@@ -123,8 +123,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 220.9,
-      "max_adv": 215.8,
-      "last_candle_ts": 1793720700
+      "max_adv": 215.0,
+      "last_candle_ts": 1793721000
     },
     "MVLL_USDT": {
       "direction": "SHORT",
@@ -142,7 +142,7 @@
       "tp2_reached": false,
       "max_fav": 13.3,
       "max_adv": 13.67,
-      "last_candle_ts": 1793720700
+      "last_candle_ts": 1793721000
     }
   },
   "stats": {
@@ -206,8 +206,6 @@
     ]
   },
   "closed_symbols": {
-    "MU_USDT": "2026-11-03T12:50:35.406385+00:00",
-    "KORU_USDT": "2026-11-03T12:55:29.022101+00:00",
     "MUU_USDT": "2026-11-03T13:30:44.204951+00:00",
     "SNXX_USDT": "2026-11-03T13:30:44.204951+00:00",
     "TQQQX_USDT": "2026-11-03T13:30:44.204951+00:00",
