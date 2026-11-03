@@ -14,8 +14,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 95.2,
-      "max_adv": 98.7,
-      "last_candle_ts": 1793708700
+      "max_adv": 98.9,
+      "last_candle_ts": 1793709000
     },
     "MU_USDT": {
       "direction": "SHORT",
@@ -31,8 +31,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 836.92,
-      "max_adv": 863.92,
-      "last_candle_ts": 1793708700
+      "max_adv": 866.0,
+      "last_candle_ts": 1793709000
     },
     "KORU_USDT": {
       "direction": "SHORT",
@@ -48,8 +48,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 10.542,
-      "max_adv": 11.035,
-      "last_candle_ts": 1793708700
+      "max_adv": 11.06,
+      "last_candle_ts": 1793709000
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -66,41 +66,7 @@
       "tp2_reached": false,
       "max_fav": 323.74,
       "max_adv": 327.09,
-      "last_candle_ts": 1793708700
-    },
-    "PLTR_USDT": {
-      "direction": "SHORT",
-      "entry_price": 167.61,
-      "entry_time": "2026-11-03T10:10:31.385540+00:00",
-      "leverage": 8,
-      "risk": 5.707500000000004,
-      "tp1": 163.805,
-      "tp2": 158.0975,
-      "tp3": 152.39000000000001,
-      "stop_loss": 167.61,
-      "initial_stop": 173.31750000000002,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 162.44,
-      "max_adv": 167.8,
-      "last_candle_ts": 1793708700
-    },
-    "MRVL_USDT": {
-      "direction": "SHORT",
-      "entry_price": 173.02,
-      "entry_time": "2026-11-03T11:55:27.482052+00:00",
-      "leverage": 5,
-      "risk": 3.553928571428579,
-      "tp1": 170.6507142857143,
-      "tp2": 167.09678571428572,
-      "tp3": 163.54285714285714,
-      "stop_loss": 176.57392857142858,
-      "initial_stop": 176.57392857142858,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 172.81,
-      "max_adv": 176.38,
-      "last_candle_ts": 1793708700
+      "last_candle_ts": 1793709000
     },
     "MUU_USDT": {
       "direction": "SHORT",
@@ -116,8 +82,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 22.65,
-      "max_adv": 22.68,
-      "last_candle_ts": 1793708700
+      "max_adv": 22.88,
+      "last_candle_ts": 1793709000
     },
     "SNXX_USDT": {
       "direction": "SHORT",
@@ -133,19 +99,53 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 6.388,
-      "max_adv": 6.408,
-      "last_candle_ts": 1793708700
+      "max_adv": 6.474,
+      "last_candle_ts": 1793709000
+    },
+    "LITE_USDT": {
+      "direction": "SHORT",
+      "entry_price": 698.09,
+      "entry_time": "2026-11-03T12:35:29.385535+00:00",
+      "leverage": 5,
+      "risk": 14.013214285714295,
+      "tp1": 688.7478571428571,
+      "tp2": 674.7346428571428,
+      "tp3": 660.7214285714285,
+      "stop_loss": 712.1032142857143,
+      "initial_stop": 712.1032142857143,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 698.09,
+      "max_adv": 698.09,
+      "last_candle_ts": 1793709300
+    },
+    "TQQQX_USDT": {
+      "direction": "SHORT",
+      "entry_price": 60.25,
+      "entry_time": "2026-11-03T12:35:29.385535+00:00",
+      "leverage": 10,
+      "risk": 0.8785714285714297,
+      "tp1": 59.66428571428571,
+      "tp2": 58.785714285714285,
+      "tp3": 57.90714285714285,
+      "stop_loss": 61.128571428571426,
+      "initial_stop": 61.128571428571426,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 60.25,
+      "max_adv": 60.25,
+      "last_candle_ts": 1793709300
     }
   },
   "stats": {
     "wins": 64,
-    "draws": 38,
-    "losses": 92,
-    "total": 194,
-    "r_count": 29,
-    "sum_r": -5.219705330964646,
+    "draws": 39,
+    "losses": 93,
+    "total": 196,
+    "r_count": 31,
+    "sum_r": -6.297756106175793,
     "win_r": 8.896794306060508,
-    "loss_r": 14.116499637025152,
+    "loss_r": 15.1945504122363,
     "recent_r": [
       -0.642,
       -0.087,
@@ -175,7 +175,9 @@
       -0.037,
       -1.046,
       -1.036,
-      -0.025
+      -0.025,
+      -0.029,
+      -1.049
     ]
   },
   "closed_symbols": {
@@ -184,7 +186,9 @@
     "ZEC_USDT": "2026-11-03T11:05:24.372755+00:00",
     "ENA_USDT": "2026-11-03T11:55:27.482052+00:00",
     "SNDK_USDT": "2026-11-03T12:25:25.016569+00:00",
-    "MVLL_USDT": "2026-11-03T12:25:25.016569+00:00"
+    "MVLL_USDT": "2026-11-03T12:25:25.016569+00:00",
+    "PLTR_USDT": "2026-11-03T12:35:29.385535+00:00",
+    "MRVL_USDT": "2026-11-03T12:35:29.385535+00:00"
   },
   "fail_count": 0,
   "last_report_date": "2026-11-03"
