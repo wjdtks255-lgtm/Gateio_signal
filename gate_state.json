@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1.917,
       "max_adv": 1.849,
-      "last_candle_ts": 1793718900
+      "last_candle_ts": 1793719200
     },
     "STRK_USDT": {
       "direction": "LONG",
@@ -33,8 +33,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.04426,
-      "max_adv": 0.04325,
-      "last_candle_ts": 1793718900
+      "max_adv": 0.0432,
+      "last_candle_ts": 1793719200
     },
     "HANA_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 0.01434,
       "max_adv": 0.01457,
-      "last_candle_ts": 1793718900
+      "last_candle_ts": 1793719200
     },
     "MAGMA_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 0.40812,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793718900
+      "last_candle_ts": 1793719200
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -86,9 +86,9 @@
       "initial_stop": 0.34604999999999997,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.3383,
+      "max_fav": 0.3376,
       "max_adv": 0.3442,
-      "last_candle_ts": 1793718900
+      "last_candle_ts": 1793719200
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 3.8218,
       "max_adv": 3.8531,
-      "last_candle_ts": 1793718900
+      "last_candle_ts": 1793719200
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -122,9 +122,9 @@
       "initial_stop": 59.03178571428572,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 57.49,
-      "max_adv": 57.55,
-      "last_candle_ts": 1793718900
+      "max_fav": 57.44,
+      "max_adv": 57.6,
+      "last_candle_ts": 1793719200
     },
     "BE_USDT": {
       "direction": "LONG",
@@ -141,8 +141,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 220.9,
-      "max_adv": 218.4,
-      "last_candle_ts": 1793718900
+      "max_adv": 217.8,
+      "last_candle_ts": 1793719200
     }
   },
   "stats": {
@@ -205,8 +205,6 @@
     ]
   },
   "closed_symbols": {
-    "SNDK_USDT": "2026-11-03T12:25:25.016569+00:00",
-    "MVLL_USDT": "2026-11-03T12:25:25.016569+00:00",
     "PLTR_USDT": "2026-11-03T12:35:29.385535+00:00",
     "MRVL_USDT": "2026-11-03T12:35:29.385535+00:00",
     "MU_USDT": "2026-11-03T12:50:35.406385+00:00",
