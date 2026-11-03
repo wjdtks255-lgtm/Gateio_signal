@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.37783,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793729100
+      "last_candle_ts": 1793729400
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.3355,
       "max_adv": 0.3452,
-      "last_candle_ts": 1793729100
+      "last_candle_ts": 1793729400
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 3.7967,
       "max_adv": 3.8909,
-      "last_candle_ts": 1793729100
+      "last_candle_ts": 1793729400
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 57.38,
       "max_adv": 57.77,
-      "last_candle_ts": 1793729100
+      "last_candle_ts": 1793729400
     },
     "INTW_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 6.37,
       "max_adv": 6.52,
-      "last_candle_ts": 1793729100
+      "last_candle_ts": 1793729400
     },
     "COIN_USDT": {
       "direction": "LONG",
@@ -105,8 +105,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 150.53,
-      "max_adv": 147.4,
-      "last_candle_ts": 1793729100
+      "max_adv": 147.3,
+      "last_candle_ts": 1793729400
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -124,7 +124,7 @@
       "tp2_reached": false,
       "max_fav": 173.71,
       "max_adv": 176.32,
-      "last_candle_ts": 1793729100
+      "last_candle_ts": 1793729400
     },
     "LITE_USDT": {
       "direction": "SHORT",
@@ -142,7 +142,7 @@
       "tp2_reached": false,
       "max_fav": 677.25,
       "max_adv": 691.71,
-      "last_candle_ts": 1793729100
+      "last_candle_ts": 1793729400
     }
   },
   "stats": {
@@ -208,8 +208,6 @@
     ]
   },
   "closed_symbols": {
-    "LAB_USDT": "2026-11-03T15:15:30.619560+00:00",
-    "MUBARAK_USDT": "2026-11-03T15:15:30.619560+00:00",
     "ZRO_USDT": "2026-11-03T15:30:42.102846+00:00",
     "HANA_USDT": "2026-11-03T16:20:39.092608+00:00",
     "BE_USDT": "2026-11-03T16:35:28.250397+00:00",
