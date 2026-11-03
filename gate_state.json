@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 98.9,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -32,7 +32,7 @@
       "tp2_reached": false,
       "max_fav": 323.74,
       "max_adv": 327.09,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     },
     "MUU_USDT": {
       "direction": "SHORT",
@@ -49,7 +49,7 @@
       "tp2_reached": false,
       "max_fav": 22.65,
       "max_adv": 23.11,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     },
     "SNXX_USDT": {
       "direction": "SHORT",
@@ -66,7 +66,7 @@
       "tp2_reached": false,
       "max_fav": 6.388,
       "max_adv": 6.554,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     },
     "LITE_USDT": {
       "direction": "SHORT",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 698.09,
       "max_adv": 704.62,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     },
     "TQQQX_USDT": {
       "direction": "SHORT",
@@ -100,7 +100,7 @@
       "tp2_reached": false,
       "max_fav": 60.08,
       "max_adv": 60.39,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     },
     "SOXL_USDT": {
       "direction": "SHORT",
@@ -115,9 +115,9 @@
       "initial_stop": 76.3425,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 73.99,
+      "max_fav": 73.82,
       "max_adv": 74.8,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     },
     "AAOI_USDT": {
       "direction": "SHORT",
@@ -134,7 +134,7 @@
       "tp2_reached": false,
       "max_fav": 64.59,
       "max_adv": 64.88,
-      "last_candle_ts": 1793710800
+      "last_candle_ts": 1793711100
     }
   },
   "stats": {
@@ -183,8 +183,6 @@
     ]
   },
   "closed_symbols": {
-    "INTW_USDT": "2026-11-03T10:05:24.408598+00:00",
-    "TRUMP_USDT": "2026-11-03T10:10:31.385540+00:00",
     "ZEC_USDT": "2026-11-03T11:05:24.372755+00:00",
     "ENA_USDT": "2026-11-03T11:55:27.482052+00:00",
     "SNDK_USDT": "2026-11-03T12:25:25.016569+00:00",
