@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.37484,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     },
     "JTO_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.3355,
       "max_adv": 0.346,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     },
     "NEAR_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 3.7967,
       "max_adv": 3.8909,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 57.38,
       "max_adv": 57.77,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     },
     "INTW_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 6.23,
       "max_adv": 6.52,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     },
     "COIN_USDT": {
       "direction": "LONG",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 150.53,
       "max_adv": 145.99,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -122,9 +122,9 @@
       "initial_stop": 180.91892857142858,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 173.71,
+      "max_fav": 173.41,
       "max_adv": 176.79,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     },
     "LITE_USDT": {
       "direction": "SHORT",
@@ -142,7 +142,7 @@
       "tp2_reached": false,
       "max_fav": 673.05,
       "max_adv": 691.71,
-      "last_candle_ts": 1793733900
+      "last_candle_ts": 1793734200
     }
   },
   "stats": {
@@ -208,7 +208,6 @@
     ]
   },
   "closed_symbols": {
-    "BE_USDT": "2026-11-03T16:35:28.250397+00:00",
     "STRK_USDT": "2026-11-03T17:10:33.576927+00:00",
     "MVLL_USDT": "2026-11-03T17:10:33.576927+00:00"
   },
