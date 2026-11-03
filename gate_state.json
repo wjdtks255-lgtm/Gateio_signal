@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 1120.47,
       "max_adv": 1167.33,
-      "last_candle_ts": 1793702100
+      "last_candle_ts": 1793702400
     },
     "CBRS_USDT": {
       "direction": "SHORT",
@@ -32,7 +32,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 98.3,
-      "last_candle_ts": 1793702100
+      "last_candle_ts": 1793702400
     },
     "MU_USDT": {
       "direction": "SHORT",
@@ -49,7 +49,7 @@
       "tp2_reached": false,
       "max_fav": 836.92,
       "max_adv": 863.92,
-      "last_candle_ts": 1793702100
+      "last_candle_ts": 1793702400
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -66,7 +66,7 @@
       "tp2_reached": false,
       "max_fav": 1076.64,
       "max_adv": 1118.48,
-      "last_candle_ts": 1793702100
+      "last_candle_ts": 1793702400
     },
     "KORU_USDT": {
       "direction": "SHORT",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 10.542,
       "max_adv": 10.944,
-      "last_candle_ts": 1793702100
+      "last_candle_ts": 1793702400
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -100,7 +100,7 @@
       "tp2_reached": false,
       "max_fav": 0.16666,
       "max_adv": 0.1704,
-      "last_candle_ts": 1793702100
+      "last_candle_ts": 1793702400
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -116,8 +116,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 323.74,
-      "max_adv": 326.69,
-      "last_candle_ts": 1793702100
+      "max_adv": 326.87,
+      "last_candle_ts": 1793702400
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -134,7 +134,7 @@
       "tp2_reached": false,
       "max_fav": 163.73,
       "max_adv": 167.8,
-      "last_candle_ts": 1793702100
+      "last_candle_ts": 1793702400
     }
   },
   "stats": {
@@ -175,7 +175,6 @@
     ]
   },
   "closed_symbols": {
-    "LSK_USDT": "2026-11-03T07:45:29.892804+00:00",
     "INTW_USDT": "2026-11-03T10:05:24.408598+00:00",
     "TRUMP_USDT": "2026-11-03T10:10:31.385540+00:00"
   },
