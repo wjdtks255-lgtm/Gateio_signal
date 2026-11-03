@@ -15,7 +15,7 @@
       "tp2_reached": false,
       "max_fav": 95.2,
       "max_adv": 99.9,
-      "last_candle_ts": 1793714700
+      "last_candle_ts": 1793715000
     },
     "AAPL_USDT": {
       "direction": "SHORT",
@@ -32,7 +32,7 @@
       "tp2_reached": false,
       "max_fav": 323.72,
       "max_adv": 327.09,
-      "last_candle_ts": 1793714700
+      "last_candle_ts": 1793715000
     },
     "LAB_USDT": {
       "direction": "LONG",
@@ -50,7 +50,7 @@
       "tp2_reached": false,
       "max_fav": 0.04703,
       "max_adv": 0.04646,
-      "last_candle_ts": 1793714700
+      "last_candle_ts": 1793715000
     },
     "BOME_USDT": {
       "direction": "LONG",
@@ -68,7 +68,7 @@
       "tp2_reached": false,
       "max_fav": 0.0006429,
       "max_adv": 0.0006263,
-      "last_candle_ts": 1793714700
+      "last_candle_ts": 1793715000
     },
     "ZRO_USDT": {
       "direction": "LONG",
@@ -84,9 +84,9 @@
       "initial_stop": 1.7998214285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.873,
+      "max_fav": 1.876,
       "max_adv": 1.849,
-      "last_candle_ts": 1793714700
+      "last_candle_ts": 1793715000
     },
     "MUBARAK_USDT": {
       "direction": "SHORT",
@@ -102,9 +102,9 @@
       "initial_stop": 0.03980928571428572,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.03858,
-      "max_adv": 0.03871,
-      "last_candle_ts": 1793714700
+      "max_fav": 0.03857,
+      "max_adv": 0.03875,
+      "last_candle_ts": 1793715000
     },
     "STRK_USDT": {
       "direction": "LONG",
@@ -121,8 +121,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.04426,
-      "max_adv": 0.04392,
-      "last_candle_ts": 1793714700
+      "max_adv": 0.04383,
+      "last_candle_ts": 1793715000
     },
     "HANA_USDT": {
       "direction": "SHORT",
@@ -139,7 +139,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.01436,
-      "max_adv": 0.01436,
+      "max_adv": 0.0144,
       "last_candle_ts": 1793715000
     }
   },
