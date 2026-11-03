@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- TP1 단축(1.0 ATR)을 통한 승률 극대화 및 본전 방어 속도 개선 버전
+- 수익형 본전 방어(Profit-Lock Breakeven) 로직 적용 버전
 """
 
 import csv
@@ -26,28 +26,29 @@ MAX_SLOTS = 8
 
 # 진입 조건
 MIN_CHANGE_PCT = 4.5          # 24시간 변동률 기준(%)
-MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)[span_2](start_span)[span_2](end_span)
+MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)[span_0](start_span)[span_0](end_span)
 RSI_PERIOD = 14
 ATR_PERIOD = 14
-BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이[span_3](start_span)[span_3](end_span)
-LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외[span_4](start_span)[span_4](end_span)
+BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이[span_1](start_span)[span_1](end_span)
+LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외[span_2](start_span)[span_2](end_span)
 
-# 목표가/손절가 (ATR 배수). 승률 개선을 위해 TP1을 1.0 ATR로 단축
+# 목표가/손절가 (ATR 배수)
 ATR_SL = 1.5
-ATR_TP_MULTS = (1.0, 2.5, 4.0)   # TP1을 1.0R로 당겨 승률(본전 방어 빈도) 극대화
-MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외[span_5](start_span)[span_5](end_span)
-MAX_PER_THEME = 1             # 같은 테마에서 같은 방향으로 동시에 가질 수 있는 최대 슬롯 수[span_6](start_span)[span_6](end_span)
+ATR_TP_MULTS = (1.0, 2.5, 4.0)   # TP1을 1.0R로 당겨 승률 및 본전 방어 속도 극대화
+MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외[span_3](start_span)[span_3](end_span)
+MAX_PER_THEME = 1             # 같은 테마에서 같은 방향으로 동시에 가질 수 있는 최대 슬롯 수[span_4](start_span)[span_4](end_span)
 
-# 비용/리스크 가정
-FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%[span_7](start_span)[span_7](end_span)
-RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)[span_8](start_span)[span_8](end_span)
-MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실이 이 비율을 넘지 않도록 레버리지 상한[span_9](start_span)[span_9](end_span)
+# 비용/리스크 가정 및 수익형 본전 방어 오프셋
+FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%[span_5](start_span)[span_5](end_span)
+PROFIT_LOCK_ATR = 0.2         # TP1 달성 시 스탑로스를 진입가보다 이만큼 유리한 방향(+0.2 ATR)으로 설정
+RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)[span_6](start_span)[span_6](end_span)
+MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실이 이 비율을 넘지 않도록 레버리지 상한[span_7](start_span)[span_7](end_span)
 
 # 보유 시간 규칙
-ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산[span_10](start_span)[span_10](end_span)
-ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%, 레버리지 미반영 가격 기준)[span_11](start_span)[span_11](end_span)
-TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산[span_12](start_span)[span_12](end_span)
-COOLDOWN_HOURS = 3            # 청산 후 같은 종목 재진입 금지 시간[span_13](start_span)[span_13](end_span)
+ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산[span_8](start_span)[span_8](end_span)
+ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%, 레버리지 미반영 가격 기준)[span_9](start_span)[span_9](end_span)
+TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산[span_10](start_span)[span_10](end_span)
+COOLDOWN_HOURS = 3            # 청산 후 같은 종목 재진입 금지 시간[span_11](start_span)[span_11](end_span)
 
 # 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부
 DRAW_BAND_R = 0.1
@@ -57,9 +58,9 @@ MAX_CANDIDATES = 40
 SCAN_BUDGET_SEC = 150
 
 # 알림 옵션
-FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림[span_14](start_span)[span_14](end_span)
+FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림[span_12](start_span)[span_12](end_span)
 DAILY_REPORT_ENABLED = True
-DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회[span_15](start_span)[span_15](end_span)
+DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회[span_13](start_span)[span_13](end_span)
 
 CSV_FIELDS = [
     "closed_at", "symbol", "direction", "category", "leverage",
@@ -69,7 +70,7 @@ CSV_FIELDS = [
 
 REASON_LABEL = {
     "SL": "손절",
-    "BREAKEVEN": "본전",
+    "PROFIT_LOCK": "수익 방어",  # 본전 대신 약수익 구간 청산
     "TP1_PROTECT": "TP1 방어",
     "TP3": "TP3",
     "ROTATE": "회전",
@@ -402,7 +403,7 @@ def build_stats_line(stats):
     wins, draws, losses = stats.get("wins", 0), stats.get("draws", 0), stats.get("losses", 0)
     wr_all = round(wins / total * 100, 1) if total else 0.0
     
-    # 무승부 제외 순수 승패 기준 승률 (우상향 지표)
+    # 무승부 제외 순수 승패 기준 승률
     decisive = wins + losses
     wr_dec = round(wins / decisive * 100, 1) if decisive else 0.0
     
@@ -428,6 +429,7 @@ def build_stats_line(stats):
 # ──────────────────────────── 포지션 관리 ────────────────────────────
 def migrate_slot(info):
     entry = float(info.get("entry_price", 0) or 0)
+    atr = float(info.get("atr", info.get("risk", entry) / ATR_SL))
     if "risk" not in info:
         info["risk"] = abs(float(info.get("tp1", entry)) - entry)
     info.setdefault("direction", "LONG")
@@ -439,20 +441,27 @@ def migrate_slot(info):
     if "last_candle_ts" not in info:
         dt = parse_iso(info.get("entry_time", ""), utcnow())
         info["last_candle_ts"] = int(dt.timestamp()) // 300 * 300
+        
+    # 수익형 본전 방어 타겟 가격 계산 (진입가 + 0.2 ATR)
+    profit_lock_target = entry + (atr * PROFIT_LOCK_ATR) if info["direction"] == "LONG" else entry - (atr * PROFIT_LOCK_ATR)
+
     if info["direction"] == "LONG":
         if info["tp1_reached"]:
-            info["stop_loss"] = max(info["stop_loss"], entry)
+            info["stop_loss"] = max(info["stop_loss"], profit_lock_target)
         if info["tp2_reached"]:
             info["stop_loss"] = max(info["stop_loss"], info["tp1"])
     else:
         if info["tp1_reached"]:
-            info["stop_loss"] = min(info["stop_loss"], entry)
+            info["stop_loss"] = min(info["stop_loss"], profit_lock_target)
         if info["tp2_reached"]:
             info["stop_loss"] = min(info["stop_loss"], info["tp1"])
 
 
 def step(info, high, low):
     direction, entry = info["direction"], info["entry_price"]
+    atr = float(info.get("atr", info.get("risk", entry) / ATR_SL))
+    profit_lock_target = entry + (atr * PROFIT_LOCK_ATR) if direction == "LONG" else entry - (atr * PROFIT_LOCK_ATR)
+    
     events = []
     if direction == "LONG":
         info["max_fav"] = max(info["max_fav"], high)
@@ -463,7 +472,7 @@ def step(info, high, low):
             return events, ("TP3", info["tp3"])
         if high >= info["tp1"] and not info["tp1_reached"]:
             info["tp1_reached"] = True
-            info["stop_loss"] = max(info["stop_loss"], entry)
+            info["stop_loss"] = max(info["stop_loss"], profit_lock_target)
             events.append("TP1")
         if high >= info["tp2"] and not info["tp2_reached"]:
             info["tp2_reached"] = True
@@ -478,7 +487,7 @@ def step(info, high, low):
             return events, ("TP3", info["tp3"])
         if low <= info["tp1"] and not info["tp1_reached"]:
             info["tp1_reached"] = True
-            info["stop_loss"] = min(info["stop_loss"], entry)
+            info["stop_loss"] = min(info["stop_loss"], profit_lock_target)
             events.append("TP1")
         if low <= info["tp2"] and not info["tp2_reached"]:
             info["tp2_reached"] = True
@@ -491,7 +500,7 @@ def stop_reason(info):
     if info.get("tp2_reached"):
         return "TP1_PROTECT"
     if info.get("tp1_reached"):
-        return "BREAKEVEN"
+        return "PROFIT_LOCK"  # 본전 대신 약수익 방어선 체결
     return "SL"
 
 
@@ -540,12 +549,12 @@ def build_event_message(symbol, info, event):
     level = info["tp1"] if event == "TP1" else info["tp2"]
     pct = pct_move(direction, entry, level)
     if event == "TP1":
-        title = "🎯 <b>TP1 도달 (본전 방어선 확보)</b>"
-        action = f"🔒 스탑을 본전(<code>{fmt_price(entry)}</code>)으로 이동\n   이제 손실 없는 안전한 거래입니다"
+        title = "🎯 <b>TP1 도달 (수익형 본전 방어선 확보)</b>"
+        action = f"🔒 스탑을 약수익 구간(<code>+{PROFIT_LOCK_ATR} ATR</code>)으로 이동\n   손실 차단 및 소액 수익 확보 완료"
     else:
         title = "🎯🎯 <b>TP2 도달</b>"
         action = (f"🔒 스탑을 TP1(<code>{fmt_price(info['tp1'])}</code>)으로 이동\n"
-                  f"   최소 수익 확보, TP3(<code>{fmt_price(info['tp3'])}</code>) 목표로 홀딩")
+                  f"   안전한 수익 확보, TP3(<code>{fmt_price(info['tp3'])}</code>) 목표로 홀딩")
     return (
         f"{title} | {dir_tag(direction)}\n"
         f"<a href='{chart_link(symbol)}'>[{get_asset_category(symbol)}] {symbol}</a>\n\n"
@@ -563,7 +572,7 @@ def build_close_message(symbol, info, trade):
     reason = trade["reason"]
     head = {
         "SL": ("🛑 <b>손절 청산</b>", ""),
-        "BREAKEVEN": ("🏳️ <b>본전 청산</b>", "TP1 도달 후 되돌아와 본전 스탑 체결\n"),
+        "PROFIT_LOCK": ("💰 <b>수익 방어 청산 (Profit-Lock)</b>", "TP1 도달 후 되돌아와 약수익 스탑 체결\n"),
         "TP1_PROTECT": ("✅ <b>수익 청산 (TP1 방어)</b>", "TP2 도달 후 스탑(TP1)에서 체결\n"),
         "TP3": ("🏆 <b>TP3 최종 목표 도달</b>", ""),
         "ROTATE": ("🔄 <b>회전 청산</b>", "장기 보유 수익 확보, 슬롯 회전\n"),
@@ -720,6 +729,7 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 "entry_time": now.isoformat(),
                 "leverage": leverage,
                 "risk": risk,
+                "atr": atr,  # 수익형 본전 방어 계산용 저장
                 "tp1": tp1, "tp2": tp2, "tp3": tp3,
                 "stop_loss": sl,
                 "initial_stop": sl,
@@ -735,12 +745,12 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 return pct_move(direction, last_price, price)
 
             msg = (
-                f"🚀 <b>신규 시그널 (승률 최적화형)</b> | {dir_tag(direction)}\n"
+                f"🚀 <b>신규 시그널 (수익 방어형)</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(last_price)}</code>\n"
                 f"레버리지 <code>{leverage}배</code>\n\n"
-                "🎯 <b>목표가 (TP1 단축 적용)</b>\n"
-                f"TP1 <code>{fmt_price(tp1)} ({pct_of(tp1):+.2f}%)</code> → 1.0R (본전 방어 빠르게 진입)\n"
+                "🎯 <b>목표가 (수익형 본전 방어 적용)</b>\n"
+                f"TP1 <code>{fmt_price(tp1)} ({pct_of(tp1):+.2f}%)</code> → 도달 시 스탑을 <b>+{PROFIT_LOCK_ATR} ATR</b>로 락\n"
                 f"TP2 <code>{fmt_price(tp2)} ({pct_of(tp2):+.2f}%)</code> → 2.5R\n"
                 f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code> → 4.0R\n"
                 f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code> → -1.5R\n\n"
@@ -787,7 +797,7 @@ def build_slot_status_message(state, tickers):
         if info["tp2_reached"]:
             status = f"🎯🎯 TP2 도달 | 스탑 TP1 방어 | TP3까지 {dist(info['tp3']):.1f}%"
         elif info["tp1_reached"]:
-            status = f"🎯 TP1 도달 | 스탑 본전 | TP2까지 {dist(info['tp2']):.1f}%"
+            status = f"🎯 TP1 도달 | 스탑 수익 방어(+{PROFIT_LOCK_ATR}ATR) | TP2까지 {dist(info['tp2']):.1f}%"
         else:
             status = f"📈 홀딩 | TP1까지 {dist(info['tp1']):.1f}% / SL까지 {dist(info['stop_loss']):.1f}%"
 
@@ -810,7 +820,7 @@ def build_daily_report(now, stats):
                 if dt and dt >= since:
                     rows.append(row)
 
-    lines = [f"📋 <b>일일 리포트 (승률 분석)</b> | {now.strftime('%m/%d')}\n"]
+    lines = [f"📋 <b>일일 리포트 (수익 방어 분석)</b> | {now.strftime('%m/%d')}\n"]
     if not rows:
         lines.append("최근 24시간 청산 거래가 없습니다.")
     else:
@@ -848,7 +858,7 @@ def maybe_send_daily_report(state, now):
 
 def run_bot():
     start_time = time.time()
-    print("Bot 시작...")
+    print("Bot 시작과 함께 수익 방어 로직 실행...")
     state = load_state()
     now = utcnow()
 
