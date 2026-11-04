@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.37484,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793753100
+      "last_candle_ts": 1793753400
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 57.38,
       "max_adv": 58.65,
-      "last_candle_ts": 1793753100
+      "last_candle_ts": 1793753400
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 171.98,
       "max_adv": 176.79,
-      "last_candle_ts": 1793753100
+      "last_candle_ts": 1793753400
     },
     "LITE_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 669.12,
       "max_adv": 695.97,
-      "last_candle_ts": 1793753100
+      "last_candle_ts": 1793753400
     },
     "PIEVERSE_USDT": {
       "direction": "LONG",
@@ -86,9 +86,9 @@
       "initial_stop": 1.1228500000000001,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.1656,
+      "max_fav": 1.1673,
       "max_adv": 1.1479,
-      "last_candle_ts": 1793753100
+      "last_candle_ts": 1793753400
     },
     "ESPORTS_USDT": {
       "direction": "SHORT",
@@ -105,8 +105,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.01226,
-      "max_adv": 0.01241,
-      "last_candle_ts": 1793753100
+      "max_adv": 0.01249,
+      "last_candle_ts": 1793753400
     },
     "XPL_USDT": {
       "direction": "SHORT",
@@ -124,7 +124,7 @@
       "tp2_reached": false,
       "max_fav": 0.06143,
       "max_adv": 0.0624,
-      "last_candle_ts": 1793753100
+      "last_candle_ts": 1793753400
     },
     "SOON_USDT": {
       "direction": "LONG",
@@ -141,7 +141,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.2545,
-      "max_adv": 0.2545,
+      "max_adv": 0.2538,
       "last_candle_ts": 1793753400
     }
   },
