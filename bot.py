@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 최대 슬롯 5개로 축소 및 기준 대폭 완화 반영 버전
+- 텔레그램 알림 메시지에서 불필요한 부가 문구(기준 완화 등) 제거 버전
 """
 
 import csv
@@ -22,9 +22,9 @@ STATE_FILE = "gate_state.json"
 TRADES_FILE = "trades.csv"
 BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
 
-MAX_SLOTS = 5                  # 최대 슬롯 5개로 축소 [수정됨: 8 -> 5]
+MAX_SLOTS = 5                  # 최대 슬롯 5개
 
-# 진입 조건 (신호 빈도 극대화를 위해 대폭 완화)
+# 진입 조건 
 MIN_CHANGE_PCT = 2.5          # 24시간 변동률 기준(%)
 MIN_QUOTE_VOLUME = 300_000    # 24시간 거래대금 최소값(USDT)
 RSI_PERIOD = 14
@@ -77,7 +77,7 @@ REASON_LABEL = {
     "TIME_STOP": "타임스탑",
 }
 
-NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]  # 5개 슬롯에 맞게 축소
+NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
 
 
 # ──────────────────────────── 공통 유틸 ────────────────────────────
@@ -912,9 +912,9 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             def pct_of(price):
                 return pct_move(direction, last_price, price)
 
-            # 🛡️ 신규 시그널 개별 텔레그램 알림 전송
+            # 🛡️ 신규 시그널 개별 텔레그램 알림 전송 (불필요한 문구 완전 제거)
             msg = (
-                f"🛡️ <b>신규 시그널 (기준 대폭 완화)</b> | {dir_tag(direction)}\n"
+                f"🛡️ <b>신규 시그널</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(last_price)}</code> | 레버리지 <code>{leverage}배</code>\n\n"
                 "🎯 <b>목표가 및 방어선</b>\n"
@@ -923,7 +923,7 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code>\n"
                 f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code>\n\n"
                 f"📌 <b>진입 근거 (추세 & 스마트 머니)</b>\n"
-                f"• 변동률 <code>{change:+.1f}%</code> (기준 2.5% 통과)\n"
+                f"• 변동률 <code>{change:+.1f}%</code>\n"
                 f"• ADX <code>{analysis['adx']:.1f}</code> / RSI <code>{analysis['rsi']:.1f}</code>\n"
                 f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트"
             )
