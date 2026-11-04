@@ -14,9 +14,9 @@
       "initial_stop": 0.050426071428571424,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.04797,
+      "max_fav": 0.04795,
       "max_adv": 0.04819,
-      "last_candle_ts": 1793831400
+      "last_candle_ts": 1793831700
     },
     "CXMT_USDT": {
       "direction": "LONG",
@@ -32,9 +32,9 @@
       "initial_stop": 6.238,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 6.38,
+      "max_fav": 6.389,
       "max_adv": 6.368,
-      "last_candle_ts": 1793831400
+      "last_candle_ts": 1793831700
     },
     "TSLA_USDT": {
       "direction": "SHORT",
@@ -50,9 +50,9 @@
       "initial_stop": 393.7807142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 385.42,
+      "max_fav": 385.37,
       "max_adv": 385.55,
-      "last_candle_ts": 1793831400
+      "last_candle_ts": 1793831700
     },
     "TAO_USDT": {
       "direction": "LONG",
@@ -68,9 +68,27 @@
       "initial_stop": 231.00357142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 237.0,
+      "max_fav": 237.1,
       "max_adv": 235.9,
-      "last_candle_ts": 1793831400
+      "last_candle_ts": 1793831700
+    },
+    "TQQQX_USDT": {
+      "direction": "LONG",
+      "entry_price": 63.0,
+      "entry_time": "2026-11-04T22:40:35.336174+00:00",
+      "leverage": 8,
+      "risk": 2.0507142857142826,
+      "atr": 1.3671428571428552,
+      "tp1": 64.36714285714285,
+      "tp2": 66.41785714285714,
+      "tp3": 68.46857142857142,
+      "stop_loss": 60.949285714285715,
+      "initial_stop": 60.949285714285715,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 63.0,
+      "max_adv": 63.0,
+      "last_candle_ts": 1793832000
     }
   },
   "stats": {
