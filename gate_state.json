@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 52.55,
       "max_adv": 51.73,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     },
     "TQQQX_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 64.88,
       "max_adv": 61.71,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     },
     "ETH_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 2449.74,
       "max_adv": 2404.03,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1017.15,
       "max_adv": 1051.62,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     },
     "AMZN_USDT": {
       "direction": "LONG",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 270.95,
       "max_adv": 265.85,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     },
     "ZEC_USDT": {
       "direction": "LONG",
@@ -104,9 +104,9 @@
       "initial_stop": 1248.635,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1293.86,
+      "max_fav": 1296.23,
       "max_adv": 1282.55,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     },
     "TIA_USDT": {
       "direction": "LONG",
@@ -122,9 +122,9 @@
       "initial_stop": 0.4371678571428571,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.4527,
+      "max_fav": 0.4542,
       "max_adv": 0.4473,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     },
     "FARTCOIN_USDT": {
       "direction": "LONG",
@@ -142,7 +142,7 @@
       "tp2_reached": false,
       "max_fav": 0.12599,
       "max_adv": 0.12493,
-      "last_candle_ts": 1793829000
+      "last_candle_ts": 1793829300
     }
   },
   "stats": {
@@ -178,11 +178,6 @@
     ]
   },
   "closed_symbols": {
-    "CXMT_USDT": {
-      "time": "2026-11-04T16:00:46.623035+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "SOL_USDT": {
       "time": "2026-11-04T17:15:31.064430+00:00",
       "direction": "LONG",
