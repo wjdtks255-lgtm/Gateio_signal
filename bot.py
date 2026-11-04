@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 신규 시그널 알림 및 슬롯 현황 출력 로직 오류 수정 완료 버전
+- 시그널 빈도 극대화를 위해 변동률(2.5%), 이격도(1.5 ATR), ADX(14)로 기준 대폭 완화
 """
 
 import csv
@@ -24,13 +24,13 @@ BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
 
 MAX_SLOTS = 8
 
-# 진입 조건 (신호 빈도 개선을 위해 기준 완화)
-MIN_CHANGE_PCT = 3.5          # 24시간 변동률 기준(%)
-MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)
+# 진입 조건 (신호 빈도 극대화를 위해 대폭 완화)
+MIN_CHANGE_PCT = 2.5          # 24시간 변동률 기준(%) [완화: 3.5 -> 2.5]
+MIN_QUOTE_VOLUME = 300_000    # 24시간 거래대금 최소값(USDT) [완화: 50만 -> 30만]
 RSI_PERIOD = 14
 ATR_PERIOD = 14
 ADX_PERIOD = 14
-BODY_RATIO_MIN = 0.30         # 캔들 몸통 비율
+BODY_RATIO_MIN = 0.25         # 캔들 몸통 비율 [완화: 0.30 -> 0.25]
 LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 레버리지 토큰 제외
 
 # 목표가/손절가 (ATR 배수)
@@ -49,12 +49,12 @@ MAX_MARGIN_LOSS = 0.5
 ROTATE_HOURS = 18             
 ROTATE_MIN_PROFIT_PCT = 0.5   
 TIME_STOP_HOURS = 24          
-COOLDOWN_HOURS = 6            
+COOLDOWN_HOURS = 4            # 쿨다운 단축 [완화: 6시간 -> 4시간]
 
 # 결과 분류: 무승부 밴드
 DRAW_BAND_R = 0.05
 
-MAX_CANDIDATES = 40
+MAX_CANDIDATES = 50           # 후보군 탐색 범위 확대 [완화: 40 -> 50]
 SCAN_BUDGET_SEC = 150
 
 FAIL_ALERT_THRESHOLD = 3      
@@ -275,7 +275,7 @@ def fetch_completed_5m(symbol, from_ts, now_ts):
             if c["t"] >= from_ts and c["t"] + 300 <= now_ts]
 
 
-# ──────────────────────────── 지표 및 고도화 필터 ────────────────────────────
+# ──────────────────────────── 지표 및 고도화 필터 (대폭 완화) ────────────────────────────
 def wilder_rsi(closes, period=RSI_PERIOD):
     if len(closes) < period + 1:
         return None
@@ -371,12 +371,12 @@ def check_order_block_retest(candles, direction, current_price):
         if direction == "LONG":
             if c["o"] > c["c"]:  # 음봉 (Demand OB)
                 zone_low, zone_high = c["l"], c["o"]
-                if zone_low * 0.98 <= current_price <= zone_high * 1.03:
+                if zone_low * 0.97 <= current_price <= zone_high * 1.04:
                     return zone_low, zone_high
         else:
             if c["c"] > c["o"]:  # 양봉 (Supply OB)
                 zone_low, zone_high = c["o"], c["h"]
-                if zone_low * 0.97 <= current_price <= zone_high * 1.02:
+                if zone_low * 0.96 <= current_price <= zone_high * 1.03:
                     return zone_low, zone_high
                     
     return last["l"], last["h"]
@@ -413,20 +413,26 @@ def analyze_signal(symbol, direction, now_ts, current_price):
     if direction == "LONG":
         if not (ema20 > ema50 and current_price > ma50):
             return None
-        if adx < 17:
+        # ADX 대폭 완화: 14 이상
+        if adx < 14:
             return None
-        if ema_distance > (1.2 * atr):
+        # 이격도 대폭 완화: 1.5 ATR 이내
+        if ema_distance > (1.5 * atr):
             return None
-        if rsi < 48 or last["c"] <= last["o"] or body_ratio < BODY_RATIO_MIN:
+        # RSI 완화: 45 이상
+        if rsi < 45 or last["c"] <= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
     else:
         if not (ema20 < ema50 and current_price < ma50):
             return None
-        if adx < 17:
+        # ADX 대폭 완화: 14 이상
+        if adx < 14:
             return None
-        if ema_distance > (1.2 * atr):
+        # 이격도 대폭 완화: 1.5 ATR 이내
+        if ema_distance > (1.5 * atr):
             return None
-        if rsi > 52 or last["c"] >= last["o"] or body_ratio < BODY_RATIO_MIN:
+        # RSI 완화: 55 이하
+        if rsi > 55 or last["c"] >= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
 
     zone_low, zone_high = check_order_block_retest(candles, direction, current_price)
@@ -907,14 +913,14 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 "max_adv": last_price,
                 "last_candle_ts": now_ts // 300 * 300,
             }
-            changed = True  # 👈 신규 시그널 포착 시 변경 상태 반영
+            changed = True
 
             def pct_of(price):
                 return pct_move(direction, last_price, price)
 
-            # 🛡️ 신규 시그널 개별 텔레그램 알림 전송 (즉시 발송)
+            # 🛡️ 신규 시그널 개별 텔레그램 알림 전송
             msg = (
-                f"🛡️ <b>신규 시그널 (기준 완화 반영)</b> | {dir_tag(direction)}\n"
+                f"🛡️ <b>신규 시그널 (기준 대폭 완화)</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(last_price)}</code> | 레버리지 <code>{leverage}배</code>\n\n"
                 "🎯 <b>목표가 및 방어선</b>\n"
@@ -923,7 +929,7 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code>\n"
                 f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code>\n\n"
                 f"📌 <b>진입 근거 (추세 & 스마트 머니)</b>\n"
-                f"• 변동률 <code>{change:+.1f}%</code> (기준 3.5% 통과)\n"
+                f"• 변동률 <code>{change:+.1f}%</code> (기준 2.5% 통과)\n"
                 f"• ADX <code>{analysis['adx']:.1f}</code> / RSI <code>{analysis['rsi']:.1f}</code>\n"
                 f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트"
             )
@@ -1025,7 +1031,6 @@ def run_bot():
     if len(state["active_slots"]) < MAX_SLOTS:
         changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
-    # 💡 포지션 변동이나 새로운 시그널이 잡혔을 때 슬롯 현황판도 함께 업데이트되도록 수정
     if changed_positions or changed_new:
         send_telegram_message(build_slot_status_message(state, tickers))
 
