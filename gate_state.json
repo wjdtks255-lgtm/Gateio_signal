@@ -33,7 +33,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 6.371,
-      "max_adv": 6.37,
+      "max_adv": 6.368,
       "last_candle_ts": 1793831400
     },
     "TSLA_USDT": {
@@ -68,7 +68,7 @@
       "initial_stop": 231.00357142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 236.3,
+      "max_fav": 236.4,
       "max_adv": 235.9,
       "last_candle_ts": 1793831400
     }
