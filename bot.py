@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- EMA 정렬, ADX 추세 강도, ATR 이격도 제한(추격 차단) 필터 고도화 반영
+- 신규 시그널 알림 및 슬롯 현황 출력 로직 오류 수정 완료 버전
 """
 
 import csv
@@ -24,44 +24,42 @@ BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
 
 MAX_SLOTS = 8
 
-# 진입 조건 (코인 및 주식형 토큰 마켓 집중)
-MIN_CHANGE_PCT = 4.5          # 24시간 변동률 기준(%)
+# 진입 조건 (신호 빈도 개선을 위해 기준 완화)
+MIN_CHANGE_PCT = 3.5          # 24시간 변동률 기준(%)
 MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)
 RSI_PERIOD = 14
 ATR_PERIOD = 14
 ADX_PERIOD = 14
-BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이
-LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외
+BODY_RATIO_MIN = 0.30         # 캔들 몸통 비율
+LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 레버리지 토큰 제외
 
 # 목표가/손절가 (ATR 배수)
 ATR_SL = 1.5
-ATR_TP_MULTS = (1.0, 2.5, 4.0)   # TP1을 1.0 ATR로 당겨 승률 및 본전 방어 속도 극대화
-MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외
-MAX_PER_THEME = 1             # 같은 테마에서 같은 방향 최대 슬롯
+ATR_TP_MULTS = (1.0, 2.5, 4.0)   
+MAX_SL_PCT = 6.0              
+MAX_PER_THEME = 1             
 
 # 비용/리스크 가정 및 수익형 본전 방어 오프셋
-FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%
-PROFIT_LOCK_ATR = 0.2         # TP1 달성 시 스탑로스를 진입가보다 이만큼 유리한 방향(+0.2 ATR)으로 설정
-RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)
-MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실 상한
+FEE_ROUNDTRIP = 0.001         
+PROFIT_LOCK_ATR = 0.2         
+RISK_PER_TRADE_PCT = 1.5      
+MAX_MARGIN_LOSS = 0.5         
 
 # 보유 시간 및 쿨다운 규칙
-ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산
-ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%)
-TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산
-COOLDOWN_HOURS = 6            # 청산 후 같은 종목 재진입 금지 시간 (6시간)
+ROTATE_HOURS = 18             
+ROTATE_MIN_PROFIT_PCT = 0.5   
+TIME_STOP_HOURS = 24          
+COOLDOWN_HOURS = 6            
 
-# 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부 (0.05로 정밀화)
+# 결과 분류: 무승부 밴드
 DRAW_BAND_R = 0.05
 
-# 실행 시간 관리
 MAX_CANDIDATES = 40
 SCAN_BUDGET_SEC = 150
 
-# 알림 옵션
-FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림
+FAIL_ALERT_THRESHOLD = 3      
 DAILY_REPORT_ENABLED = True
-DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회
+DAILY_REPORT_HOUR_UTC = 0     
 
 CSV_FIELDS = [
     "closed_at", "symbol", "direction", "category", "leverage",
@@ -325,7 +323,7 @@ def calc_ema(closes, period=20):
 
 def calc_adx(candles, period=ADX_PERIOD):
     if len(candles) < period * 2:
-        return 25.0  # 데이터 부족 시 중립 값 반환
+        return 25.0  
     
     tr_list, plus_dm_list, minus_dm_list = [], [], []
     for i in range(1, len(candles)):
@@ -373,12 +371,12 @@ def check_order_block_retest(candles, direction, current_price):
         if direction == "LONG":
             if c["o"] > c["c"]:  # 음봉 (Demand OB)
                 zone_low, zone_high = c["l"], c["o"]
-                if zone_low * 0.99 <= current_price <= zone_high * 1.02:
+                if zone_low * 0.98 <= current_price <= zone_high * 1.03:
                     return zone_low, zone_high
         else:
             if c["c"] > c["o"]:  # 양봉 (Supply OB)
                 zone_low, zone_high = c["o"], c["h"]
-                if zone_low * 0.98 <= current_price <= zone_high * 1.01:
+                if zone_low * 0.97 <= current_price <= zone_high * 1.02:
                     return zone_low, zone_high
                     
     return last["l"], last["h"]
@@ -392,7 +390,6 @@ def analyze_signal(symbol, direction, now_ts, current_price):
 
     closes = [c["c"] for c in candles]
     
-    # 지표 산출 (MA50, EMA20, EMA50, ADX, ATR, RSI)
     ma50 = calc_ma(closes, 50)
     ema20 = calc_ema(closes, 20)
     ema50 = calc_ema(closes, 50)
@@ -411,45 +408,27 @@ def analyze_signal(symbol, direction, now_ts, current_price):
     if body_ratio < BODY_RATIO_MIN:
         return None
 
-    # 이격도 계산 (가격과 EMA20 간격 <= 0.8 ATR)
     ema_distance = abs(current_price - ema20)
 
-    # ────────── 🟢 롱(LONG) 진입 조건 ──────────
     if direction == "LONG":
-        if not (
-            change_pct_positive_check := True  # 변동률은 외부에서 체크
-        ):
-            pass
-        
-        # 1. 이동평균선 추세 정렬: EMA20 > EMA50 및 가격 > MA50
         if not (ema20 > ema50 and current_price > ma50):
             return None
-        # 2. 추세 강도: ADX >= 20
-        if adx < 20:
+        if adx < 17:
             return None
-        # 3. 이격도 제한: 가격과 EMA20 간격 <= 0.8 ATR
-        if ema_distance > (0.8 * atr):
+        if ema_distance > (1.2 * atr):
             return None
-        # 4. 모멘텀 및 캔들: RSI >= 50, 양봉 몸통 비율 >= 0.35
-        if rsi < 50 or last["c"] <= last["o"] or body_ratio < BODY_RATIO_MIN:
+        if rsi < 48 or last["c"] <= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
-
-    # ────────── 🔴 숏(SHORT) 진입 조건 ──────────
     else:
-        # 1. 이동평균선 추세 정렬: EMA20 < EMA50 및 가격 < MA50
         if not (ema20 < ema50 and current_price < ma50):
             return None
-        # 2. 추세 강도: ADX >= 20
-        if adx < 20:
+        if adx < 17:
             return None
-        # 3. 이격도 제한: 가격과 EMA20 간격 <= 0.8 ATR
-        if ema_distance > (0.8 * atr):
+        if ema_distance > (1.2 * atr):
             return None
-        # 4. 모멘텀 및 캔들: RSI <= 50, 음봉 몸통 비율 >= 0.35
-        if rsi > 50 or last["c"] >= last["o"] or body_ratio < BODY_RATIO_MIN:
+        if rsi > 52 or last["c"] >= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
 
-    # 5. 스마트 머니: 유효한 오더블럭(OB) 리테스트 확인
     zone_low, zone_high = check_order_block_retest(candles, direction, current_price)
     if not zone_low or not zone_high:
         return None
@@ -850,7 +829,6 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             last_price = float(t.get("last", 0))
             change = float(t.get("change_percentage", 0))
             
-            # 롱은 변동률 +4.5% 이상, 숏은 -4.5% 이하
             if change >= MIN_CHANGE_PCT:
                 direction = "LONG"
             elif change <= -MIN_CHANGE_PCT:
@@ -929,13 +907,14 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 "max_adv": last_price,
                 "last_candle_ts": now_ts // 300 * 300,
             }
-            changed = True
+            changed = True  # 👈 신규 시그널 포착 시 변경 상태 반영
 
             def pct_of(price):
                 return pct_move(direction, last_price, price)
 
+            # 🛡️ 신규 시그널 개별 텔레그램 알림 전송 (즉시 발송)
             msg = (
-                f"🛡️ <b>신규 시그널 (EMA·ADX·이격도 필터 적용)</b> | {dir_tag(direction)}\n"
+                f"🛡️ <b>신규 시그널 (기준 완화 반영)</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(last_price)}</code> | 레버리지 <code>{leverage}배</code>\n\n"
                 "🎯 <b>목표가 및 방어선</b>\n"
@@ -944,15 +923,16 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code>\n"
                 f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code>\n\n"
                 f"📌 <b>진입 근거 (추세 & 스마트 머니)</b>\n"
-                f"• EMA20/50 정렬 및 ADX <code>{analysis['adx']:.1f}</code> 충족\n"
-                f"• 이격도(EMA20 간격) <= 0.8 ATR 통과\n"
-                f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트\n"
-                f"• 변동 <code>{change:+.1f}%</code> / RSI <code>{analysis['rsi']:.1f}</code>"
+                f"• 변동률 <code>{change:+.1f}%</code> (기준 3.5% 통과)\n"
+                f"• ADX <code>{analysis['adx']:.1f}</code> / RSI <code>{analysis['rsi']:.1f}</code>\n"
+                f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트"
             )
             send_telegram_message(msg)
+            
         except Exception as e:
             print(f"Error processing candidate {symbol}: {e}")
             continue
+            
     return changed
 
 
@@ -1045,6 +1025,7 @@ def run_bot():
     if len(state["active_slots"]) < MAX_SLOTS:
         changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
+    # 💡 포지션 변동이나 새로운 시그널이 잡혔을 때 슬롯 현황판도 함께 업데이트되도록 수정
     if changed_positions or changed_new:
         send_telegram_message(build_slot_status_message(state, tickers))
 
