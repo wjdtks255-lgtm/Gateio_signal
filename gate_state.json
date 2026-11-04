@@ -14,9 +14,9 @@
       "initial_stop": 51.322142857142865,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 52.37,
+      "max_fav": 52.4,
       "max_adv": 51.73,
-      "last_candle_ts": 1793803200
+      "last_candle_ts": 1793803500
     },
     "NEAR_USDT": {
       "direction": "LONG",
@@ -28,13 +28,13 @@
       "tp1": 4.142314285714286,
       "tp2": 4.252435714285714,
       "tp3": 4.362557142857143,
-      "stop_loss": 3.9587785714285717,
+      "stop_loss": 4.083582857142857,
       "initial_stop": 3.9587785714285717,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 4.1352,
+      "max_fav": 4.1981,
       "max_adv": 3.964,
-      "last_candle_ts": 1793803200
+      "last_candle_ts": 1793803500
     },
     "CXMT_USDT": {
       "direction": "LONG",
@@ -50,9 +50,9 @@
       "initial_stop": 6.4185357142857145,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 6.61,
+      "max_fav": 6.629,
       "max_adv": 6.496,
-      "last_candle_ts": 1793803200
+      "last_candle_ts": 1793803500
     },
     "TRUMP_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1.402,
       "max_adv": 1.455,
-      "last_candle_ts": 1793803200
+      "last_candle_ts": 1793803500
     },
     "TSLA_USDT": {
       "direction": "SHORT",
@@ -87,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 374.29,
-      "max_adv": 383.67,
-      "last_candle_ts": 1793803200
+      "max_adv": 383.96,
+      "last_candle_ts": 1793803500
     },
     "LIT_USDT": {
       "direction": "LONG",
@@ -104,9 +104,9 @@
       "initial_stop": 3.306714285714286,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 3.522,
+      "max_fav": 3.537,
       "max_adv": 3.399,
-      "last_candle_ts": 1793803200
+      "last_candle_ts": 1793803500
     },
     "BTW_USDT": {
       "direction": "LONG",
@@ -123,8 +123,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1.15942,
-      "max_adv": 1.150488,
-      "last_candle_ts": 1793803200
+      "max_adv": 1.130594,
+      "last_candle_ts": 1793803500
     },
     "AAPL_USDT": {
       "direction": "LONG",
@@ -140,9 +140,9 @@
       "initial_stop": 344.4242857142857,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 350.21,
+      "max_fav": 351.0,
       "max_adv": 347.69,
-      "last_candle_ts": 1793803200
+      "last_candle_ts": 1793803500
     }
   },
   "stats": {
