@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.37484,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793753700
+      "last_candle_ts": 1793754000
     },
     "ZHIPU_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 57.38,
       "max_adv": 58.65,
-      "last_candle_ts": 1793753700
+      "last_candle_ts": 1793754000
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -46,13 +46,13 @@
       "tp1": 171.7707142857143,
       "tp2": 166.28178571428572,
       "tp3": 160.79285714285712,
-      "stop_loss": 180.91892857142858,
+      "stop_loss": 174.69814285714287,
       "initial_stop": 180.91892857142858,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 171.98,
+      "max_fav": 170.99,
       "max_adv": 176.79,
-      "last_candle_ts": 1793753700
+      "last_candle_ts": 1793754000
     },
     "LITE_USDT": {
       "direction": "SHORT",
@@ -64,13 +64,13 @@
       "tp1": 668.9714285714286,
       "tp2": 647.8085714285714,
       "tp3": 626.6457142857143,
-      "stop_loss": 704.2428571428571,
+      "stop_loss": 680.2582857142858,
       "initial_stop": 704.2428571428571,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 669.12,
+      "max_fav": 664.14,
       "max_adv": 695.97,
-      "last_candle_ts": 1793753700
+      "last_candle_ts": 1793754000
     },
     "PIEVERSE_USDT": {
       "direction": "LONG",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 1.1673,
       "max_adv": 1.1479,
-      "last_candle_ts": 1793753700
+      "last_candle_ts": 1793754000
     },
     "ESPORTS_USDT": {
       "direction": "SHORT",
@@ -104,9 +104,9 @@
       "initial_stop": 0.013032499999999999,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.01226,
+      "max_fav": 0.01214,
       "max_adv": 0.01249,
-      "last_candle_ts": 1793753700
+      "last_candle_ts": 1793754000
     },
     "XPL_USDT": {
       "direction": "SHORT",
@@ -124,7 +124,7 @@
       "tp2_reached": false,
       "max_fav": 0.06143,
       "max_adv": 0.0624,
-      "last_candle_ts": 1793753700
+      "last_candle_ts": 1793754000
     },
     "SOON_USDT": {
       "direction": "LONG",
@@ -141,8 +141,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.2545,
-      "max_adv": 0.2527,
-      "last_candle_ts": 1793753700
+      "max_adv": 0.2507,
+      "last_candle_ts": 1793754000
     }
   },
   "stats": {
