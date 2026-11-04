@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 52.4,
       "max_adv": 51.73,
-      "last_candle_ts": 1793803500
+      "last_candle_ts": 1793803800
     },
     "NEAR_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 4.1981,
       "max_adv": 3.964,
-      "last_candle_ts": 1793803500
+      "last_candle_ts": 1793803800
     },
     "CXMT_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 6.629,
       "max_adv": 6.496,
-      "last_candle_ts": 1793803500
+      "last_candle_ts": 1793803800
     },
     "TRUMP_USDT": {
       "direction": "SHORT",
@@ -70,25 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1.402,
       "max_adv": 1.455,
-      "last_candle_ts": 1793803500
-    },
-    "TSLA_USDT": {
-      "direction": "SHORT",
-      "entry_price": 377.68,
-      "entry_time": "2026-11-04T12:05:25.459512+00:00",
-      "leverage": 8,
-      "risk": 6.879642857142862,
-      "atr": 4.586428571428574,
-      "tp1": 373.0935714285714,
-      "tp2": 366.2139285714286,
-      "tp3": 359.3342857142857,
-      "stop_loss": 384.5596428571429,
-      "initial_stop": 384.5596428571429,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 374.29,
-      "max_adv": 383.96,
-      "last_candle_ts": 1793803500
+      "last_candle_ts": 1793803800
     },
     "LIT_USDT": {
       "direction": "LONG",
@@ -100,13 +82,13 @@
       "tp1": 3.538857142857143,
       "tp2": 3.6781428571428574,
       "tp3": 3.8174285714285716,
-      "stop_loss": 3.306714285714286,
+      "stop_loss": 3.464571428571429,
       "initial_stop": 3.306714285714286,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 3.537,
+      "max_fav": 3.539,
       "max_adv": 3.399,
-      "last_candle_ts": 1793803500
+      "last_candle_ts": 1793803800
     },
     "BTW_USDT": {
       "direction": "LONG",
@@ -123,8 +105,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1.15942,
-      "max_adv": 1.130594,
-      "last_candle_ts": 1793803500
+      "max_adv": 1.114682,
+      "last_candle_ts": 1793803800
     },
     "AAPL_USDT": {
       "direction": "LONG",
@@ -140,20 +122,38 @@
       "initial_stop": 344.4242857142857,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 351.0,
+      "max_fav": 351.36,
       "max_adv": 347.69,
-      "last_candle_ts": 1793803500
+      "last_candle_ts": 1793803800
+    },
+    "TQQQX_USDT": {
+      "direction": "LONG",
+      "entry_price": 63.47,
+      "entry_time": "2026-11-04T14:55:25.076754+00:00",
+      "leverage": 8,
+      "risk": 2.124642857142856,
+      "atr": 1.4164285714285707,
+      "tp1": 64.88642857142857,
+      "tp2": 67.01107142857143,
+      "tp3": 69.13571428571429,
+      "stop_loss": 61.34535714285714,
+      "initial_stop": 61.34535714285714,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 63.47,
+      "max_adv": 63.47,
+      "last_candle_ts": 1793804100
     }
   },
   "stats": {
     "wins": 5,
     "draws": 0,
-    "losses": 3,
-    "total": 8,
-    "r_count": 8,
-    "sum_r": -2.0604541689157365,
+    "losses": 4,
+    "total": 9,
+    "r_count": 9,
+    "sum_r": -3.115352367534852,
     "win_r": 1.028037785189996,
-    "loss_r": 3.088491954105733,
+    "loss_r": 4.143390152724848,
     "recent_r": [
       0.615,
       0.102,
@@ -162,7 +162,8 @@
       -1.017,
       -1.035,
       0.116,
-      0.109
+      0.109,
+      -1.055
     ]
   },
   "closed_symbols": {
@@ -205,6 +206,11 @@
       "time": "2026-11-04T14:40:34.358398+00:00",
       "direction": "SHORT",
       "reason": "PROFIT_LOCK"
+    },
+    "TSLA_USDT": {
+      "time": "2026-11-04T14:55:25.076754+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
     }
   },
   "fail_count": 0,
