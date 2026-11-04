@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 52.4,
       "max_adv": 51.73,
-      "last_candle_ts": 1793806800
+      "last_candle_ts": 1793807100
     },
     "CXMT_USDT": {
       "direction": "LONG",
@@ -33,8 +33,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 6.639,
-      "max_adv": 6.483,
-      "last_candle_ts": 1793806800
+      "max_adv": 6.448,
+      "last_candle_ts": 1793807100
     },
     "AAPL_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": true,
       "max_fav": 354.11,
       "max_adv": 347.69,
-      "last_candle_ts": 1793806800
+      "last_candle_ts": 1793807100
     },
     "TQQQX_USDT": {
       "direction": "LONG",
@@ -69,8 +69,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 64.88,
-      "max_adv": 62.95,
-      "last_candle_ts": 1793806800
+      "max_adv": 62.67,
+      "last_candle_ts": 1793807100
     },
     "ETH_USDT": {
       "direction": "LONG",
@@ -87,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 2449.74,
-      "max_adv": 2422.71,
-      "last_candle_ts": 1793806800
+      "max_adv": 2417.31,
+      "last_candle_ts": 1793807100
     },
     "SOL_USDT": {
       "direction": "LONG",
@@ -105,8 +105,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 98.13,
-      "max_adv": 96.32,
-      "last_candle_ts": 1793806800
+      "max_adv": 96.16,
+      "last_candle_ts": 1793807100
     },
     "ADA_USDT": {
       "direction": "LONG",
@@ -123,8 +123,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.1991,
-      "max_adv": 0.1976,
-      "last_candle_ts": 1793806800
+      "max_adv": 0.1974,
+      "last_candle_ts": 1793807100
     },
     "ENA_USDT": {
       "direction": "LONG",
@@ -140,7 +140,7 @@
       "initial_stop": 0.17921428571428571,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.1853,
+      "max_fav": 0.1861,
       "max_adv": 0.1853,
       "last_candle_ts": 1793807100
     }
