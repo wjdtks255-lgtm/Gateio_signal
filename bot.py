@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 무승부 밴드 0.05로 정밀화, 티커 파싱 예외 방어 강화, 메시지 포맷 정돈
+- 무승부 밴드 0.05 정밀화, 깔끔한 슬롯 현황 중심 메시지 포맷 적용
 """
 
 import csv
@@ -845,7 +845,7 @@ def build_slot_status_message(state, tickers):
     symbols = list(active.keys())
     longs = sum(1 for s in symbols if active[s].get("direction") == "LONG")
     shorts = len(symbols) - longs
-    lines = [f"<b>📊 슬롯 현황 ({len(symbols)} / {MAX_SLOTS}) | 🟢 롱 {longs} / 🔴 숏 {shorts}</b>\n"]
+    lines = [f"📊 <b>슬롯 현황 ({len(symbols)} / {MAX_SLOTS}) | 🟢 롱 {longs} / 🔴 숏 {shorts}</b>\n"]
 
     for i in range(MAX_SLOTS):
         icon = NUM_EMOJI[i] if i < len(NUM_EMOJI) else f"{i + 1}."
@@ -874,66 +874,10 @@ def build_slot_status_message(state, tickers):
             status = f"📈 홀딩 | TP1까지 {dist(info['tp1']):.1f}% / SL까지 {dist(info['stop_loss']):.1f}%"
 
         lines.append(
-            f"{icon} {icon_dir} <a href='{chart_link(sym)}'>[{get_asset_category(sym)}] {sym}</a>\n"
+            f"{icon} {icon_dir} <b>[{get_asset_category(sym)}]</b> <a href='{chart_link(sym)}'>{sym}</a>\n"
             f"   <code>{pct:+.2f}% ({lev}배 {pct * lev:+.1f}%) | 보유 {hold}</code>\n"
             f"   <code>{status}</code>"
         )
-    lines.append("\n" + build_stats_line(state["stats"]))
-    return "\n".join(lines)
-
-
-def build_daily_report(state, tickers, now):
-    since = now - timedelta(hours=24)
-    rows = []
-    if os.path.exists(TRADES_FILE):
-        with open(TRADES_FILE, "r", encoding="utf-8") as f:
-            for row in csv.DictReader(f):
-                dt = parse_iso(row.get("closed_at", ""))
-                if dt and dt >= since:
-                    rows.append(row)
-
-    lines = [f"📋 <b>일일 리포트 (미실현 손익 통합 대시보드)</b> | {now.strftime('%m/%d')}\n"]
-    
-    active = state["active_slots"]
-    if active:
-        total_unrealized_pct = 0.0
-        slot_summaries = []
-        for sym, info in active.items():
-            entry = info["entry_price"]
-            direction = info["direction"]
-            lev = info.get("leverage", 1)
-            price = tickers.get(sym, entry)
-            pct = pct_move(direction, entry, price)
-            lev_pct = pct * lev
-            total_unrealized_pct += lev_pct
-            entry_dt = parse_iso(info.get("entry_time", ""), now)
-            h = (now - entry_dt).total_seconds() / 3600
-            slot_summaries.append(f"• {sym} ({dir_tag(direction)}): <code>{lev_pct:+.1f}%</code> ({fmt_hours(h)})")
-        
-        lines.append(f"🔵 <b>실시간 오픈 슬롯 ({len(active)}개) 미실현 합계: <code>{total_unrealized_pct:+.1f}%</code></b>")
-        lines.extend(slot_summaries)
-        lines.append("")
-
-    if not rows:
-        lines.append("최근 24시간 확정 청산 거래가 없습니다.")
-    else:
-        nets = [float(r["net_r"]) for r in rows]
-        wins = sum(1 for n in nets if n > DRAW_BAND_R)
-        losses = sum(1 for n in nets if n < -DRAW_BAND_R)
-        draws = len(nets) - wins - losses
-        lines.append(f"최근 24시간 확정 <code>{len(nets)}전 {wins}승 {draws}무 {losses}패 | 합계 {sum(nets):+.2f}R</code>\n")
-
-        lines.append("<b>청산 유형별</b>")
-        for key, label in REASON_LABEL.items():
-            vals = [float(r["net_r"]) for r in rows if r["exit_reason"] == key]
-            if vals:
-                lines.append(f"• {label} <code>{len(vals)}건 평균 {sum(vals) / len(vals):+.2f}R</code>")
-
-        by_dir = {"LONG": 0.0, "SHORT": 0.0}
-        for r in rows:
-            by_dir[r["direction"]] = by_dir.get(r["direction"], 0.0) + float(r["net_r"])
-        lines.append(f"\n방향별 확정 <code>롱 {by_dir['LONG']:+.2f}R / 숏 {by_dir['SHORT']:+.2f}R</code>")
-
     lines.append("\n" + build_stats_line(state["stats"]))
     return "\n".join(lines)
 
@@ -944,7 +888,8 @@ def maybe_send_daily_report(state, tickers, now):
     today = now.strftime("%Y-%m-%d")
     if now.hour < DAILY_REPORT_HOUR_UTC or state.get("last_report_date") == today:
         return False
-    send_telegram_message(build_daily_report(state, tickers, now))
+    # 일일 리포트 대신 깔끔한 슬롯 현황판 메시지로 통일하여 전송
+    send_telegram_message(build_slot_status_message(state, tickers))
     state["last_report_date"] = today
     return True
 
