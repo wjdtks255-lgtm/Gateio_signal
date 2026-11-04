@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 오더블럭 리테스트 엄격화, MA50 추세 필터, 수익형 본전 방어(Profit-Lock) 및 정확한 가격 표기 버전
+- [1번] 일일 요약 미실현 손익 및 보유 시간 대시보드 통합
+- [2번] ATR 기반 동적 레버리지 세분화 보정
+- [3번] 손절 종목 '반대 방향' 쿨다운 예외 허용 (양방향 유연화)
+- 오더블럭 리테스트 엄격화, MA50 추세 필터, 수익형 본전 방어(Profit-Lock) 적용
 """
 
 import csv
@@ -48,7 +51,7 @@ MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실 상한[span_8](start
 ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산[span_9](start_span)[span_9](end_span)
 ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%)[span_10](start_span)[span_10](end_span)
 TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산[span_11](start_span)[span_11](end_span)
-COOLDOWN_HOURS = 6            # 청산 후 같은 종목 재진입 금지 시간 (6시간)
+COOLDOWN_HOURS = 6            # 청산 후 같은 종목 재진입 금지 기본 시간 (6시간)
 
 # 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부
 DRAW_BAND_R = 0.1
@@ -166,7 +169,7 @@ def default_state():
             "r_count": 0, "sum_r": 0.0, "win_r": 0.0, "loss_r": 0.0,
             "recent_r": [],
         },
-        "closed_symbols": {},
+        "closed_symbols": {},  # 저장 형태: {symbol: {"time": iso_str, "direction": "LONG/SHORT", "reason": "SL"}}
         "fail_count": 0,
         "last_report_date": "",
     }
@@ -193,11 +196,20 @@ def load_state():
         state["active_slots"] = data["active_slots"]
     if isinstance(data.get("stats"), dict):
         state["stats"].update(data["stats"])
+    
     closed = data.get("closed_symbols", {})
     if isinstance(closed, list):
-        state["closed_symbols"] = {sym: utcnow().isoformat() for sym in closed}
+        state["closed_symbols"] = {sym: {"time": utcnow().isoformat(), "direction": "LONG", "reason": "SL"} for sym in closed}
     elif isinstance(closed, dict):
-        state["closed_symbols"] = closed
+        # 기존 단순 문자열 타임스탬프 호환 처리
+        new_closed = {}
+        for sym, val in closed.items():
+            if isinstance(val, str):
+                new_closed[sym] = {"time": val, "direction": "LONG", "reason": "SL"}
+            elif isinstance(val, dict):
+                new_closed[sym] = val
+        state["closed_symbols"] = new_closed
+
     try:
         state["fail_count"] = int(data.get("fail_count", 0))
     except Exception:
@@ -379,7 +391,7 @@ def analyze_signal(symbol, direction, now_ts, current_price):
     }
 
 
-# ──────────────────────────── 분류/레버리지/테마 ────────────────────────────
+# ──────────────────────────── 분류/레버리지/테마 (튜닝 2 적용) ────────────────────────────
 STOCK_BASES = {"SKHYNIX", "TSLA", "AAPL", "NVDA", "MSFT", "AMZN", "META", "NFLX",
                "GOOGL", "BABA", "AMD", "INTC", "PLTR", "COIN", "MSTR",
                "SOXL", "SOXS", "TQQQ", "SQQQ"}
@@ -420,11 +432,29 @@ def count_theme_slots(active, theme, sign):
     return count
 
 
-def calculate_recommended_leverage(category, change_24h):
+def calculate_dynamic_leverage(category, change_24h, atr, current_price):
+    """
+    [튜닝 2] ATR 변동성 연동 동적 레버리지 세분화:
+    - 기본 변동률 배율에 더해 ATR이 가격 대비 과도하게 클 경우(고변동성 노이즈) 레버리지를 하향 조정
+    """
     abs_change = abs(change_24h)
+    
+    # 기본 레버리지 산정
     if category == "코인":
-        return 5 if abs_change > 10.0 else (7 if abs_change > 6.0 else 10)
-    return {"주식": 8, "지수": 12}.get(category, 10)
+        base_lev = 5 if abs_change > 10.0 else (7 if abs_change > 6.0 else 10)
+    else:
+        base_lev = 8 if category == "주식" else 12
+
+    # ATR 변동성 비율 계산 (ATR / 현재가 * 100)
+    if current_price > 0 and atr > 0:
+        atr_pct = (atr / current_price) * 100
+        # 변동성 폭이 지나치게 클 경우(예: 3% 이상) 리스크 관리를 위해 레버리지 1~2단계 축소
+        if atr_pct > 3.5:
+            base_lev = max(3, base_lev - 3)
+        elif atr_pct > 2.0:
+            base_lev = max(4, base_lev - 2)
+
+    return base_lev
 
 
 # ──────────────────────────── 통계 ────────────────────────────
@@ -577,7 +607,14 @@ def finalize_trade(state, symbol, info, reason, exit_price, now):
         "mfe_r": round(mfe_r, 3),
         "mae_r": round(mae_r, 3),
     })
-    state["closed_symbols"][symbol] = now.isoformat()
+    
+    # [튜닝 3 반영] 쿨다운 저장 시 방향 및 청산 사유 기록 (반대 방향 진입 허용용)
+    state["closed_symbols"][symbol] = {
+        "time": now.isoformat(),
+        "direction": direction,
+        "reason": reason
+    }
+    
     del state["active_slots"][symbol]
     return {"reason": reason, "exit_price": exit_price, "net_r": net_r,
             "outcome": outcome, "hours": hours}
@@ -589,7 +626,6 @@ def build_event_message(symbol, info, event):
     level = info["tp1"] if event == "TP1" else info["tp2"]
     pct = pct_move(direction, entry, level)
     
-    # ATR 및 약수익 락 정확한 가격 계산
     atr = float(info.get("atr", info.get("risk", entry) / ATR_SL))
     sign = 1 if direction == "LONG" else -1
     profit_lock_price = entry + (sign * atr * PROFIT_LOCK_ATR) if event == "TP1" else info["tp1"]
@@ -710,26 +746,43 @@ def identify_new_signals(state, raw_tickers, now, start_time):
         symbol = t.get("contract", "")
         if not symbol.endswith("_USDT") or LEVERAGED_TOKEN_RE.search(symbol):
             continue
-        if symbol in active or symbol in closed:
+        
+        last_price = float(t.get("last", 0))
+        change = float(t.get("change_percentage", 0))
+        direction = "LONG" if change > 0 else "SHORT"
+
+        # [튜닝 3 반영] 쿨다운 검사 로직 (동일 방향은 6시간 금지, 반대 방향은 즉시 허용 검토)
+        if symbol in active:
             continue
+        if symbol in closed:
+            c_info = closed[symbol]
+            c_time = parse_iso(c_info.get("time", ""), now)
+            c_dir = c_info.get("direction", "")
+            
+            # 동일 방향이면 6시간 쿨다운 엄격 적용
+            if c_dir == direction:
+                if (now - c_time).total_seconds() < COOLDOWN_HOURS * 3600:
+                    continue
+            else:
+                # [튜닝 3 핵심] 반대 방향인 경우, 손절(-1R) 등으로 끝났다면 추세 반전 시 쿨다운 단축(또는 즉시 허용)
+                if c_info.get("reason") == "SL" and (now - c_time).total_seconds() < 1800: # 최소 30분 노이즈 필터만 적용 후 반대방향 오픈
+                    continue
+
         try:
-            last_price = float(t.get("last", 0))
-            change = float(t.get("change_percentage", 0))
             volume = float(t.get("volume_24h_quote") or t.get("volume_24h_settle") or 0)
         except (TypeError, ValueError):
             continue
         if last_price <= 0 or volume < MIN_QUOTE_VOLUME or abs(change) < MIN_CHANGE_PCT:
             continue
-        candidates.append((volume, symbol, last_price, change))
+        candidates.append((volume, symbol, last_price, change, direction))
 
     candidates.sort(reverse=True)
-    for volume, symbol, last_price, change in candidates[:MAX_CANDIDATES]:
+    for volume, symbol, last_price, change, direction in candidates[:MAX_CANDIDATES]:
         if len(active) >= MAX_SLOTS:
             break
         if time.time() - start_time > SCAN_BUDGET_SEC:
             break
         try:
-            direction = "LONG" if change > 0 else "SHORT"
             theme, theme_sign = theme_exposure(symbol, direction)
             if theme and count_theme_slots(active, theme, theme_sign) >= MAX_PER_THEME:
                 continue
@@ -751,7 +804,8 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 continue
 
             category = get_asset_category(symbol)
-            leverage = calculate_recommended_leverage(category, change)
+            # [튜닝 2 반영] ATR 변동성 연동 동적 레버리지 적용
+            leverage = calculate_dynamic_leverage(category, change, atr, last_price)
             leverage = max(1, min(leverage, int(MAX_MARGIN_LOSS / sl_frac) or 1))
 
             ob_low, ob_high = analysis["ob_low"], analysis["ob_high"]
@@ -778,7 +832,7 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 return pct_move(direction, last_price, price)
 
             msg = (
-                f"🛡️ <b>신규 시그널 (추세 & OB 리테스트 완료)</b> | {dir_tag(direction)}\n"
+                f"🛡️ <b>신규 시그널 (동적레버리지 & OB리테스트)</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(last_price)}</code> | 레버리지 <code>{leverage}배</code>\n\n"
                 "🎯 <b>목표가 및 방어선</b>\n"
@@ -840,7 +894,7 @@ def build_slot_status_message(state, tickers):
     return "\n".join(lines)
 
 
-def build_daily_report(now, stats):
+def build_daily_report(state, tickers, now):
     since = now - timedelta(hours=24)
     rows = []
     if os.path.exists(TRADES_FILE):
@@ -850,15 +904,37 @@ def build_daily_report(now, stats):
                 if dt and dt >= since:
                     rows.append(row)
 
-    lines = [f"📋 <b>일일 리포트 (추세/OB 튜닝 분석)</b> | {now.strftime('%m/%d')}\n"]
+    lines = [f"📋 <b>일일 리포트 (미실현 손익 통합 대시보드)</b> | {now.strftime('%m/%d')}\n"]
+    
+    # [튜닝 1 반영] 현재 열려 있는 8개 슬롯의 총 미실현 손익 및 보유 시간 요약 추가
+    active = state["active_slots"]
+    if active:
+        total_unrealized_pct = 0.0
+        slot_summaries = []
+        for sym, info in active.items():
+            entry = info["entry_price"]
+            direction = info["direction"]
+            lev = info.get("leverage", 1)
+            price = tickers.get(sym, entry)
+            pct = pct_move(direction, entry, price)
+            lev_pct = pct * lev
+            total_unrealized_pct += lev_pct
+            entry_dt = parse_iso(info.get("entry_time", ""), now)
+            h = (now - entry_dt).total_seconds() / 3600
+            slot_summaries.append(f"• {sym} ({dir_tag(direction)}): <code>{lev_pct:+.1f}%</code> ({fmt_hours(h)})")
+        
+        lines.append(f"🔵 <b>실시간 오픈 슬롯 ({len(active)}개) 미실현 합계: <code>{total_unrealized_pct:+.1f}%</code></b>")
+        lines.extend(slot_summaries)
+        lines.append("")
+
     if not rows:
-        lines.append("최근 24시간 청산 거래가 없습니다.")
+        lines.append("최근 24시간 확정 청산 거래가 없습니다.")
     else:
         nets = [float(r["net_r"]) for r in rows]
         wins = sum(1 for n in nets if n > DRAW_BAND_R)
         losses = sum(1 for n in nets if n < -DRAW_BAND_R)
         draws = len(nets) - wins - losses
-        lines.append(f"최근 24시간 <code>{len(nets)}전 {wins}승 {draws}무 {losses}패 | 합계 {sum(nets):+.2f}R</code>\n")
+        lines.append(f"최근 24시간 확정 <code>{len(nets)}전 {wins}승 {draws}무 {losses}패 | 합계 {sum(nets):+.2f}R</code>\n")
 
         lines.append("<b>청산 유형별</b>")
         for key, label in REASON_LABEL.items():
@@ -869,19 +945,19 @@ def build_daily_report(now, stats):
         by_dir = {"LONG": 0.0, "SHORT": 0.0}
         for r in rows:
             by_dir[r["direction"]] = by_dir.get(r["direction"], 0.0) + float(r["net_r"])
-        lines.append(f"\n방향별 <code>롱 {by_dir['LONG']:+.2f}R / 숏 {by_dir['SHORT']:+.2f}R</code>")
+        lines.append(f"\n방향별 확정 <code>롱 {by_dir['LONG']:+.2f}R / 숏 {by_dir['SHORT']:+.2f}R</code>")
 
-    lines.append("\n" + build_stats_line(stats))
+    lines.append("\n" + build_stats_line(state["stats"]))
     return "\n".join(lines)
 
 
-def maybe_send_daily_report(state, now):
+def maybe_send_daily_report(state, tickers, now):
     if not DAILY_REPORT_ENABLED:
         return False
     today = now.strftime("%Y-%m-%d")
     if now.hour < DAILY_REPORT_HOUR_UTC or state.get("last_report_date") == today:
         return False
-    send_telegram_message(build_daily_report(now, state["stats"]))
+    send_telegram_message(build_daily_report(state, tickers, now))
     state["last_report_date"] = today
     return True
 
@@ -909,9 +985,10 @@ def run_bot():
             continue
 
     cooldown = timedelta(hours=COOLDOWN_HOURS)
+    # [튜닝 3 반영] 쿨다운 기간이 지난 항목 정리 (2배 주기로 스윕)
     state["closed_symbols"] = {
-        sym: ts for sym, ts in state["closed_symbols"].items()
-        if (now - parse_iso(ts, now - cooldown * 2)) < cooldown
+        sym: info for sym, info in state["closed_symbols"].items()
+        if (now - parse_iso(info.get("time", ""), now - cooldown * 2)) < cooldown
     }
 
     changed_positions = manage_positions(state, tickers, now)
@@ -922,7 +999,7 @@ def run_bot():
     if changed_positions or changed_new:
         send_telegram_message(build_slot_status_message(state, tickers))
 
-    maybe_send_daily_report(state, now)
+    maybe_send_daily_report(state, tickers, now)
     save_state(state)
 
 
