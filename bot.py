@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 시그널 빈도 극대화를 위해 변동률(2.5%), 이격도(1.5 ATR), ADX(14)로 기준 대폭 완화
+- 최대 슬롯 5개로 축소 및 기준 대폭 완화 반영 버전
 """
 
 import csv
@@ -22,15 +22,15 @@ STATE_FILE = "gate_state.json"
 TRADES_FILE = "trades.csv"
 BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
 
-MAX_SLOTS = 8
+MAX_SLOTS = 5                  # 최대 슬롯 5개로 축소 [수정됨: 8 -> 5]
 
 # 진입 조건 (신호 빈도 극대화를 위해 대폭 완화)
-MIN_CHANGE_PCT = 2.5          # 24시간 변동률 기준(%) [완화: 3.5 -> 2.5]
-MIN_QUOTE_VOLUME = 300_000    # 24시간 거래대금 최소값(USDT) [완화: 50만 -> 30만]
+MIN_CHANGE_PCT = 2.5          # 24시간 변동률 기준(%)
+MIN_QUOTE_VOLUME = 300_000    # 24시간 거래대금 최소값(USDT)
 RSI_PERIOD = 14
 ATR_PERIOD = 14
 ADX_PERIOD = 14
-BODY_RATIO_MIN = 0.25         # 캔들 몸통 비율 [완화: 0.30 -> 0.25]
+BODY_RATIO_MIN = 0.25         # 캔들 몸통 비율
 LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 레버리지 토큰 제외
 
 # 목표가/손절가 (ATR 배수)
@@ -49,12 +49,12 @@ MAX_MARGIN_LOSS = 0.5
 ROTATE_HOURS = 18             
 ROTATE_MIN_PROFIT_PCT = 0.5   
 TIME_STOP_HOURS = 24          
-COOLDOWN_HOURS = 4            # 쿨다운 단축 [완화: 6시간 -> 4시간]
+COOLDOWN_HOURS = 4            
 
 # 결과 분류: 무승부 밴드
 DRAW_BAND_R = 0.05
 
-MAX_CANDIDATES = 50           # 후보군 탐색 범위 확대 [완화: 40 -> 50]
+MAX_CANDIDATES = 50           
 SCAN_BUDGET_SEC = 150
 
 FAIL_ALERT_THRESHOLD = 3      
@@ -77,7 +77,7 @@ REASON_LABEL = {
     "TIME_STOP": "타임스탑",
 }
 
-NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣"]
+NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]  # 5개 슬롯에 맞게 축소
 
 
 # ──────────────────────────── 공통 유틸 ────────────────────────────
@@ -275,7 +275,7 @@ def fetch_completed_5m(symbol, from_ts, now_ts):
             if c["t"] >= from_ts and c["t"] + 300 <= now_ts]
 
 
-# ──────────────────────────── 지표 및 고도화 필터 (대폭 완화) ────────────────────────────
+# ──────────────────────────── 지표 및 고도화 필터 ────────────────────────────
 def wilder_rsi(closes, period=RSI_PERIOD):
     if len(closes) < period + 1:
         return None
@@ -413,25 +413,19 @@ def analyze_signal(symbol, direction, now_ts, current_price):
     if direction == "LONG":
         if not (ema20 > ema50 and current_price > ma50):
             return None
-        # ADX 대폭 완화: 14 이상
         if adx < 14:
             return None
-        # 이격도 대폭 완화: 1.5 ATR 이내
         if ema_distance > (1.5 * atr):
             return None
-        # RSI 완화: 45 이상
         if rsi < 45 or last["c"] <= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
     else:
         if not (ema20 < ema50 and current_price < ma50):
             return None
-        # ADX 대폭 완화: 14 이상
         if adx < 14:
             return None
-        # 이격도 대폭 완화: 1.5 ATR 이내
         if ema_distance > (1.5 * atr):
             return None
-        # RSI 완화: 55 이하
         if rsi > 55 or last["c"] >= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
 
