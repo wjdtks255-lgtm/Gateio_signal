@@ -205,7 +205,10 @@
       0.088,
       0.096,
       0.095
-    ]
+    ],
+    "sum_pct": 0.0,
+    "win_pct_sum": 0.0,
+    "loss_pct_sum": 0.0
   },
   "closed_symbols": {
     "ARIA_USDT": {
