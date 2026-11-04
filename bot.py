@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 누적 퍼센트(%) 수익률 및 승패 평균 통계 추가 버전
+- 누적 레버리지 수익률(%) 항목 제거 버전
 - 오더블럭 리테스트 엄격화, MA50 추세 필터, 수익형 본전 방어(Profit-Lock) 적용
 """
 
@@ -166,7 +166,6 @@ def default_state():
             "wins": 0, "draws": 0, "losses": 0, "total": 0,
             "r_count": 0, "sum_r": 0.0, "win_r": 0.0, "loss_r": 0.0,
             "recent_r": [],
-            "sum_pct": 0.0, "win_pct_sum": 0.0, "loss_pct_sum": 0.0,
         },
         "closed_symbols": {},
         "fail_count": 0,
@@ -447,8 +446,8 @@ def calculate_dynamic_leverage(category, change_24h, atr, current_price):
     return base_lev
 
 
-# ──────────────────────────── 통계 (퍼센트 추가) ────────────────────────────
-def record_stats(stats, net_r, outcome, leverage_pct):
+# ──────────────────────────── 통계 (퍼센트 출력 제외) ────────────────────────────
+def record_stats(stats, net_r, outcome):
     stats["total"] += 1
     stats[{"win": "wins", "draw": "draws", "loss": "losses"}[outcome]] += 1
     stats["r_count"] += 1
@@ -458,18 +457,6 @@ def record_stats(stats, net_r, outcome, leverage_pct):
     else:
         stats["loss_r"] += -net_r
     stats["recent_r"] = (stats.get("recent_r", []) + [round(net_r, 3)])[-50:]
-
-    # 누적 퍼센트(%) 통계 업데이트
-    stats["sum_r"] # 기존 변수 유지
-    stats.setdefault("sum_pct", 0.0)
-    stats.setdefault("win_pct_sum", 0.0)
-    stats.setdefault("loss_pct_sum", 0.0)
-    
-    stats["sum_pct"] += leverage_pct
-    if leverage_pct > 0:
-        stats["win_pct_sum"] += leverage_pct
-    elif leverage_pct < 0:
-        stats["loss_pct_sum"] += -leverage_pct
 
 
 def build_stats_line(stats):
@@ -493,16 +480,6 @@ def build_stats_line(stats):
         lines.append(
             f"<code>평균 R {avg_r:+.2f} | PF {pf} | 최근 {len(recent)}전 {sum(recent):+.1f}R"
             f" (R 기록 {n}전)</code>"
-        )
-        
-        # 누적 퍼센트(%) 지표 추가 출력
-        sum_pct = stats.get("sum_pct", 0.0)
-        wins_cnt = stats.get("wins", 0)
-        losses_cnt = stats.get("losses", 0)
-        avg_win_pct = stats.get("win_pct_sum", 0.0) / wins_cnt if wins_cnt > 0 else 0.0
-        avg_loss_pct = stats.get("loss_pct_sum", 0.0) / losses_cnt if losses_cnt > 0 else 0.0
-        lines.append(
-            f"💰 <code>누적 레버리지 수익률: {sum_pct:+.1f}% | 평균 승리 +{avg_win_pct:.1f}% / 평균 손절 -{avg_loss_pct:.1f}%</code>"
         )
     else:
         lines.append("<code>R 통계: 기록 대기 중</code>")
@@ -597,7 +574,6 @@ def finalize_trade(state, symbol, info, reason, exit_price, now):
     else:
         outcome = "draw"
 
-    # 레버리지 반영 실질 수익률(%) 계산
     lev = float(info.get("leverage", 1))
     raw_pct = pct_move(direction, entry, exit_price)
     leverage_pct = round(raw_pct * lev, 2)
@@ -607,7 +583,7 @@ def finalize_trade(state, symbol, info, reason, exit_price, now):
     mfe_r = r_move(direction, entry, info["max_fav"], risk)
     mae_r = r_move(direction, entry, info["max_adv"], risk)
 
-    record_stats(state["stats"], net_r, outcome, leverage_pct)
+    record_stats(state["stats"], net_r, outcome)
     append_trade_csv({
         "closed_at": now.isoformat(),
         "symbol": symbol,
@@ -684,7 +660,7 @@ def build_close_message(symbol, info, trade):
         f"진입 <code>{fmt_price(entry)}</code> → 청산 <code>{fmt_price(exit_price)}</code>\n"
         f"{head[1]}"
         f"가격 변동 <code>{pct:+.2f}%</code> ({lev}배: <code>{pct * lev:+.1f}%</code>)\n\n"
-        f"결과 <code>{trade['net_r']:+.2f}R</code> ({trade['leverage_pct']:+.1f}%) | <b>{outcome_label}</b>\n"
+        f"결과 <code>{trade['net_r']:+.2f}R</code> | <b>{outcome_label}</b>\n"
         f"보유 <code>{fmt_hours(trade['hours'])}</code>"
     )
 
