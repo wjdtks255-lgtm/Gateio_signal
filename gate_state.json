@@ -32,7 +32,7 @@
       "initial_stop": 6.238,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 6.37,
+      "max_fav": 6.371,
       "max_adv": 6.37,
       "last_candle_ts": 1793831400
     },
@@ -50,7 +50,7 @@
       "initial_stop": 393.7807142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 385.55,
+      "max_fav": 385.49,
       "max_adv": 385.55,
       "last_candle_ts": 1793831400
     },
@@ -68,7 +68,7 @@
       "initial_stop": 231.00357142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 235.9,
+      "max_fav": 236.3,
       "max_adv": 235.9,
       "last_candle_ts": 1793831400
     }
