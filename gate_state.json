@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 52.55,
       "max_adv": 51.73,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     },
     "AAPL_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": true,
       "max_fav": 354.5,
       "max_adv": 347.69,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     },
     "TQQQX_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 64.88,
       "max_adv": 61.71,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     },
     "ETH_USDT": {
       "direction": "LONG",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 2449.74,
       "max_adv": 2417.31,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     },
     "ADA_USDT": {
       "direction": "LONG",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 0.2,
       "max_adv": 0.1957,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     },
     "ENA_USDT": {
       "direction": "LONG",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 0.18726,
       "max_adv": 0.17978,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -124,7 +124,7 @@
       "tp2_reached": false,
       "max_fav": 1017.15,
       "max_adv": 1051.62,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     },
     "AMZN_USDT": {
       "direction": "LONG",
@@ -140,9 +140,9 @@
       "initial_stop": 264.90464285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 270.53,
+      "max_fav": 270.95,
       "max_adv": 270.07,
-      "last_candle_ts": 1793815500
+      "last_candle_ts": 1793815800
     }
   },
   "stats": {
@@ -175,11 +175,6 @@
     ]
   },
   "closed_symbols": {
-    "SNXX_USDT": {
-      "time": "2026-11-04T12:15:28.562899+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "PEPE_USDT": {
       "time": "2026-11-04T14:00:50.972107+00:00",
       "direction": "LONG",
