@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.37269,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 166.74,
       "max_adv": 176.79,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     },
     "PIEVERSE_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 1.1899,
       "max_adv": 1.1343,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     },
     "SOON_USDT": {
       "direction": "LONG",
@@ -70,7 +70,7 @@
       "tp2_reached": true,
       "max_fav": 0.2678,
       "max_adv": 0.2498,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     },
     "BTW_USDT": {
       "direction": "LONG",
@@ -82,13 +82,13 @@
       "tp1": 1.0472640000000002,
       "tp2": 1.1061735000000001,
       "tp3": 1.165083,
-      "stop_loss": 0.9490815000000001,
+      "stop_loss": 1.0158456,
       "initial_stop": 0.9490815000000001,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1.034445,
+      "max_fav": 1.050148,
       "max_adv": 0.96102,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     },
     "TSLA_USDT": {
       "direction": "SHORT",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 381.86,
       "max_adv": 386.07,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     },
     "PEPE_USDT": {
       "direction": "LONG",
@@ -124,7 +124,7 @@
       "tp2_reached": false,
       "max_fav": 5.032e-06,
       "max_adv": 4.946e-06,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     },
     "UNI_USDT": {
       "direction": "LONG",
@@ -140,9 +140,9 @@
       "initial_stop": 7.118214285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 7.381,
+      "max_fav": 7.382,
       "max_adv": 7.282,
-      "last_candle_ts": 1793774400
+      "last_candle_ts": 1793774700
     }
   },
   "stats": {
@@ -211,11 +211,6 @@
     "loss_pct_sum": 0.0
   },
   "closed_symbols": {
-    "NEAR_USDT": {
-      "time": "2026-11-04T00:50:30.384675+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "ZHIPU_USDT": {
       "time": "2026-11-04T01:35:25.970423+00:00",
       "direction": "LONG",
