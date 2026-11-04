@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 166.74,
       "max_adv": 176.79,
-      "last_candle_ts": 1793780400
+      "last_candle_ts": 1793780700
     },
     "SOON_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": true,
       "max_fav": 0.2698,
       "max_adv": 0.2498,
-      "last_candle_ts": 1793780400
+      "last_candle_ts": 1793780700
     },
     "BTW_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 1.072145,
       "max_adv": 0.96102,
-      "last_candle_ts": 1793780400
+      "last_candle_ts": 1793780700
     },
     "TSLA_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 379.48,
       "max_adv": 386.07,
-      "last_candle_ts": 1793780400
+      "last_candle_ts": 1793780700
     },
     "PEPE_USDT": {
       "direction": "LONG",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 5.174e-06,
       "max_adv": 4.923e-06,
-      "last_candle_ts": 1793780400
+      "last_candle_ts": 1793780700
     },
     "UNI_USDT": {
       "direction": "LONG",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 7.548,
       "max_adv": 7.282,
-      "last_candle_ts": 1793780400
+      "last_candle_ts": 1793780700
     },
     "XAG_USDT": {
       "direction": "LONG",
@@ -124,7 +124,7 @@
       "tp2_reached": false,
       "max_fav": 52.07,
       "max_adv": 51.7,
-      "last_candle_ts": 1793780400
+      "last_candle_ts": 1793780700
     },
     "ZEC_USDT": {
       "direction": "LONG",
@@ -140,7 +140,7 @@
       "initial_stop": 1247.0032142857142,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1287.86,
+      "max_fav": 1288.06,
       "max_adv": 1287.86,
       "last_candle_ts": 1793780700
     }
