@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.37269,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 166.74,
       "max_adv": 176.79,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     },
     "PIEVERSE_USDT": {
       "direction": "LONG",
@@ -46,13 +46,13 @@
       "tp1": 1.1856,
       "tp2": 1.22325,
       "tp3": 1.2609,
-      "stop_loss": 1.1228500000000001,
+      "stop_loss": 1.1655200000000001,
       "initial_stop": 1.1228500000000001,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1.1827,
+      "max_fav": 1.1899,
       "max_adv": 1.1343,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     },
     "SOON_USDT": {
       "direction": "LONG",
@@ -64,13 +64,13 @@
       "tp1": 0.25911428571428574,
       "tp2": 0.2660357142857143,
       "tp3": 0.2729571428571429,
-      "stop_loss": 0.2554228571428572,
+      "stop_loss": 0.25911428571428574,
       "initial_stop": 0.24757857142857143,
       "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 0.2646,
+      "tp2_reached": true,
+      "max_fav": 0.2678,
       "max_adv": 0.2498,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     },
     "BTW_USDT": {
       "direction": "LONG",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 1.032987,
       "max_adv": 0.96102,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     },
     "TSLA_USDT": {
       "direction": "SHORT",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 381.86,
       "max_adv": 386.07,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     },
     "PEPE_USDT": {
       "direction": "LONG",
@@ -124,7 +124,7 @@
       "tp2_reached": false,
       "max_fav": 5.032e-06,
       "max_adv": 4.946e-06,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     },
     "UNI_USDT": {
       "direction": "LONG",
@@ -140,9 +140,9 @@
       "initial_stop": 7.118214285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 7.377,
+      "max_fav": 7.381,
       "max_adv": 7.282,
-      "last_candle_ts": 1793773800
+      "last_candle_ts": 1793774100
     }
   },
   "stats": {
@@ -211,11 +211,6 @@
     "loss_pct_sum": 0.0
   },
   "closed_symbols": {
-    "SNXX_USDT": {
-      "time": "2026-11-04T00:35:25.546314+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "NEAR_USDT": {
       "time": "2026-11-04T00:50:30.384675+00:00",
       "direction": "LONG",
