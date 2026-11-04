@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.37484,
       "max_adv": 0.43031,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     },
     "PLTR_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 166.74,
       "max_adv": 176.79,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     },
     "LITE_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": true,
       "max_fav": 637.71,
       "max_adv": 695.97,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     },
     "PIEVERSE_USDT": {
       "direction": "LONG",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1.1735,
       "max_adv": 1.1343,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     },
     "ESPORTS_USDT": {
       "direction": "SHORT",
@@ -86,9 +86,9 @@
       "initial_stop": 0.013032499999999999,
       "tp1_reached": true,
       "tp2_reached": true,
-      "max_fav": 0.01114,
+      "max_fav": 0.01108,
       "max_adv": 0.01249,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     },
     "SOON_USDT": {
       "direction": "LONG",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 0.259,
       "max_adv": 0.2498,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     },
     "KORU_USDT": {
       "direction": "SHORT",
@@ -124,7 +124,7 @@
       "tp2_reached": true,
       "max_fav": 9.433,
       "max_adv": 10.452,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     },
     "BTW_USDT": {
       "direction": "LONG",
@@ -142,7 +142,7 @@
       "tp2_reached": false,
       "max_fav": 1.032987,
       "max_adv": 0.96102,
-      "last_candle_ts": 1793766300
+      "last_candle_ts": 1793766600
     }
   },
   "stats": {
