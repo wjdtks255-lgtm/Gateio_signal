@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 누적 레버리지 수익률(%) 항목 제거 버전
-- 오더블럭 리테스트 엄격화, MA50 추세 필터, 수익형 본전 방어(Profit-Lock) 적용
+- 무승부 밴드 0.05로 정밀화, 티커 파싱 예외 방어 강화, 메시지 포맷 정돈
 """
 
 import csv
@@ -26,42 +25,42 @@ BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
 MAX_SLOTS = 8
 
 # 진입 조건 (코인 및 주식형 토큰 마켓 집중)
-MIN_CHANGE_PCT = 4.5          # 24시간 변동률 기준(%)[span_0](start_span)[span_0](end_span)
-MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)[span_1](start_span)[span_1](end_span)
+MIN_CHANGE_PCT = 4.5          # 24시간 변동률 기준(%)
+MIN_QUOTE_VOLUME = 500_000    # 24시간 거래대금 최소값(USDT)
 RSI_PERIOD = 14
 ATR_PERIOD = 14
-BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이[span_2](start_span)[span_2](end_span)
-LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외[span_3](start_span)[span_3](end_span)
+BODY_RATIO_MIN = 0.35         # 직전 완성봉 몸통 / 전체 길이
+LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 3L, 5S 같은 레버리지 토큰 제외
 
 # 목표가/손절가 (ATR 배수)
 ATR_SL = 1.5
 ATR_TP_MULTS = (1.0, 2.5, 4.0)   # TP1을 1.0 ATR로 당겨 승률 및 본전 방어 속도 극대화
-MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외[span_4](start_span)[span_4](end_span)
-MAX_PER_THEME = 1             # 같은 테마에서 같은 방향 최대 슬롯[span_5](start_span)[span_5](end_span)
+MAX_SL_PCT = 6.0              # 손절 거리(%)가 이 값을 넘는 종목은 신호 제외
+MAX_PER_THEME = 1             # 같은 테마에서 같은 방향 최대 슬롯
 
 # 비용/리스크 가정 및 수익형 본전 방어 오프셋
-FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%[span_6](start_span)[span_6](end_span)
+FEE_ROUNDTRIP = 0.001         # 왕복 수수료+슬리피지 가정 0.1%
 PROFIT_LOCK_ATR = 0.2         # TP1 달성 시 스탑로스를 진입가보다 이만큼 유리한 방향(+0.2 ATR)으로 설정
-RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)[span_7](start_span)[span_7](end_span)
-MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실 상한[span_8](start_span)[span_8](end_span)
+RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)
+MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실 상한
 
 # 보유 시간 및 쿨다운 규칙
-ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산[span_9](start_span)[span_9](end_span)
-ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%)[span_10](start_span)[span_10](end_span)
-TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산[span_11](start_span)[span_11](end_span)
+ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산
+ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%)
+TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산
 COOLDOWN_HOURS = 6            # 청산 후 같은 종목 재진입 금지 시간 (6시간)
 
-# 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부
-DRAW_BAND_R = 0.1
+# 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부 (0.05로 정밀화)
+DRAW_BAND_R = 0.05
 
 # 실행 시간 관리
 MAX_CANDIDATES = 40
 SCAN_BUDGET_SEC = 150
 
 # 알림 옵션
-FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림[span_12](start_span)[span_12](end_span)
+FAIL_ALERT_THRESHOLD = 3      # API 연속 실패 N회째에 오류 알림
 DAILY_REPORT_ENABLED = True
-DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회[span_13](start_span)[span_13](end_span)
+DAILY_REPORT_HOUR_UTC = 0     # UTC 00:00 = 한국시간 09:00 이후 첫 실행 때 하루 1회
 
 CSV_FIELDS = [
     "closed_at", "symbol", "direction", "category", "leverage",
@@ -320,14 +319,14 @@ def check_order_block_retest(candles, direction, current_price):
     if direction == "LONG":
         for i in range(len(candles) - 2, max(0, len(candles) - 6), -1):
             c = candles[i]
-            if c["o"] > c["c"]:  # 음봉 (Demand OB)[span_14](start_span)[span_14](end_span)
+            if c["o"] > c["c"]:  # 음봉 (Demand OB)
                 zone_low, zone_high = c["l"], c["o"]
                 if zone_low * 0.99 <= current_price <= zone_high * 1.02:
                     return zone_low, zone_high
     else:
         for i in range(len(candles) - 2, max(0, len(candles) - 6), -1):
             c = candles[i]
-            if c["c"] > c["o"]:  # 양봉 (Supply OB)[span_15](start_span)[span_15](end_span)
+            if c["c"] > c["o"]:  # 양봉 (Supply OB)
                 zone_low, zone_high = c["o"], c["h"]
                 if zone_low * 0.98 <= current_price <= zone_high * 1.01:
                     return zone_low, zone_high
@@ -446,7 +445,7 @@ def calculate_dynamic_leverage(category, change_24h, atr, current_price):
     return base_lev
 
 
-# ──────────────────────────── 통계 (퍼센트 출력 제외) ────────────────────────────
+# ──────────────────────────── 통계 ────────────────────────────
 def record_stats(stats, net_r, outcome):
     stats["total"] += 1
     stats[{"win": "wins", "draw": "draws", "loss": "losses"}[outcome]] += 1
@@ -736,35 +735,35 @@ def identify_new_signals(state, raw_tickers, now, start_time):
 
     candidates = []
     for t in raw_tickers:
-        symbol = t.get("contract", "")
-        if not symbol.endswith("_USDT") or LEVERAGED_TOKEN_RE.search(symbol):
-            continue
-        
-        last_price = float(t.get("last", 0))
-        change = float(t.get("change_percentage", 0))
-        direction = "LONG" if change > 0 else "SHORT"
-
-        if symbol in active:
-            continue
-        if symbol in closed:
-            c_info = closed[symbol]
-            c_time = parse_iso(c_info.get("time", ""), now)
-            c_dir = c_info.get("direction", "")
-            
-            if c_dir == direction:
-                if (now - c_time).total_seconds() < COOLDOWN_HOURS * 3600:
-                    continue
-            else:
-                if c_info.get("reason") == "SL" and (now - c_time).total_seconds() < 1800:
-                    continue
-
         try:
+            symbol = t.get("contract", "")
+            if not symbol.endswith("_USDT") or LEVERAGED_TOKEN_RE.search(symbol):
+                continue
+            
+            last_price = float(t.get("last", 0))
+            change = float(t.get("change_percentage", 0))
+            direction = "LONG" if change > 0 else "SHORT"
+
+            if symbol in active:
+                continue
+            if symbol in closed:
+                c_info = closed[symbol]
+                c_time = parse_iso(c_info.get("time", ""), now)
+                c_dir = c_info.get("direction", "")
+                
+                if c_dir == direction:
+                    if (now - c_time).total_seconds() < COOLDOWN_HOURS * 3600:
+                        continue
+                else:
+                    if c_info.get("reason") == "SL" and (now - c_time).total_seconds() < 1800:
+                        continue
+
             volume = float(t.get("volume_24h_quote") or t.get("volume_24h_settle") or 0)
-        except (TypeError, ValueError):
+            if last_price <= 0 or volume < MIN_QUOTE_VOLUME or abs(change) < MIN_CHANGE_PCT:
+                continue
+            candidates.append((volume, symbol, last_price, change, direction))
+        except (KeyError, TypeError, ValueError):
             continue
-        if last_price <= 0 or volume < MIN_QUOTE_VOLUME or abs(change) < MIN_CHANGE_PCT:
-            continue
-        candidates.append((volume, symbol, last_price, change, direction))
 
     candidates.sort(reverse=True)
     for volume, symbol, last_price, change, direction in candidates[:MAX_CANDIDATES]:
@@ -830,7 +829,7 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code>\n"
                 f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code>\n\n"
                 f"📌 <b>진입 근거 (스마트 머니 & MA50)</b>\n"
-                f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트 확인[span_16](start_span)[span_16](end_span)\n"
+                f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트 확인\n"
                 f"• 변동 <code>{change:+.1f}%</code> / 거래대금 <code>{volume / 1e6:.1f}M USDT</code>\n"
                 f"• RSI <code>{analysis['rsi']:.1f}</code> / MA50 추세 정렬 완료"
             )
@@ -968,7 +967,10 @@ def run_bot():
     tickers = {}
     for t in raw_tickers:
         try:
-            tickers[t["contract"]] = float(t.get("last", 0))
+            contract = t.get("contract")
+            last_price = float(t.get("last", 0))
+            if contract:
+                tickers[contract] = last_price
         except (KeyError, TypeError, ValueError):
             continue
 
