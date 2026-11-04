@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 오더블럭 리테스트 엄격화, MA50 추세 필터, 수익형 본전 방어(Profit-Lock) 적용 버전
+- 오더블럭 리테스트 엄격화, MA50 추세 필터, 수익형 본전 방어(Profit-Lock) 및 정확한 가격 표기 버전
 """
 
 import csv
@@ -44,11 +44,11 @@ PROFIT_LOCK_ATR = 0.2         # TP1 달성 시 스탑로스를 진입가보다 �
 RISK_PER_TRADE_PCT = 1.5      # 권장 증거금 계산용: 손절 시 계좌 손실 목표(%)[span_7](start_span)[span_7](end_span)
 MAX_MARGIN_LOSS = 0.5         # 손절 시 증거금 손실 상한[span_8](start_span)[span_8](end_span)
 
-# 보유 시간 및 쿨다운 규칙 (튜닝: 쿨다운 6시간으로 연장)
+# 보유 시간 및 쿨다운 규칙
 ROTATE_HOURS = 18             # 이 시간 이상 + 수익이면 슬롯 회전 청산[span_9](start_span)[span_9](end_span)
 ROTATE_MIN_PROFIT_PCT = 0.5   # 회전 청산 최소 수익(%)[span_10](start_span)[span_10](end_span)
 TIME_STOP_HOURS = 24          # 이 시간 이상이면 손익 무관 청산[span_11](start_span)[span_11](end_span)
-COOLDOWN_HOURS = 6            # 청산 후 같은 종목 재진입 금지 시간 (6시간으로 확대)
+COOLDOWN_HOURS = 6            # 청산 후 같은 종목 재진입 금지 시간 (6시간)
 
 # 결과 분류: 수수료 반영 R이 ±이 값 이내면 무승부
 DRAW_BAND_R = 0.1
@@ -304,11 +304,6 @@ def calc_ma(closes, period=50):
 
 
 def check_order_block_retest(candles, direction, current_price):
-    """
-    [튜닝 2] 오더블럭(OB) 리테스트 필터:
-    - 롱: 직전 급등 전 마지막 음봉(Demand Zone) 근처로 가격이 눌림을 주었는지 확인[span_14](start_span)[span_14](end_span)
-    - 숏: 직전 급락 전 마지막 양봉(Supply Zone) 근처로 가격이 리테스트를 주었는지 확인[span_15](start_span)[span_15](end_span)
-    """
     if len(candles) < 5:
         return None, None
 
@@ -316,21 +311,18 @@ def check_order_block_retest(candles, direction, current_price):
     if direction == "LONG":
         for i in range(len(candles) - 2, max(0, len(candles) - 6), -1):
             c = candles[i]
-            if c["o"] > c["c"]:  # 음봉 (Demand OB)[span_16](start_span)[span_16](end_span)
+            if c["o"] > c["c"]:  # 음봉 (Demand OB)[span_14](start_span)[span_14](end_span)
                 zone_low, zone_high = c["l"], c["o"]
-                # 현재가가 오더블럭 존 부근(혹은 존 내부/상단 1% 이내)에 위치하는지 리테스트 확인
                 if zone_low * 0.99 <= current_price <= zone_high * 1.02:
                     return zone_low, zone_high
     else:
         for i in range(len(candles) - 2, max(0, len(candles) - 6), -1):
             c = candles[i]
-            if c["c"] > c["o"]:  # 양봉 (Supply OB)[span_17](start_span)[span_17](end_span)
+            if c["c"] > c["o"]:  # 양봉 (Supply OB)[span_15](start_span)[span_15](end_span)
                 zone_low, zone_high = c["o"], c["h"]
-                # 현재가가 공급 오더블럭 존 부근에 위치하는지 리테스트 확인
                 if zone_low * 0.98 <= current_price <= zone_high * 1.01:
                     return zone_low, zone_high
                     
-    # 존을 정확히 타이트하게 만족하지 못하면 기본 봉 기준 허용
     return last["l"], last["h"]
 
 
@@ -342,13 +334,13 @@ def analyze_signal(symbol, direction, now_ts, current_price):
 
     closes = [c["c"] for c in candles]
     
-    # [튜닝 1] 1시간봉 추세 필터 (MA50 기준 역추세 차단)
+    # 1시간봉 MA50 추세 필터
     ma50 = calc_ma(closes, 50)
     if ma50:
         if direction == "LONG" and current_price < ma50:
-            return None  # 하락 추세 중 롱 진입 차단
+            return None
         if direction == "SHORT" and current_price > ma50:
-            return None  # 상승 추세 중 숏 진입 차단
+            return None
 
     last = candles[-1]
     total_range = last["h"] - last["l"]
@@ -374,7 +366,6 @@ def analyze_signal(symbol, direction, now_ts, current_price):
     if not atr or atr <= 0:
         return None
         
-    # [튜닝 2] 오더블럭 리테스트 검증
     zone_low, zone_high = check_order_block_retest(candles, direction, current_price)
     if not zone_low or not zone_high:
         return None
@@ -597,12 +588,19 @@ def build_event_message(symbol, info, event):
     lev = info.get("leverage", 1)
     level = info["tp1"] if event == "TP1" else info["tp2"]
     pct = pct_move(direction, entry, level)
+    
+    # ATR 및 약수익 락 정확한 가격 계산
+    atr = float(info.get("atr", info.get("risk", entry) / ATR_SL))
+    sign = 1 if direction == "LONG" else -1
+    profit_lock_price = entry + (sign * atr * PROFIT_LOCK_ATR) if event == "TP1" else info["tp1"]
+
     if event == "TP1":
         title = "🎯 <b>TP1 도달 (수익형 본전 방어선 확보)</b>"
-        action = f"🔒 스탑을 약수익 구간(<code>+{PROFIT_LOCK_ATR} ATR</code>)으로 이동"
+        action = f"🔒 스탑을 약수익 구간(<code>{fmt_price(profit_lock_price)}</code> / <code>+{PROFIT_LOCK_ATR} ATR</code>)으로 이동"
     else:
         title = "🎯🎯 <b>TP2 도달</b>"
         action = f"🔒 스탑을 TP1(<code>{fmt_price(info['tp1'])}</code>)으로 이동"
+        
     return (
         f"{title} | {dir_tag(direction)}\n"
         f"<a href='{chart_link(symbol)}'>[{get_asset_category(symbol)}] {symbol}</a>\n\n"
@@ -736,7 +734,6 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             if theme and count_theme_slots(active, theme, theme_sign) >= MAX_PER_THEME:
                 continue
             
-            # 분석 및 튜닝 필터 검증 (MA50 추세 + 오더블럭 리테스트)
             analysis = analyze_signal(symbol, direction, now_ts, last_price)
             if not analysis:
                 continue
@@ -790,7 +787,7 @@ def identify_new_signals(state, raw_tickers, now, start_time):
                 f"TP3 <code>{fmt_price(tp3)} ({pct_of(tp3):+.2f}%)</code>\n"
                 f"🛑 SL <code>{fmt_price(sl)} ({pct_of(sl):+.2f}%)</code>\n\n"
                 f"📌 <b>진입 근거 (스마트 머니 & MA50)</b>\n"
-                f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트 확인[span_18](start_span)[span_18](end_span)\n"
+                f"• 오더블럭(OB) 존: <code>{fmt_price(ob_low)} ~ {fmt_price(ob_high)}</code> 리테스트 확인[span_16](start_span)[span_16](end_span)\n"
                 f"• 변동 <code>{change:+.1f}%</code> / 거래대금 <code>{volume / 1e6:.1f}M USDT</code>\n"
                 f"• RSI <code>{analysis['rsi']:.1f}</code> / MA50 추세 정렬 완료"
             )
