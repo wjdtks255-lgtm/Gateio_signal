@@ -14,7 +14,7 @@
       "initial_stop": 51.322142857142865,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 52.1,
+      "max_fav": 52.11,
       "max_adv": 52.03,
       "last_candle_ts": 1793784000
     },
@@ -50,7 +50,7 @@
       "initial_stop": 4.9266428571428575e-06,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 5.076e-06,
+      "max_fav": 5.085e-06,
       "max_adv": 5.05e-06,
       "last_candle_ts": 1793784000
     },
