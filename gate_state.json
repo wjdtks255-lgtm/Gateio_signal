@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 52.55,
       "max_adv": 51.73,
-      "last_candle_ts": 1793814900
+      "last_candle_ts": 1793815200
     },
     "AAPL_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": true,
       "max_fav": 354.5,
       "max_adv": 347.69,
-      "last_candle_ts": 1793814900
+      "last_candle_ts": 1793815200
     },
     "TQQQX_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 64.88,
       "max_adv": 61.71,
-      "last_candle_ts": 1793814900
+      "last_candle_ts": 1793815200
     },
     "ETH_USDT": {
       "direction": "LONG",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 2449.74,
       "max_adv": 2417.31,
-      "last_candle_ts": 1793814900
+      "last_candle_ts": 1793815200
     },
     "ADA_USDT": {
       "direction": "LONG",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 0.2,
       "max_adv": 0.1957,
-      "last_candle_ts": 1793814900
+      "last_candle_ts": 1793815200
     },
     "ENA_USDT": {
       "direction": "LONG",
@@ -106,7 +106,7 @@
       "tp2_reached": false,
       "max_fav": 0.18726,
       "max_adv": 0.17978,
-      "last_candle_ts": 1793814900
+      "last_candle_ts": 1793815200
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -124,35 +124,35 @@
       "tp2_reached": false,
       "max_fav": 1017.15,
       "max_adv": 1051.62,
-      "last_candle_ts": 1793814900
+      "last_candle_ts": 1793815200
     },
-    "CL_USDT": {
-      "direction": "SHORT",
-      "entry_price": 88.56,
-      "entry_time": "2026-11-04T17:15:31.064430+00:00",
-      "leverage": 7,
-      "risk": 1.9050000000000016,
-      "atr": 1.2700000000000011,
-      "tp1": 87.29,
-      "tp2": 85.385,
-      "tp3": 83.48,
-      "stop_loss": 88.306,
-      "initial_stop": 90.465,
-      "tp1_reached": true,
+    "AMZN_USDT": {
+      "direction": "LONG",
+      "entry_price": 270.07,
+      "entry_time": "2026-11-04T18:06:08.319722+00:00",
+      "leverage": 8,
+      "risk": 5.165357142857153,
+      "atr": 3.443571428571435,
+      "tp1": 273.5135714285714,
+      "tp2": 278.67892857142857,
+      "tp3": 283.8442857142857,
+      "stop_loss": 264.90464285714285,
+      "initial_stop": 264.90464285714285,
+      "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 87.21,
-      "max_adv": 88.56,
-      "last_candle_ts": 1793814900
+      "max_fav": 270.07,
+      "max_adv": 270.07,
+      "last_candle_ts": 1793815500
     }
   },
   "stats": {
     "wins": 9,
-    "draws": 0,
+    "draws": 1,
     "losses": 7,
-    "total": 16,
-    "r_count": 16,
-    "sum_r": -5.315539820195101,
-    "win_r": 1.93985377468969,
+    "total": 17,
+    "r_count": 17,
+    "sum_r": -5.228694675838144,
+    "win_r": 2.026698919046648,
     "loss_r": 7.255393594884792,
     "recent_r": [
       0.615,
@@ -170,25 +170,11 @@
       0.069,
       0.63,
       -1.035,
-      -1.06
+      -1.06,
+      0.087
     ]
   },
   "closed_symbols": {
-    "ZEC_USDT": {
-      "time": "2026-11-04T12:05:25.459512+00:00",
-      "direction": "LONG",
-      "reason": "PROFIT_LOCK"
-    },
-    "WLD_USDT": {
-      "time": "2026-11-04T12:05:25.459512+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
-    "MSTR_USDT": {
-      "time": "2026-11-04T12:05:25.459512+00:00",
-      "direction": "LONG",
-      "reason": "PROFIT_LOCK"
-    },
     "SNXX_USDT": {
       "time": "2026-11-04T12:15:28.562899+00:00",
       "direction": "LONG",
@@ -248,6 +234,11 @@
       "time": "2026-11-04T17:15:31.064430+00:00",
       "direction": "LONG",
       "reason": "SL"
+    },
+    "CL_USDT": {
+      "time": "2026-11-04T18:06:08.319722+00:00",
+      "direction": "SHORT",
+      "reason": "PROFIT_LOCK"
     }
   },
   "fail_count": 0,
