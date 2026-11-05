@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.04357,
       "max_adv": 0.04825,
-      "last_candle_ts": 1793884200
+      "last_candle_ts": 1793884500
     },
     "TSLA_USDT": {
       "direction": "SHORT",
@@ -32,9 +32,9 @@
       "initial_stop": 393.7807142857143,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 376.03,
+      "max_fav": 376.0,
       "max_adv": 385.55,
-      "last_candle_ts": 1793884200
+      "last_candle_ts": 1793884500
     },
     "INTC_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 56.08,
       "max_adv": 58.15,
-      "last_candle_ts": 1793884200
+      "last_candle_ts": 1793884500
     },
     "INTW_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 5.51,
       "max_adv": 5.76,
-      "last_candle_ts": 1793884200
+      "last_candle_ts": 1793884500
     },
     "NBIS_USDT": {
       "direction": "SHORT",
@@ -87,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 135.89,
-      "max_adv": 136.8,
-      "last_candle_ts": 1793884200
+      "max_adv": 137.02,
+      "last_candle_ts": 1793884500
     }
   },
   "stats": {
