@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- TP/손절 도달 및 이벤트 발생 시 개별 알림 즉시 전송 + 슬롯 현황 주기적 갱신
+- 슬롯 현황 1시간 주기로 갱신 출력 반영 버전
 """
 
 import csv
@@ -169,6 +169,7 @@ def default_state():
         "closed_symbols": {},
         "fail_count": 0,
         "last_report_date": "",
+        "last_status_report_ts": 0,  # 💡 슬롯 현황 1시간 주기 제어를 위한 타임스탬프 추가
     }
 
 
@@ -211,6 +212,12 @@ def load_state():
     except Exception:
         state["fail_count"] = 0
     state["last_report_date"] = str(data.get("last_report_date", ""))
+    
+    try:
+        state["last_status_report_ts"] = int(data.get("last_status_report_ts", 0))
+    except Exception:
+        state["last_status_report_ts"] = 0
+
     return state
 
 
@@ -811,7 +818,7 @@ def manage_positions(state, tickers, now):
     for alert in alerts:
         send_telegram_message(alert)
         
-    return True  # 💡 항상 True를 반환하여 주기적으로 슬롯 현황판과 함께 상태가 갱신되도록 유지합니다.
+    return changed
 
 
 def identify_new_signals(state, raw_tickers, now, start_time):
@@ -994,12 +1001,13 @@ def run_bot():
     start_time = time.time()
     state = load_state()
     now = utcnow()
+    now_ts = int(now.timestamp())
 
     raw_tickers = fetch_tickers()
     if not raw_tickers:
         state["fail_count"] += 1
         n = state["fail_count"]
-        if n == FAIL_ALERT_THRESHOLD or (n > FAIL_ALT_THRESHOLD and (n - FAIL_ALERT_THRESHOLD) % 12 == 0):
+        if n == FAIL_ALERT_THRESHOLD or (n > FAIL_ALERT_THRESHOLD and (n - FAIL_ALERT_THRESHOLD) % 12 == 0):
             send_telegram_message(f"⚠️ <b>봇 오류 경고</b>\nGate.io 시세 조회가 {n}회 연속 실패했습니다.")
         save_state(state)
         return
@@ -1026,9 +1034,15 @@ def run_bot():
     if len(state["active_slots"]) < MAX_SLOTS:
         changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
-    # 💡 주기적으로 슬롯 현황판 전송 + TP/SL 도달 시 개별 텔레그램 알림은 alerts를 통해 즉시 전송됨
-    if changed_positions or changed_new:
+    # 💡 [핵심 수정]: 실질적인 포지션 이벤트(청산, TP, SL 등)나 신규 진입이 있으면 즉시 전송하고,
+    # 그렇지 않더라도 마지막 현황판 전송 시각으로부터 정확히 1시간(3600초)이 지났을 때만 슬롯 현황을 주기적으로 전송합니다.
+    last_report_ts = state.get("last_status_report_ts", 0)
+    time_elapsed = now_ts - last_report_ts
+    hourly_due = (time_elapsed >= 3600) and len(state["active_slots"]) > 0
+
+    if changed_positions or changed_new or hourly_due:
         send_telegram_message(build_slot_status_message(state, tickers))
+        state["last_status_report_ts"] = now_ts
 
     maybe_send_daily_report(state, tickers, now)
     save_state(state)
