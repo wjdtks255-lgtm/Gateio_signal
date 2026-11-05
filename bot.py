@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 슬롯 현황 1시간 주기로 갱신 출력 반영 버전
+- 주기적 현황판 전송 완전 제거 (신규 진입 및 TP/손절 등 실질적 이벤트 발생 시에만 전송)
 """
 
 import csv
@@ -169,7 +169,6 @@ def default_state():
         "closed_symbols": {},
         "fail_count": 0,
         "last_report_date": "",
-        "last_status_report_ts": 0,  # 💡 슬롯 현황 1시간 주기 제어를 위한 타임스탬프 추가
     }
 
 
@@ -212,12 +211,6 @@ def load_state():
     except Exception:
         state["fail_count"] = 0
     state["last_report_date"] = str(data.get("last_report_date", ""))
-    
-    try:
-        state["last_status_report_ts"] = int(data.get("last_status_report_ts", 0))
-    except Exception:
-        state["last_status_report_ts"] = 0
-
     return state
 
 
@@ -818,6 +811,7 @@ def manage_positions(state, tickers, now):
     for alert in alerts:
         send_telegram_message(alert)
         
+    # 💡 포지션에 실제 청산, TP 도달 등의 변화(changed)가 있을 때만 True 반환
     return changed
 
 
@@ -1001,7 +995,6 @@ def run_bot():
     start_time = time.time()
     state = load_state()
     now = utcnow()
-    now_ts = int(now.timestamp())
 
     raw_tickers = fetch_tickers()
     if not raw_tickers:
@@ -1034,15 +1027,10 @@ def run_bot():
     if len(state["active_slots"]) < MAX_SLOTS:
         changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
-    # 💡 [핵심 수정]: 실질적인 포지션 이벤트(청산, TP, SL 등)나 신규 진입이 있으면 즉시 전송하고,
-    # 그렇지 않더라도 마지막 현황판 전송 시각으로부터 정확히 1시간(3600초)이 지났을 때만 슬롯 현황을 주기적으로 전송합니다.
-    last_report_ts = state.get("last_status_report_ts", 0)
-    time_elapsed = now_ts - last_report_ts
-    hourly_due = (time_elapsed >= 3600) and len(state["active_slots"]) > 0
-
-    if changed_positions or changed_new or hourly_due:
+    # 💡 [핵심]: 주기적인 현황판 전송 로직을 완전히 제거하고, 
+    # 오직 신규 진입이나 포지션 종료/TP/손절 같은 실질적인 변화가 발생했을 때만 현황판을 함께 전송합니다.
+    if changed_positions or changed_new:
         send_telegram_message(build_slot_status_message(state, tickers))
-        state["last_status_report_ts"] = now_ts
 
     maybe_send_daily_report(state, tickers, now)
     save_state(state)
