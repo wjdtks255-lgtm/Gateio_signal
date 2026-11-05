@@ -15,8 +15,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1.182,
-      "max_adv": 1.201,
-      "last_candle_ts": 1793906400
+      "max_adv": 1.206,
+      "last_candle_ts": 1793906700
     }
   },
   "stats": {
@@ -41,11 +41,6 @@
     ]
   },
   "closed_symbols": {
-    "INTW_USDT": {
-      "time": "2026-11-05T15:25:34.367079+00:00",
-      "direction": "SHORT",
-      "reason": "TP3"
-    },
     "WLFI_USDT": {
       "time": "2026-11-05T16:25:25.751741+00:00",
       "direction": "SHORT",
