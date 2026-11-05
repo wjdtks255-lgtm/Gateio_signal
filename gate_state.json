@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.04357,
       "max_adv": 0.04825,
-      "last_candle_ts": 1793893500
+      "last_candle_ts": 1793893800
     },
     "INTC_USDT": {
       "direction": "SHORT",
@@ -32,9 +32,9 @@
       "initial_stop": 58.941071428571426,
       "tp1_reached": true,
       "tp2_reached": true,
-      "max_fav": 52.47,
+      "max_fav": 52.43,
       "max_adv": 58.15,
-      "last_candle_ts": 1793893500
+      "last_candle_ts": 1793893800
     }
   },
   "stats": {
