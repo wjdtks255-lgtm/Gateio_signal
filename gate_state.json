@@ -1,32 +1,13 @@
 {
-  "active_slots": {
-    "INTC_USDT": {
-      "direction": "SHORT",
-      "entry_price": 57.11,
-      "entry_time": "2026-11-05T01:15:29.711561+00:00",
-      "leverage": 6,
-      "risk": 1.8310714285714287,
-      "atr": 1.2207142857142859,
-      "tp1": 55.88928571428571,
-      "tp2": 54.058214285714286,
-      "tp3": 52.22714285714286,
-      "stop_loss": 55.88928571428571,
-      "initial_stop": 58.941071428571426,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 52.43,
-      "max_adv": 58.15,
-      "last_candle_ts": 1793895900
-    }
-  },
+  "active_slots": {},
   "stats": {
-    "wins": 5,
+    "wins": 6,
     "draws": 0,
     "losses": 3,
-    "total": 8,
-    "r_count": 8,
-    "sum_r": 6.756977557510227,
-    "win_r": 9.870515839813574,
+    "total": 9,
+    "r_count": 9,
+    "sum_r": 7.39245483467036,
+    "win_r": 10.505993116973707,
     "loss_r": 3.113538282303347,
     "recent_r": [
       -1.031,
@@ -36,7 +17,8 @@
       2.629,
       -1.035,
       2.647,
-      1.356
+      1.356,
+      0.635
     ]
   },
   "closed_symbols": {
@@ -69,6 +51,11 @@
       "time": "2026-11-05T16:25:25.751741+00:00",
       "direction": "SHORT",
       "reason": "ROTATE"
+    },
+    "INTC_USDT": {
+      "time": "2026-11-05T16:35:34.491104+00:00",
+      "direction": "SHORT",
+      "reason": "TP1_PROTECT"
     }
   },
   "fail_count": 0,
