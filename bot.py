@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- CSV 저장 시 컬럼 개수/데이터 밀림 방지 안전장치 추가 (방법 2 반영)
-- 신규 진입 및 TP/손절 등 실질적 이벤트 발생 시에만 슬롯 현황 전송
+- 상위 타임프레임(4h) 추세 필터 + 거래량 모멘텀 필터 적용 버전
 """
 
 import csv
@@ -222,15 +221,12 @@ def save_state(state):
     os.replace(tmp, STATE_FILE)
 
 
-# 💡 [방법 2 안전장치 강화]: CSV 헤더 필드 개수와 불일치하는 오류 방지 로직
 def append_trade_csv(row):
     exists = os.path.exists(TRADES_FILE) and os.path.getsize(TRADES_FILE) > 0
     with open(TRADES_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction='ignore')
         if not exists:
             writer.writeheader()
-        
-        # 필드 누락 방지: 없는 필드는 기본값 "" 채움
         clean_row = {field: row.get(field, "") for field in CSV_FIELDS}
         writer.writerow(clean_row)
 
@@ -262,6 +258,7 @@ def parse_candles(raw):
                 "h": float(c["h"]),
                 "l": float(c["l"]),
                 "c": float(c["c"]),
+                "v": float(c.get("v", 0)),  # 거래량 필터를 위한 볼륨 파싱 추가
             })
         except (KeyError, TypeError, ValueError):
             continue
@@ -388,6 +385,7 @@ def check_order_block_retest(candles, direction, current_price):
 
 
 def analyze_signal(symbol, direction, now_ts, current_price):
+    # 1. 1시간봉 데이터 분석
     raw = api_get("/candlesticks", {"contract": symbol, "interval": "1h", "limit": 80})
     candles = [c for c in parse_candles(raw) if c["t"] + 3600 <= now_ts]
     if len(candles) < 50:
@@ -433,6 +431,26 @@ def analyze_signal(symbol, direction, now_ts, current_price):
             return None
         if rsi > 55 or last["c"] >= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
+
+    # 💡 [개선 필터 1]: 거래량(볼륨) 모멘텀 필터 추가 (직전 20개 봉 평균 거래량의 1.1배 이상일 때만 허용)
+    volumes = [c["v"] for c in candles]
+    if len(volumes) >= 20:
+        avg_vol = sum(volumes[-21:-1]) / 20
+        if avg_vol > 0 and last["v"] < avg_vol * 1.1:
+            return None
+
+    # 💡 [개선 필터 2]: 상위 타임프레임(4시간봉) 추세 필터 추가
+    raw_4h = api_get("/candlesticks", {"contract": symbol, "interval": "4h", "limit": 60})
+    candles_4h = [c for c in parse_candles(raw_4h) if c["t"] + 14400 <= now_ts]
+    if len(candles_4h) >= 30:
+        closes_4h = [c["c"] for c in candles_4h]
+        ema20_4h = calc_ema(closes_4h, 20)
+        ema50_4h = calc_ema(closes_4h, 50)
+        if ema20_4h and ema50_4h:
+            if direction == "LONG" and ema20_4h <= ema50_4h:
+                return None
+            if direction == "SHORT" and ema20_4h >= ema50_4h:
+                return None
 
     zone_low, zone_high = check_order_block_retest(candles, direction, current_price)
     if not zone_low or not zone_high:
@@ -1031,7 +1049,6 @@ def run_bot():
     if len(state["active_slots"]) < MAX_SLOTS:
         changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
-    # 💡 신규 진입이 있거나 TP/손절 등 청산 이벤트가 발생한 순간에만 현황판 전송
     if changed_positions or changed_new:
         send_telegram_message(build_slot_status_message(state, tickers))
 
