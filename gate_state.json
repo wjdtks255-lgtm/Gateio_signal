@@ -14,9 +14,9 @@
       "initial_stop": 1.25175,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.195,
+      "max_fav": 1.183,
       "max_adv": 1.2,
-      "last_candle_ts": 1793904300
+      "last_candle_ts": 1793904600
     }
   },
   "stats": {
@@ -41,11 +41,6 @@
     ]
   },
   "closed_symbols": {
-    "NBIS_USDT": {
-      "time": "2026-11-05T14:50:35.974536+00:00",
-      "direction": "SHORT",
-      "reason": "TP3"
-    },
     "INJ_USDT": {
       "time": "2026-11-05T15:15:41.817601+00:00",
       "direction": "LONG",
