@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 0.04357,
       "max_adv": 0.04825,
-      "last_candle_ts": 1793881800
+      "last_candle_ts": 1793882100
     },
     "TSLA_USDT": {
       "direction": "SHORT",
@@ -34,25 +34,7 @@
       "tp2_reached": false,
       "max_fav": 376.71,
       "max_adv": 385.55,
-      "last_candle_ts": 1793881800
-    },
-    "TAO_USDT": {
-      "direction": "LONG",
-      "entry_price": 235.9,
-      "entry_time": "2026-11-04T22:30:42.270295+00:00",
-      "leverage": 10,
-      "risk": 4.896428571428573,
-      "atr": 3.2642857142857156,
-      "tp1": 239.1642857142857,
-      "tp2": 244.06071428571428,
-      "tp3": 248.95714285714286,
-      "stop_loss": 231.00357142857143,
-      "initial_stop": 231.00357142857143,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 238.1,
-      "max_adv": 231.3,
-      "last_candle_ts": 1793881800
+      "last_candle_ts": 1793882100
     },
     "INTC_USDT": {
       "direction": "SHORT",
@@ -70,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 56.08,
       "max_adv": 58.15,
-      "last_candle_ts": 1793881800
+      "last_candle_ts": 1793882100
     },
     "INTW_USDT": {
       "direction": "SHORT",
@@ -88,24 +70,31 @@
       "tp2_reached": false,
       "max_fav": 5.52,
       "max_adv": 5.76,
-      "last_candle_ts": 1793881800
+      "last_candle_ts": 1793882100
     }
   },
   "stats": {
     "wins": 1,
     "draws": 0,
-    "losses": 1,
-    "total": 2,
-    "r_count": 2,
-    "sum_r": -0.41231191222570573,
+    "losses": 2,
+    "total": 3,
+    "r_count": 3,
+    "sum_r": -1.4604898845087106,
     "win_r": 0.6184090909090918,
-    "loss_r": 1.0307210031347975,
+    "loss_r": 2.078898975417802,
     "recent_r": [
       -1.031,
-      0.618
+      0.618,
+      -1.048
     ]
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "TAO_USDT": {
+      "time": "2026-11-05T12:40:29.521779+00:00",
+      "direction": "LONG",
+      "reason": "SL"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-05"
 }
