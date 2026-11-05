@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 주기적 현황판 전송 완전 제거 (신규 진입 및 TP/손절 등 실질적 이벤트 발생 시에만 전송)
+- CSV 저장 시 컬럼 개수/데이터 밀림 방지 안전장치 추가 (방법 2 반영)
+- 신규 진입 및 TP/손절 등 실질적 이벤트 발생 시에만 슬롯 현황 전송
 """
 
 import csv
@@ -221,13 +222,17 @@ def save_state(state):
     os.replace(tmp, STATE_FILE)
 
 
+# 💡 [방법 2 안전장치 강화]: CSV 헤더 필드 개수와 불일치하는 오류 방지 로직
 def append_trade_csv(row):
     exists = os.path.exists(TRADES_FILE) and os.path.getsize(TRADES_FILE) > 0
     with open(TRADES_FILE, "a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction='ignore')
         if not exists:
             writer.writeheader()
-        writer.writerow(row)
+        
+        # 필드 누락 방지: 없는 필드는 기본값 "" 채움
+        clean_row = {field: row.get(field, "") for field in CSV_FIELDS}
+        writer.writerow(clean_row)
 
 
 # ──────────────────────────── Gate.io API ────────────────────────────
@@ -811,7 +816,6 @@ def manage_positions(state, tickers, now):
     for alert in alerts:
         send_telegram_message(alert)
         
-    # 💡 포지션에 실제 청산, TP 도달 등의 변화(changed)가 있을 때만 True 반환
     return changed
 
 
@@ -1027,8 +1031,7 @@ def run_bot():
     if len(state["active_slots"]) < MAX_SLOTS:
         changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
-    # 💡 [핵심]: 주기적인 현황판 전송 로직을 완전히 제거하고, 
-    # 오직 신규 진입이나 포지션 종료/TP/손절 같은 실질적인 변화가 발생했을 때만 현황판을 함께 전송합니다.
+    # 💡 신규 진입이 있거나 TP/손절 등 청산 이벤트가 발생한 순간에만 현황판 전송
     if changed_positions or changed_new:
         send_telegram_message(build_slot_status_message(state, tickers))
 
