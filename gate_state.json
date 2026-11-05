@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1.182,
       "max_adv": 1.224,
-      "last_candle_ts": 1793910600
+      "last_candle_ts": 1793910900
     }
   },
   "stats": {
@@ -40,13 +40,7 @@
       0.635
     ]
   },
-  "closed_symbols": {
-    "INTC_USDT": {
-      "time": "2026-11-05T16:35:34.491104+00:00",
-      "direction": "SHORT",
-      "reason": "TP1_PROTECT"
-    }
-  },
+  "closed_symbols": {},
   "fail_count": 0,
   "last_report_date": "2026-11-05"
 }
