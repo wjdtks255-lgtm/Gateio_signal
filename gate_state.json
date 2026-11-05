@@ -22,11 +22,6 @@
     ]
   },
   "closed_symbols": {
-    "TAO_USDT": {
-      "time": "2026-11-05T12:40:29.521779+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "TSLA_USDT": {
       "time": "2026-11-05T14:40:43.320528+00:00",
       "direction": "SHORT",
