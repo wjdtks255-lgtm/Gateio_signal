@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 텔레그램 알림 메시지에서 불필요한 부가 문구(기준 완화 등) 제거 버전
+- TP/손절 도달 및 이벤트 발생 시 개별 알림 즉시 전송 + 슬롯 현황 주기적 갱신
 """
 
 import csv
@@ -810,7 +810,8 @@ def manage_positions(state, tickers, now):
 
     for alert in alerts:
         send_telegram_message(alert)
-    return changed
+        
+    return True  # 💡 항상 True를 반환하여 주기적으로 슬롯 현황판과 함께 상태가 갱신되도록 유지합니다.
 
 
 def identify_new_signals(state, raw_tickers, now, start_time):
@@ -912,7 +913,7 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             def pct_of(price):
                 return pct_move(direction, last_price, price)
 
-            # 🛡️ 신규 시그널 개별 텔레그램 알림 전송 (불필요한 문구 완전 제거)
+            # 🛡️ 신규 시그널 개별 텔레그램 알림 전송
             msg = (
                 f"🛡️ <b>신규 시그널</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
@@ -998,7 +999,7 @@ def run_bot():
     if not raw_tickers:
         state["fail_count"] += 1
         n = state["fail_count"]
-        if n == FAIL_ALERT_THRESHOLD or (n > FAIL_ALERT_THRESHOLD and (n - FAIL_ALERT_THRESHOLD) % 12 == 0):
+        if n == FAIL_ALERT_THRESHOLD or (n > FAIL_ALT_THRESHOLD and (n - FAIL_ALERT_THRESHOLD) % 12 == 0):
             send_telegram_message(f"⚠️ <b>봇 오류 경고</b>\nGate.io 시세 조회가 {n}회 연속 실패했습니다.")
         save_state(state)
         return
@@ -1025,6 +1026,7 @@ def run_bot():
     if len(state["active_slots"]) < MAX_SLOTS:
         changed_new = identify_new_signals(state, raw_tickers, now, start_time)
 
+    # 💡 주기적으로 슬롯 현황판 전송 + TP/SL 도달 시 개별 텔레그램 알림은 alerts를 통해 즉시 전송됨
     if changed_positions or changed_new:
         send_telegram_message(build_slot_status_message(state, tickers))
 
