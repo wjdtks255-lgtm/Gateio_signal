@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 상위 타임프레임(4h) 추세 필터 + 거래량 모멘텀 필터 적용 버전
+- 상위 타임프레임(4h) 추세 필터 + 거래량 모멘텀 필터 최적화 버전
 """
 
 import csv
@@ -258,7 +258,7 @@ def parse_candles(raw):
                 "h": float(c["h"]),
                 "l": float(c["l"]),
                 "c": float(c["c"]),
-                "v": float(c.get("v", 0)),  # 거래량 필터를 위한 볼륨 파싱 추가
+                "v": float(c.get("v", 0)),
             })
         except (KeyError, TypeError, ValueError):
             continue
@@ -432,24 +432,23 @@ def analyze_signal(symbol, direction, now_ts, current_price):
         if rsi > 55 or last["c"] >= last["o"] or body_ratio < BODY_RATIO_MIN:
             return None
 
-    # 💡 [개선 필터 1]: 거래량(볼륨) 모멘텀 필터 추가 (직전 20개 봉 평균 거래량의 1.1배 이상일 때만 허용)
+    # 💡 [완화된 거래량 필터]: 직전 20개 봉 평균 거래량 이상(1.0배 이상)이면 통과
     volumes = [c["v"] for c in candles]
     if len(volumes) >= 20:
         avg_vol = sum(volumes[-21:-1]) / 20
-        if avg_vol > 0 and last["v"] < avg_vol * 1.1:
+        if avg_vol > 0 and last["v"] < avg_vol * 1.0:
             return None
 
-    # 💡 [개선 필터 2]: 상위 타임프레임(4시간봉) 추세 필터 추가
-    raw_4h = api_get("/candlesticks", {"contract": symbol, "interval": "4h", "limit": 60})
+    # 💡 [완화된 4시간봉 추세 필터]: 4h EMA 20선 기준 위치 확인 (역추세 방지용 부드러운 필터)
+    raw_4h = api_get("/candlesticks", {"contract": symbol, "interval": "4h", "limit": 40})
     candles_4h = [c for c in parse_candles(raw_4h) if c["t"] + 14400 <= now_ts]
-    if len(candles_4h) >= 30:
+    if len(candles_4h) >= 20:
         closes_4h = [c["c"] for c in candles_4h]
         ema20_4h = calc_ema(closes_4h, 20)
-        ema50_4h = calc_ema(closes_4h, 50)
-        if ema20_4h and ema50_4h:
-            if direction == "LONG" and ema20_4h <= ema50_4h:
+        if ema20_4h:
+            if direction == "LONG" and current_price < ema20_4h * 0.98:
                 return None
-            if direction == "SHORT" and ema20_4h >= ema50_4h:
+            if direction == "SHORT" and current_price > ema20_4h * 1.02:
                 return None
 
     zone_low, zone_high = check_order_block_retest(candles, direction, current_price)
