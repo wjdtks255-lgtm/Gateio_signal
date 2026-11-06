@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 88.89,
       "max_adv": 90.86,
-      "last_candle_ts": 1793975100
+      "last_candle_ts": 1793975400
     },
     "XRP_USDT": {
       "direction": "SHORT",
@@ -32,27 +32,9 @@
       "initial_stop": 1.2401392857142857,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1.177,
+      "max_fav": 1.1744,
       "max_adv": 1.2228,
-      "last_candle_ts": 1793975100
-    },
-    "SPCX_USDT": {
-      "direction": "SHORT",
-      "entry_price": 127.45,
-      "entry_time": "2026-11-06T00:40:31.314389+00:00",
-      "leverage": 8,
-      "risk": 4.217142857142863,
-      "atr": 2.8114285714285754,
-      "tp1": 124.63857142857142,
-      "tp2": 120.42142857142856,
-      "tp3": 116.2042857142857,
-      "stop_loss": 131.66714285714286,
-      "initial_stop": 131.66714285714286,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 125.7,
-      "max_adv": 131.57,
-      "last_candle_ts": 1793975100
+      "last_candle_ts": 1793975400
     },
     "BTC_USDT": {
       "direction": "SHORT",
@@ -70,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 75263.5,
       "max_adv": 76348.0,
-      "last_candle_ts": 1793975100
+      "last_candle_ts": 1793975400
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -86,20 +68,38 @@
       "initial_stop": 2273.9217857142858,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 2224.13,
+      "max_fav": 2217.32,
       "max_adv": 2248.61,
-      "last_candle_ts": 1793975100
+      "last_candle_ts": 1793975400
+    },
+    "SOXL_USDT": {
+      "direction": "SHORT",
+      "entry_price": 46.11,
+      "entry_time": "2026-11-06T14:35:27.440496+00:00",
+      "leverage": 5,
+      "risk": 2.997857142857142,
+      "atr": 1.9985714285714278,
+      "tp1": 44.11142857142857,
+      "tp2": 41.11357142857143,
+      "tp3": 38.11571428571429,
+      "stop_loss": 49.10785714285714,
+      "initial_stop": 49.10785714285714,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 46.11,
+      "max_adv": 46.11,
+      "last_candle_ts": 1793975700
     }
   },
   "stats": {
     "wins": 6,
     "draws": 4,
-    "losses": 7,
-    "total": 17,
-    "r_count": 17,
-    "sum_r": 3.642908840054319,
+    "losses": 8,
+    "total": 18,
+    "r_count": 18,
+    "sum_r": 2.6126869565854847,
     "win_r": 10.847988938171468,
-    "loss_r": 7.205080098117148,
+    "loss_r": 8.235301981585982,
     "recent_r": [
       -1.031,
       0.618,
@@ -117,10 +117,17 @@
       -1.025,
       -1.023,
       -1.015,
-      -1.028
+      -1.028,
+      -1.03
     ]
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "SPCX_USDT": {
+      "time": "2026-11-06T14:35:27.440496+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-06"
 }
