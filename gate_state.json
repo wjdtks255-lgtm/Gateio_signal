@@ -15,8 +15,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 88.89,
-      "max_adv": 90.86,
-      "last_candle_ts": 1793975400
+      "max_adv": 90.97,
+      "last_candle_ts": 1793975700
     },
     "XRP_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1.1744,
       "max_adv": 1.2228,
-      "last_candle_ts": 1793975400
+      "last_candle_ts": 1793975700
     },
     "BTC_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 75263.5,
       "max_adv": 76348.0,
-      "last_candle_ts": 1793975400
+      "last_candle_ts": 1793975700
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 2217.32,
       "max_adv": 2248.61,
-      "last_candle_ts": 1793975400
+      "last_candle_ts": 1793975700
     },
     "SOXL_USDT": {
       "direction": "SHORT",
@@ -87,7 +87,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 46.11,
-      "max_adv": 46.11,
+      "max_adv": 47.9,
       "last_candle_ts": 1793975700
     }
   },
