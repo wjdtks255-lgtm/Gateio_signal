@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 847.75,
       "max_adv": 882.84,
-      "last_candle_ts": 1793983200
+      "last_candle_ts": 1793983500
     },
     "ZEC_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1374.16,
       "max_adv": 1313.62,
-      "last_candle_ts": 1793983200
+      "last_candle_ts": 1793983500
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 838.4,
       "max_adv": 859.38,
-      "last_candle_ts": 1793983200
+      "last_candle_ts": 1793983500
     },
     "TRUMP_USDT": {
       "direction": "LONG",
@@ -69,8 +69,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1.247,
-      "max_adv": 1.234,
-      "last_candle_ts": 1793983200
+      "max_adv": 1.233,
+      "last_candle_ts": 1793983500
     },
     "OPENAI_USDT": {
       "direction": "SHORT",
@@ -86,9 +86,9 @@
       "initial_stop": 1302.6478571428572,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1275.95,
+      "max_fav": 1273.62,
       "max_adv": 1283.29,
-      "last_candle_ts": 1793983200
+      "last_candle_ts": 1793983500
     }
   },
   "stats": {
@@ -129,16 +129,6 @@
     ]
   },
   "closed_symbols": {
-    "SOL_USDT": {
-      "time": "2026-11-06T14:45:32.704352+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
-    "ETH_USDT": {
-      "time": "2026-11-06T14:45:32.704352+00:00",
-      "direction": "SHORT",
-      "reason": "PROFIT_LOCK"
-    },
     "SOXL_USDT": {
       "time": "2026-11-06T14:50:32.332581+00:00",
       "direction": "SHORT",
