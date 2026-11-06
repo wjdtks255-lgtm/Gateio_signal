@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1.1744,
       "max_adv": 1.2228,
-      "last_candle_ts": 1793976000
+      "last_candle_ts": 1793976300
     },
     "BTC_USDT": {
       "direction": "SHORT",
@@ -34,25 +34,7 @@
       "tp2_reached": false,
       "max_fav": 75263.5,
       "max_adv": 76348.0,
-      "last_candle_ts": 1793976000
-    },
-    "SOXL_USDT": {
-      "direction": "SHORT",
-      "entry_price": 46.11,
-      "entry_time": "2026-11-06T14:35:27.440496+00:00",
-      "leverage": 5,
-      "risk": 2.997857142857142,
-      "atr": 1.9985714285714278,
-      "tp1": 44.11142857142857,
-      "tp2": 41.11357142857143,
-      "tp3": 38.11571428571429,
-      "stop_loss": 49.10785714285714,
-      "initial_stop": 49.10785714285714,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 46.11,
-      "max_adv": 48.97,
-      "last_candle_ts": 1793976000
+      "last_candle_ts": 1793976300
     },
     "INTC_USDT": {
       "direction": "LONG",
@@ -69,7 +51,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 56.61,
-      "max_adv": 56.61,
+      "max_adv": 56.16,
       "last_candle_ts": 1793976300
     },
     "KORU_USDT": {
@@ -86,20 +68,38 @@
       "initial_stop": 7.722142857142857,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 7.234,
+      "max_fav": 7.19,
       "max_adv": 7.234,
       "last_candle_ts": 1793976300
+    },
+    "SKHYNIX_USDT": {
+      "direction": "SHORT",
+      "entry_price": 882.84,
+      "entry_time": "2026-11-06T14:50:32.332581+00:00",
+      "leverage": 6,
+      "risk": 35.57785714285716,
+      "atr": 23.71857142857144,
+      "tp1": 859.1214285714286,
+      "tp2": 823.5435714285715,
+      "tp3": 787.9657142857143,
+      "stop_loss": 918.4178571428572,
+      "initial_stop": 918.4178571428572,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 882.84,
+      "max_adv": 882.84,
+      "last_candle_ts": 1793976600
     }
   },
   "stats": {
     "wins": 6,
     "draws": 5,
-    "losses": 9,
-    "total": 20,
-    "r_count": 20,
-    "sum_r": 1.6139733659139965,
+    "losses": 10,
+    "total": 21,
+    "r_count": 21,
+    "sum_r": 0.5985923794951258,
     "win_r": 10.894328283362672,
-    "loss_r": 9.280354917448673,
+    "loss_r": 10.295735903867543,
     "recent_r": [
       -1.031,
       0.618,
@@ -120,7 +120,8 @@
       -1.028,
       -1.03,
       -1.045,
-      0.046
+      0.046,
+      -1.015
     ]
   },
   "closed_symbols": {
@@ -138,6 +139,11 @@
       "time": "2026-11-06T14:45:32.704352+00:00",
       "direction": "SHORT",
       "reason": "PROFIT_LOCK"
+    },
+    "SOXL_USDT": {
+      "time": "2026-11-06T14:50:32.332581+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
     }
   },
   "fail_count": 0,
