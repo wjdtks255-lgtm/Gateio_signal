@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 88.89,
       "max_adv": 90.86,
-      "last_candle_ts": 1793974500
+      "last_candle_ts": 1793974800
     },
     "XRP_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1.177,
       "max_adv": 1.2228,
-      "last_candle_ts": 1793974500
+      "last_candle_ts": 1793974800
     },
     "SPCX_USDT": {
       "direction": "SHORT",
@@ -51,8 +51,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 125.7,
-      "max_adv": 131.04,
-      "last_candle_ts": 1793974500
+      "max_adv": 131.11,
+      "last_candle_ts": 1793974800
     },
     "BTC_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 75263.5,
       "max_adv": 76348.0,
-      "last_candle_ts": 1793974500
+      "last_candle_ts": 1793974800
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 2224.13,
       "max_adv": 2248.61,
-      "last_candle_ts": 1793974500
+      "last_candle_ts": 1793974800
     }
   },
   "stats": {
@@ -120,13 +120,7 @@
       -1.028
     ]
   },
-  "closed_symbols": {
-    "ZEC_USDT": {
-      "time": "2026-11-06T12:25:25.480818+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    }
-  },
+  "closed_symbols": {},
   "fail_count": 0,
   "last_report_date": "2026-11-06"
 }
