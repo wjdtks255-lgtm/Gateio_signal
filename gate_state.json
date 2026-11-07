@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1281.27,
       "max_adv": 1299.68,
-      "last_candle_ts": 1794092400
+      "last_candle_ts": 1794092700
     },
     "KORU_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 6.927,
       "max_adv": 7.096,
-      "last_candle_ts": 1794092400
+      "last_candle_ts": 1794092700
     },
     "PEPE_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 4.801e-06,
       "max_adv": 4.894e-06,
-      "last_candle_ts": 1794092400
+      "last_candle_ts": 1794092700
     },
     "ZEC_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1237.3,
       "max_adv": 1259.57,
-      "last_candle_ts": 1794092400
+      "last_candle_ts": 1794092700
     },
     "TRUMP_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 1.175,
       "max_adv": 1.18,
-      "last_candle_ts": 1794092400
+      "last_candle_ts": 1794092700
     }
   },
   "stats": {
@@ -143,11 +143,6 @@
     ]
   },
   "closed_symbols": {
-    "SOXL_USDT": {
-      "time": "2026-11-07T21:10:27.523609+00:00",
-      "direction": "LONG",
-      "reason": "PROFIT_LOCK"
-    },
     "CL_USDT": {
       "time": "2026-11-07T22:30:37.664786+00:00",
       "direction": "SHORT",
