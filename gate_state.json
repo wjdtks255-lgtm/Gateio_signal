@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 845.06,
       "max_adv": 882.84,
-      "last_candle_ts": 1794022500
+      "last_candle_ts": 1794022800
     },
     "ZEC_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1377.24,
       "max_adv": 1313.62,
-      "last_candle_ts": 1794022500
+      "last_candle_ts": 1794022800
     },
     "SNDK_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 818.43,
       "max_adv": 859.38,
-      "last_candle_ts": 1794022500
+      "last_candle_ts": 1794022800
     },
     "SPCX_USDT": {
       "direction": "LONG",
@@ -70,36 +70,36 @@
       "tp2_reached": true,
       "max_fav": 137.56,
       "max_adv": 131.06,
-      "last_candle_ts": 1794022500
+      "last_candle_ts": 1794022800
     },
-    "LTC_USDT": {
-      "direction": "LONG",
-      "entry_price": 52.79,
-      "entry_time": "2026-11-06T17:55:25.396778+00:00",
+    "CL_USDT": {
+      "direction": "SHORT",
+      "entry_price": 89.67,
+      "entry_time": "2026-11-07T03:45:30.376929+00:00",
       "leverage": 10,
-      "risk": 0.6932142857142863,
-      "atr": 0.4621428571428576,
-      "tp1": 53.25214285714286,
-      "tp2": 53.94535714285714,
-      "tp3": 54.63857142857143,
-      "stop_loss": 52.096785714285716,
-      "initial_stop": 52.096785714285716,
+      "risk": 0.9610714285714315,
+      "atr": 0.6407142857142877,
+      "tp1": 89.02928571428572,
+      "tp2": 88.06821428571428,
+      "tp3": 87.10714285714285,
+      "stop_loss": 90.63107142857143,
+      "initial_stop": 90.63107142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 53.13,
-      "max_adv": 52.13,
-      "last_candle_ts": 1794022500
+      "max_fav": 89.67,
+      "max_adv": 89.67,
+      "last_candle_ts": 1794023100
     }
   },
   "stats": {
     "wins": 7,
     "draws": 8,
-    "losses": 12,
-    "total": 27,
-    "r_count": 27,
-    "sum_r": -0.5994155506179255,
+    "losses": 13,
+    "total": 28,
+    "r_count": 28,
+    "sum_r": -1.6755680493299256,
     "win_r": 11.773961803685829,
-    "loss_r": 12.37337735430375,
+    "loss_r": 13.44952985301575,
     "recent_r": [
       -1.031,
       0.618,
@@ -127,10 +127,17 @@
       0.075,
       0.119,
       -1.037,
-      0.069
+      0.069,
+      -1.076
     ]
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "LTC_USDT": {
+      "time": "2026-11-07T03:45:30.376929+00:00",
+      "direction": "LONG",
+      "reason": "SL"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-07"
 }
