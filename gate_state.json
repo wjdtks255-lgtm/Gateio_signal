@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 818.43,
       "max_adv": 859.38,
-      "last_candle_ts": 1794029700
+      "last_candle_ts": 1794030000
     },
     "SPCX_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": true,
       "max_fav": 137.56,
       "max_adv": 131.06,
-      "last_candle_ts": 1794029700
+      "last_candle_ts": 1794030000
     },
     "CL_USDT": {
       "direction": "SHORT",
@@ -50,9 +50,9 @@
       "initial_stop": 90.63107142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 89.54,
+      "max_fav": 89.53,
       "max_adv": 89.71,
-      "last_candle_ts": 1794029700
+      "last_candle_ts": 1794030000
     },
     "XRP_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1.1518,
       "max_adv": 1.164,
-      "last_candle_ts": 1794029700
+      "last_candle_ts": 1794030000
     },
     "OPENAI_USDT": {
       "direction": "SHORT",
@@ -87,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1285.82,
-      "max_adv": 1292.08,
-      "last_candle_ts": 1794029700
+      "max_adv": 1292.1,
+      "last_candle_ts": 1794030000
     }
   },
   "stats": {
@@ -134,11 +134,6 @@
     ]
   },
   "closed_symbols": {
-    "LTC_USDT": {
-      "time": "2026-11-07T03:45:30.376929+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "SKHYNIX_USDT": {
       "time": "2026-11-07T04:40:29.750171+00:00",
       "direction": "SHORT",
