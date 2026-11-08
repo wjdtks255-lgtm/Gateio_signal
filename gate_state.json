@@ -1,23 +1,5 @@
 {
   "active_slots": {
-    "CAP_USDT": {
-      "direction": "LONG",
-      "entry_price": 0.10063,
-      "entry_time": "2026-11-08T11:25:26.264598+00:00",
-      "leverage": 7,
-      "risk": 0.002778214285714285,
-      "atr": 0.0018521428571428567,
-      "tp1": 0.10248214285714285,
-      "tp2": 0.10526035714285714,
-      "tp3": 0.10803857142857143,
-      "stop_loss": 0.10248214285714285,
-      "initial_stop": 0.09785178571428571,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 0.1056,
-      "max_adv": 0.09826,
-      "last_candle_ts": 1794150600
-    },
     "PEPE_USDT": {
       "direction": "LONG",
       "entry_price": 4.989e-06,
@@ -34,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 5.124e-06,
       "max_adv": 4.989e-06,
-      "last_candle_ts": 1794150600
+      "last_candle_ts": 1794150900
     },
     "BTW_USDT": {
       "direction": "LONG",
@@ -52,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1.186552,
       "max_adv": 1.146547,
-      "last_candle_ts": 1794150600
+      "last_candle_ts": 1794150900
     },
     "BCH_USDT": {
       "direction": "SHORT",
@@ -68,9 +50,9 @@
       "initial_stop": 248.47107142857143,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 245.6,
+      "max_fav": 245.46,
       "max_adv": 246.21,
-      "last_candle_ts": 1794150600
+      "last_candle_ts": 1794150900
     },
     "FIL_USDT": {
       "direction": "SHORT",
@@ -86,22 +68,39 @@
       "initial_stop": 0.7780321428571428,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.7663,
+      "max_fav": 0.7658,
       "max_adv": 0.7696,
-      "last_candle_ts": 1794150600
+      "last_candle_ts": 1794150900
+    },
+    "ENA_USDT": {
+      "direction": "SHORT",
+      "entry_price": 0.15436,
+      "entry_time": "2026-11-08T15:20:30.233520+00:00",
+      "leverage": 10,
+      "risk": 0.0028703571428571406,
+      "atr": 0.0019135714285714272,
+      "tp1": 0.15244642857142857,
+      "tp2": 0.14957607142857143,
+      "tp3": 0.1467057142857143,
+      "stop_loss": 0.15723035714285713,
+      "initial_stop": 0.15723035714285713,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.15436,
+      "max_adv": 0.15436,
+      "last_candle_ts": 1794151200
     }
   },
   "stats": {
-    "wins": 10,
+    "wins": 11,
     "draws": 21,
     "losses": 24,
-    "total": 55,
-    "r_count": 55,
-    "sum_r": -5.701505253747857,
-    "win_r": 17.835595496577827,
+    "total": 56,
+    "r_count": 56,
+    "sum_r": -3.0710596951927718,
+    "win_r": 20.466041055132912,
     "loss_r": 23.53710075032568,
     "recent_r": [
-      -1.035,
       2.647,
       1.356,
       0.635,
@@ -150,15 +149,11 @@
       0.052,
       -1.082,
       -1.061,
-      0.053
+      0.053,
+      2.63
     ]
   },
   "closed_symbols": {
-    "PUMP_USDT": {
-      "time": "2026-11-08T13:20:29.634597+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "SOXL_USDT": {
       "time": "2026-11-08T13:55:24.245246+00:00",
       "direction": "LONG",
@@ -178,6 +173,11 @@
       "time": "2026-11-08T14:55:25.508607+00:00",
       "direction": "SHORT",
       "reason": "PROFIT_LOCK"
+    },
+    "CAP_USDT": {
+      "time": "2026-11-08T15:20:30.233520+00:00",
+      "direction": "LONG",
+      "reason": "TP3"
     }
   },
   "fail_count": 0,
