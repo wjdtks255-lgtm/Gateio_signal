@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 6.927,
       "max_adv": 7.096,
-      "last_candle_ts": 1794128700
+      "last_candle_ts": 1794129600
     },
     "TRUMP_USDT": {
       "direction": "SHORT",
@@ -28,13 +28,13 @@
       "tp1": 1.1596428571428572,
       "tp2": 1.1366071428571427,
       "tp3": 1.1135714285714284,
-      "stop_loss": 1.1980357142857143,
+      "stop_loss": 1.1719285714285714,
       "initial_stop": 1.1980357142857143,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1.165,
+      "max_fav": 1.157,
       "max_adv": 1.196,
-      "last_candle_ts": 1794128700
+      "last_candle_ts": 1794129600
     },
     "UNI_USDT": {
       "direction": "LONG",
@@ -51,8 +51,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 7.15,
-      "max_adv": 7.033,
-      "last_candle_ts": 1794128700
+      "max_adv": 7.006,
+      "last_candle_ts": 1794129600
     },
     "HYPE_USDT": {
       "direction": "SHORT",
@@ -64,13 +64,13 @@
       "tp1": 76.7475,
       "tp2": 76.07175,
       "tp3": 75.396,
-      "stop_loss": 77.87374999999999,
+      "stop_loss": 77.1079,
       "initial_stop": 77.87374999999999,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 77.064,
+      "max_fav": 76.671,
       "max_adv": 77.48,
-      "last_candle_ts": 1794128700
+      "last_candle_ts": 1794129600
     },
     "ZEC_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 1257.39,
       "max_adv": 1266.25,
-      "last_candle_ts": 1794128700
+      "last_candle_ts": 1794129600
     }
   },
   "stats": {
@@ -146,13 +146,7 @@
       0.64
     ]
   },
-  "closed_symbols": {
-    "BTW_USDT": {
-      "time": "2026-11-08T07:20:33.314305+00:00",
-      "direction": "SHORT",
-      "reason": "TP1_PROTECT"
-    }
-  },
+  "closed_symbols": {},
   "fail_count": 0,
   "last_report_date": "2026-11-08"
 }
