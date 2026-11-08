@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 6.927,
       "max_adv": 7.096,
-      "last_candle_ts": 1794121800
+      "last_candle_ts": 1794122100
     },
     "TRUMP_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1.165,
       "max_adv": 1.196,
-      "last_candle_ts": 1794121800
+      "last_candle_ts": 1794122100
     },
     "UNI_USDT": {
       "direction": "LONG",
@@ -52,25 +52,7 @@
       "tp2_reached": false,
       "max_fav": 7.15,
       "max_adv": 7.041,
-      "last_candle_ts": 1794121800
-    },
-    "BTW_USDT": {
-      "direction": "SHORT",
-      "entry_price": 1.234279,
-      "entry_time": "2026-11-08T04:00:43.851547+00:00",
-      "leverage": 8,
-      "risk": 0.0455090357142857,
-      "atr": 0.030339357142857133,
-      "tp1": 1.2039396428571427,
-      "tp2": 1.1584306071428572,
-      "tp3": 1.1129215714285714,
-      "stop_loss": 1.2039396428571427,
-      "initial_stop": 1.2797880357142857,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 1.1582,
-      "max_adv": 1.241267,
-      "last_candle_ts": 1794121800
+      "last_candle_ts": 1794122100
     },
     "HYPE_USDT": {
       "direction": "SHORT",
@@ -88,17 +70,35 @@
       "tp2_reached": false,
       "max_fav": 77.09,
       "max_adv": 77.48,
-      "last_candle_ts": 1794121800
+      "last_candle_ts": 1794122100
+    },
+    "ZEC_USDT": {
+      "direction": "SHORT",
+      "entry_price": 1262.4,
+      "entry_time": "2026-11-08T07:20:33.314305+00:00",
+      "leverage": 10,
+      "risk": 20.236071428571442,
+      "atr": 13.490714285714294,
+      "tp1": 1248.9092857142857,
+      "tp2": 1228.6732142857143,
+      "tp3": 1208.4371428571428,
+      "stop_loss": 1282.6360714285715,
+      "initial_stop": 1282.6360714285715,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 1262.4,
+      "max_adv": 1262.4,
+      "last_candle_ts": 1794122400
     }
   },
   "stats": {
-    "wins": 8,
+    "wins": 9,
     "draws": 16,
     "losses": 18,
-    "total": 42,
-    "r_count": 42,
-    "sum_r": -3.50910511169577,
-    "win_r": 14.39445027579858,
+    "total": 43,
+    "r_count": 43,
+    "sum_r": -2.8695600700125237,
+    "win_r": 15.033995317481825,
     "loss_r": 17.903555387494347,
     "recent_r": [
       -1.031,
@@ -142,10 +142,17 @@
       -1.093,
       -1.05,
       0.061,
-      -0.217
+      -0.217,
+      0.64
     ]
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "BTW_USDT": {
+      "time": "2026-11-08T07:20:33.314305+00:00",
+      "direction": "SHORT",
+      "reason": "TP1_PROTECT"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-08"
 }
