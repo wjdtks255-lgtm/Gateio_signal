@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1281.27,
       "max_adv": 1299.68,
-      "last_candle_ts": 1794107400
+      "last_candle_ts": 1794107700
     },
     "KORU_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 6.927,
       "max_adv": 7.096,
-      "last_candle_ts": 1794107400
+      "last_candle_ts": 1794107700
     },
     "PEPE_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 4.786e-06,
       "max_adv": 4.894e-06,
-      "last_candle_ts": 1794107400
+      "last_candle_ts": 1794107700
     },
     "ZEC_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1237.03,
       "max_adv": 1263.32,
-      "last_candle_ts": 1794107400
+      "last_candle_ts": 1794107700
     },
     "TRUMP_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 1.165,
       "max_adv": 1.188,
-      "last_candle_ts": 1794107400
+      "last_candle_ts": 1794107700
     }
   },
   "stats": {
