@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1281.27,
       "max_adv": 1299.68,
-      "last_candle_ts": 1794097500
+      "last_candle_ts": 1794097800
     },
     "KORU_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 6.927,
       "max_adv": 7.096,
-      "last_candle_ts": 1794097500
+      "last_candle_ts": 1794097800
     },
     "PEPE_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 4.801e-06,
       "max_adv": 4.894e-06,
-      "last_candle_ts": 1794097500
+      "last_candle_ts": 1794097800
     },
     "ZEC_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 1237.3,
       "max_adv": 1263.32,
-      "last_candle_ts": 1794097500
+      "last_candle_ts": 1794097800
     },
     "TRUMP_USDT": {
       "direction": "SHORT",
@@ -88,7 +88,7 @@
       "tp2_reached": false,
       "max_fav": 1.175,
       "max_adv": 1.188,
-      "last_candle_ts": 1794097500
+      "last_candle_ts": 1794097800
     }
   },
   "stats": {
@@ -142,13 +142,7 @@
       -1.093
     ]
   },
-  "closed_symbols": {
-    "CL_USDT": {
-      "time": "2026-11-07T22:30:37.664786+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    }
-  },
+  "closed_symbols": {},
   "fail_count": 0,
   "last_report_date": "2026-11-08"
 }
