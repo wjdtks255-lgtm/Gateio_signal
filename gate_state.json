@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 6.927,
       "max_adv": 7.096,
-      "last_candle_ts": 1794137100
+      "last_candle_ts": 1794137400
     },
     "UNI_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 7.15,
       "max_adv": 7.006,
-      "last_candle_ts": 1794137100
+      "last_candle_ts": 1794137400
     },
     "PUMP_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 0.003642,
       "max_adv": 0.003708,
-      "last_candle_ts": 1794137100
+      "last_candle_ts": 1794137400
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -69,8 +69,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.15499,
-      "max_adv": 0.15537,
-      "last_candle_ts": 1794137100
+      "max_adv": 0.15549,
+      "last_candle_ts": 1794137400
     },
     "CAP_USDT": {
       "direction": "LONG",
@@ -86,9 +86,9 @@
       "initial_stop": 0.09785178571428571,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.10104,
-      "max_adv": 0.10063,
-      "last_candle_ts": 1794137100
+      "max_fav": 0.10108,
+      "max_adv": 0.10052,
+      "last_candle_ts": 1794137400
     }
   },
   "stats": {
@@ -151,11 +151,6 @@
     ]
   },
   "closed_symbols": {
-    "HYPE_USDT": {
-      "time": "2026-11-08T09:31:07.819101+00:00",
-      "direction": "SHORT",
-      "reason": "PROFIT_LOCK"
-    },
     "OPENAI_USDT": {
       "time": "2026-11-08T10:55:25.646787+00:00",
       "direction": "LONG",
