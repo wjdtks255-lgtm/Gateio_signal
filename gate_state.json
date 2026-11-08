@@ -1,23 +1,5 @@
 {
   "active_slots": {
-    "KORU_USDT": {
-      "direction": "SHORT",
-      "entry_price": 6.992,
-      "entry_time": "2026-11-07T12:00:45.881549+00:00",
-      "leverage": 10,
-      "risk": 0.11517857142857146,
-      "atr": 0.0767857142857143,
-      "tp1": 6.915214285714286,
-      "tp2": 6.800035714285714,
-      "tp3": 6.684857142857143,
-      "stop_loss": 7.107178571428571,
-      "initial_stop": 7.107178571428571,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 6.927,
-      "max_adv": 7.096,
-      "last_candle_ts": 1794138600
-    },
     "UNI_USDT": {
       "direction": "LONG",
       "entry_price": 7.117,
@@ -34,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 7.15,
       "max_adv": 7.006,
-      "last_candle_ts": 1794138600
+      "last_candle_ts": 1794138900
     },
     "PUMP_USDT": {
       "direction": "SHORT",
@@ -52,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.003642,
       "max_adv": 0.003708,
-      "last_candle_ts": 1794138600
+      "last_candle_ts": 1794138900
     },
     "ENA_USDT": {
       "direction": "SHORT",
@@ -70,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 0.15474,
       "max_adv": 0.15549,
-      "last_candle_ts": 1794138600
+      "last_candle_ts": 1794138900
     },
     "CAP_USDT": {
       "direction": "LONG",
@@ -88,18 +70,36 @@
       "tp2_reached": false,
       "max_fav": 0.10108,
       "max_adv": 0.10018,
-      "last_candle_ts": 1794138600
+      "last_candle_ts": 1794138900
+    },
+    "SOXL_USDT": {
+      "direction": "LONG",
+      "entry_price": 46.52,
+      "entry_time": "2026-11-08T12:00:46.464865+00:00",
+      "leverage": 8,
+      "risk": 0.5710714285714291,
+      "atr": 0.3807142857142861,
+      "tp1": 46.90071428571429,
+      "tp2": 47.471785714285716,
+      "tp3": 48.042857142857144,
+      "stop_loss": 45.948928571428574,
+      "initial_stop": 45.948928571428574,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 46.52,
+      "max_adv": 46.52,
+      "last_candle_ts": 1794139200
     }
   },
   "stats": {
     "wins": 10,
     "draws": 18,
-    "losses": 19,
-    "total": 47,
-    "r_count": 47,
-    "sum_r": -1.3033717107591358,
+    "losses": 20,
+    "total": 48,
+    "r_count": 48,
+    "sum_r": -1.6158603929296778,
     "win_r": 17.66256732686493,
-    "loss_r": 18.965939037624064,
+    "loss_r": 19.278427719794607,
     "recent_r": [
       -1.031,
       0.618,
@@ -147,7 +147,8 @@
       0.019,
       2.527,
       0.082,
-      -1.062
+      -1.062,
+      -0.312
     ]
   },
   "closed_symbols": {
@@ -165,6 +166,11 @@
       "time": "2026-11-08T11:25:26.264598+00:00",
       "direction": "SHORT",
       "reason": "SL"
+    },
+    "KORU_USDT": {
+      "time": "2026-11-08T12:00:46.464865+00:00",
+      "direction": "SHORT",
+      "reason": "TIME_STOP"
     }
   },
   "fail_count": 0,
