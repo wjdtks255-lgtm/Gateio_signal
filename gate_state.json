@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1.186552,
       "max_adv": 1.119925,
-      "last_candle_ts": 1794177900
+      "last_candle_ts": 1794178200
     },
     "OPENAI_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1330.46,
       "max_adv": 1307.85,
-      "last_candle_ts": 1794177900
+      "last_candle_ts": 1794178200
     },
     "CYBER_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 0.2666,
       "max_adv": 0.293,
-      "last_candle_ts": 1794177900
+      "last_candle_ts": 1794178200
     },
     "AIN_USDT": {
       "direction": "LONG",
@@ -70,38 +70,37 @@
       "tp2_reached": false,
       "max_fav": 0.15528,
       "max_adv": 0.14812,
-      "last_candle_ts": 1794177900
+      "last_candle_ts": 1794178200
     },
-    "SOL_USDT": {
+    "ZEC_USDT": {
       "direction": "SHORT",
-      "entry_price": 86.35,
-      "entry_time": "2026-11-08T22:10:32.255783+00:00",
+      "entry_price": 1203.97,
+      "entry_time": "2026-11-08T22:55:27.585482+00:00",
       "leverage": 10,
-      "risk": 1.1967857142857143,
-      "atr": 0.7978571428571429,
-      "tp1": 85.55214285714285,
-      "tp2": 84.35535714285713,
-      "tp3": 83.15857142857142,
-      "stop_loss": 86.19042857142857,
-      "initial_stop": 87.5467857142857,
-      "tp1_reached": true,
+      "risk": 30.206785714285747,
+      "atr": 20.137857142857165,
+      "tp1": 1183.8321428571428,
+      "tp2": 1153.6253571428572,
+      "tp3": 1123.4185714285713,
+      "stop_loss": 1234.1767857142859,
+      "initial_stop": 1234.1767857142859,
+      "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 85.52,
-      "max_adv": 86.81,
-      "last_candle_ts": 1794177900
+      "max_fav": 1203.97,
+      "max_adv": 1203.97,
+      "last_candle_ts": 1794178500
     }
   },
   "stats": {
     "wins": 15,
-    "draws": 24,
+    "draws": 25,
     "losses": 25,
-    "total": 64,
-    "r_count": 64,
-    "sum_r": 2.319698501339377,
-    "win_r": 26.9204295198643,
+    "total": 65,
+    "r_count": 65,
+    "sum_r": 2.3808802381343606,
+    "win_r": 26.981611256659285,
     "loss_r": 24.600731018524915,
     "recent_r": [
-      -1.023,
       -1.015,
       -1.028,
       -1.03,
@@ -150,7 +149,8 @@
       0.082,
       -1.064,
       2.6,
-      2.469
+      2.469,
+      0.061
     ]
   },
   "closed_symbols": {
@@ -163,6 +163,11 @@
       "time": "2026-11-08T22:10:32.255783+00:00",
       "direction": "SHORT",
       "reason": "TP3"
+    },
+    "SOL_USDT": {
+      "time": "2026-11-08T22:55:27.585482+00:00",
+      "direction": "SHORT",
+      "reason": "PROFIT_LOCK"
     }
   },
   "fail_count": 0,
