@@ -10,13 +10,13 @@
       "tp1": 1195.2357142857143,
       "tp2": 1154.5492857142856,
       "tp3": 1113.862857142857,
-      "stop_loss": 1263.0464285714286,
+      "stop_loss": 1208.797857142857,
       "initial_stop": 1263.0464285714286,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 1204.47,
+      "max_fav": 1190.25,
       "max_adv": 1234.99,
-      "last_candle_ts": 1794240600
+      "last_candle_ts": 1794240900
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.06941,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794240600
+      "last_candle_ts": 1794240900
     },
     "SNDK_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 900.5,
       "max_adv": 884.61,
-      "last_candle_ts": 1794240600
+      "last_candle_ts": 1794240900
     },
     "NVDA_USDT": {
       "direction": "SHORT",
@@ -68,9 +68,9 @@
       "initial_stop": 183.43607142857144,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 175.84,
+      "max_fav": 175.78,
       "max_adv": 180.3,
-      "last_candle_ts": 1794240600
+      "last_candle_ts": 1794240900
     },
     "SOXL_USDT": {
       "direction": "LONG",
@@ -87,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 56.55,
-      "max_adv": 55.05,
-      "last_candle_ts": 1794240600
+      "max_adv": 54.82,
+      "last_candle_ts": 1794240900
     }
   },
   "stats": {
