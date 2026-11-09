@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1163.02,
       "max_adv": 1234.99,
-      "last_candle_ts": 1794246300
+      "last_candle_ts": 1794246600
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.06941,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794246300
+      "last_candle_ts": 1794246600
     },
     "SOXL_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 56.55,
       "max_adv": 54.02,
-      "last_candle_ts": 1794246300
+      "last_candle_ts": 1794246600
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -69,8 +69,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 2115.7,
-      "max_adv": 2127.4,
-      "last_candle_ts": 1794246300
+      "max_adv": 2127.57,
+      "last_candle_ts": 1794246600
     },
     "SOL_USDT": {
       "direction": "SHORT",
@@ -86,7 +86,7 @@
       "initial_stop": 88.14642857142857,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 86.64,
+      "max_fav": 86.53,
       "max_adv": 86.64,
       "last_candle_ts": 1794246600
     }
@@ -154,11 +154,6 @@
     ]
   },
   "closed_symbols": {
-    "SOXS_USDT": {
-      "time": "2026-11-09T15:55:25.160794+00:00",
-      "direction": "SHORT",
-      "reason": "TP3"
-    },
     "NVDA_USDT": {
       "time": "2026-11-09T17:15:32.679846+00:00",
       "direction": "SHORT",
