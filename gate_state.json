@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1332.8,
       "max_adv": 1307.85,
-      "last_candle_ts": 1794202800
+      "last_candle_ts": 1794203100
     },
     "CYBER_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.2613,
       "max_adv": 0.293,
-      "last_candle_ts": 1794202800
+      "last_candle_ts": 1794203100
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 2126.33,
       "max_adv": 2146.66,
-      "last_candle_ts": 1794202800
+      "last_candle_ts": 1794203100
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -70,7 +70,7 @@
       "tp2_reached": false,
       "max_fav": 0.0691,
       "max_adv": 0.0699,
-      "last_candle_ts": 1794202800
+      "last_candle_ts": 1794203100
     },
     "XRP_USDT": {
       "direction": "SHORT",
@@ -86,9 +86,9 @@
       "initial_stop": 1.1237857142857144,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.0982,
-      "max_adv": 1.1003,
-      "last_candle_ts": 1794202800
+      "max_fav": 1.0975,
+      "max_adv": 1.1004,
+      "last_candle_ts": 1794203100
     }
   },
   "stats": {
