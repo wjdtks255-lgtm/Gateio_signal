@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Gate.io USDT 선물 롱/숏 시그널 봇 (텔레그램 알림 전용, 자동 주문 없음)
-- 진입 필터 대폭 완화 버전 (더 많은 종목 포착)
+- 본전 락 타이밍 지연 및 노이즈 컷 방지 최적화 버전
 """
 
 import csv
@@ -24,14 +24,14 @@ BASE_URL = "https://api.gateio.ws/api/v4/futures/usdt"
 
 MAX_SLOTS = 5                  # 최대 슬롯 5개
 
-# 진입 조건 (대폭 완화)
-MIN_CHANGE_PCT = 2.0          # 24시간 변동률 기준(%) 2.5 -> 2.0으로 하향
-MIN_QUOTE_VOLUME = 200_000    # 24시간 거래대금 최소값(USDT) 30만 -> 20만으로 하향
+# 진입 조건 
+MIN_CHANGE_PCT = 2.0          # 24시간 변동률 기준(%)
+MIN_QUOTE_VOLUME = 200_000    # 24시간 거래대금 최소값(USDT)
 RSI_PERIOD = 14
 ATR_PERIOD = 14
 ADX_PERIOD = 14
-BODY_RATIO_MIN = 0.20         # 캔들 몸통 비율 조건도 소폭 완화
-LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  # 레버리지 토큰 제외
+BODY_RATIO_MIN = 0.20         
+LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")  
 
 # 목표가/손절가 (ATR 배수)
 ATR_SL = 1.5
@@ -41,7 +41,7 @@ MAX_PER_THEME = 1
 
 # 비용/리스크 가정 및 수익형 본전 방어 오프셋
 FEE_ROUNDTRIP = 0.001         
-PROFIT_LOCK_ATR = 0.2         
+PROFIT_LOCK_ATR = 0.5         # TP1 도달 시 본전 락 대신 약수익 여유 폭 부여 (+0.5 ATR)
 RISK_PER_TRADE_PCT = 1.5      
 MAX_MARGIN_LOSS = 0.5         
 
@@ -49,7 +49,7 @@ MAX_MARGIN_LOSS = 0.5
 ROTATE_HOURS = 18             
 ROTATE_MIN_PROFIT_PCT = 0.5   
 TIME_STOP_HOURS = 24          
-COOLDOWN_HOURS = 2            # 쿨다운도 4시간에서 2시간으로 단축
+COOLDOWN_HOURS = 2            
 
 # 결과 분류: 무승부 밴드
 DRAW_BAND_R = 0.05
@@ -277,7 +277,7 @@ def fetch_completed_5m(symbol, from_ts, now_ts):
             if c["t"] >= from_ts and c["t"] + 300 <= now_ts]
 
 
-# ──────────────────────────── 지표 및 필터 (완화 버전) ────────────────────────────
+# ──────────────────────────── 지표 및 필터 ────────────────────────────
 def wilder_rsi(closes, period=RSI_PERIOD):
     if len(closes) < period + 1:
         return None
@@ -371,12 +371,12 @@ def check_order_block_retest(candles, direction, current_price):
     for i in range(len(candles) - 2, max(0, len(candles) - 6), -1):
         c = candles[i]
         if direction == "LONG":
-            if c["o"] > c["c"]:  # 음봉 (Demand OB)
+            if c["o"] > c["c"]:  
                 zone_low, zone_high = c["l"] * 0.98, c["o"] * 1.02
                 if zone_low <= current_price <= zone_high * 1.05:
                     return c["l"], c["o"]
         else:
-            if c["c"] > c["o"]:  # 양봉 (Supply OB)
+            if c["c"] > c["o"]:  
                 zone_low, zone_high = c["o"] * 0.98, c["h"] * 1.02
                 if zone_low * 0.95 <= current_price <= zone_high:
                     return c["o"], c["h"]
@@ -385,7 +385,6 @@ def check_order_block_retest(candles, direction, current_price):
 
 
 def analyze_signal(symbol, direction, now_ts, current_price):
-    # 1시간봉 데이터 분석 (필터 대폭 완화)
     raw = api_get("/candlesticks", {"contract": symbol, "interval": "1h", "limit": 60})
     candles = [c for c in parse_candles(raw) if c["t"] + 3600 <= now_ts]
     if len(candles) < 30:
@@ -409,8 +408,6 @@ def analyze_signal(symbol, direction, now_ts, current_price):
     body_ratio = abs(last["c"] - last["o"]) / total_range
     if body_ratio < BODY_RATIO_MIN:
         return None
-
-    # 4시간봉 필터 제거 완료 (1시간봉 오더블럭 및 기본 추세 조건에만 집중하여 포착률 극대화)
 
     zone_low, zone_high = check_order_block_retest(candles, direction, current_price)
     if not zone_low or not zone_high:
@@ -549,7 +546,7 @@ def build_stats_line(stats):
     return "\n".join(lines)
 
 
-# ──────────────────────────── 포지션 관리 ────────────────────────────
+# ──────────────────────────── 포지션 관리 (노이즈 컷 방지 로직 적용) ────────────────────────────
 def migrate_slot(info):
     entry = float(info.get("entry_price", 0) or 0)
     atr = float(info.get("atr", info.get("risk", entry) / ATR_SL))
@@ -570,18 +567,19 @@ def migrate_slot(info):
     info.setdefault("tp2", entry)
     info.setdefault("tp3", entry)
 
+    # 💡 [개선]: TP1 도달 시 곧바로 본전으로 락을 걸지 않고, +0.5 ATR 여유 구간(Profit Lock)으로 스탑을 올려 노이즈 컷 방지
     profit_lock_target = entry + (atr * PROFIT_LOCK_ATR) if info["direction"] == "LONG" else entry - (atr * PROFIT_LOCK_ATR)
 
     if info["direction"] == "LONG":
-        if info["tp1_reached"]:
+        if info["tp1_reached"] and not info["tp2_reached"]:
             info["stop_loss"] = max(info["stop_loss"], profit_lock_target)
         if info["tp2_reached"]:
-            info["stop_loss"] = max(info["stop_loss"], info["tp1"])
+            info["stop_loss"] = max(info["stop_loss"], entry)  # TP2 도달 시에만 확실한 본전(Entry) 락
     else:
-        if info["tp1_reached"]:
+        if info["tp1_reached"] and not info["tp2_reached"]:
             info["stop_loss"] = min(info["stop_loss"], profit_lock_target)
         if info["tp2_reached"]:
-            info["stop_loss"] = min(info["stop_loss"], info["tp1"])
+            info["stop_loss"] = min(info["stop_loss"], entry)
 
 
 def step(info, high, low):
@@ -603,7 +601,7 @@ def step(info, high, low):
             events.append("TP1")
         if high >= info["tp2"] and not info["tp2_reached"]:
             info["tp2_reached"] = True
-            info["stop_loss"] = max(info["stop_loss"], info["tp1"])
+            info["stop_loss"] = max(info["stop_loss"], entry)
             events.append("TP2")
     else:
         info["max_fav"] = min(info["max_fav"], low)
@@ -618,7 +616,7 @@ def step(info, high, low):
             events.append("TP1")
         if low <= info["tp2"] and not info["tp2_reached"]:
             info["tp2_reached"] = True
-            info["stop_loss"] = min(info["stop_loss"], info["tp1"])
+            info["stop_loss"] = min(info["stop_loss"], entry)
             events.append("TP2")
     return events, None
 
@@ -688,14 +686,14 @@ def build_event_message(symbol, info, event):
     
     atr = float(info.get("atr", info.get("risk", entry) / ATR_SL))
     sign = 1 if direction == "LONG" else -1
-    profit_lock_price = entry + (sign * atr * PROFIT_LOCK_ATR) if event == "TP1" else info["tp1"]
+    profit_lock_price = entry + (sign * atr * PROFIT_LOCK_ATR) if event == "TP1" else entry
 
     if event == "TP1":
         title = "🎯 <b>TP1 도달 (수익형 본전 방어선 확보)</b>"
         action = f"🔒 스탑을 약수익 구간(<code>{fmt_price(profit_lock_price)}</code> / <code>+{PROFIT_LOCK_ATR} ATR</code>)으로 이동"
     else:
         title = "🎯🎯 <b>TP2 도달</b>"
-        action = f"🔒 스탑을 TP1(<code>{fmt_price(info['tp1'])}</code>)으로 이동"
+        action = f"🔒 스탑을 본전(<code>{fmt_price(entry)}</code>)으로 이동"
         
     return (
         f"{title} | {dir_tag(direction)}\n"
@@ -715,7 +713,7 @@ def build_close_message(symbol, info, trade):
     head = {
         "SL": ("🛑 <b>손절 청산</b>", ""),
         "PROFIT_LOCK": ("💰 <b>수익 방어 청산 (Profit-Lock)</b>", "TP1 도달 후 되돌아와 약수익 스탑 체결\n"),
-        "TP1_PROTECT": ("✅ <b>수익 청산 (TP1 방어)</b>", "TP2 도달 후 스탑(TP1)에서 체결\n"),
+        "TP1_PROTECT": ("✅ <b>수익 청산 (TP1 방어)</b>", "TP2 도달 후 스탑(본전)에서 체결\n"),
         "TP3": ("🏆 <b>TP3 최종 목표 도달</b>", ""),
         "ROTATE": ("🔄 <b>회전 청산</b>", "장기 보유 수익 확보, 슬롯 회전\n"),
         "TIME_STOP": ("⏳ <b>타임스탑 청산</b>", f"{TIME_STOP_HOURS}시간 초과 청산\n"),
@@ -896,7 +894,6 @@ def identify_new_signals(state, raw_tickers, now, start_time):
             def pct_of(price):
                 return pct_move(direction, last_price, price)
 
-            # 신규 시그널 개별 텔레그램 알림 전송
             msg = (
                 f"🛡️ <b>신규 시그널</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
@@ -947,7 +944,7 @@ def build_slot_status_message(state, tickers):
             return abs(level - price) / price * 100 if price > 0 else 0.0
 
         if info["tp2_reached"]:
-            status = f"🎯🎯 TP2 도달 | 스탑 TP1 방어 | TP3까지 {dist(info['tp3']):.1f}%"
+            status = f"🎯🎯 TP2 도달 | 스탑 본전 방어 | TP3까지 {dist(info['tp3']):.1f}%"
         elif info["tp1_reached"]:
             status = f"🎯 TP1 도달 | 스탑 수익 방어(+{PROFIT_LOCK_ATR}ATR) | TP2까지 {dist(info['tp2']):.1f}%"
         else:
