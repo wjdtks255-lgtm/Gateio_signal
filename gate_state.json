@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1163.02,
       "max_adv": 1234.99,
-      "last_candle_ts": 1794246000
+      "last_candle_ts": 1794246300
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -34,25 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.06941,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794246000
-    },
-    "SNDK_USDT": {
-      "direction": "LONG",
-      "entry_price": 884.61,
-      "entry_time": "2026-11-09T15:50:29.774961+00:00",
-      "leverage": 8,
-      "risk": 29.47071428571431,
-      "atr": 19.64714285714287,
-      "tp1": 904.2571428571429,
-      "tp2": 933.7278571428571,
-      "tp3": 963.1985714285715,
-      "stop_loss": 894.4335714285714,
-      "initial_stop": 855.1392857142857,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 905.19,
-      "max_adv": 884.61,
-      "last_candle_ts": 1794246000
+      "last_candle_ts": 1794246300
     },
     "SOXL_USDT": {
       "direction": "LONG",
@@ -70,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 56.55,
       "max_adv": 54.02,
-      "last_candle_ts": 1794246000
+      "last_candle_ts": 1794246300
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -88,20 +70,37 @@
       "tp2_reached": false,
       "max_fav": 2115.7,
       "max_adv": 2127.4,
-      "last_candle_ts": 1794246000
+      "last_candle_ts": 1794246300
+    },
+    "SOL_USDT": {
+      "direction": "SHORT",
+      "entry_price": 86.64,
+      "entry_time": "2026-11-09T17:50:35.854778+00:00",
+      "leverage": 10,
+      "risk": 1.50642857142857,
+      "atr": 1.0042857142857133,
+      "tp1": 85.63571428571429,
+      "tp2": 84.12928571428571,
+      "tp3": 82.62285714285714,
+      "stop_loss": 88.14642857142857,
+      "initial_stop": 88.14642857142857,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 86.64,
+      "max_adv": 86.64,
+      "last_candle_ts": 1794246600
     }
   },
   "stats": {
     "wins": 17,
-    "draws": 33,
+    "draws": 34,
     "losses": 33,
-    "total": 83,
-    "r_count": 83,
-    "sum_r": -0.003928001613222543,
-    "win_r": 33.031398271501075,
+    "total": 84,
+    "r_count": 84,
+    "sum_r": 0.29938875351899075,
+    "win_r": 33.33471502663329,
     "loss_r": 33.03532627311428,
     "recent_r": [
-      1.479,
       0.052,
       0.097,
       0.086,
@@ -150,20 +149,11 @@
       -1.048,
       -1.049,
       2.651,
-      0.289
+      0.289,
+      0.303
     ]
   },
   "closed_symbols": {
-    "SOL_USDT": {
-      "time": "2026-11-09T15:50:29.774961+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
-    "XRP_USDT": {
-      "time": "2026-11-09T15:50:29.774961+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "SOXS_USDT": {
       "time": "2026-11-09T15:55:25.160794+00:00",
       "direction": "SHORT",
@@ -172,6 +162,11 @@
     "NVDA_USDT": {
       "time": "2026-11-09T17:15:32.679846+00:00",
       "direction": "SHORT",
+      "reason": "PROFIT_LOCK"
+    },
+    "SNDK_USDT": {
+      "time": "2026-11-09T17:50:35.854778+00:00",
+      "direction": "LONG",
       "reason": "PROFIT_LOCK"
     }
   },
