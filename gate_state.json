@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1.186552,
       "max_adv": 1.119925,
-      "last_candle_ts": 1794190800
+      "last_candle_ts": 1794191100
     },
     "OPENAI_USDT": {
       "direction": "LONG",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 1332.37,
       "max_adv": 1307.85,
-      "last_candle_ts": 1794190800
+      "last_candle_ts": 1794191100
     },
     "CYBER_USDT": {
       "direction": "SHORT",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 0.2666,
       "max_adv": 0.293,
-      "last_candle_ts": 1794190800
+      "last_candle_ts": 1794191100
     },
     "AIN_USDT": {
       "direction": "LONG",
@@ -70,7 +70,7 @@
       "tp2_reached": true,
       "max_fav": 0.16159,
       "max_adv": 0.14812,
-      "last_candle_ts": 1794190800
+      "last_candle_ts": 1794191100
     },
     "XAG_USDT": {
       "direction": "LONG",
@@ -87,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 53.42,
-      "max_adv": 53.33,
-      "last_candle_ts": 1794190800
+      "max_adv": 53.27,
+      "last_candle_ts": 1794191100
     }
   },
   "stats": {
@@ -154,11 +154,6 @@
     ]
   },
   "closed_symbols": {
-    "SOXL_USDT": {
-      "time": "2026-11-09T00:25:25.630611+00:00",
-      "direction": "SHORT",
-      "reason": "PROFIT_LOCK"
-    },
     "AKE_USDT": {
       "time": "2026-11-09T02:10:36.044091+00:00",
       "direction": "SHORT",
