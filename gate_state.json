@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1204.47,
       "max_adv": 1234.99,
-      "last_candle_ts": 1794240300
+      "last_candle_ts": 1794240600
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -34,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.06941,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794240300
+      "last_candle_ts": 1794240600
     },
     "SNDK_USDT": {
       "direction": "LONG",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 900.5,
       "max_adv": 884.61,
-      "last_candle_ts": 1794240300
+      "last_candle_ts": 1794240600
     },
     "NVDA_USDT": {
       "direction": "SHORT",
@@ -64,13 +64,13 @@
       "tp1": 176.70928571428573,
       "tp2": 172.6732142857143,
       "tp3": 168.63714285714286,
-      "stop_loss": 183.43607142857144,
+      "stop_loss": 178.05464285714285,
       "initial_stop": 183.43607142857144,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 176.83,
+      "max_fav": 175.84,
       "max_adv": 180.3,
-      "last_candle_ts": 1794240300
+      "last_candle_ts": 1794240600
     },
     "SOXL_USDT": {
       "direction": "LONG",
@@ -87,8 +87,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 56.55,
-      "max_adv": 55.08,
-      "last_candle_ts": 1794240300
+      "max_adv": 55.05,
+      "last_candle_ts": 1794240600
     }
   },
   "stats": {
