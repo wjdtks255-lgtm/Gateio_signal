@@ -16,25 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1204.47,
       "max_adv": 1234.99,
-      "last_candle_ts": 1794239100
-    },
-    "SOXS_USDT": {
-      "direction": "SHORT",
-      "entry_price": 68.62,
-      "entry_time": "2026-11-09T12:55:28.758108+00:00",
-      "leverage": 5,
-      "risk": 4.323214285714286,
-      "atr": 2.8821428571428576,
-      "tp1": 65.73785714285715,
-      "tp2": 61.41464285714286,
-      "tp3": 57.09142857142857,
-      "stop_loss": 67.17892857142857,
-      "initial_stop": 72.94321428571429,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 57.49,
-      "max_adv": 70.08,
-      "last_candle_ts": 1794239100
+      "last_candle_ts": 1794239400
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -52,7 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.06941,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794239100
+      "last_candle_ts": 1794239400
     },
     "SNDK_USDT": {
       "direction": "LONG",
@@ -68,7 +50,7 @@
       "initial_stop": 855.1392857142857,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 884.61,
+      "max_fav": 886.49,
       "max_adv": 884.61,
       "last_candle_ts": 1794239400
     },
@@ -87,21 +69,38 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 179.4,
-      "max_adv": 179.4,
+      "max_adv": 179.57,
       "last_candle_ts": 1794239400
+    },
+    "SOXL_USDT": {
+      "direction": "LONG",
+      "entry_price": 55.33,
+      "entry_time": "2026-11-09T15:55:25.160794+00:00",
+      "leverage": 5,
+      "risk": 3.291428571428572,
+      "atr": 2.1942857142857144,
+      "tp1": 57.52428571428571,
+      "tp2": 60.815714285714286,
+      "tp3": 64.10714285714286,
+      "stop_loss": 52.03857142857143,
+      "initial_stop": 52.03857142857143,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 55.33,
+      "max_adv": 55.33,
+      "last_candle_ts": 1794239700
     }
   },
   "stats": {
-    "wins": 16,
+    "wins": 17,
     "draws": 32,
     "losses": 33,
-    "total": 81,
-    "r_count": 81,
-    "sum_r": -2.943606388421337,
-    "win_r": 30.09171988469296,
+    "total": 82,
+    "r_count": 82,
+    "sum_r": -0.29281217115574343,
+    "win_r": 32.742514101958555,
     "loss_r": 33.03532627311428,
     "recent_r": [
-      0.068,
       0.589,
       1.479,
       0.052,
@@ -150,7 +149,8 @@
       -1.017,
       0.282,
       -1.048,
-      -1.049
+      -1.049,
+      2.651
     ]
   },
   "closed_symbols": {
@@ -163,6 +163,11 @@
       "time": "2026-11-09T15:50:29.774961+00:00",
       "direction": "SHORT",
       "reason": "SL"
+    },
+    "SOXS_USDT": {
+      "time": "2026-11-09T15:55:25.160794+00:00",
+      "direction": "SHORT",
+      "reason": "TP3"
     }
   },
   "fail_count": 0,
