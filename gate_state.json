@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 1332.8,
       "max_adv": 1307.85,
-      "last_candle_ts": 1794202200
+      "last_candle_ts": 1794202500
     },
     "CYBER_USDT": {
       "direction": "SHORT",
@@ -34,25 +34,7 @@
       "tp2_reached": false,
       "max_fav": 0.2615,
       "max_adv": 0.293,
-      "last_candle_ts": 1794202200
-    },
-    "XAG_USDT": {
-      "direction": "LONG",
-      "entry_price": 53.4,
-      "entry_time": "2026-11-09T02:10:36.044091+00:00",
-      "leverage": 10,
-      "risk": 0.41357142857142853,
-      "atr": 0.2757142857142857,
-      "tp1": 53.675714285714285,
-      "tp2": 54.089285714285715,
-      "tp3": 54.50285714285714,
-      "stop_loss": 52.98642857142857,
-      "initial_stop": 52.98642857142857,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 53.43,
-      "max_adv": 53.02,
-      "last_candle_ts": 1794202200
+      "last_candle_ts": 1794202500
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -68,9 +50,9 @@
       "initial_stop": 2183.4100000000003,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 2128.1,
+      "max_fav": 2126.33,
       "max_adv": 2146.66,
-      "last_candle_ts": 1794202200
+      "last_candle_ts": 1794202500
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -86,22 +68,39 @@
       "initial_stop": 0.07096714285714285,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.06921,
+      "max_fav": 0.06914,
       "max_adv": 0.0699,
-      "last_candle_ts": 1794202200
+      "last_candle_ts": 1794202500
+    },
+    "XRP_USDT": {
+      "direction": "SHORT",
+      "entry_price": 1.1003,
+      "entry_time": "2026-11-09T05:40:39.120222+00:00",
+      "leverage": 10,
+      "risk": 0.023485714285714294,
+      "atr": 0.015657142857142863,
+      "tp1": 1.0846428571428572,
+      "tp2": 1.061157142857143,
+      "tp3": 1.0376714285714286,
+      "stop_loss": 1.1237857142857144,
+      "initial_stop": 1.1237857142857144,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 1.1003,
+      "max_adv": 1.1003,
+      "last_candle_ts": 1794202800
     }
   },
   "stats": {
     "wins": 16,
     "draws": 27,
-    "losses": 27,
-    "total": 70,
-    "r_count": 70,
-    "sum_r": 1.1885976561149207,
+    "losses": 28,
+    "total": 71,
+    "r_count": 71,
+    "sum_r": 0.05947848513046128,
     "win_r": 27.845270850502384,
-    "loss_r": 26.656673194387455,
+    "loss_r": 27.785792365371915,
     "recent_r": [
-      -1.015,
       -1.041,
       0.618,
       0.075,
@@ -150,12 +149,13 @@
       0.099,
       0.118,
       0.646,
-      -1.016
+      -1.016,
+      -1.129
     ]
   },
   "closed_symbols": {
-    "BTW_USDT": {
-      "time": "2026-11-09T03:40:29.909574+00:00",
+    "XAG_USDT": {
+      "time": "2026-11-09T05:40:39.120222+00:00",
       "direction": "LONG",
       "reason": "SL"
     }
