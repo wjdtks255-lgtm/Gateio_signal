@@ -84,11 +84,6 @@
     }
   },
   "closed_symbols": {
-    "SOXL_USDT": {
-      "time": "2026-11-10T12:50:30.378169+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "ZEC_USDT": {
       "time": "2026-11-10T13:50:32.976012+00:00",
       "direction": "SHORT",
