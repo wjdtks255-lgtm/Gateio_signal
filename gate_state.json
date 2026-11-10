@@ -1,37 +1,5 @@
 {
   "active_slots": {
-    "SOXL_USDT": {
-      "strategy_version": 2,
-      "direction": "LONG",
-      "entry_price": 56.22,
-      "entry_time": "2026-11-10T08:45:34.506966+00:00",
-      "leverage": 2,
-      "risk": 2.6497181670741834,
-      "atr": 1.7664787780494555,
-      "tp1": 57.98647877804945,
-      "tp2": 60.636196945123636,
-      "tp3": 63.28591511219782,
-      "stop_loss": 53.570281832925815,
-      "initial_stop": 53.570281832925815,
-      "tp1_lock_price": 57.10323938902473,
-      "tp2_lock_price": 57.98647877804945,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 56.93,
-      "max_adv": 53.65,
-      "last_candle_ts": 1794314400,
-      "score": 8,
-      "reasons": [
-        "1H EMA20/50 추세 정렬",
-        "1H EMA20 기울기 +1.24%",
-        "1H ADX 30.6",
-        "15M EMA21 눌림 후 재돌파",
-        "15M 캔들 몸통 0.77",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
     "ZEC_USDT": {
       "strategy_version": 2,
       "direction": "SHORT",
@@ -50,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1130.18,
-      "max_adv": 1154.74,
-      "last_candle_ts": 1794314400,
+      "max_adv": 1154.95,
+      "last_candle_ts": 1794314700,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -84,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 88.85,
       "max_adv": 89.6,
-      "last_candle_ts": 1794314400,
+      "last_candle_ts": 1794314700,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -116,7 +84,7 @@
       "tp2_reached": false,
       "max_fav": 84.24,
       "max_adv": 84.75,
-      "last_candle_ts": 1794314400,
+      "last_candle_ts": 1794314700,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -133,14 +101,13 @@
   "stats": {
     "wins": 54,
     "draws": 3,
-    "losses": 37,
-    "total": 94,
-    "r_count": 94,
-    "sum_r": -0.2509999999999989,
+    "losses": 38,
+    "total": 95,
+    "r_count": 95,
+    "sum_r": -1.271999999999999,
     "win_r": 36.939,
-    "loss_r": 37.18999999999999,
+    "loss_r": 38.21099999999999,
     "recent_r": [
-      2.527,
       0.082,
       -1.062,
       -0.312,
@@ -189,18 +156,19 @@
       -1.058,
       0.207,
       0.974,
-      -1.038
+      -1.038,
+      -1.021
     ],
     "positive_count": 57,
     "directional": {
       "LONG": {
-        "total": 29,
+        "total": 30,
         "wins": 13,
         "draws": 0,
-        "losses": 16,
-        "win_rate": 44.827586206896555,
-        "avg_r": -0.247448275862069,
-        "pf": 0.5733650416171227
+        "losses": 17,
+        "win_rate": 43.333333333333336,
+        "avg_r": -0.2732333333333334,
+        "pf": 0.5405526596042824
       },
       "SHORT": {
         "total": 65,
@@ -221,6 +189,11 @@
     },
     "SNDK_USDT": {
       "time": "2026-11-10T12:45:28.813500+00:00",
+      "direction": "LONG",
+      "reason": "SL"
+    },
+    "SOXL_USDT": {
+      "time": "2026-11-10T12:50:30.378169+00:00",
       "direction": "LONG",
       "reason": "SL"
     }
