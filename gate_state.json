@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 70.353,
       "max_adv": 73.062,
-      "last_candle_ts": 1794336300,
+      "last_candle_ts": 1794336600,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -51,7 +51,7 @@
       "tp2_reached": false,
       "max_fav": 0.3026,
       "max_adv": 0.3139,
-      "last_candle_ts": 1794336300,
+      "last_candle_ts": 1794336600,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -81,8 +81,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1214.7,
-      "max_adv": 1228.86,
-      "last_candle_ts": 1794336300,
+      "max_adv": 1232.6,
+      "last_candle_ts": 1794336600,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
