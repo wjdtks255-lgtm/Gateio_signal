@@ -17,9 +17,9 @@
       "tp2_lock_price": 72.17132110442557,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 71.314,
+      "max_fav": 71.182,
       "max_adv": 73.062,
-      "last_candle_ts": 1794327900,
+      "last_candle_ts": 1794328200,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -51,7 +51,7 @@
       "tp2_reached": false,
       "max_fav": 0.3033,
       "max_adv": 0.3139,
-      "last_candle_ts": 1794327900,
+      "last_candle_ts": 1794328200,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -148,11 +148,6 @@
     }
   },
   "closed_symbols": {
-    "BZ_USDT": {
-      "time": "2026-11-10T14:35:27.454965+00:00",
-      "direction": "SHORT",
-      "reason": "PROFIT_LOCK"
-    },
     "ARB_USDT": {
       "time": "2026-11-10T16:00:53.975495+00:00",
       "direction": "SHORT",
