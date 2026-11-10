@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 2082.74,
       "max_adv": 2142.55,
-      "last_candle_ts": 1794308700,
+      "last_candle_ts": 1794309000,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
@@ -42,7 +42,7 @@
       "tp2_reached": false,
       "max_fav": 901.49,
       "max_adv": 874.2,
-      "last_candle_ts": 1794308700,
+      "last_candle_ts": 1794309000,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -75,7 +75,7 @@
       "tp2_reached": false,
       "max_fav": 56.93,
       "max_adv": 54.34,
-      "last_candle_ts": 1794308700,
+      "last_candle_ts": 1794309000,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -106,8 +106,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1130.18,
-      "max_adv": 1151.43,
-      "last_candle_ts": 1794308700,
+      "max_adv": 1154.67,
+      "last_candle_ts": 1794309000,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
