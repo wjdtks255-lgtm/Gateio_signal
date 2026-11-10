@@ -17,9 +17,9 @@
       "tp2_lock_price": 72.17132110442557,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 71.48,
+      "max_fav": 71.454,
       "max_adv": 73.062,
-      "last_candle_ts": 1794325500,
+      "last_candle_ts": 1794325800,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -51,7 +51,7 @@
       "tp2_reached": false,
       "max_fav": 0.15898,
       "max_adv": 0.16322,
-      "last_candle_ts": 1794325500,
+      "last_candle_ts": 1794325800,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 0.3033,
       "max_adv": 0.3139,
-      "last_candle_ts": 1794325500,
+      "last_candle_ts": 1794325800,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -180,11 +180,6 @@
     }
   },
   "closed_symbols": {
-    "ZEC_USDT": {
-      "time": "2026-11-10T13:50:32.976012+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "CL_USDT": {
       "time": "2026-11-10T14:05:25.849303+00:00",
       "direction": "SHORT",
