@@ -84,11 +84,6 @@
     }
   },
   "closed_symbols": {
-    "SNDK_USDT": {
-      "time": "2026-11-10T12:45:28.813500+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "SOXL_USDT": {
       "time": "2026-11-10T12:50:30.378169+00:00",
       "direction": "LONG",
