@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 1208.45,
       "max_adv": 1238.57,
-      "last_candle_ts": 1794348600,
+      "last_candle_ts": 1794348900,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -50,8 +50,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 50.05,
-      "max_adv": 50.73,
-      "last_candle_ts": 1794348600,
+      "max_adv": 50.78,
+      "last_candle_ts": 1794348900,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 0.1728,
       "max_adv": 0.1754,
-      "last_candle_ts": 1794348600,
+      "last_candle_ts": 1794348900,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -115,7 +115,7 @@
       "tp2_reached": false,
       "max_fav": 243.63,
       "max_adv": 245.53,
-      "last_candle_ts": 1794348600,
+      "last_candle_ts": 1794348900,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -214,11 +214,6 @@
     }
   },
   "closed_symbols": {
-    "HYPE_USDT": {
-      "time": "2026-11-10T20:15:33.088465+00:00",
-      "direction": "SHORT",
-      "reason": "TP2_PROTECT"
-    },
     "WLD_USDT": {
       "time": "2026-11-10T22:15:28.930115+00:00",
       "direction": "SHORT",
