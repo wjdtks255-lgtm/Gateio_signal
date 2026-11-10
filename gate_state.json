@@ -17,9 +17,9 @@
       "tp2_lock_price": 72.17132110442557,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 71.182,
+      "max_fav": 71.05,
       "max_adv": 73.062,
-      "last_candle_ts": 1794328200,
+      "last_candle_ts": 1794328500,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -49,9 +49,9 @@
       "tp2_lock_price": 0.30932683176594694,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.3033,
+      "max_fav": 0.3029,
       "max_adv": 0.3139,
-      "last_candle_ts": 1794328200,
+      "last_candle_ts": 1794328500,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
