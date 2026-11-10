@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 0.06932,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794290700,
+      "last_candle_ts": 1794291000,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
@@ -39,7 +39,7 @@
       "tp2_reached": false,
       "max_fav": 2107.21,
       "max_adv": 2142.55,
-      "last_candle_ts": 1794290700,
+      "last_candle_ts": 1794291000,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
@@ -64,8 +64,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 68.35,
-      "max_adv": 67.9,
-      "last_candle_ts": 1794290700,
+      "max_adv": 67.83,
+      "last_candle_ts": 1794291000,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 1.113,
       "max_adv": 1.126,
-      "last_candle_ts": 1794290700,
+      "last_candle_ts": 1794291000,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -127,8 +127,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 893.22,
-      "max_adv": 888.9,
-      "last_candle_ts": 1794290700,
+      "max_adv": 887.54,
+      "last_candle_ts": 1794291000,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -227,11 +227,6 @@
     }
   },
   "closed_symbols": {
-    "SOL_USDT": {
-      "time": "2026-11-10T04:10:28.855029+00:00",
-      "direction": "SHORT",
-      "reason": "PROFIT_LOCK"
-    },
     "ZEC_USDT": {
       "time": "2026-11-10T05:20:33.811573+00:00",
       "direction": "SHORT",
