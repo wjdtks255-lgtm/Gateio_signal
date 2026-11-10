@@ -1,28 +1,5 @@
 {
   "active_slots": {
-    "DOGE_USDT": {
-      "direction": "SHORT",
-      "entry_price": 0.0697,
-      "entry_time": "2026-11-09T13:10:31.850693+00:00",
-      "leverage": 10,
-      "risk": 0.0013542857142857172,
-      "atr": 0.0009028571428571447,
-      "tp1": 0.06879714285714285,
-      "tp2": 0.06744285714285714,
-      "tp3": 0.06608857142857141,
-      "stop_loss": 0.07105428571428571,
-      "initial_stop": 0.07105428571428571,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 0.06932,
-      "max_adv": 0.07085,
-      "last_candle_ts": 1794305100,
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "strategy_version": 1,
-      "tp1_lock_price": 0.06924857142857142,
-      "tp2_lock_price": 0.0697
-    },
     "ETH_USDT": {
       "direction": "SHORT",
       "entry_price": 2126.74,
@@ -39,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 2088.07,
       "max_adv": 2142.55,
-      "last_candle_ts": 1794305100,
+      "last_candle_ts": 1794305400,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
@@ -65,7 +42,7 @@
       "tp2_reached": false,
       "max_fav": 901.49,
       "max_adv": 881.85,
-      "last_candle_ts": 1794305100,
+      "last_candle_ts": 1794305400,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -98,7 +75,7 @@
       "tp2_reached": false,
       "max_fav": 56.93,
       "max_adv": 54.7,
-      "last_candle_ts": 1794305100,
+      "last_candle_ts": 1794305400,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -128,9 +105,9 @@
       "tp2_lock_price": 1121.4452392873343,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1136.0,
+      "max_fav": 1132.43,
       "max_adv": 1146.38,
-      "last_candle_ts": 1794305100,
+      "last_candle_ts": 1794305400,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -146,16 +123,15 @@
     }
   },
   "stats": {
-    "wins": 52,
+    "wins": 53,
     "draws": 3,
     "losses": 36,
-    "total": 91,
-    "r_count": 91,
-    "sum_r": -0.3939999999999988,
-    "win_r": 35.758,
+    "total": 92,
+    "r_count": 92,
+    "sum_r": -0.1869999999999988,
+    "win_r": 35.965,
     "loss_r": 36.151999999999994,
     "recent_r": [
-      -0.217,
       0.64,
       0.019,
       2.527,
@@ -204,9 +180,10 @@
       0.276,
       1.595,
       -1.041,
-      -1.058
+      -1.058,
+      0.207
     ],
-    "positive_count": 55,
+    "positive_count": 56,
     "directional": {
       "LONG": {
         "total": 28,
@@ -218,13 +195,13 @@
         "pf": 0.6110759092637184
       },
       "SHORT": {
-        "total": 63,
-        "wins": 39,
+        "total": 64,
+        "wins": 40,
         "draws": 3,
         "losses": 21,
-        "win_rate": 65.0,
-        "avg_r": 0.09117460317460314,
-        "pf": 1.2819833087874324
+        "win_rate": 65.57377049180327,
+        "avg_r": 0.09298437499999997,
+        "pf": 1.2921453117329404
       }
     }
   },
@@ -238,6 +215,11 @@
       "time": "2026-11-10T09:05:28.827997+00:00",
       "direction": "LONG",
       "reason": "SL"
+    },
+    "DOGE_USDT": {
+      "time": "2026-11-10T10:15:30.111130+00:00",
+      "direction": "SHORT",
+      "reason": "ROTATE"
     }
   },
   "fail_count": 0,
