@@ -16,7 +16,7 @@
       "tp2_reached": true,
       "max_fav": 1141.88,
       "max_adv": 1234.99,
-      "last_candle_ts": 1794283200,
+      "last_candle_ts": 1794283500,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
@@ -39,7 +39,7 @@
       "tp2_reached": false,
       "max_fav": 0.06932,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794283200,
+      "last_candle_ts": 1794283500,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
@@ -62,48 +62,24 @@
       "tp2_reached": false,
       "max_fav": 2107.21,
       "max_adv": 2142.55,
-      "last_candle_ts": 1794283200,
+      "last_candle_ts": 1794283500,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
       "tp1_lock_price": 2115.455,
       "tp2_lock_price": 2126.74
-    },
-    "SOL_USDT": {
-      "direction": "SHORT",
-      "entry_price": 86.64,
-      "entry_time": "2026-11-09T17:50:35.854778+00:00",
-      "leverage": 10,
-      "risk": 1.50642857142857,
-      "atr": 1.0042857142857133,
-      "tp1": 85.63571428571429,
-      "tp2": 84.12928571428571,
-      "tp3": 82.62285714285714,
-      "stop_loss": 86.13785714285714,
-      "initial_stop": 88.14642857142857,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 85.46,
-      "max_adv": 87.07,
-      "last_candle_ts": 1794283200,
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "strategy_version": 1,
-      "tp1_lock_price": 86.13785714285714,
-      "tp2_lock_price": 86.64
     }
   },
   "stats": {
-    "wins": 50,
+    "wins": 51,
     "draws": 3,
     "losses": 34,
-    "total": 87,
-    "r_count": 87,
-    "sum_r": -0.16599999999999882,
-    "win_r": 33.887,
+    "total": 88,
+    "r_count": 88,
+    "sum_r": 0.11000000000000121,
+    "win_r": 34.163000000000004,
     "loss_r": 34.053,
     "recent_r": [
-      0.079,
       -1.093,
       -1.05,
       0.061,
@@ -152,9 +128,10 @@
       0.303,
       0.317,
       0.24,
-      -1.018
+      -1.018,
+      0.276
     ],
-    "positive_count": 53,
+    "positive_count": 54,
     "directional": {
       "LONG": {
         "total": 27,
@@ -166,13 +143,13 @@
         "pf": 0.6549850584080416
       },
       "SHORT": {
-        "total": 60,
-        "wins": 37,
+        "total": 61,
+        "wins": 38,
         "draws": 3,
         "losses": 20,
-        "win_rate": 64.91228070175438,
-        "avg_r": 0.08189999999999996,
-        "pf": 1.2542293962439857
+        "win_rate": 65.51724137931035,
+        "avg_r": 0.08508196721311471,
+        "pf": 1.2685084587924877
       }
     }
   },
@@ -181,6 +158,11 @@
       "time": "2026-11-10T03:45:31.156675+00:00",
       "direction": "LONG",
       "reason": "SL"
+    },
+    "SOL_USDT": {
+      "time": "2026-11-10T04:10:28.855029+00:00",
+      "direction": "SHORT",
+      "reason": "PROFIT_LOCK"
     }
   },
   "fail_count": 0,
