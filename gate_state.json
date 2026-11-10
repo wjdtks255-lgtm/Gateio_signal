@@ -1,36 +1,5 @@
 {
   "active_slots": {
-    "WLD_USDT": {
-      "strategy_version": 2,
-      "direction": "SHORT",
-      "entry_price": 0.3139,
-      "entry_time": "2026-11-10T15:30:41.083916+00:00",
-      "leverage": 4,
-      "risk": 0.006859752351079634,
-      "atr": 0.004573168234053089,
-      "tp1": 0.30932683176594694,
-      "tp2": 0.3024670794148673,
-      "tp3": 0.2956073270637877,
-      "stop_loss": 0.3116134158829735,
-      "initial_stop": 0.3207597523510797,
-      "tp1_lock_price": 0.3116134158829735,
-      "tp2_lock_price": 0.30932683176594694,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 0.3026,
-      "max_adv": 0.3139,
-      "last_candle_ts": 1794348300,
-      "score": 7,
-      "reasons": [
-        "1H EMA20/50 추세 정렬",
-        "1H EMA20 기울기 -0.37%",
-        "15M EMA21 눌림 후 재돌파",
-        "15M 캔들 몸통 0.74",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
     "OPENAI_USDT": {
       "strategy_version": 2,
       "direction": "SHORT",
@@ -49,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1208.45,
-      "max_adv": 1238.15,
-      "last_candle_ts": 1794348300,
+      "max_adv": 1238.57,
+      "last_candle_ts": 1794348600,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -81,8 +50,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 50.05,
-      "max_adv": 50.71,
-      "last_candle_ts": 1794348300,
+      "max_adv": 50.73,
+      "last_candle_ts": 1794348600,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -114,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 0.1728,
       "max_adv": 0.1754,
-      "last_candle_ts": 1794348300,
+      "last_candle_ts": 1794348600,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -146,7 +115,7 @@
       "tp2_reached": false,
       "max_fav": 243.63,
       "max_adv": 245.53,
-      "last_candle_ts": 1794348300,
+      "last_candle_ts": 1794348600,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -162,16 +131,15 @@
     }
   },
   "stats": {
-    "wins": 58,
+    "wins": 59,
     "draws": 3,
     "losses": 39,
-    "total": 100,
-    "r_count": 100,
-    "sum_r": -0.8579999999999989,
-    "win_r": 38.391,
+    "total": 101,
+    "r_count": 101,
+    "sum_r": -0.569999999999999,
+    "win_r": 38.678999999999995,
     "loss_r": 39.24899999999999,
     "recent_r": [
-      -1.06,
       0.052,
       -1.082,
       -1.061,
@@ -220,9 +188,10 @@
       0.271,
       0.272,
       0.297,
-      0.612
+      0.612,
+      0.288
     ],
-    "positive_count": 61,
+    "positive_count": 62,
     "directional": {
       "LONG": {
         "total": 30,
@@ -234,13 +203,13 @@
         "pf": 0.5405526596042824
       },
       "SHORT": {
-        "total": 70,
-        "wins": 45,
+        "total": 71,
+        "wins": 46,
         "draws": 3,
         "losses": 22,
-        "win_rate": 67.16417910447761,
-        "avg_r": 0.10484285714285711,
-        "pf": 1.34281576980568
+        "win_rate": 67.64705882352942,
+        "avg_r": 0.10742253521126757,
+        "pf": 1.356268684603886
       }
     }
   },
@@ -249,6 +218,11 @@
       "time": "2026-11-10T20:15:33.088465+00:00",
       "direction": "SHORT",
       "reason": "TP2_PROTECT"
+    },
+    "WLD_USDT": {
+      "time": "2026-11-10T22:15:28.930115+00:00",
+      "direction": "SHORT",
+      "reason": "PROFIT_LOCK"
     }
   },
   "fail_count": 0,
