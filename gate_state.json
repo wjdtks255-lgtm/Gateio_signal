@@ -16,7 +16,7 @@
       "tp2_reached": false,
       "max_fav": 0.06932,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794300900,
+      "last_candle_ts": 1794301200,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
@@ -33,50 +33,18 @@
       "tp1": 2104.17,
       "tp2": 2070.315,
       "tp3": 2036.46,
-      "stop_loss": 2160.595,
+      "stop_loss": 2115.455,
       "initial_stop": 2160.595,
-      "tp1_reached": false,
+      "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 2105.27,
+      "max_fav": 2093.53,
       "max_adv": 2142.55,
-      "last_candle_ts": 1794300900,
+      "last_candle_ts": 1794301200,
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "strategy_version": 1,
       "tp1_lock_price": 2115.455,
       "tp2_lock_price": 2126.74
-    },
-    "CRCL_USDT": {
-      "strategy_version": 2,
-      "direction": "LONG",
-      "entry_price": 68.29,
-      "entry_time": "2026-11-10T05:15:28.010539+00:00",
-      "leverage": 3,
-      "risk": 1.1755654987932933,
-      "atr": 0.7837103325288622,
-      "tp1": 69.07371033252886,
-      "tp2": 70.24927583132217,
-      "tp3": 71.42484133011546,
-      "stop_loss": 67.11443450120672,
-      "initial_stop": 67.11443450120672,
-      "tp1_lock_price": 68.68185516626444,
-      "tp2_lock_price": 69.07371033252886,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 68.35,
-      "max_adv": 67.5,
-      "last_candle_ts": 1794300900,
-      "score": 8,
-      "reasons": [
-        "1H EMA20/50 추세 정렬",
-        "1H EMA20 기울기 +0.29%",
-        "1H ADX 31.7",
-        "15M EMA21 눌림 후 재돌파",
-        "15M 캔들 몸통 0.64",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
     },
     "SNDK_USDT": {
       "strategy_version": 2,
@@ -96,8 +64,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 893.22,
-      "max_adv": 882.16,
-      "last_candle_ts": 1794300900,
+      "max_adv": 881.85,
+      "last_candle_ts": 1794301200,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -129,8 +97,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 56.84,
-      "max_adv": 55.44,
-      "last_candle_ts": 1794300900,
+      "max_adv": 54.98,
+      "last_candle_ts": 1794301200,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -147,14 +115,13 @@
   "stats": {
     "wins": 52,
     "draws": 3,
-    "losses": 35,
-    "total": 90,
-    "r_count": 90,
-    "sum_r": 0.6640000000000013,
+    "losses": 36,
+    "total": 91,
+    "r_count": 91,
+    "sum_r": -0.3939999999999988,
     "win_r": 35.758,
-    "loss_r": 35.093999999999994,
+    "loss_r": 36.151999999999994,
     "recent_r": [
-      0.061,
       -0.217,
       0.64,
       0.019,
@@ -203,18 +170,19 @@
       -1.018,
       0.276,
       1.595,
-      -1.041
+      -1.041,
+      -1.058
     ],
     "positive_count": 55,
     "directional": {
       "LONG": {
-        "total": 27,
+        "total": 28,
         "wins": 13,
         "draws": 0,
-        "losses": 14,
-        "win_rate": 48.148148148148145,
-        "avg_r": -0.18814814814814818,
-        "pf": 0.6549850584080416
+        "losses": 15,
+        "win_rate": 46.42857142857143,
+        "avg_r": -0.21921428571428575,
+        "pf": 0.6110759092637184
       },
       "SHORT": {
         "total": 63,
@@ -231,6 +199,11 @@
     "TRUMP_USDT": {
       "time": "2026-11-10T08:35:30.269346+00:00",
       "direction": "SHORT",
+      "reason": "SL"
+    },
+    "CRCL_USDT": {
+      "time": "2026-11-10T09:05:28.827997+00:00",
+      "direction": "LONG",
       "reason": "SL"
     }
   },
