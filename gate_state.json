@@ -16,7 +16,12 @@
       "tp2_reached": true,
       "max_fav": 1141.88,
       "max_adv": 1234.99,
-      "last_candle_ts": 1794280200
+      "last_candle_ts": 1794280200,
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "strategy_version": 1,
+      "tp1_lock_price": 1208.797857142857,
+      "tp2_lock_price": 1222.36
     },
     "DOGE_USDT": {
       "direction": "SHORT",
@@ -34,7 +39,12 @@
       "tp2_reached": false,
       "max_fav": 0.06941,
       "max_adv": 0.07085,
-      "last_candle_ts": 1794280200
+      "last_candle_ts": 1794280200,
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "strategy_version": 1,
+      "tp1_lock_price": 0.06924857142857142,
+      "tp2_lock_price": 0.0697
     },
     "ETH_USDT": {
       "direction": "SHORT",
@@ -52,7 +62,12 @@
       "tp2_reached": false,
       "max_fav": 2115.7,
       "max_adv": 2142.55,
-      "last_candle_ts": 1794280200
+      "last_candle_ts": 1794280200,
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "strategy_version": 1,
+      "tp1_lock_price": 2115.455,
+      "tp2_lock_price": 2126.74
     },
     "SOL_USDT": {
       "direction": "SHORT",
@@ -70,7 +85,12 @@
       "tp2_reached": false,
       "max_fav": 85.84,
       "max_adv": 87.07,
-      "last_candle_ts": 1794280200
+      "last_candle_ts": 1794280200,
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "strategy_version": 1,
+      "tp1_lock_price": 86.13785714285714,
+      "tp2_lock_price": 86.64
     },
     "SOXL_USDT": {
       "direction": "LONG",
@@ -88,18 +108,23 @@
       "tp2_reached": false,
       "max_fav": 57.84,
       "max_adv": 54.97,
-      "last_candle_ts": 1794280200
+      "last_candle_ts": 1794280200,
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "strategy_version": 1,
+      "tp1_lock_price": 57.83428571428571,
+      "tp2_lock_price": 56.79
     }
   },
   "stats": {
-    "wins": 17,
-    "draws": 36,
+    "wins": 50,
+    "draws": 3,
     "losses": 33,
     "total": 86,
     "r_count": 86,
-    "sum_r": 0.8559641914481415,
-    "win_r": 33.89129046456244,
-    "loss_r": 33.03532627311428,
+    "sum_r": 0.8520000000000012,
+    "win_r": 33.887,
+    "loss_r": 33.035,
     "recent_r": [
       0.086,
       0.079,
@@ -151,9 +176,32 @@
       0.303,
       0.317,
       0.24
-    ]
+    ],
+    "positive_count": 53,
+    "directional": {
+      "LONG": {
+        "total": 26,
+        "wins": 13,
+        "draws": 0,
+        "losses": 13,
+        "win_rate": 50.0,
+        "avg_r": -0.15623076923076928,
+        "pf": 0.7036334452064792
+      },
+      "SHORT": {
+        "total": 60,
+        "wins": 37,
+        "draws": 3,
+        "losses": 20,
+        "win_rate": 64.91228070175438,
+        "avg_r": 0.08189999999999996,
+        "pf": 1.2542293962439857
+      }
+    }
   },
   "closed_symbols": {},
   "fail_count": 0,
-  "last_report_date": "2026-11-10"
+  "last_report_date": "2026-11-10",
+  "csv_stats_offset": 20,
+  "strategy_version": 2
 }
