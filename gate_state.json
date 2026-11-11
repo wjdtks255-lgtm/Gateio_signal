@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 965.0,
       "max_adv": 1006.29,
-      "last_candle_ts": 1794411900,
+      "last_candle_ts": 1794412200,
       "score": 7,
       "required_score": 7,
       "rsi_1h": 37.77993294067532,
@@ -53,9 +53,9 @@
       "tp2_lock_price": 693.2686652837256,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 691.21,
+      "max_fav": 692.06,
       "max_adv": 688.87,
-      "last_candle_ts": 1794411900,
+      "last_candle_ts": 1794412200,
       "score": 8,
       "required_score": 8,
       "rsi_1h": 61.983191881320764,
@@ -112,11 +112,6 @@
     "last_closed_at": ""
   },
   "closed_symbols": {
-    "HYPE_USDT": {
-      "time": "2026-11-11T13:55:26.180169+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "IBM_USDT": {
       "time": "2026-11-11T14:00:48.723628+00:00",
       "direction": "SHORT",
