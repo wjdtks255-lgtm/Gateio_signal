@@ -11,15 +11,15 @@
       "tp1": 569.119248931141,
       "tp2": 583.9984978622819,
       "tp3": 603.8374964371365,
-      "stop_loss": 555.2319499287428,
+      "stop_loss": 558.5826816795129,
       "initial_stop": 542.3366008550872,
       "tp1_lock_price": 555.2319499287428,
       "tp2_lock_price": 569.119248931141,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 574.13,
+      "max_fav": 579.94,
       "max_adv": 551.81,
-      "last_candle_ts": 1794435600,
+      "last_candle_ts": 1794435900,
       "score": 9,
       "required_score": 8,
       "rsi_1h": 67.78731352635474,
@@ -37,64 +37,29 @@
       ],
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false
-    },
-    "NBIS_USDT": {
-      "strategy_version": 4,
-      "direction": "LONG",
-      "entry_price": 157.47,
-      "entry_time": "2026-11-11T21:31:50.606006+00:00",
-      "leverage": 1,
-      "risk": 4.1562172425033985,
-      "atr": 3.4635143687528323,
-      "tp1": 162.66527155312926,
-      "tp2": 167.8605431062585,
-      "tp3": 174.78757184376417,
-      "stop_loss": 153.3137827574966,
-      "initial_stop": 153.3137827574966,
-      "tp1_lock_price": 157.8163514368753,
-      "tp2_lock_price": 162.66527155312926,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 159.3,
-      "max_adv": 153.58,
-      "last_candle_ts": 1794435600,
-      "score": 8,
-      "required_score": 8,
-      "rsi_1h": 61.17646352233727,
-      "rsi_15m": 54.83815915948692,
-      "adx_1h": 37.38939549778973,
-      "volume_surge": 0.6333416977174701,
-      "reasons": [
-        "1H EMA50/200 정배열 및 추세 확인",
-        "1H EMA20 기울기 +2.44%",
-        "1H ADX 37.4",
-        "15M EMA21 눌림 후 재돌파",
-        "15M 캔들 몸통 0.53",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
     }
   },
   "stats": {
     "wins": 0,
     "draws": 0,
-    "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
+    "losses": 1,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": -1.038,
     "win_r": 0.0,
-    "loss_r": 0.0,
-    "recent_r": [],
+    "loss_r": 1.038,
+    "recent_r": [
+      -1.038
+    ],
     "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 0,
+        "total": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "win_rate": 0.0,
-        "avg_r": 0.0,
+        "avg_r": -1.038,
         "pf": 0.0
       },
       "SHORT": {
@@ -108,10 +73,10 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 136,
+    "csv_rows": 137,
     "excluded_other_versions": 136,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-11T22:30:39.338589+00:00",
+    "last_closed_at": "2026-11-11T22:30:39.338589+00:00"
   },
   "closed_symbols": {
     "GRAM_USDT": {
@@ -121,6 +86,11 @@
     },
     "ZHIPU_USDT": {
       "time": "2026-11-11T22:15:32.909599+00:00",
+      "direction": "LONG",
+      "reason": "SL"
+    },
+    "NBIS_USDT": {
+      "time": "2026-11-11T22:30:39.338589+00:00",
       "direction": "LONG",
       "reason": "SL"
     }
