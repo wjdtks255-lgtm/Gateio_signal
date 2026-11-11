@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 243.63,
       "max_adv": 245.83,
-      "last_candle_ts": 1794393300,
+      "last_candle_ts": 1794393600,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 73188.1,
       "max_adv": 74155.0,
-      "last_candle_ts": 1794393300,
+      "last_candle_ts": 1794393600,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 1.0466,
       "max_adv": 1.067,
-      "last_candle_ts": 1794393300,
+      "last_candle_ts": 1794393600,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -116,7 +116,7 @@
       "tp2_reached": false,
       "max_fav": 71.313,
       "max_adv": 72.913,
-      "last_candle_ts": 1794393300,
+      "last_candle_ts": 1794393600,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -149,7 +149,7 @@
       "tp2_reached": true,
       "max_fav": 6.334,
       "max_adv": 6.768,
-      "last_candle_ts": 1794393300,
+      "last_candle_ts": 1794393600,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
