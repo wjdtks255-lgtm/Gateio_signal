@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Gate.io USDT Futures Signal Bot - quality-filtered replacement
+Gate.io USDT Futures Signal Bot - versioned paper-signal tracker
 - Telegram signal-only bot; it does NOT place orders.
 - 1h trend + 15m pullback/reclaim entry confirmation.
 - Net-R based win/draw/loss accounting.
 - Conservative 5m stop/target monitoring.
-- Preserves existing active slots and legacy CSV rows.
+- Preserves existing active slots and mixed legacy CSV rows.
 
 Important:
-This is a rule-based strategy revision, not a profit guarantee. The supplied
-trades.csv does not contain historical entry-time indicator snapshots, so the
-new entry filters cannot be honestly backtested against those old trades.
+This is a rule-based signal tracker, not a profit guarantee or an order executor.
+New strategy versions are reported separately. Historical rows without an entry
+version or indicator snapshots cannot validate the current entry filters.
 """
 
 import csv
@@ -37,6 +37,7 @@ TRADES_FILE = Path(os.getenv("TRADES_FILE", "trades.csv"))
 LOG_FILE = Path(os.getenv("LOG_FILE", "gate_signal_bot.log"))
 
 MAX_SLOTS = 5
+MAX_CRYPTO_SLOTS = 3
 MAX_CANDIDATES = 40
 SCAN_BUDGET_SEC = 150
 MIN_CHANGE_PCT = 1.5
@@ -44,6 +45,7 @@ MIN_QUOTE_VOLUME = 200_000.0
 LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")
 
 # Entry quality filters. More selective than the previous 24h-momentum-only scan.
+STRATEGY_VERSION = 3
 ADX_MIN_1H = 17.0
 BODY_RATIO_MIN = 0.35
 MIN_VOLUME_SURGE = 1.05
@@ -67,9 +69,9 @@ MAX_SL_PCT = 7.0
 FEE_ROUNDTRIP = 0.001       # assumed round-trip trading cost; adjust to actual fee tier
 DRAW_BAND_R = 0.05           # -0.05R to +0.05R is a draw
 
-# Reference leverage only; no order is submitted.
+# Display-only leverage reference; it is not account-risk sizing.
 MAX_REFERENCE_LEVERAGE = 5
-MIN_REFERENCE_LEVERAGE = 2
+MIN_REFERENCE_LEVERAGE = 1
 
 ROTATE_HOURS = 18
 ROTATE_MIN_PROFIT_PCT = 0.5
@@ -83,13 +85,24 @@ DAILY_REPORT_HOUR_UTC = 0
 FAIL_ALERT_THRESHOLD = 3
 MISSING_TICKER_ALERT_AFTER = 3
 
-CSV_FIELDS = [
+BASE_CSV_FIELDS = [
     "closed_at", "symbol", "direction", "category", "leverage",
     "entry_time", "entry_price", "exit_price", "exit_reason",
     "holding_hours", "gross_r", "net_r", "mfe_r", "mae_r",
     "leverage_pct", "outcome",
 ]
-LEGACY_CSV_FIELDS = CSV_FIELDS[:-1]
+ENTRY_AUDIT_FIELDS = [
+    "strategy_version", "score", "required_score", "rsi_1h", "rsi_15m",
+    "adx_1h", "volume_surge",
+]
+CSV_FIELDS = BASE_CSV_FIELDS
+FULL_CSV_FIELDS = BASE_CSV_FIELDS + ENTRY_AUDIT_FIELDS
+AUDIT_CSV_FIELDS = ["closed_at", "symbol"] + ENTRY_AUDIT_FIELDS
+AUDIT_FILE = Path(os.getenv(
+    "AUDIT_FILE",
+    str(TRADES_FILE.with_name(f"{TRADES_FILE.stem}_audit.csv")),
+))
+LEGACY_CSV_FIELDS = BASE_CSV_FIELDS[:-1]
 
 NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
 
@@ -216,9 +229,9 @@ def default_state() -> Dict[str, Any]:
         "closed_symbols": {},
         "fail_count": 0,
         "last_report_date": "",
-        # On first run this is inferred from the old state total and CSV length.
+        # Retained for compatibility; v3 reports are filtered by strategy_version.
         "csv_stats_offset": None,
-        "strategy_version": 2,
+        "strategy_version": STRATEGY_VERSION,
     }
 
 
@@ -280,9 +293,20 @@ def append_trade_csv(row: Dict[str, Any]) -> None:
             writer.writeheader()
         writer.writerow({field: row.get(field, "") for field in CSV_FIELDS})
 
+    audit_exists = AUDIT_FILE.exists() and AUDIT_FILE.stat().st_size > 0
+    try:
+        with AUDIT_FILE.open("a", newline="", encoding="utf-8") as handle:
+            writer = csv.DictWriter(handle, fieldnames=AUDIT_CSV_FIELDS, extrasaction="ignore")
+            if not audit_exists:
+                writer.writeheader()
+            writer.writerow({field: row.get(field, "") for field in AUDIT_CSV_FIELDS})
+    except OSError:
+        # Preserve the closed trade in the primary CSV and make the audit failure visible.
+        logging.exception("Unable to append strategy audit row to %s", AUDIT_FILE)
+
 
 def read_trade_csv() -> List[Dict[str, Any]]:
-    """Read headered, headerless, and mixed 15/16-column legacy trade CSVs."""
+    """Read current audit rows plus headered/headerless 15/16-column legacy rows."""
     if not TRADES_FILE.exists():
         return []
     records: List[Dict[str, Any]] = []
@@ -293,13 +317,16 @@ def read_trade_csv() -> List[Dict[str, Any]]:
             if raw[0].strip().lower() == "closed_at":
                 continue
             if len(raw) == 15:
-                values = raw + [""]
-            elif len(raw) == 16:
-                values = raw
+                record = dict(zip(LEGACY_CSV_FIELDS, raw))
+            elif len(raw) == len(BASE_CSV_FIELDS):
+                record = dict(zip(BASE_CSV_FIELDS, raw))
+            elif len(raw) == len(FULL_CSV_FIELDS):
+                record = dict(zip(FULL_CSV_FIELDS, raw))
             else:
                 logging.warning("Skipping malformed trade CSV row with %d columns", len(raw))
                 continue
-            record = dict(zip(CSV_FIELDS, values))
+            for field in FULL_CSV_FIELDS:
+                record.setdefault(field, "")
             try:
                 record["net_r"] = float(record["net_r"])
                 record["gross_r"] = safe_float(record.get("gross_r"))
@@ -311,6 +338,24 @@ def read_trade_csv() -> List[Dict[str, Any]]:
                 logging.warning("Skipping malformed numeric trade row: %s", record.get("symbol", "?"))
                 continue
             records.append(record)
+
+    if AUDIT_FILE.exists():
+        audit_by_trade: Dict[Tuple[str, str], Dict[str, str]] = {}
+        try:
+            with AUDIT_FILE.open("r", newline="", encoding="utf-8-sig") as handle:
+                for audit in csv.DictReader(handle):
+                    key = (str(audit.get("closed_at", "")), str(audit.get("symbol", "")))
+                    if key[0] and key[1]:
+                        audit_by_trade[key] = audit
+        except OSError:
+            logging.exception("Unable to read strategy audit file %s", AUDIT_FILE)
+        for record in records:
+            audit = audit_by_trade.get((str(record.get("closed_at", "")),
+                                        str(record.get("symbol", ""))))
+            if audit:
+                for field in ENTRY_AUDIT_FIELDS:
+                    if audit.get(field, "") != "":
+                        record[field] = audit[field]
     return records
 
 
@@ -367,15 +412,16 @@ def calculate_stats(records: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 def sync_stats_from_csv(state: Dict[str, Any]) -> Dict[str, Any]:
     records = read_trade_csv()
-    offset = state.get("csv_stats_offset")
-    if offset is None:
-        old_total = int(safe_float(state.get("stats", {}).get("total", 0)))
-        # Preserve the existing bot's counted window when the CSV contains older rows.
-        offset = max(0, len(records) - old_total) if old_total > 0 else 0
-        state["csv_stats_offset"] = offset
-        logging.info("CSV statistics offset initialized to %s", offset)
-    offset = max(0, min(int(offset), len(records)))
-    stats = calculate_stats(records[offset:])
+    current_records = [
+        record for record in records
+        if int(safe_float(record.get("strategy_version"), 0)) == STRATEGY_VERSION
+    ]
+    stats = calculate_stats(current_records)
+    stats["strategy_version"] = STRATEGY_VERSION
+    stats["csv_rows"] = len(records)
+    stats["excluded_other_versions"] = len(records) - len(current_records)
+    stats["first_closed_at"] = current_records[0].get("closed_at", "") if current_records else ""
+    stats["last_closed_at"] = current_records[-1].get("closed_at", "") if current_records else ""
     state["stats"] = stats
     return stats
 
@@ -404,8 +450,12 @@ def build_stats_line(stats: Dict[str, Any]) -> str:
         f"숏 {short_stats.get('win_rate', 0.0):.1f}% / PF {short_stats.get('pf', 0.0):.2f} "
         f"/ 평균 {short_stats.get('avg_r', 0.0):+.2f}R"
     )
+    first_closed = str(stats.get("first_closed_at", ""))[:10]
+    last_closed = str(stats.get("last_closed_at", ""))[:10]
+    period = f"{first_closed}~{last_closed} UTC" if first_closed else "신규 버전 거래 대기"
     return "\n".join([
-        "📈 <b>[누적 통계 | 순손익 R 기준]</b>",
+        f"📈 <b>[전략 v{int(stats.get('strategy_version', STRATEGY_VERSION))} | 순손익 R]</b>",
+        f"<code>집계 {period} | CSV {int(stats.get('csv_rows', total))}건 중 다른 버전 {int(stats.get('excluded_other_versions', 0))}건 제외</code>",
         f"<code>{total}전 {wins}승 {draws}무 {losses}패</code>",
         f"<code>승률 {win_rate:.1f}% (순 R +0.05 초과 / -0.05 미만, 무 제외)</code>",
         f"<code>순플러스 종료 {positive_rate:.1f}% | 평균 R {avg_r:+.2f} | PF {pf:.2f}</code>",
@@ -966,6 +1016,13 @@ def finalize_trade(state: Dict[str, Any], symbol: str, info: Dict[str, Any],
         "mae_r": round(mae_r, 3),
         "leverage_pct": leverage_pct,
         "outcome": outcome,
+        "strategy_version": int(safe_float(info.get("strategy_version"), 1)),
+        "score": int(safe_float(info.get("score"))),
+        "required_score": int(safe_float(info.get("required_score"))),
+        "rsi_1h": round(safe_float(info.get("rsi_1h")), 2),
+        "rsi_15m": round(safe_float(info.get("rsi_15m")), 2),
+        "adx_1h": round(safe_float(info.get("adx_1h")), 2),
+        "volume_surge": round(safe_float(info.get("volume_surge")), 3),
     })
 
     state["closed_symbols"][symbol] = {
@@ -1150,10 +1207,11 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
         except Exception:
             continue
 
+    # Keep the API workload bounded by liquidity, then choose among valid setups
+    # by confirmation score instead of letting scan order fill the slots.
     candidates.sort(key=lambda item: item[0], reverse=True)
+    qualified: List[Dict[str, Any]] = []
     for volume, symbol, price, change, direction in candidates[:MAX_CANDIDATES]:
-        if len(active) >= MAX_SLOTS:
-            break
         if time.time() - start_time > SCAN_BUDGET_SEC:
             logging.info("Scan budget exceeded; remaining candidates deferred.")
             break
@@ -1177,10 +1235,55 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
                 continue
 
             category = get_asset_category(symbol)
+            qualified.append({
+                "volume": volume,
+                "symbol": symbol,
+                "price": price,
+                "change": change,
+                "direction": direction,
+                "analysis": analysis,
+                "risk": risk,
+                "stop": stop,
+                "targets": (tp1, tp2, tp3),
+                "category": category,
+            })
+        except Exception:
+            logging.exception("Candidate analysis failed for %s", symbol)
+
+    qualified.sort(
+        key=lambda item: (item["analysis"]["score"], item["volume"]),
+        reverse=True,
+    )
+    crypto_slots = sum(
+        1 for symbol in active if get_asset_category(symbol) == "코인"
+    )
+
+    for item in qualified:
+        if len(active) >= MAX_SLOTS:
+            break
+        symbol = item["symbol"]
+        direction = item["direction"]
+        price = item["price"]
+        change = item["change"]
+        analysis = item["analysis"]
+        risk = item["risk"]
+        stop = item["stop"]
+        tp1, tp2, tp3 = item["targets"]
+        category = item["category"]
+
+        if category == "코인" and crypto_slots >= MAX_CRYPTO_SLOTS:
+            continue
+        theme, theme_sign = theme_exposure(symbol, direction)
+        if theme and count_theme_slots(active, theme, theme_sign) >= MAX_PER_THEME:
+            continue
+
+        try:
+            atr = analysis["atr"]
+            sign = 1 if direction == "LONG" else -1
             leverage = calculate_reference_leverage(category, change, atr, price)
             entry_time = now.isoformat()
             active[symbol] = {
-                "strategy_version": 2,
+                "strategy_version": STRATEGY_VERSION,
                 "direction": direction,
                 "entry_price": price,
                 "entry_time": entry_time,
@@ -1200,11 +1303,18 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
                 "max_adv": price,
                 "last_candle_ts": now_ts // 300 * 300,
                 "score": analysis["score"],
+                "required_score": analysis["required_score"],
+                "rsi_1h": analysis["rsi1h"],
+                "rsi_15m": analysis["rsi15"],
+                "adx_1h": analysis["adx"],
+                "volume_surge": analysis["volume_surge"],
                 "reasons": analysis["reasons"],
                 "missing_ticker_count": 0,
                 "missing_ticker_alerted": False,
             }
             changed = True
+            if category == "코인":
+                crypto_slots += 1
 
             def target_pct(target: float) -> float:
                 return pct_move(direction, price, target)
@@ -1222,12 +1332,13 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
                 f"• 1H ADX <code>{analysis['adx']:.1f}</code> / 1H RSI <code>{analysis['rsi1h']:.1f}</code>\n"
                 f"• 15M RSI <code>{analysis['rsi15']:.1f}</code> / 거래량 <code>{analysis['volume_surge']:.2f}배</code>\n"
                 f"• EMA21 거리 <code>{analysis['ema_distance_atr']:.2f} ATR</code>\n\n"
-                "⚠️ 시그널 전용이며 자동 주문은 실행하지 않습니다. 레버리지는 계좌 위험률을 계산한 주문 수량이 아닙니다."
+                "⚠️ 시그널·가상 추적 전용입니다. 자동 주문과 부분청산은 실행하지 않습니다. "
+                "참고 레버리지는 계좌 위험률이나 주문 수량을 계산하지 않습니다."
             )
             send_telegram_message(message)
             logging.info("New signal: %s %s score=%s", symbol, direction, analysis["score"])
         except Exception:
-            logging.exception("Candidate processing failed for %s", symbol)
+            logging.exception("Candidate activation failed for %s", symbol)
     return changed
 
 # ───────────────────────────── Status and main ────────────────────────────
