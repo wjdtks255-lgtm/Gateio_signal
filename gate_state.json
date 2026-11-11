@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 243.63,
       "max_adv": 245.53,
-      "last_candle_ts": 1794362400,
+      "last_candle_ts": 1794362700,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 73326.9,
       "max_adv": 74002.4,
-      "last_candle_ts": 1794362400,
+      "last_candle_ts": 1794362700,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 1.0486,
       "max_adv": 1.0628,
-      "last_candle_ts": 1794362400,
+      "last_candle_ts": 1794362700,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -114,9 +114,9 @@
       "tp2_lock_price": 71.03082048072392,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 71.747,
+      "max_fav": 71.521,
       "max_adv": 71.956,
-      "last_candle_ts": 1794362400,
+      "last_candle_ts": 1794362700,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
