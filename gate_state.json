@@ -1,43 +1,5 @@
 {
   "active_slots": {
-    "AMD_USDT": {
-      "strategy_version": 4,
-      "direction": "LONG",
-      "entry_price": 554.24,
-      "entry_time": "2026-11-11T17:10:36.823322+00:00",
-      "leverage": 2,
-      "risk": 11.903399144912756,
-      "atr": 9.919499287427296,
-      "tp1": 569.119248931141,
-      "tp2": 583.9984978622819,
-      "tp3": 603.8374964371365,
-      "stop_loss": 569.119248931141,
-      "initial_stop": 542.3366008550872,
-      "tp1_lock_price": 555.2319499287428,
-      "tp2_lock_price": 569.119248931141,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 584.09,
-      "max_adv": 551.81,
-      "last_candle_ts": 1794438000,
-      "score": 9,
-      "required_score": 8,
-      "rsi_1h": 67.78731352635474,
-      "rsi_15m": 61.779399823775144,
-      "adx_1h": 33.37984124185783,
-      "volume_surge": 1.1628805717709976,
-      "reasons": [
-        "1H EMA50/200 정배열 및 추세 확인",
-        "1H EMA20 기울기 +1.25%",
-        "1H ADX 33.4",
-        "15M EMA21 눌림 후 재돌파",
-        "거래량 증가 1.16배",
-        "15M 캔들 몸통 0.71",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
     "ZEC_USDT": {
       "strategy_version": 4,
       "direction": "SHORT",
@@ -55,9 +17,9 @@
       "tp2_lock_price": 943.647855835109,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 971.2,
+      "max_fav": 969.07,
       "max_adv": 982.51,
-      "last_candle_ts": 1794438000,
+      "last_candle_ts": 1794438300,
       "score": 8,
       "required_score": 7,
       "rsi_1h": 41.013518519762584,
@@ -77,24 +39,26 @@
     }
   },
   "stats": {
-    "wins": 0,
+    "wins": 1,
     "draws": 0,
     "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
-    "win_r": 0.0,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": 1.203,
+    "win_r": 1.203,
     "loss_r": 0.0,
-    "recent_r": [],
-    "positive_count": 0,
+    "recent_r": [
+      1.203
+    ],
+    "positive_count": 1,
     "directional": {
       "LONG": {
-        "total": 0,
-        "wins": 0,
+        "total": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "win_rate": 0.0,
-        "avg_r": 0.0,
+        "win_rate": 100.0,
+        "avg_r": 1.203,
         "pf": 0.0
       },
       "SHORT": {
@@ -108,10 +72,10 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 137,
+    "csv_rows": 138,
     "excluded_other_versions": 137,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-11T23:10:30.957839+00:00",
+    "last_closed_at": "2026-11-11T23:10:30.957839+00:00"
   },
   "closed_symbols": {
     "ZHIPU_USDT": {
@@ -123,6 +87,11 @@
       "time": "2026-11-11T22:30:39.338589+00:00",
       "direction": "LONG",
       "reason": "SL"
+    },
+    "AMD_USDT": {
+      "time": "2026-11-11T23:10:30.957839+00:00",
+      "direction": "LONG",
+      "reason": "TP2_PROTECT"
     }
   },
   "fail_count": 0,
