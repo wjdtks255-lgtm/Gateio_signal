@@ -17,9 +17,9 @@
       "tp2_lock_price": 943.647855835109,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 969.07,
+      "max_fav": 954.54,
       "max_adv": 982.51,
-      "last_candle_ts": 1794438300,
+      "last_candle_ts": 1794438600,
       "score": 8,
       "required_score": 7,
       "rsi_1h": 41.013518519762584,
@@ -39,26 +39,24 @@
     }
   },
   "stats": {
-    "wins": 1,
+    "wins": 0,
     "draws": 0,
     "losses": 0,
-    "total": 1,
-    "r_count": 1,
-    "sum_r": 1.203,
-    "win_r": 1.203,
+    "total": 0,
+    "r_count": 0,
+    "sum_r": 0.0,
+    "win_r": 0.0,
     "loss_r": 0.0,
-    "recent_r": [
-      1.203
-    ],
-    "positive_count": 1,
+    "recent_r": [],
+    "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 1,
-        "wins": 1,
+        "total": 0,
+        "wins": 0,
         "draws": 0,
         "losses": 0,
-        "win_rate": 100.0,
-        "avg_r": 1.203,
+        "win_rate": 0.0,
+        "avg_r": 0.0,
         "pf": 0.0
       },
       "SHORT": {
@@ -73,9 +71,9 @@
     },
     "strategy_version": 4,
     "csv_rows": 138,
-    "excluded_other_versions": 137,
-    "first_closed_at": "2026-11-11T23:10:30.957839+00:00",
-    "last_closed_at": "2026-11-11T23:10:30.957839+00:00"
+    "excluded_other_versions": 138,
+    "first_closed_at": "",
+    "last_closed_at": ""
   },
   "closed_symbols": {
     "ZHIPU_USDT": {
