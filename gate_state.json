@@ -1,42 +1,5 @@
 {
   "active_slots": {
-    "QQQ_USDT": {
-      "strategy_version": 4,
-      "direction": "LONG",
-      "entry_price": 689.15,
-      "entry_time": "2026-11-11T15:35:33.066462+00:00",
-      "leverage": 4,
-      "risk": 3.2949322269804977,
-      "atr": 2.7457768558170814,
-      "tp1": 693.2686652837256,
-      "tp2": 697.3873305674513,
-      "tp3": 702.8788842790854,
-      "stop_loss": 692.744191471659,
-      "initial_stop": 685.8550677730195,
-      "tp1_lock_price": 689.4245776855817,
-      "tp2_lock_price": 693.2686652837256,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 696.17,
-      "max_adv": 688.87,
-      "last_candle_ts": 1794424200,
-      "score": 8,
-      "required_score": 8,
-      "rsi_1h": 61.983191881320764,
-      "rsi_15m": 57.599128793501,
-      "adx_1h": 27.82701420185125,
-      "volume_surge": 3.134756732305784,
-      "reasons": [
-        "1H EMA50/200 정배열 및 추세 확인",
-        "1H EMA20 기울기 +0.36%",
-        "1H ADX 27.8",
-        "15M EMA21 눌림 후 재돌파",
-        "거래량 증가 3.13배",
-        "15M 캔들 몸통 0.82"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
     "AMD_USDT": {
       "strategy_version": 4,
       "direction": "LONG",
@@ -56,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 567.94,
       "max_adv": 554.02,
-      "last_candle_ts": 1794424200,
+      "last_candle_ts": 1794424500,
       "score": 9,
       "required_score": 8,
       "rsi_1h": 67.78731352635474,
@@ -93,8 +56,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1.232,
-      "max_adv": 1.2129,
-      "last_candle_ts": 1794424200,
+      "max_adv": 1.2102,
+      "last_candle_ts": 1794424500,
       "score": 8,
       "required_score": 8,
       "rsi_1h": 63.61150497388538,
@@ -114,24 +77,26 @@
     }
   },
   "stats": {
-    "wins": 0,
+    "wins": 1,
     "draws": 0,
     "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
-    "win_r": 0.0,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": 0.882,
+    "win_r": 0.882,
     "loss_r": 0.0,
-    "recent_r": [],
-    "positive_count": 0,
+    "recent_r": [
+      0.882
+    ],
+    "positive_count": 1,
     "directional": {
       "LONG": {
-        "total": 0,
-        "wins": 0,
+        "total": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "win_rate": 0.0,
-        "avg_r": 0.0,
+        "win_rate": 100.0,
+        "avg_r": 0.882,
         "pf": 0.0
       },
       "SHORT": {
@@ -145,12 +110,18 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 133,
+    "csv_rows": 134,
     "excluded_other_versions": 133,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-11T19:20:35.338553+00:00",
+    "last_closed_at": "2026-11-11T19:20:35.338553+00:00"
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "QQQ_USDT": {
+      "time": "2026-11-11T19:20:35.338553+00:00",
+      "direction": "LONG",
+      "reason": "TRAILING_STOP"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-11",
   "csv_stats_offset": 20,
