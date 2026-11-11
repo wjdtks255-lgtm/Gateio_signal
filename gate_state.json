@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 243.63,
       "max_adv": 245.83,
-      "last_candle_ts": 1794404400,
+      "last_candle_ts": 1794404700,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -52,7 +52,7 @@
       "tp2_reached": false,
       "max_fav": 73188.1,
       "max_adv": 74155.0,
-      "last_candle_ts": 1794404400,
+      "last_candle_ts": 1794404700,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -83,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 1.0466,
       "max_adv": 1.067,
-      "last_candle_ts": 1794404400,
+      "last_candle_ts": 1794404700,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -116,7 +116,7 @@
       "tp2_reached": false,
       "max_fav": 71.313,
       "max_adv": 73.054,
-      "last_candle_ts": 1794404400,
+      "last_candle_ts": 1794404700,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -125,39 +125,6 @@
         "15M EMA21 눌림 후 재돌파",
         "거래량 증가 1.23배",
         "15M 캔들 몸통 0.72",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
-    "UNI_USDT": {
-      "strategy_version": 2,
-      "direction": "SHORT",
-      "entry_price": 6.642,
-      "entry_time": "2026-11-11T02:15:29.654917+00:00",
-      "leverage": 4,
-      "risk": 0.1803455372364669,
-      "atr": 0.1202303581576446,
-      "tp1": 6.521769641842356,
-      "tp2": 6.341424104605889,
-      "tp3": 6.161078567369422,
-      "stop_loss": 6.521769641842356,
-      "initial_stop": 6.822345537236467,
-      "tp1_lock_price": 6.581884820921178,
-      "tp2_lock_price": 6.521769641842356,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 6.334,
-      "max_adv": 6.768,
-      "last_candle_ts": 1794404400,
-      "score": 9,
-      "reasons": [
-        "1H EMA20/50 추세 정렬",
-        "1H EMA20 기울기 -0.97%",
-        "1H ADX 23.0",
-        "15M EMA21 눌림 후 재돌파",
-        "거래량 증가 2.34배",
-        "15M 캔들 몸통 0.79",
         "BTC 방향 필터 통과"
       ],
       "missing_ticker_count": 0,
@@ -195,13 +162,19 @@
         "pf": 0.0
       }
     },
-    "strategy_version": 3,
-    "csv_rows": 125,
-    "excluded_other_versions": 125,
+    "strategy_version": 4,
+    "csv_rows": 126,
+    "excluded_other_versions": 126,
     "first_closed_at": "",
     "last_closed_at": ""
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "UNI_USDT": {
+      "time": "2026-11-11T13:50:05.295782+00:00",
+      "direction": "SHORT",
+      "reason": "TP2_PROTECT"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-11",
   "csv_stats_offset": 20,
