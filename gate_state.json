@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 73188.1,
       "max_adv": 74155.0,
-      "last_candle_ts": 1794406800,
+      "last_candle_ts": 1794407100,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -50,7 +50,7 @@
       "tp2_reached": false,
       "max_fav": 1.0466,
       "max_adv": 1.067,
-      "last_candle_ts": 1794406800,
+      "last_candle_ts": 1794407100,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -59,43 +59,6 @@
         "15M EMA21 눌림 후 재돌파",
         "거래량 증가 1.34배",
         "15M 캔들 몸통 0.98",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
-    "AMD_USDT": {
-      "strategy_version": 4,
-      "direction": "LONG",
-      "entry_price": 546.13,
-      "entry_time": "2026-11-11T14:00:48.723628+00:00",
-      "leverage": 2,
-      "risk": 9.32288914737104,
-      "atr": 7.769074289475866,
-      "tp1": 557.7836114342138,
-      "tp2": 569.4372228684276,
-      "tp3": 584.9753714473793,
-      "stop_loss": 536.807110852629,
-      "initial_stop": 536.807110852629,
-      "tp1_lock_price": 546.9069074289475,
-      "tp2_lock_price": 557.7836114342138,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 548.81,
-      "max_adv": 544.36,
-      "last_candle_ts": 1794406800,
-      "score": 8,
-      "required_score": 8,
-      "rsi_1h": 67.32336589752863,
-      "rsi_15m": 56.29450035287358,
-      "adx_1h": 38.80350897756609,
-      "volume_surge": 0.8892095249753229,
-      "reasons": [
-        "1H EMA50/200 정배열 및 추세 확인",
-        "1H EMA20 기울기 +1.41%",
-        "1H ADX 38.8",
-        "15M EMA21 눌림 후 재돌파",
-        "15M 캔들 몸통 0.80",
         "BTC 방향 필터 통과"
       ],
       "missing_ticker_count": 0,
@@ -120,7 +83,7 @@
       "tp2_reached": false,
       "max_fav": 981.76,
       "max_adv": 987.96,
-      "last_candle_ts": 1794406800,
+      "last_candle_ts": 1794407100,
       "score": 7,
       "required_score": 7,
       "rsi_1h": 37.77993294067532,
@@ -141,22 +104,24 @@
   "stats": {
     "wins": 0,
     "draws": 0,
-    "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
+    "losses": 1,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": -1.059,
     "win_r": 0.0,
-    "loss_r": 0.0,
-    "recent_r": [],
+    "loss_r": 1.059,
+    "recent_r": [
+      -1.059
+    ],
     "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 0,
+        "total": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "win_rate": 0.0,
-        "avg_r": 0.0,
+        "avg_r": -1.059,
         "pf": 0.0
       },
       "SHORT": {
@@ -170,10 +135,10 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 128,
+    "csv_rows": 129,
     "excluded_other_versions": 128,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-11T14:30:45.612859+00:00",
+    "last_closed_at": "2026-11-11T14:30:45.612859+00:00"
   },
   "closed_symbols": {
     "UNI_USDT": {
@@ -189,6 +154,11 @@
     "IBM_USDT": {
       "time": "2026-11-11T14:00:48.723628+00:00",
       "direction": "SHORT",
+      "reason": "SL"
+    },
+    "AMD_USDT": {
+      "time": "2026-11-11T14:30:45.612859+00:00",
+      "direction": "LONG",
       "reason": "SL"
     }
   },
