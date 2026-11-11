@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 73188.1,
       "max_adv": 74155.0,
-      "last_candle_ts": 1794407100,
+      "last_candle_ts": 1794407400,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -50,7 +50,7 @@
       "tp2_reached": false,
       "max_fav": 1.0466,
       "max_adv": 1.067,
-      "last_candle_ts": 1794407100,
+      "last_candle_ts": 1794407400,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -81,9 +81,9 @@
       "tp2_lock_price": 944.5134204537995,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 981.76,
+      "max_fav": 974.03,
       "max_adv": 987.96,
-      "last_candle_ts": 1794407100,
+      "last_candle_ts": 1794407400,
       "score": 7,
       "required_score": 7,
       "rsi_1h": 37.77993294067532,
@@ -104,24 +104,22 @@
   "stats": {
     "wins": 0,
     "draws": 0,
-    "losses": 1,
-    "total": 1,
-    "r_count": 1,
-    "sum_r": -1.059,
+    "losses": 0,
+    "total": 0,
+    "r_count": 0,
+    "sum_r": 0.0,
     "win_r": 0.0,
-    "loss_r": 1.059,
-    "recent_r": [
-      -1.059
-    ],
+    "loss_r": 0.0,
+    "recent_r": [],
     "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 1,
+        "total": 0,
         "wins": 0,
         "draws": 0,
-        "losses": 1,
+        "losses": 0,
         "win_rate": 0.0,
-        "avg_r": -1.059,
+        "avg_r": 0.0,
         "pf": 0.0
       },
       "SHORT": {
@@ -136,9 +134,9 @@
     },
     "strategy_version": 4,
     "csv_rows": 129,
-    "excluded_other_versions": 128,
-    "first_closed_at": "2026-11-11T14:30:45.612859+00:00",
-    "last_closed_at": "2026-11-11T14:30:45.612859+00:00"
+    "excluded_other_versions": 129,
+    "first_closed_at": "",
+    "last_closed_at": ""
   },
   "closed_symbols": {
     "UNI_USDT": {
