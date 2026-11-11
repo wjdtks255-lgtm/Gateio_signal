@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 567.94,
       "max_adv": 551.81,
-      "last_candle_ts": 1794435000,
+      "last_candle_ts": 1794435300,
       "score": 9,
       "required_score": 8,
       "rsi_1h": 67.78731352635474,
@@ -56,8 +56,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 159.3,
-      "max_adv": 155.83,
-      "last_candle_ts": 1794435000,
+      "max_adv": 155.5,
+      "last_candle_ts": 1794435300,
       "score": 8,
       "required_score": 8,
       "rsi_1h": 61.17646352233727,
@@ -79,24 +79,22 @@
   "stats": {
     "wins": 0,
     "draws": 0,
-    "losses": 1,
-    "total": 1,
-    "r_count": 1,
-    "sum_r": -1.071,
+    "losses": 0,
+    "total": 0,
+    "r_count": 0,
+    "sum_r": 0.0,
     "win_r": 0.0,
-    "loss_r": 1.071,
-    "recent_r": [
-      -1.071
-    ],
+    "loss_r": 0.0,
+    "recent_r": [],
     "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 1,
+        "total": 0,
         "wins": 0,
         "draws": 0,
-        "losses": 1,
+        "losses": 0,
         "win_rate": 0.0,
-        "avg_r": -1.071,
+        "avg_r": 0.0,
         "pf": 0.0
       },
       "SHORT": {
@@ -111,9 +109,9 @@
     },
     "strategy_version": 4,
     "csv_rows": 136,
-    "excluded_other_versions": 135,
-    "first_closed_at": "2026-11-11T22:15:32.909599+00:00",
-    "last_closed_at": "2026-11-11T22:15:32.909599+00:00"
+    "excluded_other_versions": 136,
+    "first_closed_at": "",
+    "last_closed_at": ""
   },
   "closed_symbols": {
     "GRAM_USDT": {
