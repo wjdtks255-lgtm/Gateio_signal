@@ -1,38 +1,5 @@
 {
   "active_slots": {
-    "IBM_USDT": {
-      "strategy_version": 2,
-      "direction": "SHORT",
-      "entry_price": 243.75,
-      "entry_time": "2026-11-10T20:20:34.520479+00:00",
-      "leverage": 4,
-      "risk": 2.1280735687139014,
-      "atr": 1.4187157124759342,
-      "tp1": 242.33128428752406,
-      "tp2": 240.20321071881017,
-      "tp3": 238.07513715009625,
-      "stop_loss": 245.8780735687139,
-      "initial_stop": 245.8780735687139,
-      "tp1_lock_price": 243.04064214376203,
-      "tp2_lock_price": 242.33128428752406,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 243.63,
-      "max_adv": 245.83,
-      "last_candle_ts": 1794405000,
-      "score": 9,
-      "reasons": [
-        "1H EMA20/50 추세 정렬",
-        "1H EMA20 기울기 -0.27%",
-        "1H ADX 31.5",
-        "15M EMA21 눌림 후 재돌파",
-        "거래량 증가 3.74배",
-        "15M 캔들 몸통 0.60",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
     "BTC_USDT": {
       "strategy_version": 2,
       "direction": "SHORT",
@@ -52,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 73188.1,
       "max_adv": 74155.0,
-      "last_candle_ts": 1794405000,
+      "last_candle_ts": 1794405300,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -83,7 +50,7 @@
       "tp2_reached": false,
       "max_fav": 1.0466,
       "max_adv": 1.067,
-      "last_candle_ts": 1794405000,
+      "last_candle_ts": 1794405300,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -92,6 +59,43 @@
         "15M EMA21 눌림 후 재돌파",
         "거래량 증가 1.34배",
         "15M 캔들 몸통 0.98",
+        "BTC 방향 필터 통과"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false
+    },
+    "AMD_USDT": {
+      "strategy_version": 4,
+      "direction": "LONG",
+      "entry_price": 546.13,
+      "entry_time": "2026-11-11T14:00:48.723628+00:00",
+      "leverage": 2,
+      "risk": 9.32288914737104,
+      "atr": 7.769074289475866,
+      "tp1": 557.7836114342138,
+      "tp2": 569.4372228684276,
+      "tp3": 584.9753714473793,
+      "stop_loss": 536.807110852629,
+      "initial_stop": 536.807110852629,
+      "tp1_lock_price": 546.9069074289475,
+      "tp2_lock_price": 557.7836114342138,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 546.13,
+      "max_adv": 546.13,
+      "last_candle_ts": 1794405600,
+      "score": 8,
+      "required_score": 8,
+      "rsi_1h": 67.32336589752863,
+      "rsi_15m": 56.29450035287358,
+      "adx_1h": 38.80350897756609,
+      "volume_surge": 0.8892095249753229,
+      "reasons": [
+        "1H EMA50/200 정배열 및 추세 확인",
+        "1H EMA20 기울기 +1.41%",
+        "1H ADX 38.8",
+        "15M EMA21 눌림 후 재돌파",
+        "15M 캔들 몸통 0.80",
         "BTC 방향 필터 통과"
       ],
       "missing_ticker_count": 0,
@@ -130,8 +134,8 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 127,
-    "excluded_other_versions": 127,
+    "csv_rows": 128,
+    "excluded_other_versions": 128,
     "first_closed_at": "",
     "last_closed_at": ""
   },
@@ -143,6 +147,11 @@
     },
     "HYPE_USDT": {
       "time": "2026-11-11T13:55:26.180169+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
+    },
+    "IBM_USDT": {
+      "time": "2026-11-11T14:00:48.723628+00:00",
       "direction": "SHORT",
       "reason": "SL"
     }
