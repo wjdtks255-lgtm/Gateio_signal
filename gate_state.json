@@ -18,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 567.94,
-      "max_adv": 554.02,
-      "last_candle_ts": 1794427800,
+      "max_adv": 552.12,
+      "last_candle_ts": 1794430200,
       "score": 9,
       "required_score": 8,
       "rsi_1h": 67.78731352635474,
@@ -37,64 +37,29 @@
       ],
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false
-    },
-    "GRAM_USDT": {
-      "strategy_version": 4,
-      "direction": "LONG",
-      "entry_price": 1.2283,
-      "entry_time": "2026-11-11T18:45:35.129366+00:00",
-      "leverage": 2,
-      "risk": 0.03803858988922361,
-      "atr": 0.03169882490768634,
-      "tp1": 1.2758482373615294,
-      "tp2": 1.3233964747230589,
-      "tp3": 1.3867941245384316,
-      "stop_loss": 1.1902614101107762,
-      "initial_stop": 1.1902614101107762,
-      "tp1_lock_price": 1.2314698824907686,
-      "tp2_lock_price": 1.2758482373615294,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 1.232,
-      "max_adv": 1.2017,
-      "last_candle_ts": 1794427800,
-      "score": 8,
-      "required_score": 8,
-      "rsi_1h": 63.61150497388538,
-      "rsi_15m": 59.29732785082396,
-      "adx_1h": 47.75610065281102,
-      "volume_surge": 1.602513377468594,
-      "reasons": [
-        "1H EMA50/200 정배열 및 추세 확인",
-        "1H EMA20 기울기 +1.91%",
-        "1H ADX 47.8",
-        "15M EMA21 눌림 후 재돌파",
-        "거래량 증가 1.60배",
-        "15M 캔들 몸통 0.91"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
     }
   },
   "stats": {
     "wins": 0,
     "draws": 0,
-    "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
+    "losses": 1,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": -1.032,
     "win_r": 0.0,
-    "loss_r": 0.0,
-    "recent_r": [],
+    "loss_r": 1.032,
+    "recent_r": [
+      -1.032
+    ],
     "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 0,
+        "total": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "win_rate": 0.0,
-        "avg_r": 0.0,
+        "avg_r": -1.032,
         "pf": 0.0
       },
       "SHORT": {
@@ -108,16 +73,21 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 134,
+    "csv_rows": 135,
     "excluded_other_versions": 134,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-11T20:58:28.946796+00:00",
+    "last_closed_at": "2026-11-11T20:58:28.946796+00:00"
   },
   "closed_symbols": {
     "QQQ_USDT": {
       "time": "2026-11-11T19:20:35.338553+00:00",
       "direction": "LONG",
       "reason": "TRAILING_STOP"
+    },
+    "GRAM_USDT": {
+      "time": "2026-11-11T20:58:28.946796+00:00",
+      "direction": "LONG",
+      "reason": "SL"
     }
   },
   "fail_count": 0,
