@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 584.09,
       "max_adv": 551.81,
-      "last_candle_ts": 1794437400,
+      "last_candle_ts": 1794437700,
       "score": 9,
       "required_score": 8,
       "rsi_1h": 67.78731352635474,
@@ -55,9 +55,9 @@
       "tp2_lock_price": 943.647855835109,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 973.42,
+      "max_fav": 971.2,
       "max_adv": 982.51,
-      "last_candle_ts": 1794437400,
+      "last_candle_ts": 1794437700,
       "score": 8,
       "required_score": 7,
       "rsi_1h": 41.013518519762584,
@@ -114,11 +114,6 @@
     "last_closed_at": ""
   },
   "closed_symbols": {
-    "GRAM_USDT": {
-      "time": "2026-11-11T20:58:28.946796+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "ZHIPU_USDT": {
       "time": "2026-11-11T22:15:32.909599+00:00",
       "direction": "LONG",
