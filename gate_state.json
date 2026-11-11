@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 567.94,
       "max_adv": 551.81,
-      "last_candle_ts": 1794434700,
+      "last_candle_ts": 1794435000,
       "score": 9,
       "required_score": 8,
       "rsi_1h": 67.78731352635474,
@@ -56,8 +56,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 159.3,
-      "max_adv": 156.89,
-      "last_candle_ts": 1794434700,
+      "max_adv": 155.83,
+      "last_candle_ts": 1794435000,
       "score": 8,
       "required_score": 8,
       "rsi_1h": 61.17646352233727,
@@ -74,64 +74,29 @@
       ],
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false
-    },
-    "ZHIPU_USDT": {
-      "strategy_version": 4,
-      "direction": "LONG",
-      "entry_price": 64.99,
-      "entry_time": "2026-11-11T22:00:43.096694+00:00",
-      "leverage": 4,
-      "risk": 0.911134315391229,
-      "atr": 0.7592785961593576,
-      "tp1": 66.12891789423904,
-      "tp2": 67.26783578847807,
-      "tp3": 68.78639298079678,
-      "stop_loss": 64.07886568460877,
-      "initial_stop": 64.07886568460877,
-      "tp1_lock_price": 65.06592785961593,
-      "tp2_lock_price": 66.12891789423904,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 65.07,
-      "max_adv": 64.8,
-      "last_candle_ts": 1794434700,
-      "score": 8,
-      "required_score": 8,
-      "rsi_1h": 64.27950768011577,
-      "rsi_15m": 58.87114284479231,
-      "adx_1h": 45.98832057058218,
-      "volume_surge": 1.096493323459857,
-      "reasons": [
-        "1H EMA50/200 정배열 및 추세 확인",
-        "1H EMA20 기울기 +1.00%",
-        "1H ADX 46.0",
-        "15M EMA21 눌림 후 재돌파",
-        "거래량 증가 1.10배",
-        "15M 캔들 몸통 0.50"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
     }
   },
   "stats": {
     "wins": 0,
     "draws": 0,
-    "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
+    "losses": 1,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": -1.071,
     "win_r": 0.0,
-    "loss_r": 0.0,
-    "recent_r": [],
+    "loss_r": 1.071,
+    "recent_r": [
+      -1.071
+    ],
     "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 0,
+        "total": 1,
         "wins": 0,
         "draws": 0,
-        "losses": 0,
+        "losses": 1,
         "win_rate": 0.0,
-        "avg_r": 0.0,
+        "avg_r": -1.071,
         "pf": 0.0
       },
       "SHORT": {
@@ -145,14 +110,19 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 135,
+    "csv_rows": 136,
     "excluded_other_versions": 135,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-11T22:15:32.909599+00:00",
+    "last_closed_at": "2026-11-11T22:15:32.909599+00:00"
   },
   "closed_symbols": {
     "GRAM_USDT": {
       "time": "2026-11-11T20:58:28.946796+00:00",
+      "direction": "LONG",
+      "reason": "SL"
+    },
+    "ZHIPU_USDT": {
+      "time": "2026-11-11T22:15:32.909599+00:00",
       "direction": "LONG",
       "reason": "SL"
     }
