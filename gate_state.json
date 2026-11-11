@@ -18,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.1727,
-      "max_adv": 0.1756,
-      "last_candle_ts": 1794360600,
+      "max_adv": 0.176,
+      "last_candle_ts": 1794360900,
       "score": 8,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -51,7 +51,7 @@
       "tp2_reached": false,
       "max_fav": 243.63,
       "max_adv": 245.53,
-      "last_candle_ts": 1794360600,
+      "last_candle_ts": 1794360900,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -60,38 +60,6 @@
         "15M EMA21 눌림 후 재돌파",
         "거래량 증가 3.74배",
         "15M 캔들 몸통 0.60",
-        "BTC 방향 필터 통과"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
-    "ZEC_USDT": {
-      "strategy_version": 2,
-      "direction": "SHORT",
-      "entry_price": 1051.73,
-      "entry_time": "2026-11-10T22:30:35.803250+00:00",
-      "leverage": 2,
-      "risk": 47.937270681115656,
-      "atr": 31.958180454077105,
-      "tp1": 1019.7718195459229,
-      "tp2": 971.8345488648073,
-      "tp3": 923.8972781836916,
-      "stop_loss": 1035.7509097729614,
-      "initial_stop": 1099.6672706811157,
-      "tp1_lock_price": 1035.7509097729614,
-      "tp2_lock_price": 1019.7718195459229,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 1016.61,
-      "max_adv": 1055.69,
-      "last_candle_ts": 1794360600,
-      "score": 8,
-      "reasons": [
-        "1H EMA20/50 추세 정렬",
-        "1H EMA20 기울기 -3.44%",
-        "1H ADX 40.0",
-        "15M EMA21 눌림 후 재돌파",
-        "15M 캔들 몸통 0.77",
         "BTC 방향 필터 통과"
       ],
       "missing_ticker_count": 0,
@@ -115,8 +83,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 73326.9,
-      "max_adv": 73861.0,
-      "last_candle_ts": 1794360600,
+      "max_adv": 73895.5,
+      "last_candle_ts": 1794360900,
       "score": 7,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -146,8 +114,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1.0486,
-      "max_adv": 1.0568,
-      "last_candle_ts": 1794360600,
+      "max_adv": 1.0609,
+      "last_candle_ts": 1794360900,
       "score": 9,
       "reasons": [
         "1H EMA20/50 추세 정렬",
@@ -163,16 +131,15 @@
     }
   },
   "stats": {
-    "wins": 59,
+    "wins": 60,
     "draws": 3,
     "losses": 41,
-    "total": 103,
-    "r_count": 103,
-    "sum_r": -2.672999999999999,
-    "win_r": 38.678999999999995,
+    "total": 104,
+    "r_count": 104,
+    "sum_r": -2.361999999999999,
+    "win_r": 38.989999999999995,
     "loss_r": 41.35199999999998,
     "recent_r": [
-      -1.061,
       0.053,
       2.63,
       0.603,
@@ -221,9 +188,10 @@
       0.612,
       0.288,
       -1.047,
-      -1.056
+      -1.056,
+      0.311
     ],
-    "positive_count": 62,
+    "positive_count": 63,
     "directional": {
       "LONG": {
         "total": 30,
@@ -235,13 +203,13 @@
         "pf": 0.5405526596042824
       },
       "SHORT": {
-        "total": 73,
-        "wins": 46,
+        "total": 74,
+        "wins": 47,
         "draws": 3,
         "losses": 24,
-        "win_rate": 65.71428571428571,
-        "avg_r": 0.0756712328767123,
-        "pf": 1.2349538513887113
+        "win_rate": 66.19718309859155,
+        "avg_r": 0.07885135135135132,
+        "pf": 1.248181702181957
       }
     }
   },
@@ -255,6 +223,11 @@
       "time": "2026-11-11T00:40:33.255462+00:00",
       "direction": "SHORT",
       "reason": "SL"
+    },
+    "ZEC_USDT": {
+      "time": "2026-11-11T01:40:30.217587+00:00",
+      "direction": "SHORT",
+      "reason": "PROFIT_LOCK"
     }
   },
   "fail_count": 0,
