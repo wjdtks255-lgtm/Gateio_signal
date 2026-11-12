@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 948.59,
       "max_adv": 1006.23,
-      "last_candle_ts": 1794496500,
+      "last_candle_ts": 1794496800,
       "score": 8,
       "required_score": 7,
       "rsi_1h": 41.013518519762584,
@@ -56,7 +56,7 @@
       "tp2_reached": false,
       "max_fav": 7.289,
       "max_adv": 7.594,
-      "last_candle_ts": 1794496500,
+      "last_candle_ts": 1794496800,
       "score": 9,
       "required_score": 6,
       "rsi_1h": 32.84368868549109,
@@ -94,7 +94,7 @@
       "tp2_reached": false,
       "max_fav": 9.767,
       "max_adv": 10.106,
-      "last_candle_ts": 1794496500,
+      "last_candle_ts": 1794496800,
       "score": 8,
       "required_score": 6,
       "rsi_1h": 38.94810924925611,
@@ -131,7 +131,7 @@
       "tp2_reached": true,
       "max_fav": 204.1,
       "max_adv": 214.0,
-      "last_candle_ts": 1794496500,
+      "last_candle_ts": 1794496800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.34141859244144,
@@ -179,7 +179,7 @@
       "tp2_reached": false,
       "max_fav": 3.3402,
       "max_adv": 3.4887,
-      "last_candle_ts": 1794496500,
+      "last_candle_ts": 1794496800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.576039104152635,
@@ -226,7 +226,7 @@
       "tp2_reached": true,
       "max_fav": 49.8,
       "max_adv": 50.95,
-      "last_candle_ts": 1794496500,
+      "last_candle_ts": 1794496800,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 36.48076681044982,
@@ -294,9 +294,9 @@
       "tp2_lock_price": 0.29168499915434326,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.2988,
-      "max_adv": 0.2989,
-      "last_candle_ts": 1794496500,
+      "max_fav": 0.2974,
+      "max_adv": 0.2996,
+      "last_candle_ts": 1794496800,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 34.46971279874725,
@@ -347,6 +347,77 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "모든 지표가 하방 정렬되었고 결정적인 약점이 없어 진입하기에 충분하다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "CRCL_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 63.93,
+      "entry_time": "2026-11-12T15:25:33.267689+00:00",
+      "leverage": 3,
+      "risk": 0.9119147814677551,
+      "atr": 0.7599289845564626,
+      "tp1": 62.790106523165306,
+      "tp2": 61.65021304633061,
+      "tp3": 60.130355077217686,
+      "stop_loss": 64.84191478146775,
+      "initial_stop": 64.84191478146775,
+      "tp1_lock_price": 63.81601065231653,
+      "tp2_lock_price": 62.790106523165306,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 63.93,
+      "max_adv": 63.93,
+      "last_candle_ts": 1794497100,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 32.36139880883778,
+      "rsi_15m": 37.500978826506966,
+      "adx_1h": 31.830812027526694,
+      "volume_surge": 1.5272901872231752,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 31.8 강한 추세 (+2)",
+        "거래량 급증 1.53배 (+2)",
+        "1H EMA20 기울기 -0.92% (+1)",
+        "15M 캔들 몸통 0.71 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 2,
+        "valid": 3,
+        "total": 5,
+        "avg_confidence": 80,
+        "votes": {
+          "Gemini": {
+            "error": "503 서버 혼잡"
+          },
+          "GPT-OSS": {
+            "decision": "ENTER",
+            "confidence": 70,
+            "reason": "RSI 과매도로 반등 위험 있으나 추세·볼륨·전략 성과가 강해 진입 가능",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "RSI 32.4 과매도 구간에서 24h -3.92% 하락 후 숏 진입은 추격 매도 위험이 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "지표 정렬과 거래량 조건이 완벽하여 진입을 막을 결정적 약점이 없다.",
             "model": "gemini-flash-lite-latest"
           }
         }
