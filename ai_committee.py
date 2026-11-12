@@ -27,8 +27,8 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
 
-AI_TIMEOUT_SEC = 20          # 위원 한 명당 응답 대기 한도
-AI_TIME_BUDGET_SEC = 200     # 실행 시작 후 이 시간이 지나면 AI 검토 생략 (워크플로 5분 제한 보호)
+AI_TIMEOUT_SEC = 45          # 위원 한 명당 응답 대기 한도 (추론형 모델은 생각하는 시간이 길어 넉넉히)
+AI_TIME_BUDGET_SEC = 170     # 실행 시작 후 이 시간이 지나면 AI 검토 생략 (워크플로 시간 제한 보호)
 DRAW_BAND_R = 0.05           # bot.py 와 같은 무승부 기준
 
 NORMAL_PROMPT = """너는 선물 단기매매 시그널의 리스크 심사위원이다.
@@ -53,7 +53,7 @@ SKEPTIC_PROMPT = """너는 선물 단기매매 위원회의 '반론 담당' 위�
 # 모델 이름은 서비스 쪽에서 바뀔 수 있어 환경변수로 덮어쓸 수 있게 해 둠. 후보가 여러 개면 앞에서부터 시도.
 VOTERS = [
     ("Gemini", "gemini", "gemini",
-     [os.getenv("GEMINI_MODEL", "gemini-flash-latest")], "normal"),
+     os.getenv("GEMINI_MODEL", "gemini-flash-latest,gemini-2.5-flash").split(","), "normal"),
     ("GPT-OSS", "gptoss", "groq",
      [os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")], "normal"),
     ("Qwen", "qwen", "groq",
@@ -99,6 +99,16 @@ def _parse_vote(text: str) -> Optional[Dict[str, Any]]:
 
 
 # ───────────────────────────── 제공처별 호출 ─────────────────────────────
+class AIError(Exception):
+    """텔레그램에 짧게 보여줄 실패 이유를 담는 예외."""
+
+
+def _http_error(status: int) -> AIError:
+    labels = {400: "요청 형식 오류", 401: "키 오류", 402: "크레딧 부족", 403: "권한 없음",
+              404: "모델 없음", 429: "한도 초과", 503: "서버 혼잡"}
+    return AIError(f"{status} {labels.get(status, '오류')}")
+
+
 def _call_gemini(model: str, system: str, prompt: str) -> Optional[str]:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     body = {
@@ -110,7 +120,7 @@ def _call_gemini(model: str, system: str, prompt: str) -> Optional[str]:
                              json=body, timeout=AI_TIMEOUT_SEC)
     if response.status_code != 200:
         logging.warning("Gemini(%s) 응답 오류: %s %s", model, response.status_code, response.text[:300])
-        return None
+        raise _http_error(response.status_code)
     parts = response.json()["candidates"][0]["content"]["parts"]
     return "".join(part.get("text", "") for part in parts if not part.get("thought"))
 
@@ -129,12 +139,14 @@ def _call_openai_style(url: str, key: str, label: str, model: str,
                              json=body, timeout=AI_TIMEOUT_SEC)
     if response.status_code != 200:
         logging.warning("%s(%s) 응답 오류: %s %s", label, model, response.status_code, response.text[:300])
-        return None
+        raise _http_error(response.status_code)
     return response.json()["choices"][0]["message"].get("content") or ""
 
 
-def _ask(provider: str, models: List[str], role: str, prompt: str) -> Optional[Dict[str, Any]]:
+def _ask(provider: str, models: List[str], role: str, prompt: str) -> Dict[str, Any]:
+    """성공하면 투표, 실패하면 {"error": 이유} 를 돌려줌."""
     system = SKEPTIC_PROMPT if role == "skeptic" else NORMAL_PROMPT
+    error = "응답 없음"
     for model in [m.strip() for m in models if m.strip()]:
         try:
             if provider == "gemini":
@@ -145,16 +157,24 @@ def _ask(provider: str, models: List[str], role: str, prompt: str) -> Optional[D
             else:
                 text = _call_openai_style("https://openrouter.ai/api/v1/chat/completions",
                                           OPENROUTER_API_KEY, "OpenRouter", model, system, prompt)
-        except Exception as exc:  # 네트워크·형식 오류 등은 다음 후보 또는 '응답 없음'
+        except AIError as exc:
+            error = str(exc)
+            continue
+        except requests.Timeout:
+            logging.warning("AI 시간 초과 (%s %s, %s초)", provider, model, AI_TIMEOUT_SEC)
+            error = "시간 초과"
+            continue
+        except Exception as exc:  # 네트워크·형식 오류 등은 다음 후보로
             logging.warning("AI 호출 실패 (%s %s): %s", provider, model, exc)
+            error = "연결 오류"
             continue
         vote = _parse_vote(text or "")
         if vote:
             vote["model"] = model
             return vote
-        if text:
-            logging.warning("AI 응답 해석 실패 (%s %s): %s", provider, model, text[:200])
-    return None
+        logging.warning("AI 응답 해석 실패 (%s %s): %s", provider, model, (text or "")[:200])
+        error = "답변 형식 오류" if text else "빈 답변"
+    return {"error": error}
 
 
 def _review(signal: Dict[str, Any]) -> Dict[str, Any]:
@@ -170,7 +190,7 @@ def _review(signal: Dict[str, Any]) -> Dict[str, Any]:
                    for name, provider, models, role in active}
         votes = {name: future.result() for name, future in futures.items()}
 
-    valid = [vote for vote in votes.values() if vote]
+    valid = [vote for vote in votes.values() if vote and "decision" in vote]
     enter = sum(1 for vote in valid if vote["decision"] == "ENTER")
     if not valid:
         verdict = "UNAVAILABLE"
@@ -203,8 +223,9 @@ def _format_block(review: Dict[str, Any]) -> str:
         head += "</b>"
     lines = [head]
     for name, vote in review.get("votes", {}).items():
-        if not vote:
-            lines.append(f"• {name}: 응답 없음")
+        if not vote or "decision" not in vote:
+            reason = (vote or {}).get("error", "")
+            lines.append(f"• {name}: 응답 없음" + (f" ({html.escape(reason)})" if reason else ""))
             continue
         label = "진입" if vote["decision"] == "ENTER" else "보류"
         lines.append(f"• {name}: {label} {vote['confidence']} — {html.escape(vote['reason'])}")
