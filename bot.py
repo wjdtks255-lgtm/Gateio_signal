@@ -38,8 +38,8 @@ STATE_FILE = Path(os.getenv("STATE_FILE", "gate_state.json"))
 TRADES_FILE = Path(os.getenv("TRADES_FILE", "trades.csv"))
 LOG_FILE = Path(os.getenv("LOG_FILE", "gate_signal_bot.log"))
 
-MAX_SLOTS = 5
-MAX_CRYPTO_SLOTS = 3
+MAX_SLOTS = 8
+MAX_CRYPTO_SLOTS = 6          # 코인 최대 6개 → 주식·지수·원자재용 최소 2자리 유지
 MAX_CANDIDATES = 60           # 탐색 후보 확대 (40 -> 60)
 SCAN_BUDGET_SEC = 150
 MIN_CHANGE_PCT = 1.5
@@ -120,7 +120,7 @@ AUDIT_FILE = Path(os.getenv(
 ))
 LEGACY_CSV_FIELDS = BASE_CSV_FIELDS[:-1]
 
-NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
+NUM_EMOJI = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣"]
 
 STOCK_BASES = {
     "SKHYNIX", "TSLA", "AAPL", "NVDA", "MSFT", "AMZN", "META", "NFLX",
