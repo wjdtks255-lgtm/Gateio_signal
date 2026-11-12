@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 3.745,
       "max_adv": 3.672,
-      "last_candle_ts": 1794512700,
+      "last_candle_ts": 1794513000,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 57.631182391356845,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 81.06,
       "max_adv": 81.95,
-      "last_candle_ts": 1794512700,
+      "last_candle_ts": 1794513000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.1874120180412,
@@ -167,7 +167,7 @@
       "tp2_reached": false,
       "max_fav": 1.0214,
       "max_adv": 1.0346,
-      "last_candle_ts": 1794512700,
+      "last_candle_ts": 1794513000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 31.244010310676686,
@@ -239,9 +239,9 @@
       "tp2_lock_price": 606.4183077338658,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 587.3,
+      "max_fav": 587.83,
       "max_adv": 575.56,
-      "last_candle_ts": 1794512700,
+      "last_candle_ts": 1794513000,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 67.7135129751334,
@@ -297,83 +297,6 @@
         }
       }
     },
-    "SUI_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 0.7925,
-      "entry_time": "2026-11-12T17:15:30.010206+00:00",
-      "leverage": 4,
-      "risk": 0.011677439264823893,
-      "atr": 0.009731199387353244,
-      "tp1": 0.7779032009189701,
-      "tp2": 0.7633064018379403,
-      "tp3": 0.7438440030632337,
-      "stop_loss": 0.8041774392648239,
-      "initial_stop": 0.8041774392648239,
-      "tp1_lock_price": 0.791040320091897,
-      "tp2_lock_price": 0.7779032009189701,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 0.7925,
-      "max_adv": 0.8032,
-      "last_candle_ts": 1794512700,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 34.039696514252256,
-      "rsi_15m": 43.67083411916224,
-      "adx_1h": 37.08208161525944,
-      "volume_surge": 0.2005571752407748,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (SHORT)",
-        "1H ADX 37.1 강한 추세 (+2)",
-        "1H EMA20 기울기 -1.17% (+1)",
-        "15M 캔들 몸통 0.70 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "APPROVE",
-        "enter": 3,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 81,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "강한 하방 추세와 우수한 전략 성과를 보여 진입 가치가 높음.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 68,
-            "reason": "RSI 과매도와 거래량 부진으로 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "강한 하락 추세와 양호한 리스크 구조, 높은 전략 승률로 진입 가치 있음",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 80,
-            "reason": "24시간 -6.29% 급락 후 거래량 없이 숏 진입은 추격과 반등 리스크가 큽니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "1시간 RSI가 34로 과매도 근접이나, 강한 추세와 정배열로 하방 여력이 충분하다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "AAVE_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -393,7 +316,7 @@
       "tp2_reached": false,
       "max_fav": 112.68,
       "max_adv": 114.18,
-      "last_candle_ts": 1794512700,
+      "last_candle_ts": 1794513000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 30.211524495547664,
@@ -466,7 +389,7 @@
       "tp2_reached": false,
       "max_fav": 19.03,
       "max_adv": 19.36,
-      "last_candle_ts": 1794512700,
+      "last_candle_ts": 1794513000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 42.630563009156056,
@@ -539,8 +462,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 3.3892,
-      "max_adv": 3.4201,
-      "last_candle_ts": 1794512700,
+      "max_adv": 3.4275,
+      "last_candle_ts": 1794513000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.469169967459344,
@@ -602,12 +525,12 @@
   "stats": {
     "wins": 6,
     "draws": 0,
-    "losses": 4,
-    "total": 10,
-    "r_count": 10,
-    "sum_r": 3.606,
+    "losses": 5,
+    "total": 11,
+    "r_count": 11,
+    "sum_r": 2.538,
     "win_r": 7.853999999999999,
-    "loss_r": 4.248,
+    "loss_r": 5.316000000000001,
     "recent_r": [
       0.47,
       1.154,
@@ -618,7 +541,8 @@
       1.132,
       -1.052,
       -1.068,
-      -1.058
+      -1.058,
+      -1.068
     ],
     "positive_count": 6,
     "directional": {
@@ -632,20 +556,20 @@
         "pf": 0.0
       },
       "SHORT": {
-        "total": 9,
+        "total": 10,
         "wins": 5,
         "draws": 0,
-        "losses": 4,
-        "win_rate": 55.55555555555556,
-        "avg_r": 0.34844444444444433,
-        "pf": 1.7382297551789074
+        "losses": 5,
+        "win_rate": 50.0,
+        "avg_r": 0.20679999999999993,
+        "pf": 1.3890142964635062
       }
     },
     "strategy_version": 5,
-    "csv_rows": 157,
+    "csv_rows": 158,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-12T18:55:25.699116+00:00"
+    "last_closed_at": "2026-11-12T19:55:27.420616+00:00"
   },
   "closed_symbols": {
     "LINK_USDT": {
@@ -695,6 +619,11 @@
     },
     "TRUMP_USDT": {
       "time": "2026-11-12T18:55:25.699116+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
+    },
+    "SUI_USDT": {
+      "time": "2026-11-12T19:55:27.420616+00:00",
       "direction": "SHORT",
       "reason": "SL"
     }
