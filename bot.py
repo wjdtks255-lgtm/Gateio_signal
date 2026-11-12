@@ -7,6 +7,7 @@ Gate.io USDT Futures Signal Bot - version 4.1 (Balanced Signal Frequency & RRR E
 - Reduced SL (1.2 ATR = -0.8R) & Increased RRR (TP1 1.5 ATR = +1.25R with 50% partial profit lock).
 - 15m EMA21 Trailing Stop after TP1 reach + accurate blended R accounting.
 - Balanced entry thresholds to prevent signal starvation while preserving win rate.
+- AI committee (Gemini + Groq) reviews each new signal for reference/logging only (ai_committee.py).
 """
 
 import csv
@@ -21,6 +22,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
+
+try:
+    import ai_committee
+except Exception:
+    ai_committee = None
 
 # ───────────────────────────── Configuration ─────────────────────────────
 TELEGRAM_TOKEN = os.getenv("GATE_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_TOKEN")
@@ -1037,6 +1043,9 @@ def finalize_trade(state: Dict[str, Any], symbol: str, info: Dict[str, Any],
         "volume_surge": round(safe_float(info.get("volume_surge")), 3),
     })
 
+    if ai_committee:
+        ai_committee.log_closed_trade(symbol, info, net_r, outcome, reason, now)
+
     state["closed_symbols"][symbol] = {
         "time": now.isoformat(),
         "direction": direction,
@@ -1348,6 +1357,10 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
             def target_pct(target: float) -> float:
                 return pct_move(direction, price, target)
 
+            ai_block = ai_committee.review_and_format(
+                active[symbol], symbol, category, change, btc_bias, analysis, state, start_time
+            ) if ai_committee else ""
+
             reasons_text = "\n".join(f"• {reason}" for reason in analysis["reasons"])
             message = (
                 f"🛡️ <b>신규 시그널 (v4 RRR개선판) | 품질 점수 {analysis['score']}/9 (기준 {analysis['required_score']})</b> | {dir_tag(direction)}\n"
@@ -1360,7 +1373,8 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
                 f"📌 <b>진입 근거</b>\n{reasons_text}\n"
                 f"• 1H ADX <code>{analysis['adx']:.1f}</code> / 1H RSI <code>{analysis['rsi1h']:.1f}</code>\n"
                 f"• 15M RSI <code>{analysis['rsi15']:.1f}</code> / 거래량 <code>{analysis['volume_surge']:.2f}배</code>\n"
-                f"• EMA21 거리 <code>{analysis['ema_distance_atr']:.2f} ATR</code>\n\n"
+                f"• EMA21 거리 <code>{analysis['ema_distance_atr']:.2f} ATR</code>"
+                f"{ai_block}\n\n"
                 "⚠️ 시그널·가상 추적 전용입니다. 자동 주문과 부분청산은 실행하지 않습니다."
             )
             send_telegram_message(message)
@@ -1406,6 +1420,10 @@ def build_slot_status_message(state: Dict[str, Any], tickers: Dict[str, float],
             f"   <code>{status}</code>"
         )
     lines.append("\n" + build_stats_line(stats))
+    if ai_committee:
+        ai_line = ai_committee.build_ai_stats_line()
+        if ai_line:
+            lines.append("\n" + ai_line)
     return "\n".join(lines)
 
 
