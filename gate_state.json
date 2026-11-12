@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 950.89,
       "max_adv": 997.46,
-      "last_candle_ts": 1794447900,
+      "last_candle_ts": 1794448200,
       "score": 8,
       "required_score": 7,
       "rsi_1h": 41.013518519762584,
@@ -56,7 +56,7 @@
       "tp2_reached": false,
       "max_fav": 295.64,
       "max_adv": 293.99,
-      "last_candle_ts": 1794447900,
+      "last_candle_ts": 1794448200,
       "score": 7,
       "required_score": 7,
       "rsi_1h": 55.88465414318842,
@@ -92,7 +92,7 @@
       "tp2_reached": false,
       "max_fav": 0.3564,
       "max_adv": 0.3598,
-      "last_candle_ts": 1794447900,
+      "last_candle_ts": 1794448200,
       "score": 7,
       "required_score": 6,
       "rsi_1h": 38.78385599720305,
@@ -126,9 +126,9 @@
       "tp2_lock_price": 117.1296478024555,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 119.61,
+      "max_fav": 119.58,
       "max_adv": 120.19,
-      "last_candle_ts": 1794447900,
+      "last_candle_ts": 1794448200,
       "score": 8,
       "required_score": 6,
       "rsi_1h": 40.822290295184516,
@@ -163,7 +163,7 @@
       "tp2_lock_price": 161.8089243985479,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 158.62,
+      "max_fav": 159.38,
       "max_adv": 158.62,
       "last_candle_ts": 1794448200,
       "score": 8,
@@ -185,26 +185,24 @@
     }
   },
   "stats": {
-    "wins": 1,
+    "wins": 0,
     "draws": 0,
     "losses": 0,
-    "total": 1,
-    "r_count": 1,
-    "sum_r": 0.662,
-    "win_r": 0.662,
+    "total": 0,
+    "r_count": 0,
+    "sum_r": 0.0,
+    "win_r": 0.0,
     "loss_r": 0.0,
-    "recent_r": [
-      0.662
-    ],
-    "positive_count": 1,
+    "recent_r": [],
+    "positive_count": 0,
     "directional": {
       "LONG": {
-        "total": 1,
-        "wins": 1,
+        "total": 0,
+        "wins": 0,
         "draws": 0,
         "losses": 0,
-        "win_rate": 100.0,
-        "avg_r": 0.662,
+        "win_rate": 0.0,
+        "avg_r": 0.0,
         "pf": 0.0
       },
       "SHORT": {
@@ -219,9 +217,9 @@
     },
     "strategy_version": 4,
     "csv_rows": 140,
-    "excluded_other_versions": 139,
-    "first_closed_at": "2026-11-12T01:50:29.273551+00:00",
-    "last_closed_at": "2026-11-12T01:50:29.273551+00:00"
+    "excluded_other_versions": 140,
+    "first_closed_at": "",
+    "last_closed_at": ""
   },
   "closed_symbols": {
     "ZHIPU_USDT": {
