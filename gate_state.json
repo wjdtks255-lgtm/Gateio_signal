@@ -1,5 +1,80 @@
 {
-  "active_slots": {},
+  "active_slots": {
+    "NG_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 3.672,
+      "entry_time": "2026-11-12T16:15:31.714417+00:00",
+      "leverage": 3,
+      "risk": 0.03743244925596214,
+      "atr": 0.031193707713301783,
+      "tp1": 3.718790561569953,
+      "tp2": 3.7655811231399055,
+      "tp3": 3.827968538566509,
+      "stop_loss": 3.634567550744038,
+      "initial_stop": 3.634567550744038,
+      "tp1_lock_price": 3.6766790561569955,
+      "tp2_lock_price": 3.718790561569953,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 3.672,
+      "max_adv": 3.672,
+      "last_candle_ts": 1794500100,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 57.631182391356845,
+      "rsi_15m": 54.66338098828228,
+      "adx_1h": 31.244017377742974,
+      "volume_surge": 1.6439862021909708,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 31.2 강한 추세 (+2)",
+        "거래량 급증 1.64배 (+2)",
+        "1H EMA20 기울기 +0.40% (+1)",
+        "15M 캔들 몸통 0.79 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 74,
+        "votes": {
+          "Gemini": {
+            "error": "503 서버 혼잡"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 55,
+            "reason": "BTC와 방향이 반대이고 근거가 약해 SKIP",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "BTC 1시간 차트 숏 바이어스와 충돌하여 방향성 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "BTC 하방 편향과 롱 방향이 충돌하고, 전략 샘플이 1건에 불과해 신뢰가 낮다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 추세와 거래량 동반으로 약점을 극복할 수 있습니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    }
+  },
   "stats": {
     "wins": 6,
     "draws": 0,
