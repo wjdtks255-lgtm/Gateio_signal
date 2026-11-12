@@ -1,2 +1,3 @@
 closed_at,symbol,direction,entry_time,exit_reason,net_r,outcome,ai_verdict,ai_enter_votes,ai_valid_votes,ai_avg_confidence,gemini_decision,gemini_confidence,gptoss_decision,gptoss_confidence,qwen_decision,qwen_confidence,deepseek_decision,deepseek_confidence,skeptic_decision,skeptic_confidence
 2026-11-12T11:55:26.411738+00:00,GOOGL_USDT,LONG,2026-11-12T00:30:40.044345+00:00,SL,-1.123,loss,NONE,,,,,,,,,,,,,
+2026-11-12T13:10:32.016909+00:00,AAPL_USDT,LONG,2026-11-12T11:15:33.072908+00:00,TRAILING_STOP,0.47,win,UNAVAILABLE,0,0,0,,,,,,,,,,
