@@ -28,7 +28,8 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
 
-AI_TIMEOUT_SEC = 45          # 위원 한 명당 응답 대기 한도 (추론형 모델은 생각하는 시간이 길어 넉넉히)
+AI_TIMEOUT_SEC = 30          # 요청 한 번당 응답 대기 한도
+VOTER_BUDGET_SEC = 40        # 위원 한 명이 후보 모델들을 돌아가며 시도하는 총 시간 한도
 AI_TIME_BUDGET_SEC = 170     # 실행 시작 후 이 시간이 지나면 AI 검토 생략 (워크플로 시간 제한 보호)
 DRAW_BAND_R = 0.05           # bot.py 와 같은 무승부 기준
 
@@ -54,7 +55,8 @@ SKEPTIC_PROMPT = """너는 선물 단기매매 위원회의 '반론 담당' 위�
 # 모델 이름은 서비스 쪽에서 바뀔 수 있어 환경변수로 덮어쓸 수 있게 해 둠. 후보가 여러 개면 앞에서부터 시도.
 VOTERS = [
     ("Gemini", "gemini", "gemini",
-     os.getenv("GEMINI_MODEL", "gemini-flash-latest,gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash").split(","),
+     # Flash 가 혼잡(503)하면 같은 계열은 대개 다 혼잡해서, 마지막엔 가벼운 Flash-Lite 로 대신 답함
+     os.getenv("GEMINI_MODEL", "gemini-flash-latest,gemini-flash-lite-latest").split(","),
      "normal"),
     ("GPT-OSS", "gptoss", "groq",
      [os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")], "normal"),
@@ -111,7 +113,8 @@ def _http_error(status: int) -> AIError:
     return AIError(f"{status} {labels.get(status, '오류')}")
 
 
-def _call_gemini(model: str, system: str, prompt: str, json_mode: bool = True) -> Optional[str]:
+def _call_gemini(model: str, system: str, prompt: str, json_mode: bool = True,
+                 timeout: float = AI_TIMEOUT_SEC) -> Optional[str]:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     config: Dict[str, Any] = {"temperature": 0.2}
     if json_mode:
@@ -122,7 +125,7 @@ def _call_gemini(model: str, system: str, prompt: str, json_mode: bool = True) -
         "generationConfig": config,
     }
     response = requests.post(url, headers={"x-goog-api-key": GEMINI_API_KEY},
-                             json=body, timeout=AI_TIMEOUT_SEC)
+                             json=body, timeout=timeout)
     if response.status_code != 200:
         logging.warning("Gemini(%s) 응답 오류: %s %s", model, response.status_code, response.text[:300])
         raise _http_error(response.status_code)
@@ -136,7 +139,7 @@ def _call_gemini_text(model: str, system: str, prompt: str) -> Optional[str]:
 
 
 def _call_openai_style(url: str, key: str, label: str, model: str,
-                       system: str, prompt: str) -> Optional[str]:
+                       system: str, prompt: str, timeout: float = AI_TIMEOUT_SEC) -> Optional[str]:
     body = {
         "model": model,
         "temperature": 0.2,
@@ -146,7 +149,7 @@ def _call_openai_style(url: str, key: str, label: str, model: str,
         ],
     }
     response = requests.post(url, headers={"Authorization": f"Bearer {key}"},
-                             json=body, timeout=AI_TIMEOUT_SEC)
+                             json=body, timeout=timeout)
     if response.status_code != 200:
         logging.warning("%s(%s) 응답 오류: %s %s", label, model, response.status_code, response.text[:300])
         raise _http_error(response.status_code)
@@ -189,26 +192,29 @@ def _ask(provider: str, models: List[str], role: str, prompt: str) -> Dict[str, 
         candidates = _openrouter_free_models()
         if not candidates:
             return {"error": "무료 모델 없음"}
-    queue = [(model, 0) for model in candidates]
-    while queue:
-        model, attempt = queue.pop(0)
+    started = time.time()
+    for model in candidates:
+        remaining = VOTER_BUDGET_SEC - (time.time() - started)
+        if remaining < 5:   # 이 위원에게 쓸 시간을 다 썼으면 포기 (다른 위원·시그널 시간 보호)
+            if error == "응답 없음":
+                error = "시간 초과"
+            break
+        timeout = min(AI_TIMEOUT_SEC, remaining)
         try:
             if provider == "gemini":
-                text = _call_gemini(model, system, prompt)
+                text = _call_gemini(model, system, prompt, timeout=timeout)
             elif provider == "groq":
                 text = _call_openai_style("https://api.groq.com/openai/v1/chat/completions",
-                                          GROQ_API_KEY, "Groq", model, system, prompt)
+                                          GROQ_API_KEY, "Groq", model, system, prompt, timeout=timeout)
             else:
                 text = _call_openai_style("https://openrouter.ai/api/v1/chat/completions",
-                                          OPENROUTER_API_KEY, "OpenRouter", model, system, prompt)
+                                          OPENROUTER_API_KEY, "OpenRouter", model, system, prompt,
+                                          timeout=timeout)
         except AIError as exc:
             error = str(exc)
-            if error.startswith("503") and attempt == 0:   # 일시적 혼잡이면 잠깐 쉬고 한 번 더
-                time.sleep(3)
-                queue.insert(0, (model, 1))
             continue
         except requests.Timeout:
-            logging.warning("AI 시간 초과 (%s %s, %s초)", provider, model, AI_TIMEOUT_SEC)
+            logging.warning("AI 시간 초과 (%s %s, %.0f초)", provider, model, timeout)
             error = "시간 초과"
             continue
         except Exception as exc:  # 네트워크·형식 오류 등은 다음 후보로
