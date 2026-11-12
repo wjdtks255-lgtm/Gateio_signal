@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Gate.io USDT Futures Signal Bot - version 4.1 (Balanced Signal Frequency & RRR Engine)
+Gate.io USDT Futures Signal Bot - version 5.0 (Quality Score Rework)
 - Telegram signal-only bot; it does NOT place orders.
 - 1h trend (EMA50/EMA200 + RSI + ADX) + 15m pullback/reclaim entry confirmation.
 - Reduced SL (1.2 ATR = -0.8R) & Increased RRR (TP1 1.5 ATR = +1.25R with 50% partial profit lock).
 - 15m EMA21 Trailing Stop after TP1 reach + accurate blended R accounting.
 - Balanced entry thresholds to prevent signal starvation while preserving win rate.
+- v5: quality score counts only optional factors (0~6); mandatory filters are pass/fail only.
 - AI committee (Gemini + Groq) reviews each new signal for reference/logging only (ai_committee.py).
 """
 
@@ -45,8 +46,8 @@ MIN_CHANGE_PCT = 1.5
 MIN_QUOTE_VOLUME = 200_000.0
 LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")
 
-# ----------------- Strategy v4 Parameters -----------------
-STRATEGY_VERSION = 4
+# ----------------- Strategy v5 Parameters -----------------
+STRATEGY_VERSION = 5          # v5: 품질 점수 체계 정리 (통계는 v5 거래부터 새로 집계)
 
 # Risk & RRR Structure
 ATR_SL = 1.2                  # 손절 폭 축소 (1.2 ATR)
@@ -66,8 +67,16 @@ BODY_RATIO_MIN = 0.32         # 15분봉 캔들 몸통 비율 (0.35 -> 0.32)
 MIN_VOLUME_SURGE = 1.05
 MAX_EMA_DISTANCE_ATR = 1.35   # EMA21 이격 허용치 (1.25 -> 1.35)
 
-MIN_SCORE_LONG = 7            # 롱 진입 최소 점수 (8 -> 7 완화)
-MIN_SCORE_SHORT = 6           # 숏 진입 최소 점수 (7 -> 6 완화)
+# 품질 점수 (v5): 필수 조건(추세 정렬·눌림 재돌파·BTC 필터)은 통과/탈락만 판단하고 점수에 넣지 않음.
+# 선택 항목만 채점 → ADX 최대 2 + 거래량 최대 2 + EMA 기울기 1 + 캔들 몸통 1 = 최대 6점
+ADX_GOOD_1H = 20.0            # 1H ADX 20 이상 +1
+ADX_STRONG_1H = 25.0          # 1H ADX 25 이상 +2
+VOLUME_STRONG = 1.5           # 거래량 1.5배 이상 +2 (MIN_VOLUME_SURGE 이상은 +1)
+SLOPE_GOOD_PCT = 0.06         # 1H EMA20 기울기 ±0.06% 이상 +1
+BODY_STRONG = 0.48            # 15M 캔들 몸통 비율 0.48 이상 +1
+MAX_SCORE = 6
+MIN_SCORE_LONG = 2            # 롱 최소 점수 (기존 7/9 와 거의 같은 난이도)
+MIN_SCORE_SHORT = 2           # 숏 최소 점수 (기존 6/9 보다 조금 엄격, 예전처럼 하려면 1)
 RSI_LONG_15M = (46.0, 68.0)   # 눌림목 직후 반등 구간 포착 (기존 53~67 -> 46~68)
 RSI_SHORT_15M = (32.0, 54.0)  # 되돌림 직후 하락 구간 포착 (기존 32~50 -> 32~54)
 RSI_LONG_1H = (48.0, 70.0)
@@ -452,9 +461,9 @@ def build_stats_line(stats: Dict[str, Any]) -> str:
     )
     first_closed = str(stats.get("first_closed_at", ""))[:10]
     last_closed = str(stats.get("last_closed_at", ""))[:10]
-    period = f"{first_closed}~{last_closed} UTC" if first_closed else "신규 v4 거래 대기"
+    period = f"{first_closed}~{last_closed} UTC" if first_closed else f"신규 v{STRATEGY_VERSION} 거래 대기"
     return "\n".join([
-        f"📈 <b>[전략 v{int(stats.get('strategy_version', STRATEGY_VERSION))} | RRR 개선판]</b>",
+        f"📈 <b>[전략 v{int(stats.get('strategy_version', STRATEGY_VERSION))}]</b>",
         f"<code>집계 {period} | CSV {int(stats.get('csv_rows', total))}건 중 이전버전 {int(stats.get('excluded_other_versions', 0))}건 제외</code>",
         f"<code>{total}전 {wins}승 {draws}무 {losses}패</code>",
         f"<code>승률 {win_rate:.1f}% (무 제외)</code>",
@@ -823,28 +832,35 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
         if last["c"] >= previous["c"]:
             return None
 
+    # 필수 조건은 여기까지 오면 이미 통과한 것이므로 근거로만 표시하고 점수에는 넣지 않음
+    reasons: List[str] = [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+    ]
+    if BTC_FILTER_ENABLED and category == "코인" and symbol != "BTC_USDT":
+        reasons.append(f"[필수] BTC 방향 충돌 없음 ({btc_bias})")
+
+    # 선택 항목만 채점 (최대 MAX_SCORE)
     score = 0
-    reasons: List[str] = []
-    score += 2
-    reasons.append("1H EMA20/50/200 추세 정렬")
-    if abs(hourly["slope_pct"]) >= 0.06:
-        score += 1
-        reasons.append(f"1H EMA20 기울기 {hourly['slope_pct']:+.2f}%")
-    if hourly["adx"] >= 20.0:
-        score += 1
-        reasons.append(f"1H ADX {hourly['adx']:.1f}")
-    if pullback_seen:
+    adx_1h = hourly["adx"]
+    if adx_1h >= ADX_STRONG_1H:
         score += 2
-        reasons.append("15M EMA21 눌림 후 재돌파")
-    if surge >= MIN_VOLUME_SURGE:
+        reasons.append(f"1H ADX {adx_1h:.1f} 강한 추세 (+2)")
+    elif adx_1h >= ADX_GOOD_1H:
         score += 1
-        reasons.append(f"거래량 증가 {surge:.2f}배")
-    if body_ratio >= 0.48:
+        reasons.append(f"1H ADX {adx_1h:.1f} (+1)")
+    if surge >= VOLUME_STRONG:
+        score += 2
+        reasons.append(f"거래량 급증 {surge:.2f}배 (+2)")
+    elif surge >= MIN_VOLUME_SURGE:
         score += 1
-        reasons.append(f"15M 캔들 몸통 {body_ratio:.2f}")
-    if category != "코인" or symbol == "BTC_USDT" or btc_bias in ("FLAT", direction):
+        reasons.append(f"거래량 증가 {surge:.2f}배 (+1)")
+    if abs(hourly["slope_pct"]) >= SLOPE_GOOD_PCT:
         score += 1
-        reasons.append(f"BTC 필터 통과 ({btc_bias})")
+        reasons.append(f"1H EMA20 기울기 {hourly['slope_pct']:+.2f}% (+1)")
+    if body_ratio >= BODY_STRONG:
+        score += 1
+        reasons.append(f"15M 캔들 몸통 {body_ratio:.2f} (+1)")
 
     required_score = MIN_SCORE_LONG if direction == "LONG" else MIN_SCORE_SHORT
     if score < required_score:
@@ -857,6 +873,7 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
     return {
         "score": score,
         "required_score": required_score,
+        "max_score": MAX_SCORE,
         "reasons": reasons,
         "atr": atr1h,
         "atr15": atr15,
@@ -1363,7 +1380,7 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
 
             reasons_text = "\n".join(f"• {reason}" for reason in analysis["reasons"])
             message = (
-                f"🛡️ <b>신규 시그널 (v4 RRR개선판) | 품질 점수 {analysis['score']}/9 (기준 {analysis['required_score']})</b> | {dir_tag(direction)}\n"
+                f"🛡️ <b>신규 시그널 (v{STRATEGY_VERSION}) | 품질 점수 {analysis['score']}/{MAX_SCORE} (기준 {analysis['required_score']})</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(price)}</code> | 참고 레버리지 <code>{leverage}배</code>\n"
                 f"🎯 TP1 <code>{fmt_price(tp1)} ({target_pct(tp1):+.2f}%)</code> [50% 분할익절]\n"
@@ -1378,7 +1395,7 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
                 "⚠️ 시그널·가상 추적 전용입니다. 자동 주문과 부분청산은 실행하지 않습니다."
             )
             send_telegram_message(message)
-            logging.info("New signal v4: %s %s score=%s", symbol, direction, analysis["score"])
+            logging.info("New signal v%s: %s %s score=%s/%s", STRATEGY_VERSION, symbol, direction, analysis["score"], MAX_SCORE)
         except Exception:
             logging.exception("Candidate activation failed for %s", symbol)
     return changed
