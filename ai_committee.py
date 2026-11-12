@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 AI 위원회 v2 (1단계: 참고·기록 전용) - 5명 위원회
-- Gemini Flash(구글) / GPT-OSS 120B(OpenAI, Groq) / Qwen(알리바바, Groq) / DeepSeek(OpenRouter)
+- Gemini Flash(구글) / GPT-OSS 120B(OpenAI, Groq) / Qwen(알리바바, Groq)
+  / OpenRouter 무료 모델(DeepSeek 우선, 없으면 다른 회사 무료 모델 자동 선택)
   / 반론 위원(Gemini Flash-Lite, 약점 찾기 전담)
 - 각 위원은 "진입/보류 + 확신도 + 근거"를 내고, 결과는 텔레그램 메시지와 ai_trades.csv 에 기록됩니다.
 - 시그널 진입 여부에는 영향을 주지 않습니다.
@@ -53,14 +54,15 @@ SKEPTIC_PROMPT = """너는 선물 단기매매 위원회의 '반론 담당' 위�
 # 모델 이름은 서비스 쪽에서 바뀔 수 있어 환경변수로 덮어쓸 수 있게 해 둠. 후보가 여러 개면 앞에서부터 시도.
 VOTERS = [
     ("Gemini", "gemini", "gemini",
-     os.getenv("GEMINI_MODEL", "gemini-flash-latest,gemini-2.5-flash").split(","), "normal"),
+     os.getenv("GEMINI_MODEL", "gemini-flash-latest,gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash").split(","),
+     "normal"),
     ("GPT-OSS", "gptoss", "groq",
      [os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")], "normal"),
     ("Qwen", "qwen", "groq",
      [os.getenv("QWEN_MODEL", "qwen/qwen3.8-27b")], "normal"),
-    ("DeepSeek", "deepseek", "openrouter",
-     os.getenv("DEEPSEEK_MODELS", "deepseek/deepseek-v4-flash:free,deepseek/deepseek-r1:free").split(","),
-     "normal"),
+    # "auto" = OpenRouter 의 현재 무료 모델 목록에서 자동 선택 (무료 모델이 자주 바뀌어서)
+    ("OpenRouter", "deepseek", "openrouter",
+     os.getenv("OPENROUTER_MODELS", "auto").split(","), "normal"),
     ("반론위원", "skeptic", "gemini",
      [os.getenv("SKEPTIC_MODEL", "gemini-flash-lite-latest")], "skeptic"),
 ]
@@ -143,11 +145,45 @@ def _call_openai_style(url: str, key: str, label: str, model: str,
     return response.json()["choices"][0]["message"].get("content") or ""
 
 
+# 위원회에 이미 있는 회사(OpenAI·알리바바·구글)는 피하고, 다른 회사 모델을 우선
+OPENROUTER_PREFERENCE = ["deepseek/", "mistralai/", "meta-llama/", "z-ai/", "moonshotai/",
+                         "minimax/", "nvidia/", "microsoft/"]
+OPENROUTER_AVOID = ("openai/", "qwen/", "google/")
+_openrouter_cache: Optional[List[str]] = None
+
+
+def _openrouter_free_models() -> List[str]:
+    """OpenRouter 의 지금 살아 있는 무료(:free) 모델 중 위원회에 없는 회사 모델을 최대 3개 고름."""
+    global _openrouter_cache
+    if _openrouter_cache is not None:
+        return _openrouter_cache
+    found: List[str] = []
+    try:
+        response = requests.get("https://openrouter.ai/api/v1/models", timeout=10)
+        ids = [str(m.get("id", "")) for m in response.json().get("data", [])]
+        free = [i for i in ids if i.endswith(":free") and not i.startswith(OPENROUTER_AVOID)]
+        for prefix in OPENROUTER_PREFERENCE:
+            found += [i for i in free if i.startswith(prefix) and i not in found]
+        found += [i for i in free if i not in found]
+    except Exception as exc:
+        logging.warning("OpenRouter 무료 모델 목록 조회 실패: %s", exc)
+    _openrouter_cache = found[:3]
+    logging.info("OpenRouter 무료 모델 후보: %s", _openrouter_cache)
+    return _openrouter_cache
+
+
 def _ask(provider: str, models: List[str], role: str, prompt: str) -> Dict[str, Any]:
     """성공하면 투표, 실패하면 {"error": 이유} 를 돌려줌."""
     system = SKEPTIC_PROMPT if role == "skeptic" else NORMAL_PROMPT
     error = "응답 없음"
-    for model in [m.strip() for m in models if m.strip()]:
+    candidates = [m.strip() for m in models if m.strip()]
+    if provider == "openrouter" and candidates == ["auto"]:
+        candidates = _openrouter_free_models()
+        if not candidates:
+            return {"error": "무료 모델 없음"}
+    queue = [(model, 0) for model in candidates]
+    while queue:
+        model, attempt = queue.pop(0)
         try:
             if provider == "gemini":
                 text = _call_gemini(model, system, prompt)
@@ -159,6 +195,9 @@ def _ask(provider: str, models: List[str], role: str, prompt: str) -> Dict[str, 
                                           OPENROUTER_API_KEY, "OpenRouter", model, system, prompt)
         except AIError as exc:
             error = str(exc)
+            if error.startswith("503") and attempt == 0:   # 일시적 혼잡이면 잠깐 쉬고 한 번 더
+                time.sleep(3)
+                queue.insert(0, (model, 1))
             continue
         except requests.Timeout:
             logging.warning("AI 시간 초과 (%s %s, %s초)", provider, model, AI_TIMEOUT_SEC)
@@ -189,6 +228,11 @@ def _review(signal: Dict[str, Any]) -> Dict[str, Any]:
         futures = {name: pool.submit(_ask, provider, models, role, prompt)
                    for name, provider, models, role in active}
         votes = {name: future.result() for name, future in futures.items()}
+    for name, provider, _models, _role in active:
+        vote = votes.get(name) or {}
+        if provider == "openrouter" and vote.get("model"):
+            short = vote["model"].split("/")[-1].replace(":free", "")
+            vote["label"] = f"{name}({short})"
 
     valid = [vote for vote in votes.values() if vote and "decision" in vote]
     enter = sum(1 for vote in valid if vote["decision"] == "ENTER")
@@ -228,7 +272,8 @@ def _format_block(review: Dict[str, Any]) -> str:
             lines.append(f"• {name}: 응답 없음" + (f" ({html.escape(reason)})" if reason else ""))
             continue
         label = "진입" if vote["decision"] == "ENTER" else "보류"
-        lines.append(f"• {name}: {label} {vote['confidence']} — {html.escape(vote['reason'])}")
+        shown = html.escape(vote.get("label", name))
+        lines.append(f"• {shown}: {label} {vote['confidence']} — {html.escape(vote['reason'])}")
     lines.append("<i>AI 의견은 참고·기록용이며 시그널에는 영향 없음</i>")
     return "\n".join(lines)
 
