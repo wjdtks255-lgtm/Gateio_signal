@@ -11,7 +11,7 @@
       "tp1": 3.718790561569953,
       "tp2": 3.7655811231399055,
       "tp3": 3.827968538566509,
-      "stop_loss": 3.70847056430635,
+      "stop_loss": 3.7106381217425777,
       "initial_stop": 3.634567550744038,
       "tp1_lock_price": 3.6766790561569955,
       "tp2_lock_price": 3.718790561569953,
@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 3.75,
       "max_adv": 3.672,
-      "last_candle_ts": 1794515700,
+      "last_candle_ts": 1794516000,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 57.631182391356845,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 81.06,
       "max_adv": 81.99,
-      "last_candle_ts": 1794515700,
+      "last_candle_ts": 1794516000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.1874120180412,
@@ -148,80 +148,6 @@
         }
       }
     },
-    "XRP_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 1.0233,
-      "entry_time": "2026-11-12T16:50:30.617131+00:00",
-      "leverage": 4,
-      "risk": 0.013107972608081973,
-      "atr": 0.010923310506734977,
-      "tp1": 1.0069150342398976,
-      "tp2": 0.9905300684797952,
-      "tp3": 0.9686834474663252,
-      "stop_loss": 1.0364079726080822,
-      "initial_stop": 1.0364079726080822,
-      "tp1_lock_price": 1.0216615034239898,
-      "tp2_lock_price": 1.0069150342398976,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 1.0214,
-      "max_adv": 1.0358,
-      "last_candle_ts": 1794515700,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 31.244010310676686,
-      "rsi_15m": 36.479749626549264,
-      "adx_1h": 26.290898908414793,
-      "volume_surge": 0.5516530287295562,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (SHORT)",
-        "1H ADX 26.3 강한 추세 (+2)",
-        "1H EMA20 기울기 -0.76% (+1)",
-        "15M 캔들 몸통 0.78 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 1,
-        "valid": 4,
-        "total": 5,
-        "avg_confidence": 80,
-        "votes": {
-          "Gemini": {
-            "error": "503 서버 혼잡"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "RSI 과매도와 거래량 부진으로 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "강한 하락 추세 정렬과 높은 전략 승률, 적절한 리스크 구조가 확인됨.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 80,
-            "reason": "RSI 31.2 과매도 구간에서 24h -4.32% 하락 후 숏 진입은 반등 리스크가 크고 거래량도 부족합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "1시간 RSI가 31.2로 과매도 구간에 임박하여 추격 숏 손실 위험이 큽니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "AMD_USDT": {
       "strategy_version": 5,
       "direction": "LONG",
@@ -241,7 +167,7 @@
       "tp2_reached": false,
       "max_fav": 588.17,
       "max_adv": 575.56,
-      "last_candle_ts": 1794515700,
+      "last_candle_ts": 1794516000,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 67.7135129751334,
@@ -315,8 +241,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 112.68,
-      "max_adv": 114.18,
-      "last_candle_ts": 1794515700,
+      "max_adv": 114.32,
+      "last_candle_ts": 1794516000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 30.211524495547664,
@@ -389,7 +315,7 @@
       "tp2_reached": false,
       "max_fav": 18.94,
       "max_adv": 19.36,
-      "last_candle_ts": 1794515700,
+      "last_candle_ts": 1794516000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 42.630563009156056,
@@ -462,8 +388,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 3.3892,
-      "max_adv": 3.4333,
-      "last_candle_ts": 1794515700,
+      "max_adv": 3.4426,
+      "last_candle_ts": 1794516000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.469169967459344,
@@ -540,7 +466,7 @@
       "tp2_reached": false,
       "max_fav": 114.92,
       "max_adv": 115.74,
-      "last_candle_ts": 1794515700,
+      "last_candle_ts": 1794516000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.27129345558804,
@@ -601,12 +527,12 @@
   "stats": {
     "wins": 6,
     "draws": 0,
-    "losses": 5,
-    "total": 11,
-    "r_count": 11,
-    "sum_r": 2.538,
+    "losses": 6,
+    "total": 12,
+    "r_count": 12,
+    "sum_r": 1.4599999999999997,
     "win_r": 7.853999999999999,
-    "loss_r": 5.316000000000001,
+    "loss_r": 6.394000000000001,
     "recent_r": [
       0.47,
       1.154,
@@ -618,7 +544,8 @@
       -1.052,
       -1.068,
       -1.058,
-      -1.068
+      -1.068,
+      -1.078
     ],
     "positive_count": 6,
     "directional": {
@@ -632,20 +559,20 @@
         "pf": 0.0
       },
       "SHORT": {
-        "total": 10,
+        "total": 11,
         "wins": 5,
         "draws": 0,
-        "losses": 5,
-        "win_rate": 50.0,
-        "avg_r": 0.20679999999999993,
-        "pf": 1.3890142964635062
+        "losses": 6,
+        "win_rate": 45.45454545454545,
+        "avg_r": 0.08999999999999991,
+        "pf": 1.1548326556146384
       }
     },
     "strategy_version": 5,
-    "csv_rows": 158,
+    "csv_rows": 159,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-12T19:55:27.420616+00:00"
+    "last_closed_at": "2026-11-12T20:45:31.158056+00:00"
   },
   "closed_symbols": {
     "ADA_USDT": {
@@ -660,6 +587,11 @@
     },
     "SUI_USDT": {
       "time": "2026-11-12T19:55:27.420616+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
+    },
+    "XRP_USDT": {
+      "time": "2026-11-12T20:45:31.158056+00:00",
       "direction": "SHORT",
       "reason": "SL"
     }
