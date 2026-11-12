@@ -44,6 +44,7 @@ jobs:
           GATE_TELEGRAM_CHAT_ID: ${{ secrets.GATE_TELEGRAM_CHAT_ID }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           PYTHONUNBUFFERED: '1'
         run: python -u bot.py
 
@@ -52,7 +53,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add gate_state.json trades.csv
+          # 아직 생성되지 않은 파일이 있어도 실패하지 않도록 있는 파일만 추가
+          for f in gate_state.json trades.csv trades_audit.csv ai_trades.csv; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
           if ! git diff --cached --quiet; then
             git commit -m "Auto-update multi-asset state [skip ci]"
             git pull --rebase origin main
