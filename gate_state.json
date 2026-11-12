@@ -180,7 +180,7 @@
         "pf": 0.0
       }
     },
-    "strategy_version": 4,
+    "strategy_version": 5,
     "csv_rows": 143,
     "excluded_other_versions": 143,
     "first_closed_at": "",
