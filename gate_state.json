@@ -147,6 +147,54 @@
       ],
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false
+    },
+    "TAO_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 214.0,
+      "entry_time": "2026-11-12T11:11:33.738288+00:00",
+      "leverage": 4,
+      "risk": 2.690118772093225,
+      "atr": 2.241765643411021,
+      "tp1": 210.63735153488346,
+      "tp2": 207.27470306976693,
+      "tp3": 202.7911717829449,
+      "stop_loss": 216.69011877209323,
+      "initial_stop": 216.69011877209323,
+      "tp1_lock_price": 213.66373515348835,
+      "tp2_lock_price": 210.63735153488346,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 214.0,
+      "max_adv": 214.0,
+      "last_candle_ts": 1794481800,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 36.34141859244144,
+      "rsi_15m": 41.17366713685655,
+      "adx_1h": 26.979986122901067,
+      "volume_surge": 0.42933495264892524,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 27.0 강한 추세 (+2)",
+        "1H EMA20 기울기 -0.67% (+1)",
+        "15M 캔들 몸통 0.60 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "UNAVAILABLE",
+        "enter": 0,
+        "valid": 0,
+        "total": 2,
+        "avg_confidence": 0,
+        "votes": {
+          "Gemini": null,
+          "Groq": null
+        }
+      }
     }
   },
   "stats": {
