@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Gate.io USDT Futures Signal Bot - version 4 (Optimized Risk & RRR Engine)
+Gate.io USDT Futures Signal Bot - version 4.1 (Balanced Signal Frequency & RRR Engine)
 - Telegram signal-only bot; it does NOT place orders.
 - 1h trend (EMA50/EMA200 + RSI + ADX) + 15m pullback/reclaim entry confirmation.
-- Reduced SL (1.2 ATR = -0.8R) & Increased RRR (TP1 1.5 ATR = +1.0R with 50% partial profit lock).
-- 15m EMA21 Trailing Stop after TP1 reach.
-- Extended 6h SL cooldown & 24h連鎖 SL lockout.
+- Reduced SL (1.2 ATR = -0.8R) & Increased RRR (TP1 1.5 ATR = +1.25R with 50% partial profit lock).
+- 15m EMA21 Trailing Stop after TP1 reach + accurate blended R accounting.
+- Balanced entry thresholds to prevent signal starvation while preserving win rate.
 """
 
 import csv
@@ -33,7 +33,7 @@ LOG_FILE = Path(os.getenv("LOG_FILE", "gate_signal_bot.log"))
 
 MAX_SLOTS = 5
 MAX_CRYPTO_SLOTS = 3
-MAX_CANDIDATES = 40
+MAX_CANDIDATES = 60           # 탐색 후보 확대 (40 -> 60)
 SCAN_BUDGET_SEC = 150
 MIN_CHANGE_PCT = 1.5
 MIN_QUOTE_VOLUME = 200_000.0
@@ -43,28 +43,28 @@ LEVERAGED_TOKEN_RE = re.compile(r"\d+[LS]_USDT$")
 STRATEGY_VERSION = 4
 
 # Risk & RRR Structure
-ATR_SL = 1.2                  # 손절 폭 축소 (1.2 ATR = 약 -0.8R)
-ATR_TP_MULTS = (1.5, 3.0, 5.0)# TP1(+1.0R = 1.5 ATR), TP2(+2.0R = 3.0 ATR), TP3(+3.3R = 5.0 ATR)
+ATR_SL = 1.2                  # 손절 폭 축소 (1.2 ATR)
+ATR_TP_MULTS = (1.5, 3.0, 5.0)# TP1(1.5 ATR = +1.25R), TP2(3.0 ATR = +2.5R), TP3(5.0 ATR = +4.17R)
 TP1_CLOSE_PCT = 0.5           # TP1 도달 시 50% 분할 익절 반영
-PROFIT_LOCK_ATR = 0.1         # TP1 달성 후 스탑을 Entry + 0.1 ATR (본절+수수료)로 이동
-TP2_LOCK_ATR = 1.5            # TP2 달성 후 스탑을 +1.5 ATR로 상향
+PROFIT_LOCK_ATR = 0.15        # TP1 달성 후 잔여 물량 스탑을 Entry + 0.15 ATR(본절+수수료)로 이동
+TP2_LOCK_ATR = 1.5            # TP2 달성 후 잔여 물량 스탑을 +1.5 ATR(TP1 가격)로 상향
 
 # Cooldown & Anti-Whipsaw
 COOLDOWN_HOURS = 2            # 일반 청산 쿨다운
-SL_COOLDOWN_HOURS = 6         # 손절(SL) 발생 시 쿨다운 (2시간 -> 6시간 확장)
+SL_COOLDOWN_HOURS = 4         # 손절(SL) 발생 시 동일 방향 쿨다운 (4시간)
 MAX_DAILY_SL_LOCKOUT = 2      # 24시간 내 2회 이상 SL 발생 종목 락아웃
 
-# Filters & Indicators
-ADX_MIN_1H = 20.0             # 1시간 ADX 기준 강화 (기존 17 -> 20)
-BODY_RATIO_MIN = 0.35
+# Filters & Indicators (신호 빈도 정상화 조정)
+ADX_MIN_1H = 17.5             # 1시간 ADX 기준 (20.0 -> 17.5 완화)
+BODY_RATIO_MIN = 0.32         # 15분봉 캔들 몸통 비율 (0.35 -> 0.32)
 MIN_VOLUME_SURGE = 1.05
-MAX_EMA_DISTANCE_ATR = 1.25
+MAX_EMA_DISTANCE_ATR = 1.35   # EMA21 이격 허용치 (1.25 -> 1.35)
 
-MIN_SCORE_LONG = 8
-MIN_SCORE_SHORT = 7
-RSI_LONG_15M = (53.0, 67.0)
-RSI_SHORT_15M = (32.0, 50.0)
-RSI_LONG_1H = (50.0, 68.0)
+MIN_SCORE_LONG = 7            # 롱 진입 최소 점수 (8 -> 7 완화)
+MIN_SCORE_SHORT = 6           # 숏 진입 최소 점수 (7 -> 6 완화)
+RSI_LONG_15M = (46.0, 68.0)   # 눌림목 직후 반등 구간 포착 (기존 53~67 -> 46~68)
+RSI_SHORT_15M = (32.0, 54.0)  # 되돌림 직후 하락 구간 포착 (기존 32~50 -> 32~54)
+RSI_LONG_1H = (48.0, 70.0)
 RSI_SHORT_1H = (30.0, 54.0)
 BTC_FILTER_ENABLED = True
 
@@ -124,7 +124,7 @@ COMMODITY_BASES = {
 SESSION = requests.Session()
 SESSION.headers.update({
     "Accept": "application/json",
-    "User-Agent": "GateSignalBot/6.0",
+    "User-Agent": "GateSignalBot/6.1",
 })
 
 logging.basicConfig(
@@ -137,6 +137,7 @@ logging.basicConfig(
 def utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
+
 def parse_iso(value: str, default: Optional[datetime] = None) -> datetime:
     try:
         dt = datetime.fromisoformat(value)
@@ -146,12 +147,14 @@ def parse_iso(value: str, default: Optional[datetime] = None) -> datetime:
     except Exception:
         return default or utcnow()
 
+
 def safe_float(value: Any, default: float = 0.0) -> float:
     try:
         result = float(value)
         return result if math.isfinite(result) else default
     except (TypeError, ValueError):
         return default
+
 
 def fmt_price(price: float) -> str:
     if price >= 1000:
@@ -162,17 +165,21 @@ def fmt_price(price: float) -> str:
         return f"{price:.5f}"
     return f"{price:.8f}"
 
+
 def fmt_hours(hours: float) -> str:
     hours = max(0.0, hours)
     whole = int(hours)
     minutes = int((hours - whole) * 60)
     return f"{whole}시간 {minutes:02d}분"
 
+
 def dir_tag(direction: str) -> str:
     return "🟢 롱" if direction == "LONG" else "🔴 숏"
 
+
 def chart_link(symbol: str) -> str:
     return f"https://www.gate.com/futures/USDT/{symbol}"
+
 
 def pct_move(direction: str, entry: float, price: float) -> float:
     if entry <= 0:
@@ -181,12 +188,14 @@ def pct_move(direction: str, entry: float, price: float) -> float:
         return (price - entry) / entry * 100.0
     return (entry - price) / entry * 100.0
 
+
 def r_move(direction: str, entry: float, price: float, risk: float) -> float:
     if risk <= 0:
         return 0.0
     if direction == "LONG":
         return (price - entry) / risk
     return (entry - price) / risk
+
 
 def send_telegram_message(message: str) -> bool:
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
@@ -225,6 +234,7 @@ def default_state() -> Dict[str, Any]:
         "strategy_version": STRATEGY_VERSION,
     }
 
+
 def load_state() -> Dict[str, Any]:
     state = default_state()
     if not STATE_FILE.exists():
@@ -239,7 +249,7 @@ def load_state() -> Dict[str, Any]:
                 state[key] = saved[key]
         if isinstance(saved.get("stats"), dict):
             state["stats"].update(saved["stats"])
-        
+
         old_closed = saved.get("closed_symbols", {})
         normalized_closed = {}
         if isinstance(old_closed, list):
@@ -267,11 +277,13 @@ def load_state() -> Dict[str, Any]:
             pass
     return state
 
+
 def save_state(state: Dict[str, Any]) -> None:
     tmp_path = STATE_FILE.with_suffix(STATE_FILE.suffix + ".tmp")
     with tmp_path.open("w", encoding="utf-8") as handle:
         json.dump(state, handle, ensure_ascii=False, indent=2)
     os.replace(tmp_path, STATE_FILE)
+
 
 def append_trade_csv(row: Dict[str, Any]) -> None:
     exists = TRADES_FILE.exists() and TRADES_FILE.stat().st_size > 0
@@ -290,6 +302,7 @@ def append_trade_csv(row: Dict[str, Any]) -> None:
             writer.writerow({field: row.get(field, "") for field in AUDIT_CSV_FIELDS})
     except OSError:
         logging.exception("Unable to append strategy audit row to %s", AUDIT_FILE)
+
 
 def read_trade_csv() -> List[Dict[str, Any]]:
     if not TRADES_FILE.exists():
@@ -340,12 +353,14 @@ def read_trade_csv() -> List[Dict[str, Any]]:
                         record[field] = audit[field]
     return records
 
+
 def classify_trade(net_r: float) -> str:
     if net_r > DRAW_BAND_R:
         return "win"
     if net_r < -DRAW_BAND_R:
         return "loss"
     return "draw"
+
 
 def calculate_stats(records: List[Dict[str, Any]]) -> Dict[str, Any]:
     stats = {
@@ -388,6 +403,7 @@ def calculate_stats(records: List[Dict[str, Any]]) -> Dict[str, Any]:
         }
     return stats
 
+
 def sync_stats_from_csv(state: Dict[str, Any]) -> Dict[str, Any]:
     records = read_trade_csv()
     current_records = [
@@ -402,6 +418,7 @@ def sync_stats_from_csv(state: Dict[str, Any]) -> Dict[str, Any]:
     stats["last_closed_at"] = current_records[-1].get("closed_at", "") if current_records else ""
     state["stats"] = stats
     return stats
+
 
 def build_stats_line(stats: Dict[str, Any]) -> str:
     total = int(stats.get("total", 0))
@@ -451,9 +468,11 @@ def api_get(path: str, params: Optional[Dict[str, Any]] = None) -> Optional[Any]
         pass
     return None
 
+
 def fetch_tickers() -> List[Dict[str, Any]]:
     data = api_get("/tickers")
     return data if isinstance(data, list) else []
+
 
 def parse_candles(raw: Any) -> List[Dict[str, float]]:
     candles: List[Dict[str, float]] = []
@@ -472,6 +491,7 @@ def parse_candles(raw: Any) -> List[Dict[str, float]]:
     candles.sort(key=lambda candle: candle["t"])
     return candles
 
+
 def fetch_completed_candles(symbol: str, interval: str, seconds: int,
                             now_ts: int, limit: int = 150) -> List[Dict[str, float]]:
     raw = api_get("/candlesticks", {
@@ -480,6 +500,7 @@ def fetch_completed_candles(symbol: str, interval: str, seconds: int,
         "limit": limit,
     })
     return [candle for candle in parse_candles(raw) if candle["t"] + seconds <= now_ts]
+
 
 def fetch_completed_5m(symbol: str, from_ts: int, now_ts: int) -> List[Dict[str, float]]:
     if from_ts >= now_ts:
@@ -500,17 +521,19 @@ def ema_series(values: List[float], period: int) -> List[float]:
         seed = sum(values) / len(values)
         return [seed for _ in values]
     result: List[float] = [float("nan")] * (period - 1)
-    ema = sum(values[:period]) / period
-    result.append(ema)
+    ema_val = sum(values[:period]) / period
+    result.append(ema_val)
     multiplier = 2.0 / (period + 1.0)
     for value in values[period:]:
-        ema = (value - ema) * multiplier + ema
-        result.append(ema)
+        ema_val = (value - ema_val) * multiplier + ema_val
+        result.append(ema_val)
     return result
+
 
 def ema(values: List[float], period: int) -> Optional[float]:
     series = ema_series(values, period)
     return series[-1] if series and math.isfinite(series[-1]) else None
+
 
 def rsi_wilder(values: List[float], period: int = 14) -> Optional[float]:
     if len(values) < period + 1:
@@ -527,6 +550,7 @@ def rsi_wilder(values: List[float], period: int = 14) -> Optional[float]:
         return 100.0 if avg_gain > 0 else 50.0
     rs = avg_gain / avg_loss
     return 100.0 - (100.0 / (1.0 + rs))
+
 
 def atr_value(candles: List[Dict[str, float]], period: int = 14) -> Optional[float]:
     if len(candles) < period + 1:
@@ -546,6 +570,7 @@ def atr_value(candles: List[Dict[str, float]], period: int = 14) -> Optional[flo
     for tr in true_ranges[period:]:
         value = (value * (period - 1) + tr) / period
     return value
+
 
 def adx_value(candles: List[Dict[str, float]], period: int = 14) -> Optional[float]:
     if len(candles) < period * 2 + 1:
@@ -590,17 +615,20 @@ def adx_value(candles: List[Dict[str, float]], period: int = 14) -> Optional[flo
         adx = ((adx * (period - 1)) + dx) / period
     return adx
 
+
 def candle_body_ratio(candle: Dict[str, float]) -> float:
     total_range = candle["h"] - candle["l"]
     if total_range <= 0:
         return 0.0
     return abs(candle["c"] - candle["o"]) / total_range
 
+
 def close_position(candle: Dict[str, float]) -> float:
     total_range = candle["h"] - candle["l"]
     if total_range <= 0:
         return 0.5
     return (candle["c"] - candle["l"]) / total_range
+
 
 def volume_surge(candles: List[Dict[str, float]], lookback: int = 20) -> float:
     if len(candles) < lookback + 1:
@@ -620,12 +648,14 @@ def get_asset_category(symbol: str) -> str:
         return "원자재"
     return "코인"
 
+
 THEMES = {
     "반도체": {"SOXL": 1, "SOXS": -1, "SKHYNIX": 1, "NVDA": 1, "AMD": 1,
               "INTC": 1, "MU": 1, "TSM": 1, "AVGO": 1, "AMAT": 1},
     "미국지수": {"NAS": 1, "NDX": 1, "SPX": 1, "US100": 1, "US30": 1,
                 "DJI": 1, "TQQQ": 1, "SQQQ": -1},
 }
+
 
 def theme_exposure(symbol: str, direction: str) -> Tuple[Optional[str], int]:
     base = symbol.upper().split("_")[0]
@@ -634,6 +664,7 @@ def theme_exposure(symbol: str, direction: str) -> Tuple[Optional[str], int]:
             return theme, members[base] * (1 if direction == "LONG" else -1)
     return None, 0
 
+
 def count_theme_slots(active: Dict[str, Any], theme: str, sign: int) -> int:
     count = 0
     for symbol, info in active.items():
@@ -641,6 +672,7 @@ def count_theme_slots(active: Dict[str, Any], theme: str, sign: int) -> int:
         if current_theme == theme and current_sign == sign:
             count += 1
     return count
+
 
 def calculate_reference_leverage(category: str, change_24h: float,
                                   atr: float, current_price: float) -> int:
@@ -657,33 +689,34 @@ def calculate_reference_leverage(category: str, change_24h: float,
 
 # ───────────────────────────── Signal analysis ────────────────────────────
 def get_hourly_bias(symbol: str, now_ts: int) -> Optional[Dict[str, Any]]:
-    # 1H EMA50/200 판단을 위해 Candle 200개 이상 조회
     candles = fetch_completed_candles(symbol, "1h", 3600, now_ts, limit=220)
-    if len(candles) < 200:
+    if len(candles) < 60:
         return None
     closes = [candle["c"] for candle in candles]
     ema20_now = ema(closes, 20)
     ema50_now = ema(closes, 50)
-    ema200_now = ema(closes, 200)
+    ema200_now = ema(closes, 200) if len(closes) >= 200 else ema50_now
     ema20_prev = ema(closes[:-5], 20)
     adx = adx_value(candles, 14)
     rsi = rsi_wilder(closes, 14)
-    
+
     if None in (ema20_now, ema50_now, ema200_now, ema20_prev, adx, rsi):
         return None
-        
+
     slope_pct = (ema20_now - ema20_prev) / ema20_prev * 100.0 if ema20_prev else 0.0
     last_close = closes[-1]
-    
-    # 롱 필터 강화: 1H EMA50 > EMA200 (정배열) & RSI > 50 & ADX >= 20 필수
-    if last_close > ema50_now > ema200_now and slope_pct > 0.03 and rsi > 50 and adx >= ADX_MIN_1H:
+
+    # 롱 조건: 1H EMA50 >= EMA200 정배열 + 가격 > EMA20 > EMA50 + ADX >= 17.5
+    if (last_close > ema20_now > ema50_now and ema50_now >= ema200_now
+            and slope_pct > 0.02 and rsi > 48.0 and adx >= ADX_MIN_1H):
         direction = "LONG"
-    # 숏 필터: 1H EMA50 < EMA200 (역배열) & RSI < 50
-    elif last_close < ema50_now < ema200_now and slope_pct < -0.03 and rsi < 50:
+    # 숏 조건: 1H EMA50 <= EMA200 역배열 + 가격 < EMA20 < EMA50 + ADX >= 17.5
+    elif (last_close < ema20_now < ema50_now and ema50_now <= ema200_now
+          and slope_pct < -0.02 and rsi < 52.0 and adx >= ADX_MIN_1H):
         direction = "SHORT"
     else:
         direction = "FLAT"
-        
+
     return {
         "direction": direction,
         "ema20": ema20_now,
@@ -694,6 +727,7 @@ def get_hourly_bias(symbol: str, now_ts: int) -> Optional[Dict[str, Any]]:
         "slope_pct": slope_pct,
         "candles": candles,
     }
+
 
 def analyze_signal(symbol: str, direction: str, now_ts: int,
                    current_price: float, btc_bias: str) -> Optional[Dict[str, Any]]:
@@ -749,17 +783,17 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
         e21 = ema21_series[index]
         if not math.isfinite(e21):
             continue
-        if direction == "LONG" and candle["l"] <= e21 + atr15 * 0.25:
+        if direction == "LONG" and candle["l"] <= e21 + atr15 * 0.30:
             pullback_seen = True
             break
-        if direction == "SHORT" and candle["h"] >= e21 - atr15 * 0.25:
+        if direction == "SHORT" and candle["h"] >= e21 - atr15 * 0.30:
             pullback_seen = True
             break
 
     if direction == "LONG":
         if not (ema9_now > ema21_now and last["c"] > ema9_now > ema21_now):
             return None
-        if not (last["c"] > last["o"] and close_pos >= 0.62):
+        if not (last["c"] > last["o"] and close_pos >= 0.58):
             return None
         if not (RSI_LONG_15M[0] <= rsi15 <= RSI_LONG_15M[1]):
             return None
@@ -772,7 +806,7 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
     else:
         if not (ema9_now < ema21_now and last["c"] < ema9_now < ema21_now):
             return None
-        if not (last["c"] < last["o"] and close_pos <= 0.38):
+        if not (last["c"] < last["o"] and close_pos <= 0.42):
             return None
         if not (RSI_SHORT_15M[0] <= rsi15 <= RSI_SHORT_15M[1]):
             return None
@@ -786,11 +820,11 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
     score = 0
     reasons: List[str] = []
     score += 2
-    reasons.append("1H EMA50/200 정배열 및 추세 확인")
-    if abs(hourly["slope_pct"]) >= 0.08:
+    reasons.append("1H EMA20/50/200 추세 정렬")
+    if abs(hourly["slope_pct"]) >= 0.06:
         score += 1
         reasons.append(f"1H EMA20 기울기 {hourly['slope_pct']:+.2f}%")
-    if hourly["adx"] >= 20:
+    if hourly["adx"] >= 20.0:
         score += 1
         reasons.append(f"1H ADX {hourly['adx']:.1f}")
     if pullback_seen:
@@ -799,12 +833,13 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
     if surge >= MIN_VOLUME_SURGE:
         score += 1
         reasons.append(f"거래량 증가 {surge:.2f}배")
-    if body_ratio >= 0.50:
+    if body_ratio >= 0.48:
         score += 1
         reasons.append(f"15M 캔들 몸통 {body_ratio:.2f}")
-    if category != "코인" or symbol == "BTC_USDT" or btc_bias == direction:
+    if category != "코인" or symbol == "BTC_USDT" or btc_bias in ("FLAT", direction):
         score += 1
-        reasons.append("BTC 방향 필터 통과")
+        reasons.append(f"BTC 필터 통과 ({btc_bias})")
+
     required_score = MIN_SCORE_LONG if direction == "LONG" else MIN_SCORE_SHORT
     if score < required_score:
         return None
@@ -867,6 +902,7 @@ def migrate_slot(info: Dict[str, Any]) -> None:
     info.setdefault("tp1_lock_price", tp1_lock)
     info.setdefault("tp2_lock_price", entry + sign * atr * TP2_LOCK_ATR)
 
+
 def step_position(info: Dict[str, Any], high: float, low: float, ema21_15m: Optional[float] = None) -> Tuple[List[str], Optional[Tuple[str, float]]]:
     direction = info["direction"]
     entry = safe_float(info["entry_price"])
@@ -881,7 +917,6 @@ def step_position(info: Dict[str, Any], high: float, low: float, ema21_15m: Opti
         info["max_fav"] = max(safe_float(info.get("max_fav"), entry), high)
         info["max_adv"] = min(safe_float(info.get("max_adv"), entry), low)
 
-        # TP1 미달성 상태
         if not info.get("tp1_reached"):
             if low <= stop:
                 return events, ("STOP", stop)
@@ -889,11 +924,9 @@ def step_position(info: Dict[str, Any], high: float, low: float, ema21_15m: Opti
                 return events, ("TP3", tp3)
             if high >= tp1:
                 info["tp1_reached"] = True
-                new_stop = entry + (atr * PROFIT_LOCK_ATR)  # 본절+수수료 보정
+                new_stop = entry + (atr * PROFIT_LOCK_ATR)
                 info["stop_loss"] = max(stop, new_stop)
                 events.append("TP1")
-
-        # TP1 달성 후: 트레일링 스탑 적용 (15분봉 EMA21 추적)
         else:
             be_stop = entry + (atr * PROFIT_LOCK_ATR)
             current_trail = max(be_stop, safe_float(info["stop_loss"]))
@@ -911,7 +944,7 @@ def step_position(info: Dict[str, Any], high: float, low: float, ema21_15m: Opti
                 info["stop_loss"] = max(info["stop_loss"], new_stop)
                 events.append("TP2")
 
-    else: # SHORT
+    else:
         info["max_fav"] = min(safe_float(info.get("max_fav"), entry), low)
         info["max_adv"] = max(safe_float(info.get("max_adv"), entry), high)
 
@@ -944,6 +977,7 @@ def step_position(info: Dict[str, Any], high: float, low: float, ema21_15m: Opti
 
     return events, None
 
+
 def stop_reason(info: Dict[str, Any]) -> str:
     if info.get("tp2_reached"):
         return "TP2_PROTECT"
@@ -951,12 +985,21 @@ def stop_reason(info: Dict[str, Any]) -> str:
         return "TRAILING_STOP"
     return "SL"
 
+
 def finalize_trade(state: Dict[str, Any], symbol: str, info: Dict[str, Any],
                    reason: str, exit_price: float, now: datetime) -> Dict[str, Any]:
     direction = info["direction"]
     entry = safe_float(info["entry_price"])
     risk = safe_float(info["risk"])
-    gross_r = r_move(direction, entry, exit_price, risk)
+
+    raw_exit_r = r_move(direction, entry, exit_price, risk)
+    if info.get("tp1_reached"):
+        tp1_price = safe_float(info.get("tp1"), exit_price)
+        tp1_r = r_move(direction, entry, tp1_price, risk)
+        gross_r = (TP1_CLOSE_PCT * tp1_r) + ((1.0 - TP1_CLOSE_PCT) * raw_exit_r)
+    else:
+        gross_r = raw_exit_r
+
     fee_r = (FEE_ROUNDTRIP * entry / risk) if risk > 0 else 0.0
     net_r = gross_r - fee_r
     outcome = classify_trade(net_r)
@@ -1010,13 +1053,14 @@ def finalize_trade(state: Dict[str, Any], symbol: str, info: Dict[str, Any],
         "leverage_pct": leverage_pct,
     }
 
+
 def build_event_message(symbol: str, info: Dict[str, Any], event: str) -> str:
     direction = info["direction"]
     entry = safe_float(info["entry_price"])
     leverage = safe_float(info.get("leverage"), 1.0)
     target = safe_float(info["tp1"] if event == "TP1" else info["tp2"])
     pct = pct_move(direction, entry, target)
-    stop = safe_float(info.get("stop_loss"))
+    stop = safe_float(info["stop_loss"])
     if event == "TP1":
         title = "🎯 <b>TP1 도달 (50% 분할 익절 반영)</b>"
         detail = f"본절 보정 스탑: <code>{fmt_price(stop)}</code> + 15M EMA21 트레일링 가동"
@@ -1030,6 +1074,7 @@ def build_event_message(symbol: str, info: Dict[str, Any], event: str) -> str:
         f"가격 변동 <code>{pct:+.2f}%</code> ({leverage:g}배 참고값: <code>{pct * leverage:+.1f}%</code>)\n"
         f"🔒 {detail}"
     )
+
 
 def build_close_message(symbol: str, info: Dict[str, Any], trade: Dict[str, Any]) -> str:
     direction = info["direction"]
@@ -1054,6 +1099,7 @@ def build_close_message(symbol: str, info: Dict[str, Any], trade: Dict[str, Any]
         f"순손익 <code>{trade['net_r']:+.2f}R</code> | 결과 <b>{result_label}</b>\n"
         f"보유 <code>{fmt_hours(trade['hours'])}</code>"
     )
+
 
 def manage_positions(state: Dict[str, Any], tickers: Dict[str, float], now: datetime) -> bool:
     active = state["active_slots"]
@@ -1083,7 +1129,6 @@ def manage_positions(state: Dict[str, Any], tickers: Dict[str, float], now: date
                 info["missing_ticker_count"] = 0
                 info["missing_ticker_alerted"] = False
 
-            # 트레일링 스탑을 위한 15분봉 EMA21 계산
             m15_candles = fetch_completed_candles(symbol, "15m", 900, now_ts, limit=50)
             ema21_15m = None
             if m15_candles and len(m15_candles) >= 21:
@@ -1137,7 +1182,6 @@ def manage_positions(state: Dict[str, Any], tickers: Dict[str, float], now: date
 
 # ───────────────────────────── New signal scan ───────────────────────────
 def check_daily_sl_count(symbol: str, history_records: List[Dict[str, Any]], now: datetime) -> int:
-    """24시간 내 동일 종목 손절(SL) 횟수 계산"""
     count = 0
     for rec in history_records:
         if rec.get("symbol") == symbol and rec.get("exit_reason") == "SL":
@@ -1145,6 +1189,7 @@ def check_daily_sl_count(symbol: str, history_records: List[Dict[str, Any]], now
             if (now - closed_at).total_seconds() <= 86400:
                 count += 1
     return count
+
 
 def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]],
                          now: datetime, start_time: float, btc_bias: str) -> bool:
@@ -1162,8 +1207,7 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
                 continue
             if symbol in active:
                 continue
-            
-            # 24시간 락아웃 검증 (동일 종목 당일 2회 SL 시 진입 차단)
+
             if check_daily_sl_count(symbol, history_records, now) >= MAX_DAILY_SL_LOCKOUT:
                 continue
 
@@ -1184,8 +1228,7 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
                 closed_at = parse_iso(closed_info.get("time", ""), now)
                 elapsed = (now - closed_at).total_seconds()
                 previous_direction = closed_info.get("direction", "")
-                
-                # SL 청산 시 6시간 쿨다운 적용
+
                 required_cooldown = (SL_COOLDOWN_HOURS * 3600) if closed_info.get("reason") == "SL" else (COOLDOWN_HOURS * 3600)
                 if previous_direction == direction and elapsed < required_cooldown:
                     continue
@@ -1201,6 +1244,7 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
     qualified: List[Dict[str, Any]] = []
     for volume, symbol, price, change, direction in candidates[:MAX_CANDIDATES]:
         if time.time() - start_time > SCAN_BUDGET_SEC:
+            logging.info("Scan budget exceeded; remaining candidates deferred.")
             break
         try:
             theme, theme_sign = theme_exposure(symbol, direction)
@@ -1306,7 +1350,7 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
 
             reasons_text = "\n".join(f"• {reason}" for reason in analysis["reasons"])
             message = (
-                f"🛡️ <b>신규 시그널 (v4 RRR개선판) | 품질 점수 {analysis['score']}/9</b> | {dir_tag(direction)}\n"
+                f"🛡️ <b>신규 시그널 (v4 RRR개선판) | 품질 점수 {analysis['score']}/9 (기준 {analysis['required_score']})</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
                 f"진입가 <code>{fmt_price(price)}</code> | 참고 레버리지 <code>{leverage}배</code>\n"
                 f"🎯 TP1 <code>{fmt_price(tp1)} ({target_pct(tp1):+.2f}%)</code> [50% 분할익절]\n"
@@ -1364,6 +1408,7 @@ def build_slot_status_message(state: Dict[str, Any], tickers: Dict[str, float],
     lines.append("\n" + build_stats_line(stats))
     return "\n".join(lines)
 
+
 def maybe_send_daily_report(state: Dict[str, Any], tickers: Dict[str, float],
                             now: datetime, stats: Dict[str, Any]) -> bool:
     if not DAILY_REPORT_ENABLED:
@@ -1374,6 +1419,7 @@ def maybe_send_daily_report(state: Dict[str, Any], tickers: Dict[str, float],
     send_telegram_message(build_slot_status_message(state, tickers, stats))
     state["last_report_date"] = today
     return True
+
 
 def run_bot() -> None:
     start_time = time.time()
@@ -1401,10 +1447,10 @@ def run_bot() -> None:
         if symbol and price > 0:
             tickers[str(symbol)] = price
 
-    cooldown = timedelta(hours=COOLDOWN_HOURS)
+    max_cooldown = timedelta(hours=max(COOLDOWN_HOURS, SL_COOLDOWN_HOURS))
     state["closed_symbols"] = {
         symbol: info for symbol, info in state["closed_symbols"].items()
-        if (now - parse_iso(info.get("time", ""), now - cooldown * 2)) < cooldown
+        if (now - parse_iso(info.get("time", ""), now - max_cooldown * 2)) < max_cooldown
     }
 
     changed_positions = manage_positions(state, tickers, now)
@@ -1419,6 +1465,7 @@ def run_bot() -> None:
         send_telegram_message(build_slot_status_message(state, tickers, stats))
     maybe_send_daily_report(state, tickers, now, stats)
     save_state(state)
+
 
 if __name__ == "__main__":
     run_bot()
