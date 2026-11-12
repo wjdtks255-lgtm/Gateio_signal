@@ -111,12 +111,15 @@ def _http_error(status: int) -> AIError:
     return AIError(f"{status} {labels.get(status, '오류')}")
 
 
-def _call_gemini(model: str, system: str, prompt: str) -> Optional[str]:
+def _call_gemini(model: str, system: str, prompt: str, json_mode: bool = True) -> Optional[str]:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+    config: Dict[str, Any] = {"temperature": 0.2}
+    if json_mode:
+        config["responseMimeType"] = "application/json"
     body = {
         "systemInstruction": {"parts": [{"text": system}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.2, "responseMimeType": "application/json"},
+        "generationConfig": config,
     }
     response = requests.post(url, headers={"x-goog-api-key": GEMINI_API_KEY},
                              json=body, timeout=AI_TIMEOUT_SEC)
@@ -125,6 +128,11 @@ def _call_gemini(model: str, system: str, prompt: str) -> Optional[str]:
         raise _http_error(response.status_code)
     parts = response.json()["candidates"][0]["content"]["parts"]
     return "".join(part.get("text", "") for part in parts if not part.get("thought"))
+
+
+def _call_gemini_text(model: str, system: str, prompt: str) -> Optional[str]:
+    """주간 리뷰처럼 JSON 이 아닌 일반 글로 답을 받을 때."""
+    return _call_gemini(model, system, prompt, json_mode=False)
 
 
 def _call_openai_style(url: str, key: str, label: str, model: str,
