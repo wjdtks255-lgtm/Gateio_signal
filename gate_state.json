@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 950.89,
       "max_adv": 1006.23,
-      "last_candle_ts": 1794477300,
+      "last_candle_ts": 1794477600,
       "score": 8,
       "required_score": 7,
       "rsi_1h": 41.013518519762584,
@@ -56,7 +56,7 @@
       "tp2_reached": false,
       "max_fav": 296.03,
       "max_adv": 293.08,
-      "last_candle_ts": 1794477300,
+      "last_candle_ts": 1794477600,
       "score": 7,
       "required_score": 7,
       "rsi_1h": 55.88465414318842,
@@ -68,42 +68,6 @@
         "1H EMA20 기울기 +0.36%",
         "1H ADX 21.5",
         "15M EMA21 눌림 후 재돌파",
-        "BTC 필터 통과 (FLAT)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
-    "ONDO_USDT": {
-      "strategy_version": 4,
-      "direction": "SHORT",
-      "entry_price": 0.3598,
-      "entry_time": "2026-11-12T01:00:42.789813+00:00",
-      "leverage": 4,
-      "risk": 0.006723763196326626,
-      "atr": 0.005603135996938855,
-      "tp1": 0.35139529600459174,
-      "tp2": 0.34299059200918347,
-      "tp3": 0.3317843200153057,
-      "stop_loss": 0.35349290050613535,
-      "initial_stop": 0.3665237631963266,
-      "tp1_lock_price": 0.3589595296004592,
-      "tp2_lock_price": 0.35139529600459174,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 0.3499,
-      "max_adv": 0.3602,
-      "last_candle_ts": 1794477300,
-      "score": 7,
-      "required_score": 6,
-      "rsi_1h": 38.78385599720305,
-      "rsi_15m": 41.39133451061728,
-      "adx_1h": 19.1040098058991,
-      "volume_surge": 0.5417846945620776,
-      "reasons": [
-        "1H EMA20/50/200 추세 정렬",
-        "1H EMA20 기울기 -0.85%",
-        "15M EMA21 눌림 후 재돌파",
-        "15M 캔들 몸통 0.78",
         "BTC 필터 통과 (FLAT)"
       ],
       "missing_ticker_count": 0,
@@ -128,7 +92,7 @@
       "tp2_reached": false,
       "max_fav": 115.69,
       "max_adv": 120.89,
-      "last_candle_ts": 1794477300,
+      "last_candle_ts": 1794477600,
       "score": 8,
       "required_score": 6,
       "rsi_1h": 40.822290295184516,
@@ -165,7 +129,7 @@
       "tp2_reached": false,
       "max_fav": 7.366,
       "max_adv": 7.495,
-      "last_candle_ts": 1794477300,
+      "last_candle_ts": 1794477600,
       "score": 9,
       "required_score": 6,
       "rsi_1h": 32.84368868549109,
@@ -186,16 +150,18 @@
     }
   },
   "stats": {
-    "wins": 0,
+    "wins": 1,
     "draws": 0,
     "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
-    "win_r": 0.0,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": 1.041,
+    "win_r": 1.041,
     "loss_r": 0.0,
-    "recent_r": [],
-    "positive_count": 0,
+    "recent_r": [
+      1.041
+    ],
+    "positive_count": 1,
     "directional": {
       "LONG": {
         "total": 0,
@@ -207,22 +173,28 @@
         "pf": 0.0
       },
       "SHORT": {
-        "total": 0,
-        "wins": 0,
+        "total": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "win_rate": 0.0,
-        "avg_r": 0.0,
+        "win_rate": 100.0,
+        "avg_r": 1.041,
         "pf": 0.0
       }
     },
     "strategy_version": 4,
-    "csv_rows": 141,
+    "csv_rows": 142,
     "excluded_other_versions": 141,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-12T10:05:25.208653+00:00",
+    "last_closed_at": "2026-11-12T10:05:25.208653+00:00"
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "ONDO_USDT": {
+      "time": "2026-11-12T10:05:25.208653+00:00",
+      "direction": "SHORT",
+      "reason": "TRAILING_STOP"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-12",
   "csv_stats_offset": 20,
