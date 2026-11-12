@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-AI 위원회 (1단계: 참고·기록 전용)
-- bot.py 의 규칙 기반 시그널을 Gemini, Groq 두 AI가 각각 검토해 "진입/보류 + 확신도 + 근거"를 냅니다.
-- 결과는 텔레그램 메시지에 붙고, 포지션 종료 시 ai_trades.csv 에 기록됩니다.
-- 시그널 진입 여부에는 영향을 주지 않습니다. (나중에 성과를 비교해 필터로 쓸지 결정)
-- 이 파일에서 무슨 오류가 나도 bot.py 는 평소처럼 동작하도록 모든 함수가 예외를 삼킵니다.
+AI 위원회 v2 (1단계: 참고·기록 전용) - 5명 위원회
+- Gemini Flash(구글) / GPT-OSS 120B(OpenAI, Groq) / Qwen(알리바바, Groq) / DeepSeek(OpenRouter)
+  / 반론 위원(Gemini Flash-Lite, 약점 찾기 전담)
+- 각 위원은 "진입/보류 + 확신도 + 근거"를 내고, 결과는 텔레그램 메시지와 ai_trades.csv 에 기록됩니다.
+- 시그널 진입 여부에는 영향을 주지 않습니다.
+- 이 파일에서 무슨 오류가 나도 bot.py 는 평소처럼 동작하도록 모든 공개 함수가 예외를 삼킵니다.
 """
 
 import csv
@@ -18,28 +19,19 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import requests
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
-# 모델 이름은 서비스 쪽에서 바뀔 수 있어 환경변수로 덮어쓸 수 있게 해 둠
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
 
-AI_TIMEOUT_SEC = 20          # AI 하나당 응답 대기 한도
-AI_TIME_BUDGET_SEC = 220     # 실행 시작 후 이 시간이 지나면 AI 검토 생략 (워크플로 5분 제한 보호)
+AI_TIMEOUT_SEC = 20          # 위원 한 명당 응답 대기 한도
+AI_TIME_BUDGET_SEC = 200     # 실행 시작 후 이 시간이 지나면 AI 검토 생략 (워크플로 5분 제한 보호)
 DRAW_BAND_R = 0.05           # bot.py 와 같은 무승부 기준
 
-AI_LOG_FILE = Path(os.getenv("AI_LOG_FILE", "ai_trades.csv"))
-AI_LOG_FIELDS = [
-    "closed_at", "symbol", "direction", "entry_time", "exit_reason", "net_r", "outcome",
-    "ai_verdict", "ai_enter_votes", "ai_valid_votes", "ai_avg_confidence",
-    "gemini_decision", "gemini_confidence", "groq_decision", "groq_confidence",
-]
-
-SYSTEM_PROMPT = """너는 선물 단기매매 시그널의 리스크 심사위원이다.
+NORMAL_PROMPT = """너는 선물 단기매매 시그널의 리스크 심사위원이다.
 규칙 기반 봇이 잡은 진입 후보 하나를 받는다. 이 자리에 지금 진입할 가치가 있는지 판단하라.
 - 기본 태도는 회의적이다. 근거가 애매하면 SKIP.
 - 경계할 것: 24시간 급등락 뒤 추격 진입, 롱인데 RSI 과열/숏인데 RSI 과매도, EMA 이격 과다,
@@ -48,102 +40,148 @@ SYSTEM_PROMPT = """너는 선물 단기매매 시그널의 리스크 심사위�
 반드시 JSON 객체 하나만 출력하라. 다른 글자는 쓰지 마라.
 {"decision": "ENTER" 또는 "SKIP", "confidence": 0~100 정수, "reason": "한국어 한 문장, 60자 이내"}"""
 
+SKEPTIC_PROMPT = """너는 선물 단기매매 위원회의 '반론 담당' 위원이다.
+다른 위원들은 이 시그널을 긍정적으로 볼 수 있다. 너의 임무는 이 진입 후보의 가장 큰 약점을 찾는 것이다.
+- 먼저 손실로 끝날 수 있는 가장 그럴듯한 시나리오를 떠올려라.
+  (추격 진입, 과열/과매도, 약한 추세, 거래량 부족, BTC 역풍, 최근 성과 부진, 불리한 손익 구조 등)
+- 그 약점이 진입을 막을 만큼 결정적이면 SKIP, 결정적 약점이 없을 때만 ENTER.
+- reason 에는 네가 찾은 가장 큰 약점(또는 약점이 약한 이유)을 적어라.
+반드시 JSON 객체 하나만 출력하라. 다른 글자는 쓰지 마라.
+{"decision": "ENTER" 또는 "SKIP", "confidence": 0~100 정수, "reason": "한국어 한 문장, 60자 이내"}"""
 
-# ───────────────────────────── AI 호출 ─────────────────────────────
+# 위원 명단: (표시 이름, 기록용 이름, 제공처, 모델 후보들, 역할)
+# 모델 이름은 서비스 쪽에서 바뀔 수 있어 환경변수로 덮어쓸 수 있게 해 둠. 후보가 여러 개면 앞에서부터 시도.
+VOTERS = [
+    ("Gemini", "gemini", "gemini",
+     [os.getenv("GEMINI_MODEL", "gemini-flash-latest")], "normal"),
+    ("GPT-OSS", "gptoss", "groq",
+     [os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")], "normal"),
+    ("Qwen", "qwen", "groq",
+     [os.getenv("QWEN_MODEL", "qwen/qwen3.8-27b")], "normal"),
+    ("DeepSeek", "deepseek", "openrouter",
+     os.getenv("DEEPSEEK_MODELS", "deepseek/deepseek-v4-flash:free,deepseek/deepseek-r1:free").split(","),
+     "normal"),
+    ("반론위원", "skeptic", "gemini",
+     [os.getenv("SKEPTIC_MODEL", "gemini-flash-lite-latest")], "skeptic"),
+]
+PROVIDER_KEYS = {"gemini": GEMINI_API_KEY, "groq": GROQ_API_KEY, "openrouter": OPENROUTER_API_KEY}
+
+AI_LOG_FILE = Path(os.getenv("AI_LOG_FILE", "ai_trades.csv"))
+AI_LOG_FIELDS = [
+    "closed_at", "symbol", "direction", "entry_time", "exit_reason", "net_r", "outcome",
+    "ai_verdict", "ai_enter_votes", "ai_valid_votes", "ai_avg_confidence",
+]
+for _name, _slug, *_ in VOTERS:
+    AI_LOG_FIELDS += [f"{_slug}_decision", f"{_slug}_confidence"]
+
+
+# ───────────────────────────── 응답 해석 ─────────────────────────────
 def _parse_vote(text: str) -> Optional[Dict[str, Any]]:
+    """추론 모델의 <think> 부분을 지우고, decision 이 들어 있는 마지막 JSON 객체를 찾음."""
     if not text:
         return None
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if not match:
-        return None
-    try:
-        data = json.loads(match.group(0))
-    except json.JSONDecodeError:
-        return None
-    decision = str(data.get("decision", "")).strip().upper()
-    if decision not in ("ENTER", "SKIP"):
-        return None
-    try:
-        confidence = int(float(data.get("confidence", 0)))
-    except (TypeError, ValueError):
-        confidence = 0
-    reason = str(data.get("reason", "")).strip()[:120]
-    return {"decision": decision, "confidence": max(0, min(100, confidence)), "reason": reason}
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    for chunk in reversed(re.findall(r"\{[^{}]*\}", text)):
+        try:
+            data = json.loads(chunk)
+        except json.JSONDecodeError:
+            continue
+        decision = str(data.get("decision", "")).strip().upper()
+        if decision not in ("ENTER", "SKIP"):
+            continue
+        try:
+            confidence = int(float(data.get("confidence", 0)))
+        except (TypeError, ValueError):
+            confidence = 0
+        reason = str(data.get("reason", "")).strip()[:120]
+        return {"decision": decision, "confidence": max(0, min(100, confidence)), "reason": reason}
+    return None
 
 
-def _ask_gemini(prompt: str) -> Optional[Dict[str, Any]]:
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+# ───────────────────────────── 제공처별 호출 ─────────────────────────────
+def _call_gemini(model: str, system: str, prompt: str) -> Optional[str]:
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     body = {
-        "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
+        "systemInstruction": {"parts": [{"text": system}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.2, "responseMimeType": "application/json"},
     }
-    response = requests.post(
-        url, headers={"x-goog-api-key": GEMINI_API_KEY}, json=body, timeout=AI_TIMEOUT_SEC,
-    )
+    response = requests.post(url, headers={"x-goog-api-key": GEMINI_API_KEY},
+                             json=body, timeout=AI_TIMEOUT_SEC)
     if response.status_code != 200:
-        logging.warning("Gemini 응답 오류: %s %s", response.status_code, response.text[:300])
+        logging.warning("Gemini(%s) 응답 오류: %s %s", model, response.status_code, response.text[:300])
         return None
     parts = response.json()["candidates"][0]["content"]["parts"]
-    return _parse_vote("".join(part.get("text", "") for part in parts))
+    return "".join(part.get("text", "") for part in parts if not part.get("thought"))
 
 
-def _ask_groq(prompt: str) -> Optional[Dict[str, Any]]:
+def _call_openai_style(url: str, key: str, label: str, model: str,
+                       system: str, prompt: str) -> Optional[str]:
     body = {
-        "model": GROQ_MODEL,
+        "model": model,
         "temperature": 0.2,
-        "response_format": {"type": "json_object"},
         "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": system},
             {"role": "user", "content": prompt},
         ],
     }
-    response = requests.post(
-        "https://api.groq.com/openai/v1/chat/completions",
-        headers={"Authorization": f"Bearer {GROQ_API_KEY}"},
-        json=body, timeout=AI_TIMEOUT_SEC,
-    )
+    response = requests.post(url, headers={"Authorization": f"Bearer {key}"},
+                             json=body, timeout=AI_TIMEOUT_SEC)
     if response.status_code != 200:
-        logging.warning("Groq 응답 오류: %s %s", response.status_code, response.text[:300])
+        logging.warning("%s(%s) 응답 오류: %s %s", label, model, response.status_code, response.text[:300])
         return None
-    return _parse_vote(response.json()["choices"][0]["message"]["content"])
+    return response.json()["choices"][0]["message"].get("content") or ""
 
 
-def _safe_call(func: Callable[[str], Optional[Dict[str, Any]]], prompt: str) -> Optional[Dict[str, Any]]:
-    try:
-        return func(prompt)
-    except Exception as exc:  # 네트워크·형식 오류 등은 '응답 없음'으로 처리
-        logging.warning("AI 호출 실패 (%s): %s", func.__name__, exc)
-        return None
+def _ask(provider: str, models: List[str], role: str, prompt: str) -> Optional[Dict[str, Any]]:
+    system = SKEPTIC_PROMPT if role == "skeptic" else NORMAL_PROMPT
+    for model in [m.strip() for m in models if m.strip()]:
+        try:
+            if provider == "gemini":
+                text = _call_gemini(model, system, prompt)
+            elif provider == "groq":
+                text = _call_openai_style("https://api.groq.com/openai/v1/chat/completions",
+                                          GROQ_API_KEY, "Groq", model, system, prompt)
+            else:
+                text = _call_openai_style("https://openrouter.ai/api/v1/chat/completions",
+                                          OPENROUTER_API_KEY, "OpenRouter", model, system, prompt)
+        except Exception as exc:  # 네트워크·형식 오류 등은 다음 후보 또는 '응답 없음'
+            logging.warning("AI 호출 실패 (%s %s): %s", provider, model, exc)
+            continue
+        vote = _parse_vote(text or "")
+        if vote:
+            vote["model"] = model
+            return vote
+        if text:
+            logging.warning("AI 응답 해석 실패 (%s %s): %s", provider, model, text[:200])
+    return None
 
 
 def _review(signal: Dict[str, Any]) -> Dict[str, Any]:
-    voters = []
-    if GEMINI_API_KEY:
-        voters.append(("Gemini", _ask_gemini))
-    if GROQ_API_KEY:
-        voters.append(("Groq", _ask_groq))
-    if not voters:
+    active = [(name, provider, models, role) for name, _slug, provider, models, role in VOTERS
+              if PROVIDER_KEYS.get(provider)]
+    if not active:
         return {"verdict": "UNAVAILABLE", "enter": 0, "valid": 0, "total": 0,
                 "avg_confidence": 0, "votes": {}}
 
     prompt = "아래 진입 후보를 심사하라.\n" + json.dumps(signal, ensure_ascii=False, indent=1)
-    with ThreadPoolExecutor(max_workers=len(voters)) as pool:
-        futures = {name: pool.submit(_safe_call, func, prompt) for name, func in voters}
+    with ThreadPoolExecutor(max_workers=len(active)) as pool:
+        futures = {name: pool.submit(_ask, provider, models, role, prompt)
+                   for name, provider, models, role in active}
         votes = {name: future.result() for name, future in futures.items()}
 
     valid = [vote for vote in votes.values() if vote]
     enter = sum(1 for vote in valid if vote["decision"] == "ENTER")
     if not valid:
         verdict = "UNAVAILABLE"
-    elif enter == len(valid):
-        verdict = "APPROVE"
-    elif enter == 0:
-        verdict = "REJECT"
+    elif enter * 2 > len(valid):
+        verdict = "APPROVE"      # 응답한 위원의 과반 찬성
+    elif enter * 2 < len(valid):
+        verdict = "REJECT"       # 과반 반대
     else:
-        verdict = "SPLIT"
+        verdict = "SPLIT"        # 정확히 반반 (응답 수가 짝수일 때)
     avg_conf = round(sum(vote["confidence"] for vote in valid) / len(valid)) if valid else 0
-    return {"verdict": verdict, "enter": enter, "valid": len(valid), "total": len(voters),
+    return {"verdict": verdict, "enter": enter, "valid": len(valid), "total": len(active),
             "avg_confidence": avg_conf, "votes": votes}
 
 
@@ -215,7 +253,8 @@ def review_and_format(slot: Dict[str, Any], symbol: str, category: str, change: 
         }
         review = _review(signal)
         slot["ai"] = review
-        logging.info("AI review %s %s: %s", symbol, direction, review["verdict"])
+        logging.info("AI review %s %s: %s %s/%s", symbol, direction,
+                     review["verdict"], review["enter"], review["valid"])
         return "\n\n" + _format_block(review)
     except Exception:
         logging.exception("AI review failed for %s", symbol)
@@ -223,14 +262,24 @@ def review_and_format(slot: Dict[str, Any], symbol: str, category: str, change: 
 
 
 # ───────────────────────────── 기록과 성과 ─────────────────────────────
+def _ensure_log_header() -> bool:
+    """예전 형식(위원 2명)의 기록 파일이 있으면 옆으로 옮기고 새 형식으로 시작. 파일이 이미 맞으면 True."""
+    if not AI_LOG_FILE.exists() or AI_LOG_FILE.stat().st_size == 0:
+        return False
+    with AI_LOG_FILE.open("r", newline="", encoding="utf-8") as handle:
+        header = next(csv.reader(handle), [])
+    if header == AI_LOG_FIELDS:
+        return True
+    os.replace(AI_LOG_FILE, AI_LOG_FILE.with_name(AI_LOG_FILE.stem + "_old.csv"))
+    return False
+
+
 def log_closed_trade(symbol: str, info: Dict[str, Any], net_r: float, outcome: str,
                      reason: str, now: datetime) -> None:
     """포지션 종료 시 AI 판정과 실제 결과를 함께 기록. AI 검토가 없던 거래도 NONE 으로 남김."""
     try:
         review = info.get("ai") or {}
         votes = review.get("votes", {})
-        gemini = votes.get("Gemini") or {}
-        groq = votes.get("Groq") or {}
         row = {
             "closed_at": now.isoformat(),
             "symbol": symbol,
@@ -243,12 +292,12 @@ def log_closed_trade(symbol: str, info: Dict[str, Any], net_r: float, outcome: s
             "ai_enter_votes": review.get("enter", ""),
             "ai_valid_votes": review.get("valid", ""),
             "ai_avg_confidence": review.get("avg_confidence", ""),
-            "gemini_decision": gemini.get("decision", ""),
-            "gemini_confidence": gemini.get("confidence", ""),
-            "groq_decision": groq.get("decision", ""),
-            "groq_confidence": groq.get("confidence", ""),
         }
-        exists = AI_LOG_FILE.exists() and AI_LOG_FILE.stat().st_size > 0
+        for name, slug, *_ in VOTERS:
+            vote = votes.get(name) or {}
+            row[f"{slug}_decision"] = vote.get("decision", "")
+            row[f"{slug}_confidence"] = vote.get("confidence", "")
+        exists = _ensure_log_header()
         with AI_LOG_FILE.open("a", newline="", encoding="utf-8") as handle:
             writer = csv.DictWriter(handle, fieldnames=AI_LOG_FIELDS)
             if not exists:
