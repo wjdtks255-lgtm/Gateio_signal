@@ -198,6 +198,7 @@ def review_and_format(slot: Dict[str, Any], symbol: str, category: str, change: 
             "btc_1h_bias": btc_bias,
             "rule_score": analysis["score"],
             "required_score": analysis["required_score"],
+            "max_score": analysis.get("max_score"),
             "rule_reasons": analysis["reasons"],
             "rsi_1h": round(analysis["rsi1h"], 1),
             "rsi_15m": round(analysis["rsi15"], 1),
