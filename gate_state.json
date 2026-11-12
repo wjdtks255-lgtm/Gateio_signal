@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 950.89,
       "max_adv": 997.46,
-      "last_candle_ts": 1794447600,
+      "last_candle_ts": 1794447900,
       "score": 8,
       "required_score": 7,
       "rsi_1h": 41.013518519762584,
@@ -33,43 +33,6 @@
         "15M EMA21 눌림 후 재돌파",
         "거래량 증가 2.07배",
         "15M 캔들 몸통 0.67"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false
-    },
-    "ERA_USDT": {
-      "strategy_version": 4,
-      "direction": "LONG",
-      "entry_price": 0.08764,
-      "entry_time": "2026-11-12T00:30:40.044345+00:00",
-      "leverage": 3,
-      "risk": 0.003502667982206504,
-      "atr": 0.0029188899851720867,
-      "tp1": 0.09201833497775813,
-      "tp2": 0.09639666995551625,
-      "tp3": 0.10223444992586044,
-      "stop_loss": 0.08807783349777581,
-      "initial_stop": 0.0841373320177935,
-      "tp1_lock_price": 0.08807783349777581,
-      "tp2_lock_price": 0.09201833497775813,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 0.09233,
-      "max_adv": 0.08669,
-      "last_candle_ts": 1794447600,
-      "score": 8,
-      "required_score": 7,
-      "rsi_1h": 61.200803292411614,
-      "rsi_15m": 60.06105093935585,
-      "adx_1h": 39.228895856040275,
-      "volume_surge": 2.0619950887931955,
-      "reasons": [
-        "1H EMA20/50/200 추세 정렬",
-        "1H EMA20 기울기 +1.66%",
-        "1H ADX 39.2",
-        "15M EMA21 눌림 후 재돌파",
-        "거래량 증가 2.06배",
-        "BTC 필터 통과 (FLAT)"
       ],
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false
@@ -93,7 +56,7 @@
       "tp2_reached": false,
       "max_fav": 295.64,
       "max_adv": 293.99,
-      "last_candle_ts": 1794447600,
+      "last_candle_ts": 1794447900,
       "score": 7,
       "required_score": 7,
       "rsi_1h": 55.88465414318842,
@@ -129,7 +92,7 @@
       "tp2_reached": false,
       "max_fav": 0.3564,
       "max_adv": 0.3598,
-      "last_candle_ts": 1794447600,
+      "last_candle_ts": 1794447900,
       "score": 7,
       "required_score": 6,
       "rsi_1h": 38.78385599720305,
@@ -165,7 +128,7 @@
       "tp2_reached": false,
       "max_fav": 119.61,
       "max_adv": 120.19,
-      "last_candle_ts": 1794447600,
+      "last_candle_ts": 1794447900,
       "score": 8,
       "required_score": 6,
       "rsi_1h": 40.822290295184516,
@@ -182,27 +145,66 @@
       ],
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false
+    },
+    "SAMSUNG_USDT": {
+      "strategy_version": 4,
+      "direction": "LONG",
+      "entry_price": 158.62,
+      "entry_time": "2026-11-12T01:50:29.273551+00:00",
+      "leverage": 4,
+      "risk": 2.551139518838307,
+      "atr": 2.1259495990319226,
+      "tp1": 161.8089243985479,
+      "tp2": 164.99784879709577,
+      "tp3": 169.24974799515962,
+      "stop_loss": 156.0688604811617,
+      "initial_stop": 156.0688604811617,
+      "tp1_lock_price": 158.93889243985478,
+      "tp2_lock_price": 161.8089243985479,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 158.62,
+      "max_adv": 158.62,
+      "last_candle_ts": 1794448200,
+      "score": 8,
+      "required_score": 7,
+      "rsi_1h": 60.665689616249736,
+      "rsi_15m": 54.320455925247934,
+      "adx_1h": 32.00929603381311,
+      "volume_surge": 0.5941513868842133,
+      "reasons": [
+        "1H EMA20/50/200 추세 정렬",
+        "1H EMA20 기울기 +0.30%",
+        "1H ADX 32.0",
+        "15M EMA21 눌림 후 재돌파",
+        "15M 캔들 몸통 0.71",
+        "BTC 필터 통과 (FLAT)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false
     }
   },
   "stats": {
-    "wins": 0,
+    "wins": 1,
     "draws": 0,
     "losses": 0,
-    "total": 0,
-    "r_count": 0,
-    "sum_r": 0.0,
-    "win_r": 0.0,
+    "total": 1,
+    "r_count": 1,
+    "sum_r": 0.662,
+    "win_r": 0.662,
     "loss_r": 0.0,
-    "recent_r": [],
-    "positive_count": 0,
+    "recent_r": [
+      0.662
+    ],
+    "positive_count": 1,
     "directional": {
       "LONG": {
-        "total": 0,
-        "wins": 0,
+        "total": 1,
+        "wins": 1,
         "draws": 0,
         "losses": 0,
-        "win_rate": 0.0,
-        "avg_r": 0.0,
+        "win_rate": 100.0,
+        "avg_r": 0.662,
         "pf": 0.0
       },
       "SHORT": {
@@ -216,10 +218,10 @@
       }
     },
     "strategy_version": 4,
-    "csv_rows": 139,
+    "csv_rows": 140,
     "excluded_other_versions": 139,
-    "first_closed_at": "",
-    "last_closed_at": ""
+    "first_closed_at": "2026-11-12T01:50:29.273551+00:00",
+    "last_closed_at": "2026-11-12T01:50:29.273551+00:00"
   },
   "closed_symbols": {
     "ZHIPU_USDT": {
@@ -241,6 +243,11 @@
       "time": "2026-11-12T01:15:30.126572+00:00",
       "direction": "LONG",
       "reason": "SL"
+    },
+    "ERA_USDT": {
+      "time": "2026-11-12T01:50:29.273551+00:00",
+      "direction": "LONG",
+      "reason": "TRAILING_STOP"
     }
   },
   "fail_count": 0,
