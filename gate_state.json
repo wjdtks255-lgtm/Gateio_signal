@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.1079,
       "max_adv": 0.1133,
-      "last_candle_ts": 1794591600,
+      "last_candle_ts": 1794591900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.32563384588397,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 49.02,
       "max_adv": 50.39,
-      "last_candle_ts": 1794591600,
+      "last_candle_ts": 1794591900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.457111176823794,
@@ -169,7 +169,7 @@
       "tp2_reached": false,
       "max_fav": 68068.1,
       "max_adv": 69111.0,
-      "last_candle_ts": 1794591600,
+      "last_candle_ts": 1794591900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 34.37045176863532,
@@ -245,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 5.713,
       "max_adv": 5.827,
-      "last_candle_ts": 1794591600,
+      "last_candle_ts": 1794591900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 42.067098155140414,
@@ -321,8 +321,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 61.74,
-      "max_adv": 62.79,
-      "last_candle_ts": 1794591600,
+      "max_adv": 62.89,
+      "last_candle_ts": 1794591900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 34.46690076374777,
@@ -399,7 +399,7 @@
       "tp2_reached": false,
       "max_fav": 0.3396,
       "max_adv": 0.3442,
-      "last_candle_ts": 1794591600,
+      "last_candle_ts": 1794591900,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 40.76744090029478,
@@ -452,6 +452,83 @@
             "decision": "ENTER",
             "confidence": 75,
             "reason": "필수 조건 충족 및 BTC 하방 정렬로 숏 포트폴리오 진입 타당함.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ANTHROPIC_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 1356.78,
+      "entry_time": "2026-11-13T17:50:30.084572+00:00",
+      "leverage": 4,
+      "risk": 18.089713830768243,
+      "atr": 15.074761525640204,
+      "tp1": 1334.1678577115397,
+      "tp2": 1311.5557154230794,
+      "tp3": 1281.4061923717989,
+      "stop_loss": 1374.8697138307682,
+      "initial_stop": 1374.8697138307682,
+      "tp1_lock_price": 1354.518785771154,
+      "tp2_lock_price": 1334.1678577115397,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 1356.78,
+      "max_adv": 1356.78,
+      "last_candle_ts": 1794592200,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 36.805342423536544,
+      "rsi_15m": 39.905855415529665,
+      "adx_1h": 29.98122967328744,
+      "volume_surge": 0.48960190136660725,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 30.0 강한 추세 (+2)",
+        "1H EMA20 기울기 -0.88% (+1)",
+        "15M 캔들 몸통 0.48 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 77,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "모든 필수 조건 충족 및 숏 방향의 우수한 성과와 강한 추세를 확인했습니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 65,
+            "reason": "거래량 부진과 RSI 저점으로 반전 위험이 커서",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 75,
+            "reason": "강한 하락 추세 정렬과 양호한 전략 성과가 확인되어 진입 가치가 있음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "거래량 증가 없이 24시간 하락 후 숏 진입은 추격 매도 위험이 크고 EMA 재돌파 신호도 모호합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "지표 정렬이 우수하고 결정적인 약점이 없어 숏 진입에 무리가 없습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
