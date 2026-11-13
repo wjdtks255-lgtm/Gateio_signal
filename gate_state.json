@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 304.5,
       "max_adv": 298.65,
-      "last_candle_ts": 1794578100,
+      "last_candle_ts": 1794578400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 60.56086331916333,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 0.1086,
       "max_adv": 0.1133,
-      "last_candle_ts": 1794578100,
+      "last_candle_ts": 1794578400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.32563384588397,
@@ -167,9 +167,9 @@
       "tp2_lock_price": 49.54461283330458,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 49.81,
+      "max_fav": 49.78,
       "max_adv": 50.39,
-      "last_candle_ts": 1794578100,
+      "last_candle_ts": 1794578400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.457111176823794,
@@ -245,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 3867.69,
       "max_adv": 3899.15,
-      "last_candle_ts": 1794578100,
+      "last_candle_ts": 1794578400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 39.60773414255268,
@@ -321,7 +321,7 @@
       "tp2_reached": false,
       "max_fav": 3866.09,
       "max_adv": 3898.53,
-      "last_candle_ts": 1794578100,
+      "last_candle_ts": 1794578400,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 38.79728168644758,
@@ -372,6 +372,84 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "강한 1H 추세와 BTC 방향성 일치로 숏 진입 조건이 충족됨.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ZHIPU_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 52.25,
+      "entry_time": "2026-11-13T14:05:37.182812+00:00",
+      "leverage": 4,
+      "risk": 1.2244720376583025,
+      "atr": 1.020393364715252,
+      "tp1": 50.71940995292712,
+      "tp2": 49.188819905854245,
+      "tp3": 47.14803317642374,
+      "stop_loss": 53.4744720376583,
+      "initial_stop": 53.4744720376583,
+      "tp1_lock_price": 52.09694099529271,
+      "tp2_lock_price": 50.71940995292712,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 52.25,
+      "max_adv": 52.25,
+      "last_candle_ts": 1794578700,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 31.062271558841843,
+      "rsi_15m": 45.7017034556523,
+      "adx_1h": 45.43395492078953,
+      "volume_surge": 2.1704835458432488,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 45.4 강한 추세 (+2)",
+        "거래량 급증 2.17배 (+2)",
+        "1H EMA20 기울기 -2.18% (+1)",
+        "15M 캔들 몸통 0.89 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 82,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 추세와 거래량 동반, 숏 방향성 및 리스크 대비 보상 비율이 우수함.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도 구간에 있어 숏 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 거래량 급증, 양호한 손익비율로 진입 타당.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 24시간 -7.9% 하락했고 RSI 31.1 과매도라 숏 진입 근거가 약하다",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "1시간 RSI가 31.1로 과매도 근처이나 강한 추세와 거래량 동반으로 추가 하락 여력이 충분합니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
