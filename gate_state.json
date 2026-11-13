@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.1086,
       "max_adv": 0.1133,
-      "last_candle_ts": 1794581400,
+      "last_candle_ts": 1794581700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.32563384588397,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 49.61,
       "max_adv": 50.39,
-      "last_candle_ts": 1794581400,
+      "last_candle_ts": 1794581700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.457111176823794,
@@ -169,7 +169,7 @@
       "tp2_reached": false,
       "max_fav": 3867.69,
       "max_adv": 3899.15,
-      "last_candle_ts": 1794581400,
+      "last_candle_ts": 1794581700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 39.60773414255268,
@@ -245,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 3866.09,
       "max_adv": 3898.53,
-      "last_candle_ts": 1794581400,
+      "last_candle_ts": 1794581700,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 38.79728168644758,
@@ -318,9 +318,9 @@
       "tp2_lock_price": 50.71940995292712,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 51.37,
+      "max_fav": 51.31,
       "max_adv": 52.32,
-      "last_candle_ts": 1794581400,
+      "last_candle_ts": 1794581700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 31.062271558841843,
@@ -374,6 +374,82 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "1시간 RSI가 31.1로 과매도 근처이나 강한 추세와 거래량 동반으로 추가 하락 여력이 충분합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "BTC_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 68898.8,
+      "entry_time": "2026-11-13T15:00:56.919814+00:00",
+      "leverage": 4,
+      "risk": 798.2741668712883,
+      "atr": 665.2284723927403,
+      "tp1": 67900.95729141089,
+      "tp2": 66903.11458282179,
+      "tp3": 65572.6576380363,
+      "stop_loss": 69697.07416687129,
+      "initial_stop": 69697.07416687129,
+      "tp1_lock_price": 68799.01572914109,
+      "tp2_lock_price": 67900.95729141089,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 68898.8,
+      "max_adv": 68898.8,
+      "last_candle_ts": 1794582000,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 34.37045176863532,
+      "rsi_15m": 43.02194744967129,
+      "adx_1h": 50.282831026894954,
+      "volume_surge": 1.504561563537279,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 50.3 강한 추세 (+2)",
+        "거래량 급증 1.50배 (+2)",
+        "1H EMA20 기울기 -0.58% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 76,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 90,
+            "reason": "강한 하방 추세와 거래량 동반, BTC 방향 일치 및 우수한 손익비로 진입 가치 높음.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "RSI가 과매도 구간에 있어 숏 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 거래량 급증, 양호한 손익비율로 진입 타당",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "RSI 34.4 저점권 숏 진입은 반등 리스크 크고 24h -3.64% 하락 후 추격 매매다",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "1시간봉 RSI가 과매도 직전이나, 강한 추세와 거래량 동반으로 숏 진입에 무리가 없습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
