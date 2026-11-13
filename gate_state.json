@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.1079,
       "max_adv": 0.1133,
-      "last_candle_ts": 1794600300,
+      "last_candle_ts": 1794600600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.32563384588397,
@@ -85,7 +85,7 @@
       "tp1": 49.54461283330458,
       "tp2": 48.99922566660916,
       "tp3": 48.27204277768194,
-      "stop_loss": 49.27954528302084,
+      "stop_loss": 49.25210976604641,
       "initial_stop": 50.52630973335634,
       "tp1_lock_price": 50.03546128333046,
       "tp2_lock_price": 49.54461283330458,
@@ -93,7 +93,7 @@
       "tp2_reached": true,
       "max_fav": 48.9,
       "max_adv": 50.39,
-      "last_candle_ts": 1794600300,
+      "last_candle_ts": 1794600600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.457111176823794,
@@ -169,7 +169,7 @@
       "tp2_reached": false,
       "max_fav": 68068.1,
       "max_adv": 69111.0,
-      "last_candle_ts": 1794600300,
+      "last_candle_ts": 1794600600,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 34.37045176863532,
@@ -245,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 5.713,
       "max_adv": 5.889,
-      "last_candle_ts": 1794600300,
+      "last_candle_ts": 1794600600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 42.067098155140414,
@@ -322,7 +322,7 @@
       "tp2_reached": false,
       "max_fav": 1353.29,
       "max_adv": 1369.77,
-      "last_candle_ts": 1794600300,
+      "last_candle_ts": 1794600600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.805342423536544,
@@ -398,8 +398,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 79.82,
-      "max_adv": 80.44,
-      "last_candle_ts": 1794600300,
+      "max_adv": 80.51,
+      "last_candle_ts": 1794600600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 43.452658104479255,
@@ -452,6 +452,159 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "지표 조건이 완벽하며 결정적인 약점이 없어 진입하기에 충분하다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "NBIS_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 117.09,
+      "entry_time": "2026-11-13T20:15:31.777187+00:00",
+      "leverage": 2,
+      "risk": 4.58463708710736,
+      "atr": 3.8205309059228,
+      "tp1": 111.3592036411158,
+      "tp2": 105.6284072822316,
+      "tp3": 97.987345470386,
+      "stop_loss": 121.67463708710736,
+      "initial_stop": 121.67463708710736,
+      "tp1_lock_price": 116.51692036411158,
+      "tp2_lock_price": 111.3592036411158,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 117.09,
+      "max_adv": 117.09,
+      "last_candle_ts": 1794600900,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 34.34569262272211,
+      "rsi_15m": 42.75706200724877,
+      "adx_1h": 43.57339230608686,
+      "volume_surge": 0.36994580637871555,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 43.6 강한 추세 (+2)",
+        "1H EMA20 기울기 -3.33% (+1)",
+        "15M 캔들 몸통 0.64 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 2,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 80,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 1H 추세와 BTC 방향성 일치, 손익비가 우수하여 진입합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과매도와 저조한 거래량으로 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "24시간 급락 후 거래량 증가 없이 추격 숏 진입은 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 24시간 -7.6% 하락했고 RSI 34.3 과매도에 거래량도 없어 숏 추격은 반등 리스크가 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하이픈 추세와 비트코인 역학이 일치하여 진입하기에 충분히 유리합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ARB_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.14556,
+      "entry_time": "2026-11-13T20:15:31.777187+00:00",
+      "leverage": 4,
+      "risk": 0.002853057705790313,
+      "atr": 0.0023775480881585943,
+      "tp1": 0.1419936778677621,
+      "tp2": 0.1384273557355242,
+      "tp3": 0.13367225955920703,
+      "stop_loss": 0.1484130577057903,
+      "initial_stop": 0.1484130577057903,
+      "tp1_lock_price": 0.1452033677867762,
+      "tp2_lock_price": 0.1419936778677621,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.14556,
+      "max_adv": 0.14556,
+      "last_candle_ts": 1794600900,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 45.63091803760141,
+      "rsi_15m": 45.30625992648322,
+      "adx_1h": 27.633343555935507,
+      "volume_surge": 0.2454092391194145,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 27.6 강한 추세 (+2)",
+        "1H EMA20 기울기 -0.41% (+1)",
+        "15M 캔들 몸통 0.94 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 4,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 76,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "추세 정렬과 BTC 방향이 일치하며 위험 대비 보상 비율이 양호함.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "ENTER",
+            "confidence": 65,
+            "reason": "강한 추세와 BTC와 일치하지만 거래량 부족과 RSI 중립으로 신중히",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 72,
+            "reason": "강한 추세 정렬과 양호한 손익비율, 전략 성과가 뒷받침되는 유효한 숏 진입.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "SHORT 신호인데 15M EMA21 재돌파 조건이 모순되고 거래량 증가도 약해 근거가 불명확합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "모든 필수 조건과 추세 지표가 완벽히 정렬되어 결정적 약점이 없다.",
             "model": "gemini-flash-lite-latest"
           }
         }
