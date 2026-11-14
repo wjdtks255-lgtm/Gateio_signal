@@ -17,9 +17,9 @@
       "tp2_lock_price": 0.018255229292313234,
       "tp1_reached": true,
       "tp2_reached": true,
-      "max_fav": 0.0163,
+      "max_fav": 0.01623,
       "max_adv": 0.02066,
-      "last_candle_ts": 1794696900,
+      "last_candle_ts": 1794697200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.620405134377748,
@@ -93,7 +93,7 @@
       "tp2_reached": true,
       "max_fav": 0.12395,
       "max_adv": 0.13512,
-      "last_candle_ts": 1794696900,
+      "last_candle_ts": 1794697200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.07250192334611,
@@ -170,7 +170,7 @@
       "tp2_reached": true,
       "max_fav": 1727.16,
       "max_adv": 1843.74,
-      "last_candle_ts": 1794696900,
+      "last_candle_ts": 1794697200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.628397930597373,
@@ -247,7 +247,7 @@
       "tp2_reached": true,
       "max_fav": 63266.2,
       "max_adv": 65448.4,
-      "last_candle_ts": 1794696900,
+      "last_candle_ts": 1794697200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 31.000255660542948,
@@ -321,7 +321,7 @@
       "tp2_lock_price": 133.31138502344768,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 134.58,
+      "max_fav": 134.55,
       "max_adv": 134.58,
       "last_candle_ts": 1794697200,
       "score": 4,
@@ -398,7 +398,7 @@
       "tp2_lock_price": 126.21784714044573,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 128.04,
+      "max_fav": 127.87,
       "max_adv": 128.04,
       "last_candle_ts": 1794697200,
       "score": 4,
@@ -450,6 +450,82 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "지표 정렬과 승률이 우수해 결정적 약점이 없다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "SKHYNIX_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 867.22,
+      "entry_time": "2026-11-14T23:05:27.686557+00:00",
+      "leverage": 3,
+      "risk": 10.932824321886452,
+      "atr": 9.110686934905377,
+      "tp1": 853.553969597642,
+      "tp2": 839.8879391952839,
+      "tp3": 821.6665653254731,
+      "stop_loss": 878.1528243218864,
+      "initial_stop": 878.1528243218864,
+      "tp1_lock_price": 865.8533969597643,
+      "tp2_lock_price": 853.553969597642,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 867.22,
+      "max_adv": 867.22,
+      "last_candle_ts": 1794697500,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 37.59387888733667,
+      "rsi_15m": 45.44407604115975,
+      "adx_1h": 42.04437267041305,
+      "volume_surge": 0.5702051566753102,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 42.0 강한 추세 (+2)",
+        "1H EMA20 기울기 -0.70% (+1)",
+        "15M 캔들 몸통 0.55 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 4,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 81,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 90,
+            "reason": "강한 추세와 높은 승률, BTC 방향 일치로 진입 가치가 높음.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "ENTER",
+            "confidence": 65,
+            "reason": "EMA 정렬·ADX 강세·전략 승률 높아 진입 가치",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 높은 ADX, 양호한 손익비율 및 전략 성과가 확인됨.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "거래량 급증 없이 돌파 진입은 실패 확률이 높아 보류한다",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 추세와 높은 승률로 약점이 제한적이므로 진입이 타당하다.",
             "model": "gemini-flash-lite-latest"
           }
         }
