@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 159.19,
       "max_adv": 163.04,
-      "last_candle_ts": 1794679500,
+      "last_candle_ts": 1794679800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 43.66744915114358,
@@ -87,7 +87,7 @@
       "tp1": 0.97398672256907,
       "tp2": 0.95557344513814,
       "tp3": 0.9310224085635668,
-      "stop_loss": 0.9709632559678808,
+      "stop_loss": 0.9696493607857332,
       "initial_stop": 1.007130621944744,
       "tp1_lock_price": 0.990558672256907,
       "tp2_lock_price": 0.97398672256907,
@@ -95,7 +95,7 @@
       "tp2_reached": true,
       "max_fav": 0.945,
       "max_adv": 0.9995,
-      "last_candle_ts": 1794679500,
+      "last_candle_ts": 1794679800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 34.80508133984925,
@@ -164,7 +164,7 @@
       "tp1": 74.11763169515176,
       "tp2": 72.55526339030351,
       "tp3": 70.47210565050584,
-      "stop_loss": 73.65854953460524,
+      "stop_loss": 73.56030349953245,
       "initial_stop": 76.92989464387861,
       "tp1_lock_price": 75.52376316951518,
       "tp2_lock_price": 74.11763169515176,
@@ -172,7 +172,7 @@
       "tp2_reached": true,
       "max_fav": 71.87,
       "max_adv": 76.16,
-      "last_candle_ts": 1794679500,
+      "last_candle_ts": 1794679800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 31.468107882781766,
@@ -241,7 +241,7 @@
       "tp1": 0.018255229292313234,
       "tp2": 0.01686045858462647,
       "tp3": 0.015000764307710784,
-      "stop_loss": 0.01889625063839452,
+      "stop_loss": 0.018799548473571667,
       "initial_stop": 0.02076581656614941,
       "tp1_lock_price": 0.019510522929231323,
       "tp2_lock_price": 0.018255229292313234,
@@ -249,7 +249,7 @@
       "tp2_reached": false,
       "max_fav": 0.01766,
       "max_adv": 0.02066,
-      "last_candle_ts": 1794679500,
+      "last_candle_ts": 1794679800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.620405134377748,
@@ -315,7 +315,7 @@
       "tp1": 48.53615346123234,
       "tp2": 48.25230692246468,
       "tp3": 47.87384487077447,
-      "stop_loss": 48.44993213032302,
+      "stop_loss": 48.43730408574104,
       "initial_stop": 49.04707723101413,
       "tp1_lock_price": 48.79161534612324,
       "tp2_lock_price": 48.53615346123234,
@@ -323,7 +323,7 @@
       "tp2_reached": true,
       "max_fav": 47.96,
       "max_adv": 48.82,
-      "last_candle_ts": 1794679500,
+      "last_candle_ts": 1794679800,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 34.77649747495984,
@@ -398,9 +398,9 @@
       "tp2_lock_price": 0.13129742678634465,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.13395,
+      "max_fav": 0.13376,
       "max_adv": 0.13512,
-      "last_candle_ts": 1794679500,
+      "last_candle_ts": 1794679800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.07250192334611,
@@ -453,6 +453,159 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "1H RSI가 32로 과매도 근접이나, 강한 추세와 지표 정렬로 추가 하락 여력이 충분합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ETH_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 1837.22,
+      "entry_time": "2026-11-14T18:15:31.590895+00:00",
+      "leverage": 4,
+      "risk": 29.21226292350638,
+      "atr": 24.34355243625532,
+      "tp1": 1800.704671345617,
+      "tp2": 1764.189342691234,
+      "tp3": 1715.5022378187234,
+      "stop_loss": 1866.4322629235064,
+      "initial_stop": 1866.4322629235064,
+      "tp1_lock_price": 1833.5684671345618,
+      "tp2_lock_price": 1800.704671345617,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 1837.22,
+      "max_adv": 1837.22,
+      "last_candle_ts": 1794680100,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 30.628397930597373,
+      "rsi_15m": 39.065923006082265,
+      "adx_1h": 42.7311792790153,
+      "volume_surge": 0.2596065670646694,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 42.7 강한 추세 (+2)",
+        "1H EMA20 기울기 -1.41% (+1)",
+        "15M 캔들 몸통 0.51 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 81,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 추세와 우수한 승률, BTC 방향성 일치로 숏 진입 가치 높음.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도 구간에 있어 숏 진입 위험이 높음",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 양호한 리스크 구조, 높은 전략 승률로 진입 적정.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "1H RSI 30.6 과매도 부근에서 24h -5.24% 급락 후 숏 진입은 반등 리스크가 크다",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "1시간 RSI가 30대 초반으로 과매도권에 근접했으나, 강한 추세와 높은 승률로 볼 때 진입 가능합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "NBIS_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 110.82,
+      "entry_time": "2026-11-14T18:15:31.590895+00:00",
+      "leverage": 3,
+      "risk": 1.9312023451709956,
+      "atr": 1.6093352876424964,
+      "tp1": 108.40599706853625,
+      "tp2": 105.99199413707251,
+      "tp3": 102.7733235617875,
+      "stop_loss": 112.751202345171,
+      "initial_stop": 112.751202345171,
+      "tp1_lock_price": 110.57859970685362,
+      "tp2_lock_price": 108.40599706853625,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 110.82,
+      "max_adv": 110.82,
+      "last_candle_ts": 1794680100,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 32.93225954193204,
+      "rsi_15m": 40.7308669305072,
+      "adx_1h": 52.51829830613941,
+      "volume_surge": 0.444236892611755,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 52.5 강한 추세 (+2)",
+        "1H EMA20 기울기 -1.24% (+1)",
+        "15M 캔들 몸통 0.49 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 2,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 82,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 90,
+            "reason": "강한 하락 추세와 높은 승률 및 우수한 손익비 조건을 충족합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과매도와 거래량 부진으로 숏 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 높은 ADX, 양호한 손익비율 및 전략 성과가 확인됨.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "이미 24시간 -5% 하락 후 추격 숏, RSI 32.9 과매도 근접, 거래량 증가 없음",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간봉 RSI가 32.9로 과매도 구간에 임박하여 추가 하락 여력이 제한적이다.",
             "model": "gemini-flash-lite-latest"
           }
         }
