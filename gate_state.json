@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.0895,
       "max_adv": 0.0948,
-      "last_candle_ts": 1794715800,
+      "last_candle_ts": 1794716100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.27027686807796,
@@ -167,16 +167,6 @@
     "last_closed_at": "2026-11-15T03:15:34.552981+00:00"
   },
   "closed_symbols": {
-    "ARB_USDT": {
-      "time": "2026-11-15T00:15:29.881159+00:00",
-      "direction": "SHORT",
-      "reason": "TP2_PROTECT"
-    },
-    "BTC_USDT": {
-      "time": "2026-11-15T00:15:29.881159+00:00",
-      "direction": "SHORT",
-      "reason": "TP2_PROTECT"
-    },
     "SPCX_USDT": {
       "time": "2026-11-15T00:45:30.655819+00:00",
       "direction": "SHORT",
