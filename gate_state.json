@@ -18,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.0895,
-      "max_adv": 0.0952,
-      "last_candle_ts": 1794717600,
+      "max_adv": 0.0957,
+      "last_candle_ts": 1794717900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.27027686807796,
@@ -167,11 +167,6 @@
     "last_closed_at": "2026-11-15T03:15:34.552981+00:00"
   },
   "closed_symbols": {
-    "SPCX_USDT": {
-      "time": "2026-11-15T00:45:30.655819+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "ETH_USDT": {
       "time": "2026-11-15T01:10:33.585815+00:00",
       "direction": "SHORT",
