@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 0.01621,
       "max_adv": 0.02066,
-      "last_candle_ts": 1794702600,
+      "last_candle_ts": 1794702900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.620405134377748,
@@ -93,7 +93,7 @@
       "tp2_reached": true,
       "max_fav": 1727.16,
       "max_adv": 1843.74,
-      "last_candle_ts": 1794702600,
+      "last_candle_ts": 1794702900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.628397930597373,
@@ -170,7 +170,7 @@
       "tp2_reached": false,
       "max_fav": 134.41,
       "max_adv": 135.5,
-      "last_candle_ts": 1794702600,
+      "last_candle_ts": 1794702900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.58548619142941,
@@ -247,7 +247,7 @@
       "tp2_reached": false,
       "max_fav": 127.46,
       "max_adv": 129.29,
-      "last_candle_ts": 1794702600,
+      "last_candle_ts": 1794702900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.37338716222119,
@@ -321,7 +321,7 @@
       "tp2_reached": false,
       "max_fav": 864.47,
       "max_adv": 877.75,
-      "last_candle_ts": 1794702600,
+      "last_candle_ts": 1794702900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.59387888733667,
@@ -395,9 +395,9 @@
       "tp2_lock_price": 96.4352705981153,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 99.37,
-      "max_adv": 99.5,
-      "last_candle_ts": 1794702600,
+      "max_fav": 99.2,
+      "max_adv": 99.64,
+      "last_candle_ts": 1794702900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.01194742534895,
@@ -473,8 +473,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.0918,
-      "max_adv": 0.0922,
-      "last_candle_ts": 1794702600,
+      "max_adv": 0.0931,
+      "last_candle_ts": 1794702900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.27027686807796,
@@ -527,6 +527,83 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "이미 24시간 동안 21% 이상 급락하여 추가 하락 시 추격 매도 및 반발 매수 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "MSTR_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 97.73,
+      "entry_time": "2026-11-15T00:40:35.062526+00:00",
+      "leverage": 1,
+      "risk": 2.3474906110649525,
+      "atr": 1.9562421758874606,
+      "tp1": 94.79563673616882,
+      "tp2": 91.86127347233761,
+      "tp3": 87.94878912056271,
+      "stop_loss": 100.07749061106496,
+      "initial_stop": 100.07749061106496,
+      "tp1_lock_price": 97.43656367361689,
+      "tp2_lock_price": 94.79563673616882,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 97.73,
+      "max_adv": 97.73,
+      "last_candle_ts": 1794703200,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 32.90059645458601,
+      "rsi_15m": 37.53037171240569,
+      "adx_1h": 59.16325863360627,
+      "volume_surge": 1.4936636800005916,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 59.2 강한 추세 (+2)",
+        "거래량 증가 1.49배 (+1)",
+        "1H EMA20 기울기 -2.64% (+1)",
+        "15M 캔들 몸통 0.94 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 2,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 80,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 92,
+            "reason": "강한 1H 추세와 우수한 승률 통계를 바탕으로 숏 진입 가치가 높음.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 55,
+            "reason": "RSI가 과매도 구간이라 반등 위험이 있어",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 거래량 동반, RSI 과매도 전 구간에서 리스크 대비 수익 구조가 우수함.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 -11.1% 급락 후 RSI 32.9 과매도 구간에서 숏 추격 진입은 반등 위험이 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 24시간 동안 11% 급락하여 RSI가 과매도권에 근접해 추가 하락 추격이 위험합니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
@@ -622,11 +699,6 @@
     "last_closed_at": "2026-11-15T00:15:29.881159+00:00"
   },
   "closed_symbols": {
-    "XAG_USDT": {
-      "time": "2026-11-14T20:35:24.642374+00:00",
-      "direction": "SHORT",
-      "reason": "TP3"
-    },
     "XRP_USDT": {
       "time": "2026-11-14T20:55:26.510227+00:00",
       "direction": "SHORT",
