@@ -4,6 +4,7 @@
 주간 리뷰 위원회
 - trades.csv(+ trades_audit.csv) 와 ai_trades.csv 를 읽어 현재 전략 버전 거래를 조건별로 집계합니다.
 - 숫자 집계는 코드가 하고, AI(Gemini, GPT-OSS)는 그 요약표만 보고 "자주 지는 조건"과 "조일 만한 기준"을 제안합니다.
+- AI 가 파라미터 역할을 오해하지 않도록 각 파라미터가 필터인지 점수 기준인지 함께 전달합니다.
 - 결과는 텔레그램으로 보냅니다. 봇 설정이나 파일은 아무것도 바꾸지 않습니다.
 """
 
@@ -19,15 +20,50 @@ import bot
 MIN_TRADES_FOR_AI = 10   # 이보다 적으면 AI 제안 생략 (표본이 너무 적으면 우연을 패턴으로 착각함)
 
 REVIEW_PROMPT = """너는 선물 단기매매 봇의 성과를 검토하는 퀀트 리뷰어다.
-아래는 규칙 기반 시그널 봇의 현재 파라미터와, 종료된 거래를 조건별로 집계한 표다.
+아래는 규칙 기반 시그널 봇의 현재 파라미터(각각의 실제 역할 포함)와, 종료된 거래를 조건별로 집계한 표다.
 R은 손절폭 1단위 대비 손익이다 (+1R = 손절폭만큼 이익).
 
+중요한 규칙:
+- 각 파라미터의 [역할]을 반드시 확인하라. [점수]로 표시된 파라미터는 품질 점수만 바꾸고 진입을 막지 않는다.
+  최소 점수 기준이 낮아서 점수 기준을 올려도 해당 구간 거래는 대부분 그대로 진입한다.
+- 진입을 실제로 막는 것은 [필터]로 표시된 파라미터뿐이다.
+- 원하는 효과를 내는 파라미터가 목록에 없으면 기존 숫자를 억지로 바꾸지 말고
+  "새 필터 추가: 내용" 형식으로 제안하라. (예: 1H ADX 상한, 특정 자산군 제외 등)
+- 건수가 20건 미만인 구간은 근거로 삼지 말고 "표본 부족"이라고만 언급하라.
+- 손절(SL) 청산이 손실인 것은 정상이다. 청산 이유 자체를 "지는 조건"으로 꼽지 마라.
+
 한국어로, 아래 세 부분만 간결하게 써라. 마크다운 표나 제목 기호(#, **)는 쓰지 마라.
-1) 자주 지는 조건: 표본 수가 어느 정도 있는 구간 중 승률이나 평균 R이 뚜렷이 나쁜 곳 2~3개.
-2) 조정 제안: 위 결과를 근거로 바꿔볼 만한 파라미터 최대 3개. 각각 "이름: 현재값 → 제안값, 이유" 형식.
+1) 자주 지는 조건: 표본이 20건 이상인 구간 중 승률이나 평균 R이 뚜렷이 나쁜 곳 2~3개.
+2) 조정 제안: 최대 3개. 기존 파라미터는 "이름: 현재값 → 제안값, 이유", 새 필터는 "새 필터 추가: 내용, 이유" 형식.
+   각 제안마다 그 변경이 실제로 어떤 거래를 막는지 한 줄로 확인하라.
    표본이 적어 확신할 수 없으면 솔직히 그렇게 말하고 "더 지켜보기"를 제안해도 된다.
 3) AI 위원회 평가: AI 판정(찬성/반대)과 위원별 기록을 보고, AI 반대 시그널을 걸러내는 필터가 쓸모 있어 보이는지.
 전체 25줄 이내."""
+
+# 파라미터 이름 → 실제 역할. AI 가 점수 기준을 필터로 착각하지 않도록 함께 보낸다.
+PARAMETER_ROLES = [
+    ("MIN_CHANGE_PCT", "[후보] 24시간 변동률 절댓값이 이 % 이상인 종목만 후보. +면 롱, -면 숏 후보"),
+    ("ADX_MIN_1H", "[필터] 1H ADX 가 이 값 미만이면 진입 안 함. 상한은 없음"),
+    ("RSI_LONG_1H", "[필터] 롱일 때 1H RSI 허용 범위"),
+    ("RSI_SHORT_1H", "[필터] 숏일 때 1H RSI 허용 범위"),
+    ("RSI_LONG_15M", "[필터] 롱일 때 15M RSI 허용 범위"),
+    ("RSI_SHORT_15M", "[필터] 숏일 때 15M RSI 허용 범위"),
+    ("BODY_RATIO_MIN", "[필터] 15M 캔들 몸통 비율이 이 값 미만이면 진입 안 함"),
+    ("MAX_EMA_DISTANCE_ATR", "[필터] 현재가와 15M EMA21 거리가 이 ATR 배수를 넘으면 진입 안 함"),
+    ("MIN_SCORE_LONG", "[필터] 롱 품질 점수가 이 값 미만이면 진입 안 함 (점수 0~6)"),
+    ("MIN_SCORE_SHORT", "[필터] 숏 품질 점수가 이 값 미만이면 진입 안 함 (점수 0~6)"),
+    ("ADX_GOOD_1H", "[점수] 1H ADX 가 이 값 이상이면 +1점. 진입을 막지 않음"),
+    ("ADX_STRONG_1H", "[점수] 1H ADX 가 이 값 이상이면 +2점. 진입을 막지 않음"),
+    ("MIN_VOLUME_SURGE", "[점수] 15M 거래량 배수가 이 값 이상이면 +1점. 진입을 막지 않음"),
+    ("VOLUME_STRONG", "[점수] 15M 거래량 배수가 이 값 이상이면 +2점. 진입을 막지 않음"),
+    ("SLOPE_GOOD_PCT", "[점수] 1H EMA20 기울기 절댓값이 이 % 이상이면 +1점. 진입을 막지 않음"),
+    ("BODY_STRONG", "[점수] 15M 캔들 몸통 비율이 이 값 이상이면 +1점. 진입을 막지 않음"),
+    ("ATR_SL", "[손익] 손절폭 = 1H ATR x 이 값 (= 1R)"),
+    ("ATR_TP_MULTS", "[손익] TP1/TP2/TP3 = 1H ATR x 각 값. TP1 에서 50% 익절 후 15M EMA21 트레일링"),
+    ("TIME_STOP_HOURS", "[청산] 이 시간 보유하면 무조건 청산"),
+    ("MAX_SLOTS", "[슬롯] 동시에 추적하는 최대 시그널 수"),
+    ("MAX_CRYPTO_SLOTS", "[슬롯] 그중 코인 최대 개수. 주식·지수·원자재 개수는 제한하지 않음"),
+]
 
 
 def _bucket_table(title: str, rows: List[Dict[str, Any]],
@@ -122,15 +158,12 @@ def build_summary() -> Tuple[str, int]:
 
 
 def current_parameters() -> str:
-    names = ["MIN_SCORE_LONG", "MIN_SCORE_SHORT", "ADX_MIN_1H", "ADX_GOOD_1H", "ADX_STRONG_1H",
-             "MIN_VOLUME_SURGE", "VOLUME_STRONG", "BODY_RATIO_MIN", "BODY_STRONG", "MAX_EMA_DISTANCE_ATR",
-             "RSI_LONG_15M", "RSI_SHORT_15M", "RSI_LONG_1H", "RSI_SHORT_1H", "MIN_CHANGE_PCT",
-             "ATR_SL", "ATR_TP_MULTS", "TIME_STOP_HOURS", "MAX_SLOTS", "MAX_CRYPTO_SLOTS"]
-    return "\n".join(f"{n} = {getattr(bot, n)}" for n in names if hasattr(bot, n))
+    return "\n".join(f"{name} = {getattr(bot, name)}  {role}"
+                     for name, role in PARAMETER_ROLES if hasattr(bot, name))
 
 
 def ask_reviewers(summary: str) -> List[Tuple[str, str]]:
-    prompt = f"[현재 파라미터]\n{current_parameters()}\n\n[집계]\n{summary}"
+    prompt = f"[현재 파라미터와 역할]\n{current_parameters()}\n\n[집계]\n{summary}"
     reviewers = []
     if ai.GEMINI_API_KEY:
         reviewers.append(("Gemini", "gemini", ai.VOTERS[0][3]))
