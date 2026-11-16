@@ -17,9 +17,9 @@
       "tp2_lock_price": 0.0027672521920378617,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.002774,
+      "max_fav": 0.002771,
       "max_adv": 0.002916,
-      "last_candle_ts": 1794842400,
+      "last_candle_ts": 1794842700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 42.05328495853997,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 17.37,
       "max_adv": 17.59,
-      "last_candle_ts": 1794842400,
+      "last_candle_ts": 1794842700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.46449116965236,
@@ -172,9 +172,9 @@
       "tp2_lock_price": 2.0062373394227535,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.9908,
+      "max_fav": 2.0037,
       "max_adv": 1.9281,
-      "last_candle_ts": 1794842400,
+      "last_candle_ts": 1794842700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 57.79227346835377,
@@ -249,9 +249,9 @@
       "tp2_lock_price": 5.6423603757186305,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 5.659,
+      "max_fav": 5.658,
       "max_adv": 5.724,
-      "last_candle_ts": 1794842400,
+      "last_candle_ts": 1794842700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 32.58593562049472,
@@ -326,7 +326,7 @@
       "tp2_reached": false,
       "max_fav": 144.61,
       "max_adv": 145.7,
-      "last_candle_ts": 1794842400,
+      "last_candle_ts": 1794842700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.91464228327284,
@@ -403,7 +403,7 @@
       "tp2_reached": false,
       "max_fav": 0.0455,
       "max_adv": 0.04575,
-      "last_candle_ts": 1794842400,
+      "last_candle_ts": 1794842700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.942636571279046,
@@ -453,6 +453,80 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "1시간 ADX가 17.6으로 추세 강도가 너무 약해 숏 포지션이 반등에 쉽게 무너질 수 있습니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "INTC_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 56.11,
+      "entry_time": "2026-11-16T15:30:40.151518+00:00",
+      "leverage": 3,
+      "risk": 0.7818807298018563,
+      "atr": 0.6515672748348803,
+      "tp1": 55.13264908774768,
+      "tp2": 54.15529817549536,
+      "tp3": 52.8521636258256,
+      "stop_loss": 56.891880729801855,
+      "initial_stop": 56.891880729801855,
+      "tp1_lock_price": 56.01226490877477,
+      "tp2_lock_price": 55.13264908774768,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 56.11,
+      "max_adv": 56.11,
+      "last_candle_ts": 1794843000,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 35.05263063620936,
+      "rsi_15m": 34.21685224347901,
+      "adx_1h": 25.5397855121854,
+      "volume_surge": 1.1380161866607252,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 25.5 강한 추세 (+2)",
+        "거래량 증가 1.14배 (+1)",
+        "1H EMA20 기울기 -0.80% (+1)",
+        "15M 캔들 몸통 0.56 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 81,
+        "votes": {
+          "Gemini": {
+            "error": "503 서버 혼잡"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "RSI가 과매도 구간이라 숏 진입 위험합니다.",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 75,
+            "reason": "강한 하락 추세 정렬과 양호한 리스크 구조가 확인되어 진입 적절.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "RSI 34.2 과매도 상태에서 숏 진입은 반등 리스크가 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 RSI가 30대에 진입하여 추가 하락 시 과매도 구간 반발 매수 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
