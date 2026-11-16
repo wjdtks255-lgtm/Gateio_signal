@@ -127,13 +127,14 @@ STOCK_BASES = {
     "GOOGL", "BABA", "AMD", "INTC", "PLTR", "COIN", "MSTR", "CRCL",
     "SOXL", "SOXS", "TQQQ", "SQQQ", "GOOG", "AVGO", "MU", "TSM",
     "SMCI", "ORCL", "AMAT", "QCOM", "ARM", "HOOD", "SNDK", "NBIS",
+    "SKHY",
 }
 INDEX_BASES = {
     "SPX", "NAS", "NDX", "DJI", "US30", "US100", "NIKKEI", "VIX", "DAX",
 }
 COMMODITY_BASES = {
     "CL", "GC", "SI", "HG", "NG", "XAU", "XAG", "WTI", "BRENT",
-    "GOLD", "SILVER", "OIL", "NATGAS",
+    "GOLD", "SILVER", "OIL", "NATGAS", "XAUT", "PAXG",
 }
 
 SESSION = requests.Session()
@@ -665,10 +666,13 @@ def get_asset_category(symbol: str) -> str:
 
 
 THEMES = {
-    "반도체": {"SOXL": 1, "SOXS": -1, "SKHYNIX": 1, "NVDA": 1, "AMD": 1,
+    "반도체": {"SOXL": 1, "SOXS": -1, "SKHYNIX": 1, "SKHY": 1, "NVDA": 1, "AMD": 1,
               "INTC": 1, "MU": 1, "TSM": 1, "AVGO": 1, "AMAT": 1},
     "미국지수": {"NAS": 1, "NDX": 1, "SPX": 1, "US100": 1, "US30": 1,
                 "DJI": 1, "TQQQ": 1, "SQQQ": -1},
+    # 같은 자산을 다른 티커로 중복 진입하지 않도록 묶음
+    "금": {"XAU": 1, "XAUT": 1, "PAXG": 1, "GC": 1, "GOLD": 1},
+    "은": {"XAG": 1, "SI": 1, "SILVER": 1},
 }
 
 
