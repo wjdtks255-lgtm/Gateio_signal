@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.002771,
       "max_adv": 0.002916,
-      "last_candle_ts": 1794872700,
+      "last_candle_ts": 1794873000,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 42.05328495853997,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.04538,
       "max_adv": 0.04618,
-      "last_candle_ts": 1794872700,
+      "last_candle_ts": 1794873000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.942636571279046,
@@ -171,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 536.06,
       "max_adv": 560.29,
-      "last_candle_ts": 1794872700,
+      "last_candle_ts": 1794873000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.452124794243844,
@@ -248,7 +248,7 @@
       "tp2_reached": false,
       "max_fav": 70.95,
       "max_adv": 73.85,
-      "last_candle_ts": 1794872700,
+      "last_candle_ts": 1794873000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 46.04568360633801,
@@ -324,7 +324,7 @@
       "tp2_reached": false,
       "max_fav": 38.91,
       "max_adv": 39.95,
-      "last_candle_ts": 1794872700,
+      "last_candle_ts": 1794873000,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 34.69703268039555,
@@ -382,82 +382,6 @@
         }
       }
     },
-    "SNDK_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 819.09,
-      "entry_time": "2026-11-16T19:20:33.593073+00:00",
-      "leverage": 3,
-      "risk": 17.396998001192298,
-      "atr": 14.497498334326917,
-      "tp1": 797.3437524985096,
-      "tp2": 775.5975049970193,
-      "tp3": 746.6025083283655,
-      "stop_loss": 813.3702998296226,
-      "initial_stop": 836.4869980011923,
-      "tp1_lock_price": 816.915375249851,
-      "tp2_lock_price": 797.3437524985096,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 797.01,
-      "max_adv": 825.35,
-      "last_candle_ts": 1794872700,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 36.47395552715121,
-      "rsi_15m": 46.723740690946954,
-      "adx_1h": 32.68688655495909,
-      "volume_surge": 0.1664286878753943,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "1H ADX 32.7 강한 추세 (+2)",
-        "1H EMA20 기울기 -0.92% (+1)",
-        "15M 캔들 몸통 0.54 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 2,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 79,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "강한 1H 추세와 우수한 승률 지표를 갖춘 숏 진입 타점임.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "RSI가 과매도 구역에 있어 숏 진입 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "ENTER",
-            "confidence": 75,
-            "reason": "강한 하락 추세와 양호한 전략 성과가 확인되어 진입 가치가 있음",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 78,
-            "reason": "24시간 -5%대 하락 후 추격 숏이고 거래량 증가 및 RSI 여력이 부족합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "1시간봉 RSI가 36.5로 이미 과매도권에 인접해 추가 하락 여력이 부족합니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "KORU_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -476,8 +400,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 6.67,
-      "max_adv": 6.739,
-      "last_candle_ts": 1794872700,
+      "max_adv": 6.781,
+      "last_candle_ts": 1794873000,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 38.5153568643905,
@@ -547,7 +471,7 @@
       "tp2_lock_price": 56.3701195140775,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 57.49,
+      "max_fav": 57.47,
       "max_adv": 57.49,
       "last_candle_ts": 1794873000,
       "score": 4,
@@ -606,16 +530,15 @@
     }
   },
   "stats": {
-    "wins": 59,
+    "wins": 60,
     "draws": 0,
     "losses": 32,
-    "total": 91,
-    "r_count": 91,
-    "sum_r": 39.300000000000004,
-    "win_r": 73.19399999999999,
+    "total": 92,
+    "r_count": 92,
+    "sum_r": 40.042,
+    "win_r": 73.93599999999999,
     "loss_r": 33.894000000000005,
     "recent_r": [
-      2.658,
       0.924,
       0.934,
       2.493,
@@ -664,9 +587,10 @@
       1.371,
       0.639,
       0.956,
-      1.191
+      1.191,
+      0.742
     ],
-    "positive_count": 59,
+    "positive_count": 60,
     "directional": {
       "LONG": {
         "total": 5,
@@ -678,20 +602,20 @@
         "pf": 4.0588235294117645
       },
       "SHORT": {
-        "total": 86,
-        "wins": 55,
+        "total": 87,
+        "wins": 56,
         "draws": 0,
         "losses": 31,
-        "win_rate": 63.95348837209303,
-        "avg_r": 0.42009302325581394,
-        "pf": 2.0995526067504633
+        "win_rate": 64.36781609195403,
+        "avg_r": 0.4237931034482758,
+        "pf": 2.1221353136317975
       }
     },
     "strategy_version": 5,
-    "csv_rows": 238,
+    "csv_rows": 239,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-16T23:50:32.368645+00:00"
+    "last_closed_at": "2026-11-16T23:55:28.642720+00:00"
   },
   "closed_symbols": {
     "KSTR_USDT": {
@@ -701,6 +625,11 @@
     },
     "CXMT_USDT": {
       "time": "2026-11-16T23:50:32.368645+00:00",
+      "direction": "SHORT",
+      "reason": "TRAILING_STOP"
+    },
+    "SNDK_USDT": {
+      "time": "2026-11-16T23:55:28.642720+00:00",
       "direction": "SHORT",
       "reason": "TRAILING_STOP"
     }
