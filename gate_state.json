@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.5974,
       "max_adv": 0.6152,
-      "last_candle_ts": 1794799200,
+      "last_candle_ts": 1794799500,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 40.82602972445794,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.023804,
       "max_adv": 0.02496,
-      "last_candle_ts": 1794799200,
+      "last_candle_ts": 1794799500,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 44.56608097138615,
@@ -174,7 +174,7 @@
       "tp2_reached": false,
       "max_fav": 2.752,
       "max_adv": 2.819,
-      "last_candle_ts": 1794799200,
+      "last_candle_ts": 1794799500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 40.20039324157917,
@@ -251,7 +251,7 @@
       "tp2_reached": false,
       "max_fav": 0.026406,
       "max_adv": 0.030693,
-      "last_candle_ts": 1794799200,
+      "last_candle_ts": 1794799500,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 34.25104651959556,
@@ -327,9 +327,9 @@
       "tp2_lock_price": 3.7254787139656272e-06,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 3.823e-06,
+      "max_fav": 3.82e-06,
       "max_adv": 3.852e-06,
-      "last_candle_ts": 1794799200,
+      "last_candle_ts": 1794799500,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 41.634623657118915,
@@ -379,6 +379,83 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "필수 조건이 충족되었고 숏 포지션 통계적 우위가 확실하다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ETHFI_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.4856,
+      "entry_time": "2026-11-16T03:30:35.752116+00:00",
+      "leverage": 4,
+      "risk": 0.010002169147534719,
+      "atr": 0.008335140956278932,
+      "tp1": 0.4730972885655816,
+      "tp2": 0.4605945771311632,
+      "tp3": 0.4439242952186053,
+      "stop_loss": 0.4956021691475347,
+      "initial_stop": 0.4956021691475347,
+      "tp1_lock_price": 0.48434972885655814,
+      "tp2_lock_price": 0.4730972885655816,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.4856,
+      "max_adv": 0.4856,
+      "last_candle_ts": 1794799800,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 37.95548985252744,
+      "rsi_15m": 40.18684994485046,
+      "adx_1h": 27.929438765271215,
+      "volume_surge": 0.9699556821995876,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 27.9 강한 추세 (+2)",
+        "1H EMA20 기울기 -0.93% (+1)",
+        "15M 캔들 몸통 0.91 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 72,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "추세 정렬과 높은 승률 지표를 바탕으로 숏 진입 가치가 충분합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 45,
+            "reason": "거래량 상승이 없고 RSI가 과매도 수준이라 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "거래량 증가 부재와 RSI 과매도 근접으로 숏 추격 리스크가 높아 진입 보류.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "ENTER",
+            "confidence": 68,
+            "reason": "추세 정렬과 전략 성과 양호하나 거래량 증가 미미해 신중 진입",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "지표 정렬과 추세 강도가 우수하여 숏 진입에 무리가 없습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
