@@ -18,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 21.848,
-      "max_adv": 21.243,
-      "last_candle_ts": 1794927600,
+      "max_adv": 21.127,
+      "last_candle_ts": 1794927900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 55.048985361615294,
@@ -94,9 +94,9 @@
       "tp2_lock_price": 0.0046445534014470415,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.00463,
+      "max_fav": 0.00457,
       "max_adv": 0.004787,
-      "last_candle_ts": 1794927600,
+      "last_candle_ts": 1794927900,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 44.30809001865257,
@@ -172,7 +172,7 @@
       "tp2_reached": false,
       "max_fav": 281.53,
       "max_adv": 284.63,
-      "last_candle_ts": 1794927600,
+      "last_candle_ts": 1794927900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.96295637013287,
@@ -248,7 +248,7 @@
       "tp2_reached": false,
       "max_fav": 14.6,
       "max_adv": 14.77,
-      "last_candle_ts": 1794927600,
+      "last_candle_ts": 1794927900,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 30.00457712492387,
@@ -395,11 +395,6 @@
     "last_closed_at": "2026-11-17T13:10:34.231740+00:00"
   },
   "closed_symbols": {
-    "EWY_USDT": {
-      "time": "2026-11-17T11:05:29.016717+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
     "SPY_USDT": {
       "time": "2026-11-17T11:10:32.755634+00:00",
       "direction": "SHORT",
