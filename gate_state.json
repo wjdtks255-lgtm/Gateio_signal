@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.04538,
       "max_adv": 0.04618,
-      "last_candle_ts": 1794887400,
+      "last_candle_ts": 1794887700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.942636571279046,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 57.19,
       "max_adv": 58.09,
-      "last_candle_ts": 1794887400,
+      "last_candle_ts": 1794887700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 47.64975820771286,
@@ -167,7 +167,7 @@
       "tp2_reached": false,
       "max_fav": 137.42,
       "max_adv": 138.56,
-      "last_candle_ts": 1794887400,
+      "last_candle_ts": 1794887700,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 45.61817690090942,
@@ -243,7 +243,7 @@
       "tp2_reached": false,
       "max_fav": 142.38,
       "max_adv": 145.68,
-      "last_candle_ts": 1794887400,
+      "last_candle_ts": 1794887700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 40.699955831702155,
@@ -321,7 +321,7 @@
       "tp2_reached": false,
       "max_fav": 136.44,
       "max_adv": 138.5,
-      "last_candle_ts": 1794887400,
+      "last_candle_ts": 1794887700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 39.5475216085068,
@@ -368,6 +368,80 @@
             "decision": "ENTER",
             "confidence": 78,
             "reason": "RSI 과열·이격 과다 없이 거래량과 ADX, 추세 정렬이 양호하고 동일 방향 전략 수익률도 우수하다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "GOOGL_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 285.09,
+      "entry_time": "2026-11-17T04:00:44.089451+00:00",
+      "leverage": 3,
+      "risk": 2.1828008883848664,
+      "atr": 1.8190007403207222,
+      "tp1": 282.3614988895189,
+      "tp2": 279.6329977790378,
+      "tp3": 275.99499629839636,
+      "stop_loss": 287.27280088838484,
+      "initial_stop": 287.27280088838484,
+      "tp1_lock_price": 284.81714988895186,
+      "tp2_lock_price": 282.3614988895189,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 285.09,
+      "max_adv": 285.09,
+      "last_candle_ts": 1794888000,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 33.17338505349299,
+      "rsi_15m": 47.41885372267864,
+      "adx_1h": 40.21293065035406,
+      "volume_surge": 1.290093616520859,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 40.2 강한 추세 (+2)",
+        "거래량 증가 1.29배 (+1)",
+        "1H EMA20 기울기 -0.63% (+1)",
+        "15M 캔들 몸통 0.65 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "SPLIT",
+        "enter": 2,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 82,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세 속 눌림목 재돌파와 우수한 손익비 및 전략 성과.",
+            "model": "gemini-flash-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도 구간이라 숏 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 거래량 동반, 양호한 손익비율 및 높은 전략 승률로 진입 적정.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 88,
+            "reason": "RSI 33.2 과매도와 이미 하락한 가격에서 숏 진입은 추격 매도 리스크가 높습니다.",
             "model": "nvidia/nemotron-3.5-super-vl:free",
             "label": "OpenRouter(nemotron-3.5-super-vl)"
           },
