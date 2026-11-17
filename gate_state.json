@@ -1,83 +1,5 @@
 {
   "active_slots": {
-    "PUMP_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 0.002853,
-      "entry_time": "2026-11-16T07:15:30.335752+00:00",
-      "leverage": 3,
-      "risk": 6.859824636971056e-05,
-      "atr": 5.7165205308092134e-05,
-      "tp1": 0.0027672521920378617,
-      "tp2": 0.002681504384075724,
-      "tp3": 0.0025671739734595394,
-      "stop_loss": 0.0029215982463697107,
-      "initial_stop": 0.0029215982463697107,
-      "tp1_lock_price": 0.0028444252192037865,
-      "tp2_lock_price": 0.0027672521920378617,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 0.002771,
-      "max_adv": 0.002916,
-      "last_candle_ts": 1794877500,
-      "score": 6,
-      "required_score": 2,
-      "rsi_1h": 42.05328495853997,
-      "rsi_15m": 37.02304962900723,
-      "adx_1h": 31.569726129481843,
-      "volume_surge": 2.4204037776395406,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "1H ADX 31.6 강한 추세 (+2)",
-        "거래량 급증 2.42배 (+2)",
-        "1H EMA20 기울기 -0.40% (+1)",
-        "15M 캔들 몸통 0.71 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "APPROVE",
-        "enter": 4,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 78,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 88,
-            "reason": "모든 필수 조건 충족, 강한 ADX와 거래량 증가를 동반한 숏 진입 타점입니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "ENTER",
-            "confidence": 70,
-            "reason": "EMA 정렬·강한 ADX·거래량 급증 등 조건 충족, RSI 과열 아님",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "ENTER",
-            "confidence": 75,
-            "reason": "강한 추세와 거래량 급증 확인, 리스크 대비 수익 구조 양호",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "숏 신호에 '재돌파' 조건이 모호하고, 투기성 코인 추격 진입은 부적절하다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "지표 조건이 완벽하며 결정적인 약점이 없어 진입한다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "WLFI_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -97,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.04538,
       "max_adv": 0.04618,
-      "last_candle_ts": 1794877500,
+      "last_candle_ts": 1794877800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.942636571279046,
@@ -152,82 +74,6 @@
         }
       }
     },
-    "HOOD_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 73.4,
-      "entry_time": "2026-11-16T16:15:31.685139+00:00",
-      "leverage": 3,
-      "risk": 1.0689229775448401,
-      "atr": 0.8907691479540334,
-      "tp1": 72.06384627806895,
-      "tp2": 70.72769255613791,
-      "tp3": 68.94615426022983,
-      "stop_loss": 71.99234959932133,
-      "initial_stop": 74.46892297754485,
-      "tp1_lock_price": 73.2663846278069,
-      "tp2_lock_price": 72.06384627806895,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 70.95,
-      "max_adv": 73.85,
-      "last_candle_ts": 1794877500,
-      "score": 3,
-      "required_score": 2,
-      "rsi_1h": 46.04568360633801,
-      "rsi_15m": 42.86492283523,
-      "adx_1h": 23.139416146263866,
-      "volume_surge": 0.25541685279762194,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "1H ADX 23.1 (+1)",
-        "1H EMA20 기울기 -0.40% (+1)",
-        "15M 캔들 몸통 0.91 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 2,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 72,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "우수한 승률과 긍정적인 숏 전략 성과를 바탕으로 진입 조건이 충족되었습니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "ENTER",
-            "confidence": 60,
-            "reason": "볼륨 상승 부족과 ADX 약함이 우려되지만, 전략 승률·PF가 높아 진입 가능",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "ADX 23으로 추세 강도가 약하고 거래량 증가가 없어 추격 매도 리스크가 큼.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 65,
-            "reason": "거래량 증가 미미하고 숏 신호에 상향 돌파 근거가 모호하여 진입 보류",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "거래량 증가 폭이 미미하고 ADX가 약해 추세 지속성이 의심됩니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "KORU_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -247,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 6.59,
       "max_adv": 6.844,
-      "last_candle_ts": 1794877500,
+      "last_candle_ts": 1794877800,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 38.5153568643905,
@@ -319,7 +165,7 @@
       "tp2_reached": false,
       "max_fav": 57.19,
       "max_adv": 57.6,
-      "last_candle_ts": 1794877500,
+      "last_candle_ts": 1794877800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 47.64975820771286,
@@ -392,8 +238,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 44.59,
-      "max_adv": 45.17,
-      "last_candle_ts": 1794877500,
+      "max_adv": 45.51,
+      "last_candle_ts": 1794877800,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 31.047555268305118,
@@ -469,8 +315,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 155.82,
-      "max_adv": 156.97,
-      "last_candle_ts": 1794877500,
+      "max_adv": 157.42,
+      "last_candle_ts": 1794877800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.78969568081774,
@@ -546,8 +392,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 137.42,
-      "max_adv": 137.99,
-      "last_candle_ts": 1794877500,
+      "max_adv": 138.11,
+      "last_candle_ts": 1794877800,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 45.61817690090942,
@@ -606,17 +452,15 @@
     }
   },
   "stats": {
-    "wins": 62,
+    "wins": 64,
     "draws": 0,
     "losses": 32,
-    "total": 94,
-    "r_count": 94,
-    "sum_r": 41.568000000000005,
-    "win_r": 75.46199999999999,
+    "total": 96,
+    "r_count": 96,
+    "sum_r": 44.03000000000001,
+    "win_r": 77.92399999999999,
     "loss_r": 33.894000000000005,
     "recent_r": [
-      2.493,
-      2.641,
       2.648,
       0.9,
       0.751,
@@ -664,9 +508,11 @@
       1.191,
       0.742,
       0.761,
-      0.765
+      0.765,
+      1.247,
+      1.215
     ],
-    "positive_count": 62,
+    "positive_count": 64,
     "directional": {
       "LONG": {
         "total": 5,
@@ -678,20 +524,20 @@
         "pf": 4.0588235294117645
       },
       "SHORT": {
-        "total": 89,
-        "wins": 58,
+        "total": 91,
+        "wins": 60,
         "draws": 0,
         "losses": 31,
-        "win_rate": 65.1685393258427,
-        "avg_r": 0.43141573033707864,
-        "pf": 2.1685789938217113
+        "win_rate": 65.93406593406593,
+        "avg_r": 0.44898901098901106,
+        "pf": 2.2435097543902356
       }
     },
     "strategy_version": 5,
-    "csv_rows": 241,
+    "csv_rows": 243,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-17T00:10:39.939183+00:00"
+    "last_closed_at": "2026-11-17T01:15:35.443772+00:00"
   },
   "closed_symbols": {
     "KSTR_USDT": {
@@ -716,6 +562,16 @@
     },
     "LITE_USDT": {
       "time": "2026-11-17T00:10:39.939183+00:00",
+      "direction": "SHORT",
+      "reason": "TRAILING_STOP"
+    },
+    "PUMP_USDT": {
+      "time": "2026-11-17T01:15:35.443772+00:00",
+      "direction": "SHORT",
+      "reason": "ROTATE"
+    },
+    "HOOD_USDT": {
+      "time": "2026-11-17T01:15:35.443772+00:00",
       "direction": "SHORT",
       "reason": "TRAILING_STOP"
     }
