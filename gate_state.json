@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.0587,
       "max_adv": 0.0597,
-      "last_candle_ts": 1794917100,
+      "last_candle_ts": 1794917400,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 35.32738076089876,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 21.848,
       "max_adv": 21.537,
-      "last_candle_ts": 1794917100,
+      "last_candle_ts": 1794917400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 55.048985361615294,
@@ -150,6 +150,82 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "지표 정렬과 강한 추세가 확인되어 결정적 약점이 없습니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "PENGU_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.00474,
+      "entry_time": "2026-11-17T12:15:29.936245+00:00",
+      "leverage": 4,
+      "risk": 7.635727884236692e-05,
+      "atr": 6.363106570197244e-05,
+      "tp1": 0.0046445534014470415,
+      "tp2": 0.004549106802894083,
+      "tp3": 0.004421844671490138,
+      "stop_loss": 0.004816357278842367,
+      "initial_stop": 0.004816357278842367,
+      "tp1_lock_price": 0.004730455340144705,
+      "tp2_lock_price": 0.0046445534014470415,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.00474,
+      "max_adv": 0.00474,
+      "last_candle_ts": 1794917700,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 44.30809001865257,
+      "rsi_15m": 40.68082485732496,
+      "adx_1h": 18.016823807726244,
+      "volume_surge": 0.726778689320026,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H EMA20 기울기 -0.71% (+1)",
+        "15M 캔들 몸통 0.93 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 73,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 45,
+            "reason": "ADX가 18으로 낮고 거래량 증가가 부족해 추세 지속성이 의심됩니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "RSI 과매도, ADX 약함, 거래량 부진 등으로 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 18로 추세 강도가 매우 약하고 거래량 증가도 없어 신뢰도가 낮음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "ADX 18로 추세 약하고 거래량 감소, 규칙 점수도 최소치라 진입 유보",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "ADX가 18로 추세가 약하고 거래량이 부족해 하방 이탈 실패 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
