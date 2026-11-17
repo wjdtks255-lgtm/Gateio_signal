@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 21.848,
       "max_adv": 21.127,
-      "last_candle_ts": 1794927900,
+      "last_candle_ts": 1794928200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 55.048985361615294,
@@ -88,7 +88,7 @@
       "tp1": 0.0046445534014470415,
       "tp2": 0.004549106802894083,
       "tp3": 0.004421844671490138,
-      "stop_loss": 0.004730455340144705,
+      "stop_loss": 0.0047202363065758325,
       "initial_stop": 0.004816357278842367,
       "tp1_lock_price": 0.004730455340144705,
       "tp2_lock_price": 0.0046445534014470415,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 0.00457,
       "max_adv": 0.004787,
-      "last_candle_ts": 1794927900,
+      "last_candle_ts": 1794928200,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 44.30809001865257,
@@ -172,7 +172,7 @@
       "tp2_reached": false,
       "max_fav": 281.53,
       "max_adv": 284.63,
-      "last_candle_ts": 1794927900,
+      "last_candle_ts": 1794928200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.96295637013287,
@@ -246,9 +246,9 @@
       "tp2_lock_price": 14.358325767952753,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 14.6,
+      "max_fav": 14.59,
       "max_adv": 14.77,
-      "last_candle_ts": 1794927900,
+      "last_candle_ts": 1794928200,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 30.00457712492387,
@@ -300,6 +300,80 @@
             "decision": "ENTER",
             "confidence": 75,
             "reason": "RSI가 30으로 과매도 구간이나 강한 추세와 높은 승률로 진입을 허용합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ZHIPU_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 43.2,
+      "entry_time": "2026-11-17T15:15:29.280513+00:00",
+      "leverage": 4,
+      "risk": 0.7896008874064846,
+      "atr": 0.6580007395054038,
+      "tp1": 42.2129988907419,
+      "tp2": 41.22599778148379,
+      "tp3": 39.90999630247298,
+      "stop_loss": 43.98960088740649,
+      "initial_stop": 43.98960088740649,
+      "tp1_lock_price": 43.10129988907419,
+      "tp2_lock_price": 42.2129988907419,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 43.2,
+      "max_adv": 43.2,
+      "last_candle_ts": 1794928500,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 40.71886256007201,
+      "rsi_15m": 39.72427738073199,
+      "adx_1h": 42.919204890718916,
+      "volume_surge": 1.8169433070117167,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 42.9 강한 추세 (+2)",
+        "거래량 급증 1.82배 (+2)",
+        "1H EMA20 기울기 -0.42% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 80,
+        "votes": {
+          "Gemini": {
+            "error": "503 서버 혼잡"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도 수준이라 숏 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 거래량 급증, 양호한 손익비율 및 전략 성과가 확인됨.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "ENTER",
+            "confidence": 80,
+            "reason": "추세 정렬, 거래량 증가, 전략 성과 양호해 숏 진입을 승인한다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "지표 정렬과 거래량 조건이 완벽하여 진입을 막을 결정적 약점이 없다.",
             "model": "gemini-flash-lite-latest"
           }
         }
@@ -395,11 +469,6 @@
     "last_closed_at": "2026-11-17T13:10:34.231740+00:00"
   },
   "closed_symbols": {
-    "SPY_USDT": {
-      "time": "2026-11-17T11:10:32.755634+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
     "CRCL_USDT": {
       "time": "2026-11-17T11:30:44.899067+00:00",
       "direction": "SHORT",
