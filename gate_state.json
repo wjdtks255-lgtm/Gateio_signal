@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 27.56,
       "max_adv": 28.42,
-      "last_candle_ts": 1794952200,
+      "last_candle_ts": 1794952500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.2657795283131,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 115.44,
       "max_adv": 117.47,
-      "last_candle_ts": 1794952200,
+      "last_candle_ts": 1794952500,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 35.3112266692376,
@@ -142,6 +142,82 @@
           },
           "반론위원": {
             "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "JCT_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.002019,
+      "entry_time": "2026-11-17T22:00:44.188131+00:00",
+      "leverage": 1,
+      "risk": 0.00011057098626385503,
+      "atr": 9.214248855321253e-05,
+      "tp1": 0.0018807862671701811,
+      "tp2": 0.0017425725343403623,
+      "tp3": 0.0015582875572339372,
+      "stop_loss": 0.002129570986263855,
+      "initial_stop": 0.002129570986263855,
+      "tp1_lock_price": 0.002005178626717018,
+      "tp2_lock_price": 0.0018807862671701811,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.002019,
+      "max_adv": 0.002019,
+      "last_candle_ts": 1794952800,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 38.87904695111424,
+      "rsi_15m": 41.61539195535835,
+      "adx_1h": 19.925297528114204,
+      "volume_surge": 0.7070873060322422,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H EMA20 기울기 -1.89% (+1)",
+        "15M 캔들 몸통 0.91 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 73,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 35,
+            "reason": "24시간 동안 이미 11% 이상 하락하여 추격 숏 진입 위험이 높습니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX가 낮고 거래량 상승이 없어 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 19.9로 추세 강도가 약하고 거래량 증가가 없어 추격 숏 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 88,
+            "reason": "24시간 -11.49% 하락 후 숏 추격 진입이고 ADX 약세, 거래량 미확인으로 승산이 낮다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간봉 ADX가 19.9로 추세가 약하고 거래량이 부족해 추격매도 시 손실 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
           }
         }
       }
