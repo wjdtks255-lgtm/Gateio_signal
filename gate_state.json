@@ -18,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.002009,
-      "max_adv": 0.002064,
-      "last_candle_ts": 1794956400,
+      "max_adv": 0.002072,
+      "last_candle_ts": 1794956700,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 38.87904695111424,
@@ -166,11 +166,6 @@
     "last_closed_at": "2026-11-17T22:55:27.842838+00:00"
   },
   "closed_symbols": {
-    "SKHYNIX_USDT": {
-      "time": "2026-11-17T19:10:34.309500+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "INTW_USDT": {
       "time": "2026-11-17T21:00:43.179539+00:00",
       "direction": "SHORT",
