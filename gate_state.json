@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.0587,
       "max_adv": 0.0599,
-      "last_candle_ts": 1794919500,
+      "last_candle_ts": 1794919800,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 35.32738076089876,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 21.848,
       "max_adv": 21.414,
-      "last_candle_ts": 1794919500,
+      "last_candle_ts": 1794919800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 55.048985361615294,
@@ -172,9 +172,9 @@
       "tp2_lock_price": 0.0046445534014470415,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.00474,
+      "max_fav": 0.004738,
       "max_adv": 0.004787,
-      "last_candle_ts": 1794919500,
+      "last_candle_ts": 1794919800,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 44.30809001865257,
@@ -321,11 +321,6 @@
     "last_closed_at": "2026-11-17T11:45:34.186259+00:00"
   },
   "closed_symbols": {
-    "WLFI_USDT": {
-      "time": "2026-11-17T08:55:25.078305+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "EWY_USDT": {
       "time": "2026-11-17T11:05:29.016717+00:00",
       "direction": "SHORT",
