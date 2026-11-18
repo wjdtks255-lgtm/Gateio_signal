@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.001922,
       "max_adv": 0.002099,
-      "last_candle_ts": 1795001100,
+      "last_candle_ts": 1795001400,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 38.87904695111424,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 39.87,
       "max_adv": 41.97,
-      "last_candle_ts": 1795001100,
+      "last_candle_ts": 1795001400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 31.549732671681397,
@@ -172,7 +172,7 @@
       "tp2_reached": false,
       "max_fav": 0.00702,
       "max_adv": 0.00742,
-      "last_candle_ts": 1795001100,
+      "last_candle_ts": 1795001400,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 37.35277438751181,
@@ -246,9 +246,9 @@
       "tp2_lock_price": 95.71867821135748,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 97.68,
+      "max_fav": 97.63,
       "max_adv": 99.78,
-      "last_candle_ts": 1795001100,
+      "last_candle_ts": 1795001400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 38.75176341712691,
@@ -324,7 +324,7 @@
       "tp2_reached": false,
       "max_fav": 55.32,
       "max_adv": 56.5,
-      "last_candle_ts": 1795001100,
+      "last_candle_ts": 1795001400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 43.666908135126455,
@@ -381,83 +381,6 @@
         }
       }
     },
-    "OPENAI_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 1236.52,
-      "entry_time": "2026-11-18T03:10:29.337739+00:00",
-      "leverage": 4,
-      "risk": 13.940467720926371,
-      "atr": 11.61705643410531,
-      "tp1": 1219.094415348842,
-      "tp2": 1201.6688306976841,
-      "tp3": 1178.4347178294734,
-      "stop_loss": 1250.4604677209263,
-      "initial_stop": 1250.4604677209263,
-      "tp1_lock_price": 1234.7774415348842,
-      "tp2_lock_price": 1219.094415348842,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 1229.31,
-      "max_adv": 1249.83,
-      "last_candle_ts": 1795001100,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 41.699110665184136,
-      "rsi_15m": 37.487565940634845,
-      "adx_1h": 27.123684311011317,
-      "volume_surge": 1.0150306499161408,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "1H ADX 27.1 강한 추세 (+2)",
-        "1H EMA20 기울기 -0.24% (+1)",
-        "15M 캔들 몸통 0.79 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 2,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 71,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "정배열 역방향이나 ADX 양호하고 승률과 손익비가 우수하여 진입합니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 40,
-            "reason": "RSI가 과열되지 않아 숏 진입 근거가 약함",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "거래량 증가 부재와 낮은 RSI로 숏 추격 시 반등 리스크가 높아 진입 보류.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "거래량 증가 없이 진입 시 추격 리스크가 있고, 규칙 점수와 기대 수익률도 낮아 보류합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "지표 정렬과 통계적 우위가 확실하여 결정적 약점이 없습니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "MSFT_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -477,7 +400,7 @@
       "tp2_reached": false,
       "max_fav": 506.21,
       "max_adv": 510.28,
-      "last_candle_ts": 1795001100,
+      "last_candle_ts": 1795001400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 40.97296289593883,
@@ -553,7 +476,7 @@
       "tp2_reached": false,
       "max_fav": 0.08805,
       "max_adv": 0.08977,
-      "last_candle_ts": 1795001100,
+      "last_candle_ts": 1795001400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 41.8120756801752,
@@ -615,14 +538,13 @@
   "stats": {
     "wins": 73,
     "draws": 0,
-    "losses": 54,
-    "total": 127,
-    "r_count": 127,
-    "sum_r": 28.56599999999999,
+    "losses": 55,
+    "total": 128,
+    "r_count": 128,
+    "sum_r": 27.47699999999999,
     "win_r": 85.62999999999998,
-    "loss_r": 57.06400000000002,
+    "loss_r": 58.15300000000002,
     "recent_r": [
-      0.937,
       0.989,
       0.38,
       0.934,
@@ -671,7 +593,8 @@
       -1.036,
       -1.055,
       0.671,
-      -1.045
+      -1.045,
+      -1.089
     ],
     "positive_count": 73,
     "directional": {
@@ -685,22 +608,28 @@
         "pf": 1.5626000640409863
       },
       "SHORT": {
-        "total": 119,
+        "total": 120,
         "wins": 68,
         "draws": 0,
-        "losses": 51,
-        "win_rate": 57.14285714285714,
-        "avg_r": 0.22528571428571414,
-        "pf": 1.497005988023951
+        "losses": 52,
+        "win_rate": 56.666666666666664,
+        "avg_r": 0.2143333333333332,
+        "pf": 1.467381428311829
       }
     },
     "strategy_version": 5,
-    "csv_rows": 274,
+    "csv_rows": 275,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-18T07:05:27.962582+00:00"
+    "last_closed_at": "2026-11-18T11:35:29.061617+00:00"
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "OPENAI_USDT": {
+      "time": "2026-11-18T11:35:29.061617+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-18",
   "csv_stats_offset": 20,
