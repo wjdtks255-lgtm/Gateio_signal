@@ -87,8 +87,16 @@ MAX_SL_PCT = 7.0
 FEE_ROUNDTRIP = 0.001
 DRAW_BAND_R = 0.05
 
-MAX_REFERENCE_LEVERAGE = 5
+# 참고 레버리지: 격리 마진에서 청산가가 손절가보다 LIQ_BUFFER 배 이상 멀리 있도록 종목마다 계산
+MAX_REFERENCE_LEVERAGE = 50   # 계산값이 이보다 크면 여기서 자름 (거래소 종목별 최대치도 함께 적용)
 MIN_REFERENCE_LEVERAGE = 1
+LIQ_BUFFER = 1.5              # 청산 거리 ≥ 손절폭 × 1.5 (꼬리·슬리피지 여유)
+DEFAULT_MAINT_RATE = 0.005    # 거래소에서 유지증거금률을 못 받아오면 쓰는 값
+RISK_PER_TRADE_PCT = 1.0      # 포지션 크기 안내용: 손절 1회에 계좌의 몇 %를 잃을지
+# 권장 레버리지 = 최대 안전 레버리지 × 종목 상황 감산 (해당하는 것끼리 곱함)
+LEV_LOW_LIQUIDITY = ((2_000_000, 0.5, "거래대금 적음"), (10_000_000, 0.75, "거래대금 보통"))  # 24h USDT 미만이면
+LEV_BIG_MOVE = ((10.0, 0.6, "24h 급등락"), (5.0, 0.8, "24h 큰 변동"))                         # |24h 변동%| 이상이면
+LEV_ATR_EXPANSION = (1.5, 0.7, "변동성 급증")                                                  # 1H ATR 이 하루 전의 몇 배 이상이면
 
 ROTATE_HOURS = 18
 ROTATE_MIN_PROFIT_PCT = 0.5
@@ -695,18 +703,38 @@ def count_theme_slots(active: Dict[str, Any], theme: str, sign: int) -> int:
     return count
 
 
-def calculate_reference_leverage(category: str, change_24h: float,
-                                  atr: float, current_price: float) -> int:
-    base = 4 if category == "코인" else 3
-    if abs(change_24h) >= 8:
-        base -= 1
-    if current_price > 0 and atr > 0:
-        atr_pct = atr / current_price * 100.0
-        if atr_pct >= 3.5:
-            base -= 2
-        elif atr_pct >= 2.0:
-            base -= 1
-    return max(MIN_REFERENCE_LEVERAGE, min(base, MAX_REFERENCE_LEVERAGE))
+def calculate_reference_leverage(symbol: str, sl_pct: float, quote_volume: float = 0.0,
+                                 change_24h: float = 0.0, atr_ratio: float = 1.0) -> Tuple[int, int, List[str]]:
+    """(권장 레버리지, 최대 안전 레버리지, 감산 이유) 를 돌려줌.
+    최대 안전: 격리 마진 청산 거리(≈ 1/레버리지 - 유지증거금률)가 손절폭 × LIQ_BUFFER 이상인 최대값.
+    권장: 최대 안전값에서 유동성·급등락·변동성 급증 상황만큼 낮춘 값."""
+    contract = api_get(f"/contracts/{symbol}")
+    contract = contract if isinstance(contract, dict) else {}
+    maint_rate = safe_float(contract.get("maintenance_rate"), DEFAULT_MAINT_RATE) or DEFAULT_MAINT_RATE
+    exchange_max = int(safe_float(contract.get("leverage_max"), MAX_REFERENCE_LEVERAGE)) or MAX_REFERENCE_LEVERAGE
+    if sl_pct <= 0:
+        return MIN_REFERENCE_LEVERAGE, MIN_REFERENCE_LEVERAGE, []
+    max_safe = int(1.0 / (sl_pct / 100.0 * LIQ_BUFFER + maint_rate))
+    max_safe = max(MIN_REFERENCE_LEVERAGE, min(max_safe, exchange_max, MAX_REFERENCE_LEVERAGE))
+
+    factor = 1.0
+    reasons: List[str] = []
+    for limit, mult, label in LEV_LOW_LIQUIDITY:
+        if 0 < quote_volume < limit:
+            factor *= mult
+            reasons.append(f"{label} ×{mult:g}")
+            break
+    for limit, mult, label in LEV_BIG_MOVE:
+        if abs(change_24h) >= limit:
+            factor *= mult
+            reasons.append(f"{label} ×{mult:g}")
+            break
+    limit, mult, label = LEV_ATR_EXPANSION
+    if atr_ratio >= limit:
+        factor *= mult
+        reasons.append(f"{label} ×{mult:g}")
+    recommended = max(MIN_REFERENCE_LEVERAGE, int(max_safe * factor))
+    return recommended, max_safe, reasons
 
 # ───────────────────────────── Signal analysis ────────────────────────────
 def get_hourly_bias(symbol: str, now_ts: int) -> Optional[Dict[str, Any]]:
@@ -875,6 +903,8 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
     atr1h = atr_value(h1_candles, 14)
     if atr1h is None or atr1h <= 0:
         return None
+    atr1h_day_ago = atr_value(h1_candles[:-24], 14)
+    atr_ratio = atr1h / atr1h_day_ago if atr1h_day_ago else 1.0
 
     return {
         "score": score,
@@ -882,6 +912,7 @@ def analyze_signal(symbol: str, direction: str, now_ts: int,
         "max_score": MAX_SCORE,
         "reasons": reasons,
         "atr": atr1h,
+        "atr_ratio": atr_ratio,
         "atr15": atr15,
         "rsi15": rsi15,
         "rsi1h": h1_rsi,
@@ -1341,7 +1372,10 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
         try:
             atr = analysis["atr"]
             sign = 1 if direction == "LONG" else -1
-            leverage = calculate_reference_leverage(category, change, atr, price)
+            sl_pct = risk / price * 100.0
+            leverage, max_leverage, lev_reasons = calculate_reference_leverage(
+                symbol, sl_pct, item["volume"], change, analysis.get("atr_ratio", 1.0))
+            position_pct = RISK_PER_TRADE_PCT / sl_pct * 100.0  # 손절 시 계좌 RISK_PER_TRADE_PCT% 손실이 되는 포지션 크기
             entry_time = now.isoformat()
             active[symbol] = {
                 "strategy_version": STRATEGY_VERSION,
@@ -1388,7 +1422,10 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
             message = (
                 f"🛡️ <b>신규 시그널 (v{STRATEGY_VERSION}) | 품질 점수 {analysis['score']}/{MAX_SCORE} (기준 {analysis['required_score']})</b> | {dir_tag(direction)}\n"
                 f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
-                f"진입가 <code>{fmt_price(price)}</code> | 참고 레버리지 <code>{leverage}배</code>\n"
+                f"진입가 <code>{fmt_price(price)}</code> | 권장 레버리지 <code>{leverage}배</code>"
+                f" (격리, 최대 안전 {max_leverage}배{' · ' + ', '.join(lev_reasons) if lev_reasons else ''})\n"
+                f"📐 계좌 {RISK_PER_TRADE_PCT:g}% 위험 기준 포지션 <code>계좌의 {position_pct:.0f}%</code>"
+                f" → {leverage}배면 증거금 <code>계좌의 {position_pct / leverage:.1f}%</code>\n"
                 f"🎯 TP1 <code>{fmt_price(tp1)} ({target_pct(tp1):+.2f}%)</code> [50% 분할익절]\n"
                 f"🎯 TP2 <code>{fmt_price(tp2)} ({target_pct(tp2):+.2f}%)</code>\n"
                 f"🏆 TP3 <code>{fmt_price(tp3)} ({target_pct(tp3):+.2f}%)</code>\n"
