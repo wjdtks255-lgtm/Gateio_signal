@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 3665.06,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795112700,
+      "last_candle_ts": 1795113000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -94,7 +94,7 @@
       "tp2_reached": false,
       "max_fav": 0.000918,
       "max_adv": 0.000972,
-      "last_candle_ts": 1795112700,
+      "last_candle_ts": 1795113000,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.62785915362285,
@@ -171,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 4.818e-05,
       "max_adv": 4.569e-05,
-      "last_candle_ts": 1795112700,
+      "last_candle_ts": 1795113000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.23616161170348,
@@ -245,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 0.4314,
       "max_adv": 0.3741,
-      "last_candle_ts": 1795112700,
+      "last_candle_ts": 1795113000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 57.94929576861123,
@@ -318,8 +318,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.563,
-      "max_adv": 0.5738,
-      "last_candle_ts": 1795112700,
+      "max_adv": 0.5743,
+      "last_candle_ts": 1795113000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 38.03858081881211,
@@ -467,11 +467,6 @@
     "last_closed_at": "2026-11-19T18:25:28.891567+00:00"
   },
   "closed_symbols": {
-    "BABA_USDT": {
-      "time": "2026-11-19T14:30:46.925425+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "XAG_USDT": {
       "time": "2026-11-19T14:40:35.006335+00:00",
       "direction": "SHORT",
