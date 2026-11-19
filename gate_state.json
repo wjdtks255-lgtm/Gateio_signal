@@ -11,7 +11,7 @@
       "tp1": 3691.8881004686714,
       "tp2": 3662.756200937343,
       "tp3": 3623.9136682289045,
-      "stop_loss": 3679.223167709177,
+      "stop_loss": 3677.6804083064626,
       "initial_stop": 3744.325519625063,
       "tp1_lock_price": 3718.106810046867,
       "tp2_lock_price": 3691.8881004686714,
@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 3659.2,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795120500,
+      "last_candle_ts": 1795120800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -94,7 +94,7 @@
       "tp2_reached": false,
       "max_fav": 0.000918,
       "max_adv": 0.000972,
-      "last_candle_ts": 1795120500,
+      "last_candle_ts": 1795120800,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.62785915362285,
@@ -171,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 4.836e-05,
       "max_adv": 4.569e-05,
-      "last_candle_ts": 1795120500,
+      "last_candle_ts": 1795120800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.23616161170348,
@@ -226,80 +226,6 @@
         }
       }
     },
-    "ICNT_USDT": {
-      "strategy_version": 5,
-      "direction": "LONG",
-      "entry_price": 0.3988,
-      "entry_time": "2026-11-19T14:50:43.043761+00:00",
-      "leverage": 3,
-      "risk": 0.027169333022589448,
-      "atr": 0.022641110852157875,
-      "tp1": 0.4327616662782368,
-      "tp2": 0.4667233325564736,
-      "tp3": 0.5120055542607893,
-      "stop_loss": 0.4205271837357743,
-      "initial_stop": 0.37163066697741054,
-      "tp1_lock_price": 0.40219616662782365,
-      "tp2_lock_price": 0.4327616662782368,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 0.4504,
-      "max_adv": 0.3741,
-      "last_candle_ts": 1795120500,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 57.94929576861123,
-      "rsi_15m": 62.30867383992621,
-      "adx_1h": 43.70519332896686,
-      "volume_surge": 0.4388787445096975,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "1H ADX 43.7 강한 추세 (+2)",
-        "1H EMA20 기울기 +6.01% (+1)",
-        "15M 캔들 몸통 0.53 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 0,
-        "valid": 4,
-        "total": 5,
-        "avg_confidence": 71,
-        "votes": {
-          "Gemini": {
-            "decision": "SKIP",
-            "confidence": 40,
-            "reason": "최근 동일 전략 승률과 손익비가 부진하여 진입을 보류합니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "24시간 급등 후 추격 진입 위험, 거래량 부진, 전략 승률 저조",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "24h 18% 급등 후 추격 진입이며, 동일 방향 전략의 평균 수익률과 승률이 부진함.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 88,
-            "reason": "24시간 18% 급등 후 추격 진입이며 거래량 증가 없고 동일 방향 전략 수익률도 부진합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "error": "503 서버 혼잡"
-          }
-        }
-      }
-    },
     "COIN_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -319,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 109.61,
       "max_adv": 111.4,
-      "last_candle_ts": 1795120500,
+      "last_candle_ts": 1795120800,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 43.1730686742595,
@@ -394,7 +320,7 @@
       "tp2_reached": false,
       "max_fav": 0.08304,
       "max_adv": 0.08504,
-      "last_candle_ts": 1795120500,
+      "last_candle_ts": 1795120800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 37.77973121643968,
@@ -469,9 +395,9 @@
       "tp2_lock_price": 0.5014075860083915,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.5099,
+      "max_fav": 0.5098,
       "max_adv": 0.5152,
-      "last_candle_ts": 1795120500,
+      "last_candle_ts": 1795120800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.52794265883253,
@@ -545,7 +471,7 @@
       "tp2_reached": false,
       "max_fav": 0.4116,
       "max_adv": 0.417,
-      "last_candle_ts": 1795120500,
+      "last_candle_ts": 1795120800,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 39.00077679912464,
@@ -606,16 +532,15 @@
     }
   },
   "stats": {
-    "wins": 92,
+    "wins": 93,
     "draws": 0,
     "losses": 78,
-    "total": 170,
-    "r_count": 170,
-    "sum_r": 20.678999999999974,
-    "win_r": 103.30399999999997,
+    "total": 171,
+    "r_count": 171,
+    "sum_r": 21.694999999999972,
+    "win_r": 104.31999999999998,
     "loss_r": 82.62500000000004,
     "recent_r": [
-      -1.055,
       -1.052,
       -1.036,
       -1.036,
@@ -664,18 +589,19 @@
       0.615,
       1.738,
       1.201,
-      -1.048
+      -1.048,
+      1.016
     ],
-    "positive_count": 92,
+    "positive_count": 93,
     "directional": {
       "LONG": {
-        "total": 21,
-        "wins": 10,
+        "total": 22,
+        "wins": 11,
         "draws": 0,
         "losses": 11,
-        "win_rate": 47.61904761904761,
-        "avg_r": -0.09000000000000001,
-        "pf": 0.8376288659793812
+        "win_rate": 50.0,
+        "avg_r": -0.03972727272727273,
+        "pf": 0.9249140893470789
       },
       "SHORT": {
         "total": 149,
@@ -688,10 +614,10 @@
       }
     },
     "strategy_version": 5,
-    "csv_rows": 317,
+    "csv_rows": 318,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-19T18:40:35.582336+00:00"
+    "last_closed_at": "2026-11-19T20:45:28.196346+00:00"
   },
   "closed_symbols": {
     "OPENAI_USDT": {
@@ -713,6 +639,11 @@
       "time": "2026-11-19T18:40:35.582336+00:00",
       "direction": "SHORT",
       "reason": "SL"
+    },
+    "ICNT_USDT": {
+      "time": "2026-11-19T20:45:28.196346+00:00",
+      "direction": "LONG",
+      "reason": "TRAILING_STOP"
     }
   },
   "fail_count": 0,
