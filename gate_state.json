@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.12533,
       "max_adv": 0.12832,
-      "last_candle_ts": 1795095600,
+      "last_candle_ts": 1795095900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.440287466476,
@@ -78,80 +78,6 @@
         }
       }
     },
-    "ASTER_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 0.5294,
-      "entry_time": "2026-11-19T04:15:30.174121+00:00",
-      "leverage": 13,
-      "risk": 0.009884361100243102,
-      "atr": 0.008236967583535919,
-      "tp1": 0.5170445486246961,
-      "tp2": 0.5046890972493923,
-      "tp3": 0.4882151620823204,
-      "stop_loss": 0.5204944860229247,
-      "initial_stop": 0.5392843611002431,
-      "tp1_lock_price": 0.5281644548624695,
-      "tp2_lock_price": 0.5170445486246961,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 0.5135,
-      "max_adv": 0.5324,
-      "last_candle_ts": 1795095600,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 37.78301103829165,
-      "rsi_15m": 45.2467074058518,
-      "adx_1h": 26.945192760602957,
-      "volume_surge": 0.9208326503851828,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (SHORT)",
-        "1H ADX 26.9 강한 추세 (+2)",
-        "1H EMA20 기울기 -1.30% (+1)",
-        "15M 캔들 몸통 0.87 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "SPLIT",
-        "enter": 2,
-        "valid": 4,
-        "total": 5,
-        "avg_confidence": 74,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "추세와 BTC 방향이 일치하고 손익비가 우수하여 진입 가치가 높음",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 45,
-            "reason": "RSI가 과매도 수준이고 거래량 상승이 없어 진입 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "error": "429 한도 초과"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 80,
-            "reason": "이미 24시간 -4.72% 하락했고 거래량 증가도 없어 숏 추격 진입은 부적절합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "모든 지표가 하방 정렬되어 있고 비트코인도 숏 방향이라 진입에 무리가 없습니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "XAUT_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -171,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 3709.37,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795095600,
+      "last_candle_ts": 1795095900,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -244,9 +170,9 @@
       "tp2_lock_price": 4.690332324789476,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 4.7888,
+      "max_fav": 4.8097,
       "max_adv": 4.2511,
-      "last_candle_ts": 1795095600,
+      "last_candle_ts": 1795095900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.60009273104706,
@@ -320,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 23.254,
       "max_adv": 22.615,
-      "last_candle_ts": 1795095600,
+      "last_candle_ts": 1795095900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.2460425072795,
@@ -397,7 +323,7 @@
       "tp2_reached": false,
       "max_fav": 45.03,
       "max_adv": 45.51,
-      "last_candle_ts": 1795095600,
+      "last_candle_ts": 1795095900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.30923115010188,
@@ -474,7 +400,7 @@
       "tp2_reached": false,
       "max_fav": 105.64,
       "max_adv": 103.2,
-      "last_candle_ts": 1795095600,
+      "last_candle_ts": 1795095900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.10267292051739,
@@ -551,7 +477,7 @@
       "tp2_reached": false,
       "max_fav": 0.000951,
       "max_adv": 0.000972,
-      "last_candle_ts": 1795095600,
+      "last_candle_ts": 1795095900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.62785915362285,
@@ -611,16 +537,15 @@
     }
   },
   "stats": {
-    "wins": 88,
+    "wins": 89,
     "draws": 0,
     "losses": 72,
-    "total": 160,
-    "r_count": 160,
-    "sum_r": 22.423999999999978,
-    "win_r": 98.72799999999998,
+    "total": 161,
+    "r_count": 161,
+    "sum_r": 23.445999999999977,
+    "win_r": 99.74999999999999,
     "loss_r": 76.30400000000004,
     "recent_r": [
-      -1.042,
       0.565,
       0.743,
       1.449,
@@ -669,9 +594,10 @@
       -1.058,
       -1.019,
       1.156,
-      -1.123
+      -1.123,
+      1.022
     ],
-    "positive_count": 88,
+    "positive_count": 89,
     "directional": {
       "LONG": {
         "total": 16,
@@ -683,20 +609,20 @@
         "pf": 0.8670730277810339
       },
       "SHORT": {
-        "total": 144,
-        "wins": 80,
+        "total": 145,
+        "wins": 81,
         "draws": 0,
         "losses": 64,
-        "win_rate": 55.55555555555556,
-        "avg_r": 0.16359722222222212,
-        "pf": 1.3476015522405669
+        "win_rate": 55.86206896551724,
+        "avg_r": 0.16951724137931024,
+        "pf": 1.362681303764035
       }
     },
     "strategy_version": 5,
-    "csv_rows": 307,
+    "csv_rows": 308,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-19T12:40:36.980757+00:00"
+    "last_closed_at": "2026-11-19T13:50:37.525120+00:00"
   },
   "closed_symbols": {
     "VELVET_USDT": {
@@ -723,6 +649,11 @@
       "time": "2026-11-19T12:40:36.980757+00:00",
       "direction": "LONG",
       "reason": "SL"
+    },
+    "ASTER_USDT": {
+      "time": "2026-11-19T13:50:37.525120+00:00",
+      "direction": "SHORT",
+      "reason": "TRAILING_STOP"
     }
   },
   "fail_count": 0,
