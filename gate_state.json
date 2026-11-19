@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.000918,
       "max_adv": 0.000972,
-      "last_candle_ts": 1795124700,
+      "last_candle_ts": 1795125000,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.62785915362285,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 4.836e-05,
       "max_adv": 4.569e-05,
-      "last_candle_ts": 1795124700,
+      "last_candle_ts": 1795125000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.23616161170348,
@@ -170,7 +170,7 @@
       "tp2_reached": false,
       "max_fav": 107.85,
       "max_adv": 111.4,
-      "last_candle_ts": 1795124700,
+      "last_candle_ts": 1795125000,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 43.1730686742595,
@@ -245,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 0.08249,
       "max_adv": 0.08504,
-      "last_candle_ts": 1795124700,
+      "last_candle_ts": 1795125000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 37.77973121643968,
@@ -322,7 +322,7 @@
       "tp2_reached": false,
       "max_fav": 0.5019,
       "max_adv": 0.5152,
-      "last_candle_ts": 1795124700,
+      "last_candle_ts": 1795125000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.52794265883253,
@@ -396,7 +396,7 @@
       "tp2_reached": false,
       "max_fav": 0.4077,
       "max_adv": 0.417,
-      "last_candle_ts": 1795124700,
+      "last_candle_ts": 1795125000,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 39.00077679912464,
@@ -474,7 +474,7 @@
       "tp2_reached": false,
       "max_fav": 103.25,
       "max_adv": 104.56,
-      "last_candle_ts": 1795124700,
+      "last_candle_ts": 1795125000,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 34.4424311559881,
@@ -526,6 +526,81 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "이미 1시간 RSI가 34.4로 과매도 구간에 근접해 추가 하락 여력이 부족합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "AMD_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 482.02,
+      "entry_time": "2026-11-19T21:55:26.922542+00:00",
+      "leverage": 12,
+      "risk": 16.199283666559406,
+      "atr": 13.499403055466173,
+      "tp1": 461.7708954168007,
+      "tp2": 441.5217908336015,
+      "tp3": 414.5229847226691,
+      "stop_loss": 498.21928366655936,
+      "initial_stop": 498.21928366655936,
+      "tp1_lock_price": 479.99508954168004,
+      "tp2_lock_price": 461.7708954168007,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 482.02,
+      "max_adv": 482.02,
+      "last_candle_ts": 1795125300,
+      "score": 3,
+      "required_score": 2,
+      "rsi_1h": 32.50124757866348,
+      "rsi_15m": 36.789794327593285,
+      "adx_1h": 31.330147865540756,
+      "volume_surge": 0.6361384510839782,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 31.3 강한 추세 (+2)",
+        "1H EMA20 기울기 -3.44% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 73,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "이미 24시간 동안 8% 이상 급락하여 RSI 과매도 구간에 진입해 추격 숏 리스크가 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과매도로 매도 위험, 거래량 부진",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 급락 후 거래량 미증가로 추격 숏 리스크가 높음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 -8.47% 급락 후 RSI 과매도 구간에서 숏 진입은 추격이며 반등 리스크가 크다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 8퍼센트 이상 하락하여 과매도 구간이므로 추격 숏은 위험하다.",
             "model": "gemini-flash-lite-latest"
           }
         }
