@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.12232,
       "max_adv": 0.12832,
-      "last_candle_ts": 1795103100,
+      "last_candle_ts": 1795103400,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.440287466476,
@@ -95,9 +95,9 @@
       "tp2_lock_price": 3691.8881004686714,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 3680.43,
+      "max_fav": 3677.93,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795103100,
+      "last_candle_ts": 1795103400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -172,7 +172,7 @@
       "tp2_reached": true,
       "max_fav": 5.2679,
       "max_adv": 4.2511,
-      "last_candle_ts": 1795103100,
+      "last_candle_ts": 1795103400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.60009273104706,
@@ -246,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 0.000933,
       "max_adv": 0.000972,
-      "last_candle_ts": 1795103100,
+      "last_candle_ts": 1795103400,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.62785915362285,
@@ -323,7 +323,7 @@
       "tp2_reached": false,
       "max_fav": 4.818e-05,
       "max_adv": 4.611e-05,
-      "last_candle_ts": 1795103100,
+      "last_candle_ts": 1795103400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.23616161170348,
@@ -397,7 +397,7 @@
       "tp2_reached": false,
       "max_fav": 0.3988,
       "max_adv": 0.3741,
-      "last_candle_ts": 1795103100,
+      "last_candle_ts": 1795103400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 57.94929576861123,
@@ -448,6 +448,82 @@
           },
           "반론위원": {
             "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "ARIA_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 0.26541,
+      "entry_time": "2026-11-19T15:55:27.956170+00:00",
+      "leverage": 2,
+      "risk": 0.015069693209852615,
+      "atr": 0.01255807767487718,
+      "tp1": 0.28424711651231577,
+      "tp2": 0.3030842330246315,
+      "tp3": 0.32820038837438587,
+      "stop_loss": 0.25034030679014735,
+      "initial_stop": 0.25034030679014735,
+      "tp1_lock_price": 0.26729371165123156,
+      "tp2_lock_price": 0.28424711651231577,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.26541,
+      "max_adv": 0.26541,
+      "last_candle_ts": 1795103700,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 52.124691141158976,
+      "rsi_15m": 63.54965880515027,
+      "adx_1h": 21.758527209228667,
+      "volume_surge": 0.6387173766408966,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 21.8 (+1)",
+        "1H EMA20 기울기 +0.29% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 86,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "낮은 승률과 손익비, 그리고 부족한 거래량으로 인해 진입을 보류합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 급등락, 거래량 부진, 전략 승률 저조",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 90,
+            "reason": "24h 급등 후 추격 위험, ADX 약세, 거래량 미증가, 동일 방향 전략 성과 부진.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 급등 추격에 거래량 감소, 약한 추세, 동일 방향 전략 손실 누적으로 진입 부적합",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "최근 동일 방향 전략 승률이 44% 미만이고 수익팩터가 0.7로 매우 저조합니다.",
+            "model": "gemini-flash-lite-latest"
           }
         }
       }
