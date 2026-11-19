@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 3665.06,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795113900,
+      "last_candle_ts": 1795114200,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -94,7 +94,7 @@
       "tp2_reached": false,
       "max_fav": 0.000918,
       "max_adv": 0.000972,
-      "last_candle_ts": 1795113900,
+      "last_candle_ts": 1795114200,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.62785915362285,
@@ -171,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 4.836e-05,
       "max_adv": 4.569e-05,
-      "last_candle_ts": 1795113900,
+      "last_candle_ts": 1795114200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.23616161170348,
@@ -245,7 +245,7 @@
       "tp2_reached": false,
       "max_fav": 0.4504,
       "max_adv": 0.3741,
-      "last_candle_ts": 1795113900,
+      "last_candle_ts": 1795114200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 57.94929576861123,
@@ -296,6 +296,81 @@
           },
           "반론위원": {
             "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "COIN_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 111.4,
+      "entry_time": "2026-11-19T18:55:25.563272+00:00",
+      "leverage": 19,
+      "risk": 2.0638446283548233,
+      "atr": 1.7198705236290195,
+      "tp1": 108.82019421455648,
+      "tp2": 106.24038842911295,
+      "tp3": 102.8006473818549,
+      "stop_loss": 113.46384462835483,
+      "initial_stop": 113.46384462835483,
+      "tp1_lock_price": 111.14201942145566,
+      "tp2_lock_price": 108.82019421455648,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 111.4,
+      "max_adv": 111.4,
+      "last_candle_ts": 1795114500,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 43.1730686742595,
+      "rsi_15m": 43.04147682077862,
+      "adx_1h": 19.781501757972354,
+      "volume_surge": 0.484614340997629,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H EMA20 기울기 -0.44% (+1)",
+        "15M 캔들 몸통 0.92 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 70,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "1H ADX가 19.8로 추세가 약하고 거래량 증가가 부족해 진입을 보류합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX 낮아 추세 약하고 거래량 부진, 신호 약함",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 19.8로 추세 강도가 약하고 거래량 증가가 없어 추격 매도 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "약한 추세(ADX 19.8)와 거래량 미확보로 신뢰도가 부족해 SKIP합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX가 19.8로 추세 강도가 약해 숏 포위망이 무너질 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
           }
         }
       }
