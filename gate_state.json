@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.12533,
       "max_adv": 0.12832,
-      "last_candle_ts": 1795086300,
+      "last_candle_ts": 1795086600,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.440287466476,
@@ -78,82 +78,6 @@
         }
       }
     },
-    "NVDA_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 151.86,
-      "entry_time": "2026-11-19T02:30:40.260116+00:00",
-      "leverage": 32,
-      "risk": 2.6360044265040785,
-      "atr": 2.1966703554200655,
-      "tp1": 148.5649944668699,
-      "tp2": 145.26998893373982,
-      "tp3": 140.8766482228997,
-      "stop_loss": 154.4960044265041,
-      "initial_stop": 154.4960044265041,
-      "tp1_lock_price": 151.530499446687,
-      "tp2_lock_price": 148.5649944668699,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 151.27,
-      "max_adv": 154.42,
-      "last_candle_ts": 1795086300,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 38.3852918150039,
-      "rsi_15m": 46.61145682607492,
-      "adx_1h": 27.332170992015588,
-      "volume_surge": 0.22493510914226314,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "1H ADX 27.3 강한 추세 (+2)",
-        "1H EMA20 기울기 -1.00% (+1)",
-        "15M 캔들 몸통 0.59 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 1,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 79,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "추세와 BTC 방향이 일치하며 위험 대비 보상 비율과 승률 통계가 우수합니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "RSI가 과매도 수준이고 거래량 상승이 없어 진입 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "거래량 급증 부재와 24시간 하락 추격 리스크로 진입 근거가 약함",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 80,
-            "reason": "이미 24시간 -3.67% 하락했고 거래량 확인이 부족해 추격 진입 리스크가 큽니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "이미 3.67% 하락하여 추격 매도 위험이 높고 RSI가 38로 과매도 구간에 근접했습니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "ASTER_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -173,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.5182,
       "max_adv": 0.5324,
-      "last_candle_ts": 1795086300,
+      "last_candle_ts": 1795086600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.78301103829165,
@@ -247,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 3718.75,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795086300,
+      "last_candle_ts": 1795086600,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -314,7 +238,7 @@
       "tp1": 146.71340630988496,
       "tp2": 148.33681261976992,
       "tp3": 150.5013543662832,
-      "stop_loss": 146.4967072374564,
+      "stop_loss": 146.55448834706868,
       "initial_stop": 143.79127495209204,
       "tp1_lock_price": 145.2523406309885,
       "tp2_lock_price": 146.71340630988496,
@@ -322,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 147.25,
       "max_adv": 145.05,
-      "last_candle_ts": 1795086300,
+      "last_candle_ts": 1795086600,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 61.72464738711311,
@@ -398,7 +322,7 @@
       "tp2_reached": false,
       "max_fav": 0.0241,
       "max_adv": 0.02219,
-      "last_candle_ts": 1795086300,
+      "last_candle_ts": 1795086600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 69.0019146750864,
@@ -475,7 +399,7 @@
       "tp2_reached": false,
       "max_fav": 4.4224,
       "max_adv": 4.2511,
-      "last_candle_ts": 1795086300,
+      "last_candle_ts": 1795086600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.60009273104706,
@@ -534,14 +458,13 @@
   "stats": {
     "wins": 87,
     "draws": 0,
-    "losses": 69,
-    "total": 156,
-    "r_count": 156,
-    "sum_r": 24.46799999999998,
+    "losses": 70,
+    "total": 157,
+    "r_count": 157,
+    "sum_r": 23.40999999999998,
     "win_r": 97.57199999999997,
-    "loss_r": 73.10400000000003,
+    "loss_r": 74.16200000000003,
     "recent_r": [
-      -1.069,
       -1.066,
       -1.046,
       -1.046,
@@ -590,7 +513,8 @@
       -1.085,
       -1.108,
       0.671,
-      0.69
+      0.69,
+      -1.058
     ],
     "positive_count": 87,
     "directional": {
@@ -604,26 +528,31 @@
         "pf": 0.9768351854750352
       },
       "SHORT": {
-        "total": 143,
+        "total": 144,
         "wins": 80,
         "draws": 0,
-        "losses": 63,
-        "win_rate": 55.94405594405595,
-        "avg_r": 0.17213986013986005,
-        "pf": 1.368972494941167
+        "losses": 64,
+        "win_rate": 55.55555555555556,
+        "avg_r": 0.16359722222222212,
+        "pf": 1.3476015522405669
       }
     },
     "strategy_version": 5,
-    "csv_rows": 303,
+    "csv_rows": 304,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-19T10:00:49.846288+00:00"
+    "last_closed_at": "2026-11-19T11:15:37.465555+00:00"
   },
   "closed_symbols": {
     "VELVET_USDT": {
       "time": "2026-11-19T10:00:49.846288+00:00",
       "direction": "LONG",
       "reason": "TRAILING_STOP"
+    },
+    "NVDA_USDT": {
+      "time": "2026-11-19T11:15:37.465555+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
     }
   },
   "fail_count": 0,
