@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.12533,
       "max_adv": 0.12832,
-      "last_candle_ts": 1795088400,
+      "last_candle_ts": 1795088700,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.440287466476,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.5182,
       "max_adv": 0.5324,
-      "last_candle_ts": 1795088400,
+      "last_candle_ts": 1795088700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.78301103829165,
@@ -171,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 3718.75,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795088400,
+      "last_candle_ts": 1795088700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -246,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 147.55,
       "max_adv": 145.05,
-      "last_candle_ts": 1795088400,
+      "last_candle_ts": 1795088700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 61.72464738711311,
@@ -322,7 +322,7 @@
       "tp2_reached": false,
       "max_fav": 0.0241,
       "max_adv": 0.02219,
-      "last_candle_ts": 1795088400,
+      "last_candle_ts": 1795088700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 69.0019146750864,
@@ -397,9 +397,9 @@
       "tp2_lock_price": 4.690332324789476,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 4.462,
+      "max_fav": 4.4686,
       "max_adv": 4.2511,
-      "last_candle_ts": 1795088400,
+      "last_candle_ts": 1795088700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.60009273104706,
@@ -472,8 +472,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 23.254,
-      "max_adv": 22.997,
-      "last_candle_ts": 1795088400,
+      "max_adv": 22.978,
+      "last_candle_ts": 1795088700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.2460425072795,
@@ -526,6 +526,78 @@
             "decision": "ENTER",
             "confidence": 75,
             "reason": "1시간봉 RSI가 66.2로 다소 높으나 추세와 지표가 견조하여 진입합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "NG_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 3.777,
+      "entry_time": "2026-11-19T11:50:38.249282+00:00",
+      "leverage": 20,
+      "risk": 0.03061457547973777,
+      "atr": 0.025512146233114808,
+      "tp1": 3.8152682193496723,
+      "tp2": 3.8535364386993445,
+      "tp3": 3.9045607311655743,
+      "stop_loss": 3.7463854245202626,
+      "initial_stop": 3.7463854245202626,
+      "tp1_lock_price": 3.7808268219349674,
+      "tp2_lock_price": 3.8152682193496723,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 3.777,
+      "max_adv": 3.777,
+      "last_candle_ts": 1795089000,
+      "score": 3,
+      "required_score": 2,
+      "rsi_1h": 63.338030157305376,
+      "rsi_15m": 61.476582943625544,
+      "adx_1h": 37.00599463677787,
+      "volume_surge": 0.7008345348888015,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 37.0 강한 추세 (+2)",
+        "1H EMA20 기울기 +0.21% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 72,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 45,
+            "reason": "거래량 증가가 미흡하고 최근 롱 전략 성과와 PF가 부진합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 78,
+            "reason": "거래량 부진과 최근 전략 승률 저조로 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "이미 24시간 5% 올랐고 거래량 감소에 동일 방향 전략 기대수익도 음수라 추격 리스크가 높다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "거래량이 부족하고 최근 전략 성과가 부진하여 추격 매수 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
