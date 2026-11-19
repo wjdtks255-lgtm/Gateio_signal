@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.12533,
       "max_adv": 0.12832,
-      "last_candle_ts": 1795079100,
+      "last_candle_ts": 1795079400,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.440287466476,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 151.27,
       "max_adv": 154.2,
-      "last_candle_ts": 1795079100,
+      "last_candle_ts": 1795079400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 38.3852918150039,
@@ -173,7 +173,7 @@
       "tp2_reached": false,
       "max_fav": 0.5208,
       "max_adv": 0.5324,
-      "last_candle_ts": 1795079100,
+      "last_candle_ts": 1795079400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.78301103829165,
@@ -247,7 +247,7 @@
       "tp2_reached": false,
       "max_fav": 3718.75,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795079100,
+      "last_candle_ts": 1795079400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -314,7 +314,7 @@
       "tp1": 146.71340630988496,
       "tp2": 148.33681261976992,
       "tp3": 150.5013543662832,
-      "stop_loss": 145.99232809256202,
+      "stop_loss": 146.06440496882595,
       "initial_stop": 143.79127495209204,
       "tp1_lock_price": 145.2523406309885,
       "tp2_lock_price": 146.71340630988496,
@@ -322,7 +322,7 @@
       "tp2_reached": false,
       "max_fav": 146.94,
       "max_adv": 145.05,
-      "last_candle_ts": 1795079100,
+      "last_candle_ts": 1795079400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 61.72464738711311,
@@ -398,7 +398,7 @@
       "tp2_reached": false,
       "max_fav": 0.07599,
       "max_adv": 0.07059,
-      "last_candle_ts": 1795079100,
+      "last_candle_ts": 1795079400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 63.88442838203135,
@@ -472,7 +472,7 @@
       "tp2_reached": false,
       "max_fav": 0.0241,
       "max_adv": 0.02222,
-      "last_candle_ts": 1795079100,
+      "last_candle_ts": 1795079400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 69.0019146750864,
@@ -525,6 +525,80 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "1시간 RSI가 69에 육박하고 24시간 동안 19퍼센트 급등하여 고점 추격 매수 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "EVAA_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 4.3288,
+      "entry_time": "2026-11-19T09:15:33.524700+00:00",
+      "leverage": 3,
+      "risk": 0.28922585983158056,
+      "atr": 0.24102154985965046,
+      "tp1": 4.690332324789476,
+      "tp2": 5.051864649578952,
+      "tp3": 5.533907749298253,
+      "stop_loss": 4.03957414016842,
+      "initial_stop": 4.03957414016842,
+      "tp1_lock_price": 4.364953232478948,
+      "tp2_lock_price": 4.690332324789476,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 4.3288,
+      "max_adv": 4.3288,
+      "last_candle_ts": 1795079700,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 67.60009273104706,
+      "rsi_15m": 61.930674811983806,
+      "adx_1h": 25.72753499572637,
+      "volume_surge": 0.47860313490602746,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 25.7 강한 추세 (+2)",
+        "1H EMA20 기울기 +2.88% (+1)",
+        "15M 캔들 몸통 0.69 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 71,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "24시간 14% 이상 급등으로 추격 매수 위험이 높고 손절폭이 큼.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "24시간 급등 후 거래량 부진, 전략 승률·수익률 저조",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 88,
+            "reason": "24시간 14.68% 급등 후 추격이며 거래량 미확인과 동일 방향 전략 PF 0.87로 부진합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간 RSI가 67.6으로 과열권에 인접해 추격 매수 시 손실 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
