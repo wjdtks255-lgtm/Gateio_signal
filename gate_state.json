@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.42,
       "max_adv": 0.4344,
-      "last_candle_ts": 1795054800,
+      "last_candle_ts": 1795055100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.31049239678168,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 0.002515,
       "max_adv": 0.002627,
-      "last_candle_ts": 1795054800,
+      "last_candle_ts": 1795055100,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 35.91672162870199,
@@ -169,8 +169,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.12576,
-      "max_adv": 0.12714,
-      "last_candle_ts": 1795054800,
+      "max_adv": 0.12737,
+      "last_candle_ts": 1795055100,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.440287466476,
@@ -248,7 +248,7 @@
       "tp2_reached": false,
       "max_fav": 897.48,
       "max_adv": 911.52,
-      "last_candle_ts": 1795054800,
+      "last_candle_ts": 1795055100,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 44.51427844913514,
@@ -325,8 +325,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 2.705,
-      "max_adv": 2.744,
-      "last_candle_ts": 1795054800,
+      "max_adv": 2.757,
+      "last_candle_ts": 1795055100,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 40.83423036080719,
@@ -378,6 +378,82 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "1시간봉 ADX가 18.9로 추세 강도가 너무 약해 숏 추격이 위험합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "NVDA_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 151.86,
+      "entry_time": "2026-11-19T02:30:40.260116+00:00",
+      "leverage": 32,
+      "risk": 2.6360044265040785,
+      "atr": 2.1966703554200655,
+      "tp1": 148.5649944668699,
+      "tp2": 145.26998893373982,
+      "tp3": 140.8766482228997,
+      "stop_loss": 154.4960044265041,
+      "initial_stop": 154.4960044265041,
+      "tp1_lock_price": 151.530499446687,
+      "tp2_lock_price": 148.5649944668699,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 151.86,
+      "max_adv": 151.86,
+      "last_candle_ts": 1795055400,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 38.3852918150039,
+      "rsi_15m": 46.61145682607492,
+      "adx_1h": 27.332170992015588,
+      "volume_surge": 0.22493510914226314,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 27.3 강한 추세 (+2)",
+        "1H EMA20 기울기 -1.00% (+1)",
+        "15M 캔들 몸통 0.59 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 79,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "추세와 BTC 방향이 일치하며 위험 대비 보상 비율과 승률 통계가 우수합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도 수준이고 거래량 상승이 없어 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "거래량 급증 부재와 24시간 하락 추격 리스크로 진입 근거가 약함",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "이미 24시간 -3.67% 하락했고 거래량 확인이 부족해 추격 진입 리스크가 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 3.67% 하락하여 추격 매도 위험이 높고 RSI가 38로 과매도 구간에 근접했습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
