@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 0.12164,
       "max_adv": 0.12832,
-      "last_candle_ts": 1795110600,
+      "last_candle_ts": 1795110900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 41.440287466476,
@@ -89,7 +89,7 @@
       "tp1": 3691.8881004686714,
       "tp2": 3662.756200937343,
       "tp3": 3623.9136682289045,
-      "stop_loss": 3693.902420072197,
+      "stop_loss": 3692.31397328428,
       "initial_stop": 3744.325519625063,
       "tp1_lock_price": 3718.106810046867,
       "tp2_lock_price": 3691.8881004686714,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 3665.06,
       "max_adv": 3740.0,
-      "last_candle_ts": 1795110600,
+      "last_candle_ts": 1795110900,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 36.31293995993512,
@@ -164,7 +164,7 @@
       "tp1": 4.690332324789476,
       "tp2": 5.051864649578952,
       "tp3": 5.533907749298253,
-      "stop_loss": 4.957243550771073,
+      "stop_loss": 4.9786182817065106,
       "initial_stop": 4.03957414016842,
       "tp1_lock_price": 4.364953232478948,
       "tp2_lock_price": 4.690332324789476,
@@ -172,7 +172,7 @@
       "tp2_reached": true,
       "max_fav": 5.3,
       "max_adv": 4.2511,
-      "last_candle_ts": 1795110600,
+      "last_candle_ts": 1795110900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.60009273104706,
@@ -246,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 0.000918,
       "max_adv": 0.000972,
-      "last_candle_ts": 1795110600,
+      "last_candle_ts": 1795110900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.62785915362285,
@@ -323,7 +323,7 @@
       "tp2_reached": false,
       "max_fav": 4.818e-05,
       "max_adv": 4.569e-05,
-      "last_candle_ts": 1795110600,
+      "last_candle_ts": 1795110900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.23616161170348,
@@ -397,7 +397,7 @@
       "tp2_reached": false,
       "max_fav": 0.4289,
       "max_adv": 0.3741,
-      "last_candle_ts": 1795110600,
+      "last_candle_ts": 1795110900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 57.94929576861123,
@@ -448,6 +448,83 @@
           },
           "반론위원": {
             "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "FIL_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.563,
+      "entry_time": "2026-11-19T18:00:51.157744+00:00",
+      "leverage": 18,
+      "risk": 0.011779149467613737,
+      "atr": 0.009815957889678114,
+      "tp1": 0.5482760631654828,
+      "tp2": 0.5335521263309656,
+      "tp3": 0.5139202105516094,
+      "stop_loss": 0.5747791494676137,
+      "initial_stop": 0.5747791494676137,
+      "tp1_lock_price": 0.5615276063165482,
+      "tp2_lock_price": 0.5482760631654828,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.563,
+      "max_adv": 0.563,
+      "last_candle_ts": 1795111200,
+      "score": 3,
+      "required_score": 2,
+      "rsi_1h": 38.03858081881211,
+      "rsi_15m": 40.38906616546508,
+      "adx_1h": 20.61117262836627,
+      "volume_surge": 0.6304700454843435,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 20.6 (+1)",
+        "1H EMA20 기울기 -0.50% (+1)",
+        "15M 캔들 몸통 0.81 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 78,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 75,
+            "reason": "필수 조건 충족 및 BTC와 방향이 일치하며 리스크 대비 보상비율이 양호함",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "RSI 과매도, ADX 약함, 거래량 부진으로 진입 회피",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 20.6으로 추세 강도가 약하고 거래량 증가가 없어 추격 매도 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "추세 강도(ADX 20.6)와 거래량 급증 부재로 신호 신뢰도가 부족합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "거래량이 평균에 못 미치며 ADX가 약해 추세 지속성이 의심됩니다.",
+            "model": "gemini-flash-lite-latest"
           }
         }
       }
