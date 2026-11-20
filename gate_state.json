@@ -11,7 +11,7 @@
       "tp1": 78.04714723386373,
       "tp2": 75.17429446772746,
       "tp3": 71.3438241128791,
-      "stop_loss": 80.148871821206,
+      "stop_loss": 80.11805567300486,
       "initial_stop": 83.21828221290902,
       "tp1_lock_price": 80.63271472338637,
       "tp2_lock_price": 78.04714723386373,
@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 77.85,
       "max_adv": 82.02,
-      "last_candle_ts": 1795215000,
+      "last_candle_ts": 1795215300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.73592125765431,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 0.12475,
       "max_adv": 0.12902,
-      "last_candle_ts": 1795215000,
+      "last_candle_ts": 1795215300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.89099762742218,
@@ -172,7 +172,7 @@
       "tp2_reached": false,
       "max_fav": 0.002355,
       "max_adv": 0.002433,
-      "last_candle_ts": 1795215000,
+      "last_candle_ts": 1795215300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.333460465049725,
@@ -246,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 3511.7,
       "max_adv": 3554.83,
-      "last_candle_ts": 1795215000,
+      "last_candle_ts": 1795215300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.24020169788696,
@@ -390,16 +390,6 @@
     "last_closed_at": "2026-11-20T22:45:32.851946+00:00"
   },
   "closed_symbols": {
-    "PAXG_USDT": {
-      "time": "2026-11-20T19:00:46.965044+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
-    "XAG_USDT": {
-      "time": "2026-11-20T19:00:46.965044+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
     "INTW_USDT": {
       "time": "2026-11-20T21:50:34.397084+00:00",
       "direction": "SHORT",
