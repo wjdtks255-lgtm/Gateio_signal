@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 1717.09,
       "max_adv": 1762.63,
-      "last_candle_ts": 1795184400,
+      "last_candle_ts": 1795184700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 40.506015962694505,
@@ -93,8 +93,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 50.03,
-      "max_adv": 51.62,
-      "last_candle_ts": 1795184400,
+      "max_adv": 51.91,
+      "last_candle_ts": 1795184700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.08087772581368,
@@ -170,7 +170,7 @@
       "tp2_reached": false,
       "max_fav": 6.74,
       "max_adv": 6.963,
-      "last_candle_ts": 1795184400,
+      "last_candle_ts": 1795184700,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.5449615437539,
@@ -248,7 +248,7 @@
       "tp2_reached": false,
       "max_fav": 803.57,
       "max_adv": 837.62,
-      "last_candle_ts": 1795184400,
+      "last_candle_ts": 1795184700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.77681461956409,
@@ -316,7 +316,7 @@
       "tp1": 0.2386805650501861,
       "tp2": 0.23186113010037215,
       "tp3": 0.22276855016728694,
-      "stop_loss": 0.24392748077978466,
+      "stop_loss": 0.2437634727188161,
       "initial_stop": 0.25095554795985114,
       "tp1_lock_price": 0.24481805650501862,
       "tp2_lock_price": 0.2386805650501861,
@@ -324,7 +324,7 @@
       "tp2_reached": false,
       "max_fav": 0.2383,
       "max_adv": 0.2503,
-      "last_candle_ts": 1795184400,
+      "last_candle_ts": 1795184700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 39.14889599618383,
@@ -382,82 +382,6 @@
         }
       }
     },
-    "ZEC_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 848.78,
-      "entry_time": "2026-11-20T08:45:29.730727+00:00",
-      "leverage": 18,
-      "risk": 19.44196966673722,
-      "atr": 16.20164138894768,
-      "tp1": 824.4775379165784,
-      "tp2": 800.1750758331569,
-      "tp3": 767.7717930552616,
-      "stop_loss": 823.9012525925617,
-      "initial_stop": 868.2219696667372,
-      "tp1_lock_price": 846.3497537916578,
-      "tp2_lock_price": 824.4775379165784,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 800.54,
-      "max_adv": 851.97,
-      "last_candle_ts": 1795184400,
-      "score": 3,
-      "required_score": 2,
-      "rsi_1h": 32.09347187702065,
-      "rsi_15m": 37.849386036578274,
-      "adx_1h": 40.685991201207266,
-      "volume_surge": 0.7460039787992209,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (SHORT)",
-        "1H ADX 40.7 강한 추세 (+2)",
-        "1H EMA20 기울기 -2.17% (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 1,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 81,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "강한 하방 추세와 비트코인 방향성 일치, 우수한 승률과 리스크 대비 보상 비율 확보.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "RSI 과매도와 거래량 부진 등 위험 요인이 많아 진입을 회피한다.",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "24시간 9.8% 급락 후 거래량 미증가로 추격 숏 리스크 높음",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 88,
-            "reason": "24시간 -9.81% 급락 후 RSI 과매도 상태에서 거래량 없이 숏 진입은 추격 매매다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "1H RSI가 32.1로 과매도 근접하여 추가 하락 여력이 부족합니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "BNB_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -476,8 +400,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 564.45,
-      "max_adv": 571.15,
-      "last_candle_ts": 1795184400,
+      "max_adv": 571.7,
+      "last_candle_ts": 1795184700,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 37.99580618652501,
@@ -535,16 +459,15 @@
     }
   },
   "stats": {
-    "wins": 103,
+    "wins": 104,
     "draws": 0,
     "losses": 80,
-    "total": 183,
-    "r_count": 183,
-    "sum_r": 31.257999999999978,
-    "win_r": 115.92699999999998,
+    "total": 184,
+    "r_count": 184,
+    "sum_r": 32.48799999999998,
+    "win_r": 117.15699999999998,
     "loss_r": 84.66900000000004,
     "recent_r": [
-      1.122,
       1.054,
       1.612,
       0.998,
@@ -593,9 +516,10 @@
       0.911,
       0.951,
       0.875,
-      1.172
+      1.172,
+      1.23
     ],
-    "positive_count": 103,
+    "positive_count": 104,
     "directional": {
       "LONG": {
         "total": 23,
@@ -607,20 +531,20 @@
         "pf": 0.8503949447077408
       },
       "SHORT": {
-        "total": 160,
-        "wins": 92,
+        "total": 161,
+        "wins": 93,
         "draws": 0,
         "losses": 68,
-        "win_rate": 57.49999999999999,
-        "avg_r": 0.2071999999999999,
-        "pf": 1.4603868960824335
+        "win_rate": 57.7639751552795,
+        "avg_r": 0.2135527950310558,
+        "pf": 1.477468094265994
       }
     },
     "strategy_version": 5,
-    "csv_rows": 330,
+    "csv_rows": 331,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-20T14:25:27.456204+00:00"
+    "last_closed_at": "2026-11-20T14:30:39.979528+00:00"
   },
   "closed_symbols": {
     "LTC_USDT": {
@@ -630,6 +554,11 @@
     },
     "SUI_USDT": {
       "time": "2026-11-20T14:25:27.456204+00:00",
+      "direction": "SHORT",
+      "reason": "TRAILING_STOP"
+    },
+    "ZEC_USDT": {
+      "time": "2026-11-20T14:30:39.979528+00:00",
       "direction": "SHORT",
       "reason": "TRAILING_STOP"
     }
