@@ -1,82 +1,5 @@
 {
   "active_slots": {
-    "SOXL_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 39.41,
-      "entry_time": "2026-11-20T15:15:34.412945+00:00",
-      "leverage": 6,
-      "risk": 2.352245839885441,
-      "atr": 1.960204866571201,
-      "tp1": 36.4696927001432,
-      "tp2": 33.529385400286394,
-      "tp3": 29.60897566714399,
-      "stop_loss": 33.39663634091871,
-      "initial_stop": 41.76224583988544,
-      "tp1_lock_price": 39.11596927001432,
-      "tp2_lock_price": 36.4696927001432,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 29.89,
-      "max_adv": 39.41,
-      "last_candle_ts": 1795213200,
-      "score": 6,
-      "required_score": 2,
-      "rsi_1h": 36.52536787052586,
-      "rsi_15m": 41.0387710087291,
-      "adx_1h": 42.586809654928196,
-      "volume_surge": 2.22839738544759,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "1H ADX 42.6 강한 추세 (+2)",
-        "거래량 급증 2.23배 (+2)",
-        "1H EMA20 기울기 -3.00% (+1)",
-        "15M 캔들 몸통 0.73 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 0,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 74,
-        "votes": {
-          "Gemini": {
-            "decision": "SKIP",
-            "confidence": 40,
-            "reason": "24시간 동안 26% 이상 급락한 상태에서의 숏 진입은 추가 하락 여력이 부족하여 제외합니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "RSI가 과매도 상태인데 숏 진입이라 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "24시간 26% 급락 후 추격 숏은 리스크가 크고, 손절폭 대비 목표가 구조가 불리합니다.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 88,
-            "reason": "24시간 -26% 급락 후 숏 진입은 단기 반등 리스크가 너무 높다",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "이미 26% 폭락한 과매도 구간이라 추가 하방 추격은 위험합니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "CRCL_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -88,7 +11,7 @@
       "tp1": 47.99956847973254,
       "tp2": 46.429136959465076,
       "tp3": 44.33522826577512,
-      "stop_loss": 48.92457232775665,
+      "stop_loss": 48.90210781298162,
       "initial_stop": 50.82634521621397,
       "tp1_lock_price": 49.412956847973255,
       "tp2_lock_price": 47.99956847973254,
@@ -96,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 47.48,
       "max_adv": 50.19,
-      "last_candle_ts": 1795213200,
+      "last_candle_ts": 1795213500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 39.51440157911075,
@@ -164,7 +87,7 @@
       "tp1": 78.04714723386373,
       "tp2": 75.17429446772746,
       "tp3": 71.3438241128791,
-      "stop_loss": 80.28161635703776,
+      "stop_loss": 80.19522872039624,
       "initial_stop": 83.21828221290902,
       "tp1_lock_price": 80.63271472338637,
       "tp2_lock_price": 78.04714723386373,
@@ -172,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 77.85,
       "max_adv": 82.02,
-      "last_candle_ts": 1795213200,
+      "last_candle_ts": 1795213500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.73592125765431,
@@ -248,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 0.12475,
       "max_adv": 0.12876,
-      "last_candle_ts": 1795213200,
+      "last_candle_ts": 1795213500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.89099762742218,
@@ -325,7 +248,7 @@
       "tp2_reached": false,
       "max_fav": 0.002355,
       "max_adv": 0.002433,
-      "last_candle_ts": 1795213200,
+      "last_candle_ts": 1795213500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.333460465049725,
@@ -399,7 +322,7 @@
       "tp2_reached": false,
       "max_fav": 3511.7,
       "max_adv": 3554.83,
-      "last_candle_ts": 1795213200,
+      "last_candle_ts": 1795213500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.24020169788696,
@@ -455,16 +378,15 @@
     }
   },
   "stats": {
-    "wins": 114,
+    "wins": 115,
     "draws": 0,
     "losses": 84,
-    "total": 198,
-    "r_count": 198,
-    "sum_r": 43.319999999999986,
-    "win_r": 132.263,
+    "total": 199,
+    "r_count": 199,
+    "sum_r": 45.20599999999999,
+    "win_r": 134.149,
     "loss_r": 88.94300000000004,
     "recent_r": [
-      -1.047,
       -1.088,
       -1.042,
       -1.035,
@@ -513,9 +435,10 @@
       1.011,
       0.985,
       0.721,
-      -1.038
+      -1.038,
+      1.886
     ],
-    "positive_count": 114,
+    "positive_count": 115,
     "directional": {
       "LONG": {
         "total": 23,
@@ -527,32 +450,22 @@
         "pf": 0.8503949447077408
       },
       "SHORT": {
-        "total": 175,
-        "wins": 103,
+        "total": 176,
+        "wins": 104,
         "draws": 0,
         "losses": 72,
-        "win_rate": 58.857142857142854,
-        "avg_r": 0.25836571428571425,
-        "pf": 1.592713972969075
+        "win_rate": 59.09090909090909,
+        "avg_r": 0.26761363636363633,
+        "pf": 1.6174376990941617
       }
     },
     "strategy_version": 5,
-    "csv_rows": 345,
+    "csv_rows": 346,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-20T22:15:31.629412+00:00"
+    "last_closed_at": "2026-11-20T22:30:41.125966+00:00"
   },
   "closed_symbols": {
-    "SOL_USDT": {
-      "time": "2026-11-20T18:25:30.713992+00:00",
-      "direction": "SHORT",
-      "reason": "TP2_PROTECT"
-    },
-    "AVAX_USDT": {
-      "time": "2026-11-20T18:30:40.026648+00:00",
-      "direction": "SHORT",
-      "reason": "TP2_PROTECT"
-    },
     "BTC_USDT": {
       "time": "2026-11-20T18:50:31.776112+00:00",
       "direction": "SHORT",
@@ -577,6 +490,11 @@
       "time": "2026-11-20T22:15:31.629412+00:00",
       "direction": "SHORT",
       "reason": "SL"
+    },
+    "SOXL_USDT": {
+      "time": "2026-11-20T22:30:41.125966+00:00",
+      "direction": "SHORT",
+      "reason": "TP2_PROTECT"
     }
   },
   "fail_count": 0,
