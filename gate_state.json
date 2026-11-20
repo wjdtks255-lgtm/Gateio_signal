@@ -18,8 +18,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 4.836e-05,
-      "max_adv": 4.525e-05,
-      "last_candle_ts": 1795146000,
+      "max_adv": 4.522e-05,
+      "last_candle_ts": 1795146300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.23616161170348,
@@ -74,81 +74,6 @@
         }
       }
     },
-    "COIN_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 111.4,
-      "entry_time": "2026-11-19T18:55:25.563272+00:00",
-      "leverage": 19,
-      "risk": 2.0638446283548233,
-      "atr": 1.7198705236290195,
-      "tp1": 108.82019421455648,
-      "tp2": 106.24038842911295,
-      "tp3": 102.8006473818549,
-      "stop_loss": 107.92253591802474,
-      "initial_stop": 113.46384462835483,
-      "tp1_lock_price": 111.14201942145566,
-      "tp2_lock_price": 108.82019421455648,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 106.21,
-      "max_adv": 111.4,
-      "last_candle_ts": 1795146000,
-      "score": 2,
-      "required_score": 2,
-      "rsi_1h": 43.1730686742595,
-      "rsi_15m": 43.04147682077862,
-      "adx_1h": 19.781501757972354,
-      "volume_surge": 0.484614340997629,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "1H EMA20 기울기 -0.44% (+1)",
-        "15M 캔들 몸통 0.92 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 0,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 70,
-        "votes": {
-          "Gemini": {
-            "decision": "SKIP",
-            "confidence": 40,
-            "reason": "1H ADX가 19.8로 추세가 약하고 거래량 증가가 부족해 진입을 보류합니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "ADX 낮아 추세 약하고 거래량 부진, 신호 약함",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "ADX 19.8로 추세 강도가 약하고 거래량 증가가 없어 추격 매도 리스크가 큼.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "약한 추세(ADX 19.8)와 거래량 미확보로 신뢰도가 부족해 SKIP합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "ADX가 19.8로 추세 강도가 약해 숏 포위망이 무너질 위험이 큽니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "ASTER_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -168,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 0.5007,
       "max_adv": 0.516,
-      "last_candle_ts": 1795146000,
+      "last_candle_ts": 1795146300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.52794265883253,
@@ -242,7 +167,7 @@
       "tp2_reached": false,
       "max_fav": 102.38,
       "max_adv": 105.22,
-      "last_candle_ts": 1795146000,
+      "last_candle_ts": 1795146300,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 34.4424311559881,
@@ -318,7 +243,7 @@
       "tp2_reached": false,
       "max_fav": 6.106,
       "max_adv": 6.506,
-      "last_candle_ts": 1795146000,
+      "last_candle_ts": 1795146300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.04684258863463,
@@ -394,7 +319,7 @@
       "tp2_reached": false,
       "max_fav": 41.74,
       "max_adv": 42.11,
-      "last_candle_ts": 1795146000,
+      "last_candle_ts": 1795146300,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 36.313025771321094,
@@ -472,7 +397,7 @@
       "tp2_reached": false,
       "max_fav": 0.6968,
       "max_adv": 0.7044,
-      "last_candle_ts": 1795146000,
+      "last_candle_ts": 1795146300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 40.71127408958241,
@@ -548,8 +473,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1739.6,
-      "max_adv": 1749.62,
-      "last_candle_ts": 1795146000,
+      "max_adv": 1750.5,
+      "last_candle_ts": 1795146300,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 40.506015962694505,
@@ -607,16 +532,15 @@
     }
   },
   "stats": {
-    "wins": 97,
+    "wins": 98,
     "draws": 0,
     "losses": 79,
-    "total": 176,
-    "r_count": 176,
-    "sum_r": 25.954999999999973,
-    "win_r": 109.60399999999998,
+    "total": 177,
+    "r_count": 177,
+    "sum_r": 27.367999999999974,
+    "win_r": 111.01699999999998,
     "loss_r": 83.64900000000004,
     "recent_r": [
-      -1.045,
       -1.089,
       0.835,
       -1.02,
@@ -665,9 +589,10 @@
       -1.024,
       0.762,
       1.199,
-      0.774
+      0.774,
+      1.413
     ],
-    "positive_count": 97,
+    "positive_count": 98,
     "directional": {
       "LONG": {
         "total": 22,
@@ -679,20 +604,20 @@
         "pf": 0.9249140893470789
       },
       "SHORT": {
-        "total": 154,
-        "wins": 86,
+        "total": 155,
+        "wins": 87,
         "draws": 0,
         "losses": 68,
-        "win_rate": 55.84415584415584,
-        "avg_r": 0.1742142857142856,
-        "pf": 1.3725784276965374
+        "win_rate": 56.12903225806451,
+        "avg_r": 0.1822064516129031,
+        "pf": 1.3922009748781397
       }
     },
     "strategy_version": 5,
-    "csv_rows": 323,
+    "csv_rows": 324,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-20T03:20:33.565811+00:00"
+    "last_closed_at": "2026-11-20T03:50:28.403751+00:00"
   },
   "closed_symbols": {
     "FARTCOIN_USDT": {
@@ -709,6 +634,11 @@
       "time": "2026-11-20T03:20:33.565811+00:00",
       "direction": "SHORT",
       "reason": "TRAILING_STOP"
+    },
+    "COIN_USDT": {
+      "time": "2026-11-20T03:50:28.403751+00:00",
+      "direction": "SHORT",
+      "reason": "TP2_PROTECT"
     }
   },
   "fail_count": 0,
