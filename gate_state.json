@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 81.66,
       "max_adv": 86.13,
-      "last_candle_ts": 1795279800,
+      "last_candle_ts": 1795280100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 31.709800982286325,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 128.09,
       "max_adv": 131.18,
-      "last_candle_ts": 1795279800,
+      "last_candle_ts": 1795280100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.06141632482124,
@@ -163,15 +163,15 @@
       "tp1": 0.02926755262260845,
       "tp2": 0.0315931052452169,
       "tp3": 0.0346938420753615,
-      "stop_loss": 0.02760484201780459,
+      "stop_loss": 0.02781532417480632,
       "initial_stop": 0.025081557901913243,
       "tp1_lock_price": 0.027174555262260845,
       "tp2_lock_price": 0.02926755262260845,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.029705,
+      "max_fav": 0.030127,
       "max_adv": 0.026942,
-      "last_candle_ts": 1795279800,
+      "last_candle_ts": 1795280100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 69.24273301314412,
@@ -246,9 +246,9 @@
       "tp2_lock_price": 0.4908051962785078,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.473,
+      "max_fav": 0.4752,
       "max_adv": 0.4548,
-      "last_candle_ts": 1795279800,
+      "last_candle_ts": 1795280100,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 55.665935435415996,
@@ -299,6 +299,82 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "최근 롱 포지션 승률이 47.8%로 저조하고 손익비가 불리하여 손실 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "PONS_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.0898,
+      "entry_time": "2026-11-21T17:00:51.872988+00:00",
+      "leverage": 4,
+      "risk": 0.003456575305438069,
+      "atr": 0.002880479421198391,
+      "tp1": 0.08547928086820242,
+      "tp2": 0.08115856173640483,
+      "tp3": 0.07539760289400806,
+      "stop_loss": 0.09325657530543807,
+      "initial_stop": 0.09325657530543807,
+      "tp1_lock_price": 0.08936792808682024,
+      "tp2_lock_price": 0.08547928086820242,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.0898,
+      "max_adv": 0.0898,
+      "last_candle_ts": 1795280400,
+      "score": 3,
+      "required_score": 2,
+      "rsi_1h": 39.20165558695938,
+      "rsi_15m": 41.614042584288846,
+      "adx_1h": 28.99433429550697,
+      "volume_surge": 0.3744394949192333,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 29.0 강한 추세 (+2)",
+        "1H EMA20 기울기 -0.87% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 2,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 74,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 82,
+            "reason": "강한 추세와 우수한 승률 통계를 바탕으로 숏 진입 조건에 부합합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과매도로 숏 위험, 거래량 부진",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "24시간 급락 후 거래량 증가 없이 추격 숏 진입은 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "거래량 증가 없이 24시간 7% 하락 후 추격 숏 진입은 신뢰성이 낮습니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 75,
+            "reason": "1시간봉 ADX가 강하고 규칙 점수가 충족되어 숏 진입에 무리가 없습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
