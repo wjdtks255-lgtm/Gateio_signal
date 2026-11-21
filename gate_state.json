@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 81.66,
       "max_adv": 86.13,
-      "last_candle_ts": 1795273500,
+      "last_candle_ts": 1795273800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 31.709800982286325,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 128.09,
       "max_adv": 131.18,
-      "last_candle_ts": 1795273500,
+      "last_candle_ts": 1795273800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.06141632482124,
@@ -169,9 +169,9 @@
       "tp2_lock_price": 0.02926755262260845,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.028226,
+      "max_fav": 0.028254,
       "max_adv": 0.026942,
-      "last_candle_ts": 1795273500,
+      "last_candle_ts": 1795273800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 69.24273301314412,
@@ -224,6 +224,81 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "1H RSI가 69.2로 과열권에 인접해 있고 최근 승률과 PF가 부진합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ENSO_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 0.4613,
+      "entry_time": "2026-11-21T15:15:37.366019+00:00",
+      "leverage": 4,
+      "risk": 0.023604157022806285,
+      "atr": 0.019670130852338572,
+      "tp1": 0.4908051962785078,
+      "tp2": 0.5203103925570157,
+      "tp3": 0.5596506542616928,
+      "stop_loss": 0.4376958429771937,
+      "initial_stop": 0.4376958429771937,
+      "tp1_lock_price": 0.4642505196278508,
+      "tp2_lock_price": 0.4908051962785078,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.4613,
+      "max_adv": 0.4613,
+      "last_candle_ts": 1795274100,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 55.665935435415996,
+      "rsi_15m": 57.46624298813306,
+      "adx_1h": 36.09248139267187,
+      "volume_surge": 1.7841489288588461,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 36.1 강한 추세 (+2)",
+        "거래량 급증 1.78배 (+2)",
+        "1H EMA20 기울기 +0.95% (+1)",
+        "15M 캔들 몸통 0.58 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 80,
+        "votes": {
+          "Gemini": {
+            "error": "503 서버 혼잡"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "최근 동일 방향 전략 승률·수익률이 낮아 진입을 회피한다.",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "최근 롱 전략 수익률 부진과 손절 대비 목표가 구조가 열위라 진입 가치가 낮음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "최근 롱 전략 PF 0.85로 기대수익 음수, 24시간 7.35% 급등 후 추격 위험",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "최근 롱 포지션 승률이 47.8%로 저조하고 손익비가 불리하여 손실 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
