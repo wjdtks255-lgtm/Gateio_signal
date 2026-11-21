@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 81.66,
       "max_adv": 86.13,
-      "last_candle_ts": 1795289400,
+      "last_candle_ts": 1795289700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 31.709800982286325,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 128.09,
       "max_adv": 131.18,
-      "last_candle_ts": 1795289400,
+      "last_candle_ts": 1795289700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.06141632482124,
@@ -171,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 0.4808,
       "max_adv": 0.4548,
-      "last_candle_ts": 1795289400,
+      "last_candle_ts": 1795289700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 55.665935435415996,
@@ -246,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 0.0884,
       "max_adv": 0.0904,
-      "last_candle_ts": 1795289400,
+      "last_candle_ts": 1795289700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 39.20165558695938,
@@ -320,9 +320,9 @@
       "tp2_lock_price": 6.812550884952108,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 6.3634,
+      "max_fav": 6.4133,
       "max_adv": 6.148,
-      "last_candle_ts": 1795289400,
+      "last_candle_ts": 1795289700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 55.28315100074295,
@@ -400,7 +400,7 @@
       "tp2_reached": false,
       "max_fav": 0.04352,
       "max_adv": 0.04382,
-      "last_candle_ts": 1795289400,
+      "last_candle_ts": 1795289700,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 41.86076693101567,
@@ -476,7 +476,7 @@
       "tp2_reached": false,
       "max_fav": 3.789,
       "max_adv": 3.776,
-      "last_candle_ts": 1795289400,
+      "last_candle_ts": 1795289700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 58.829865952779976,
@@ -528,6 +528,80 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "최근 동일 방향 전략 승률이 47%로 낮고 PF가 1 미만이라 손실 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "INJ_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 6.061,
+      "entry_time": "2026-11-21T19:40:39.036643+00:00",
+      "leverage": 14,
+      "risk": 0.16164955020649607,
+      "atr": 0.1347079585054134,
+      "tp1": 5.858938062241879,
+      "tp2": 5.65687612448376,
+      "tp3": 5.387460207472933,
+      "stop_loss": 6.222649550206496,
+      "initial_stop": 6.222649550206496,
+      "tp1_lock_price": 6.040793806224188,
+      "tp2_lock_price": 5.858938062241879,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 6.061,
+      "max_adv": 6.061,
+      "last_candle_ts": 1795290000,
+      "score": 3,
+      "required_score": 2,
+      "rsi_1h": 43.54163918433343,
+      "rsi_15m": 40.01591284735747,
+      "adx_1h": 23.528475391948525,
+      "volume_surge": 0.7127609565130276,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 23.5 (+1)",
+        "1H EMA20 기울기 -0.35% (+1)",
+        "15M 캔들 몸통 0.64 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "SPLIT",
+        "enter": 2,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 79,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 82,
+            "reason": "모든 필수 조건 충족 및 숏 포지션 통계가 우수하여 진입 가치가 높음.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX 약하고 거래량 부진, RSI 과열 아님으로 진입 회피",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "ADX 23.5로 추세 약하고 거래량 급증도 없어 숏 진입 근거가 부족합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "거래량이 다소 부족하나 1H 및 15M 지표 정렬과 준수한 승률로 진입합니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
