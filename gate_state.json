@@ -11,7 +11,7 @@
       "tp1": 26.405930390534024,
       "tp2": 27.302860781068052,
       "tp3": 28.498767968446753,
-      "stop_loss": 25.88587786183878,
+      "stop_loss": 25.900030858530997,
       "initial_stop": 24.79145568757278,
       "tp1_lock_price": 25.5986930390534,
       "tp2_lock_price": 26.405930390534024,
@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 26.409,
       "max_adv": 25.291,
-      "last_candle_ts": 1795382400,
+      "last_candle_ts": 1795382700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 66.86408702428986,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.1986,
       "max_adv": 0.2059,
-      "last_candle_ts": 1795382400,
+      "last_candle_ts": 1795382700,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 44.6904903018351,
@@ -173,9 +173,9 @@
       "tp2_lock_price": 0.2742119037523707,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.26839,
+      "max_fav": 0.26846,
       "max_adv": 0.25216,
-      "last_candle_ts": 1795382400,
+      "last_candle_ts": 1795382700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 60.9424856277425,
@@ -248,8 +248,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.9882,
-      "max_adv": 0.9815,
-      "last_candle_ts": 1795382400,
+      "max_adv": 0.9753,
+      "last_candle_ts": 1795382700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 68.26550641162083,
@@ -302,6 +302,82 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "이미 26% 급등하여 추격 매수 위험이 높고 RSI가 과열권에 육박합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "BTW_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 0.730108,
+      "entry_time": "2026-11-22T21:30:40.880315+00:00",
+      "leverage": 3,
+      "risk": 0.035364380403648636,
+      "atr": 0.029470317003040532,
+      "tp1": 0.7743134755045608,
+      "tp2": 0.8185189510091215,
+      "tp3": 0.8774595850152026,
+      "stop_loss": 0.6947436195963513,
+      "initial_stop": 0.6947436195963513,
+      "tp1_lock_price": 0.734528547550456,
+      "tp2_lock_price": 0.7743134755045608,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.730108,
+      "max_adv": 0.730108,
+      "last_candle_ts": 1795383000,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 53.89410551480213,
+      "rsi_15m": 58.02354846876218,
+      "adx_1h": 18.453383822994166,
+      "volume_surge": 0.842645173108628,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H EMA20 기울기 +0.49% (+1)",
+        "15M 캔들 몸통 0.52 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 71,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 35,
+            "reason": "1H ADX가 낮고 거래량 증가가 없어 약한 추세로 판단되어 진입을 보류합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX 낮고 거래량 부진, 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 18.5로 추세 강도가 매우 약하고 거래량 증가도 없어 추격 매수 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "24시간 8.44% 급등 후 추격 진입이며 ADX 약세·거래량 부진으로 승률이 낮습니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간봉 ADX가 18.5로 추세가 약하고 거래량이 부족해 추격 매수 시 손실 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
