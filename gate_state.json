@@ -237,6 +237,20 @@
         "pf": 1.563471209169573
       }
     },
+    "strong": {
+      "all": {
+        "total": 41,
+        "win_rate": 70.73170731707317,
+        "avg_r": 0.6002439024390243,
+        "sum_r": 24.609999999999996
+      },
+      "since": {
+        "total": 0,
+        "win_rate": 0.0,
+        "avg_r": 0.0,
+        "sum_r": 0
+      }
+    },
     "strategy_version": 5,
     "csv_rows": 380,
     "excluded_other_versions": 147,
