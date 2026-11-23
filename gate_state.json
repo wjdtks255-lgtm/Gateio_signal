@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 1.0378,
       "max_adv": 0.9728,
-      "last_candle_ts": 1795440900,
+      "last_candle_ts": 1795441200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 68.26550641162083,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 0.5084,
       "max_adv": 0.5021,
-      "last_candle_ts": 1795440900,
+      "last_candle_ts": 1795441200,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 55.496182451845485,
@@ -150,6 +150,83 @@
             "decision": "ENTER",
             "confidence": 75,
             "reason": "거래량 증가 폭이 다소 아쉽지만 1시간봉 추세와 ADX가 매우 탄탄합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "WLFI_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.04286,
+      "entry_time": "2026-11-23T13:45:30.064109+00:00",
+      "leverage": 24,
+      "risk": 0.00034228888005885836,
+      "atr": 0.000285240733382382,
+      "tp1": 0.042432138899926426,
+      "tp2": 0.04200427779985286,
+      "tp3": 0.041433796333088094,
+      "stop_loss": 0.04320228888005886,
+      "initial_stop": 0.04320228888005886,
+      "tp1_lock_price": 0.04281721388999264,
+      "tp2_lock_price": 0.042432138899926426,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.04286,
+      "max_adv": 0.04286,
+      "last_candle_ts": 1795441500,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 36.082084392716055,
+      "rsi_15m": 33.02695685758461,
+      "adx_1h": 18.35122843161557,
+      "volume_surge": 2.1138709792551507,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "거래량 급증 2.11배 (+2)",
+        "1H EMA20 기울기 -0.55% (+1)",
+        "15M 캔들 몸통 0.73 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 73,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 45,
+            "reason": "ADX가 너무 낮고 RSI가 과매도 구간에 근접해 숏 진입 리스크가 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도 구간에 있어 숏 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 18.4로 추세 강도가 매우 약해 숏 진입 근거가 부족함",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "ADX 18.4로 추세 힘이 약해 숏 승률이 불확실합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 과매도권에 진입한 상태여서 추격 숏 매매는 반등 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
