@@ -103,16 +103,6 @@
     "last_closed_at": "2026-11-23T15:50:35.943946+00:00"
   },
   "closed_symbols": {
-    "WLFI_USDT": {
-      "time": "2026-11-23T14:00:59.860299+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
-    "SKY_USDT": {
-      "time": "2026-11-23T14:00:59.860299+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "DGAI_USDT": {
       "time": "2026-11-23T15:05:29.281064+00:00",
       "direction": "LONG",
