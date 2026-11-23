@@ -96,6 +96,8 @@ RISK_PER_TRADE_PCT = 1.0      # 포지션 크기 안내용: 손절 1회에 계�
 # 권장 레버리지 = 최대 안전 레버리지 × 종목 상황 감산 (해당하는 것끼리 곱함)
 LEV_LOW_LIQUIDITY = ((2_000_000, 0.5, "거래대금 적음"), (10_000_000, 0.75, "거래대금 보통"))  # 24h USDT 미만이면
 LEV_BIG_MOVE = ((10.0, 0.6, "24h 급등락"), (5.0, 0.8, "24h 큰 변동"))                         # |24h 변동%| 이상이면
+STRONG_VOLUME_SURGE = 1.5     # 거래량 이 배수 이상이면 ⭐ 강한 신호 표시 (진입 규칙과 무관, 표시·집계용)
+STRONG_SINCE = "2026-11-23"   # ⭐ 표시를 시작한 날(UTC). 이후 거래만 따로 집계해 실전 검증
 LEV_ATR_EXPANSION = (1.5, 0.7, "변동성 급증")                                                  # 1H ATR 이 하루 전의 몇 배 이상이면
 
 ROTATE_HOURS = 18
@@ -426,7 +428,24 @@ def calculate_stats(records: List[Dict[str, Any]]) -> Dict[str, Any]:
             "avg_r": sum(safe_float(record.get("net_r")) for record in subset) / side_total if side_total else 0.0,
             "pf": side_profit / side_loss if side_loss else 0.0,
         }
+    strong = [r for r in records if safe_float(r.get("volume_surge")) >= STRONG_VOLUME_SURGE]
+    stats["strong"] = {
+        "all": subset_summary(strong),
+        "since": subset_summary([r for r in strong if str(r.get("closed_at", "")) >= STRONG_SINCE]),
+    }
     return stats
+
+
+def subset_summary(subset: List[Dict[str, Any]]) -> Dict[str, Any]:
+    rs = [safe_float(r.get("net_r")) for r in subset]
+    wins = sum(1 for v in rs if classify_trade(v) == "win")
+    decisive = wins + sum(1 for v in rs if classify_trade(v) == "loss")
+    return {
+        "total": len(rs),
+        "win_rate": wins / decisive * 100.0 if decisive else 0.0,
+        "avg_r": sum(rs) / len(rs) if rs else 0.0,
+        "sum_r": sum(rs),
+    }
 
 
 def sync_stats_from_csv(state: Dict[str, Any]) -> Dict[str, Any]:
@@ -481,7 +500,23 @@ def build_stats_line(stats: Dict[str, Any]) -> str:
         f"<code>{long_line}</code>",
         f"<code>{short_line}</code>",
         f"<code>최근 {len(recent)}전 {recent_sum:+.1f}R</code>",
-    ])
+    ] + strong_stats_lines(stats))
+
+
+def strong_stats_lines(stats: Dict[str, Any]) -> List[str]:
+    strong = stats.get("strong")
+    if not strong:
+        return []
+    def fmt(label: str, item: Dict[str, Any]) -> str:
+        if not item.get("total"):
+            return f"<code>{label} 0건</code>"
+        return (f"<code>{label} {item['total']}건 | 승률 {item['win_rate']:.0f}% | "
+                f"평균 {item['avg_r']:+.2f}R | 합계 {item['sum_r']:+.1f}R</code>")
+    return [
+        f"⭐ <b>강한 신호 (거래량 {STRONG_VOLUME_SURGE:g}배↑)</b>",
+        fmt("전체", strong.get("all", {})),
+        fmt(f"{STRONG_SINCE[5:].replace('-', '/')} 이후", strong.get("since", {})),
+    ]
 
 # ───────────────────────────── Gate API ──────────────────────────────────
 def api_get(path: str, params: Optional[Dict[str, Any]] = None) -> Optional[Any]:
@@ -1419,9 +1454,12 @@ def identify_new_signals(state: Dict[str, Any], raw_tickers: List[Dict[str, Any]
             ) if ai_committee else ""
 
             reasons_text = "\n".join(f"• {reason}" for reason in analysis["reasons"])
+            strong_tag = (f"⭐ <b>강한 신호</b> (거래량 {analysis['volume_surge']:.1f}배)\n"
+                          if analysis["volume_surge"] >= STRONG_VOLUME_SURGE else "")
             message = (
                 f"🛡️ <b>신규 시그널 (v{STRATEGY_VERSION}) | 품질 점수 {analysis['score']}/{MAX_SCORE} (기준 {analysis['required_score']})</b> | {dir_tag(direction)}\n"
-                f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n\n"
+                f"<a href='{chart_link(symbol)}'>[{category}] {symbol}</a>\n"
+                f"{strong_tag}\n"
                 f"진입가 <code>{fmt_price(price)}</code> | 권장 레버리지 <code>{leverage}배</code>"
                 f" (격리, 최대 안전 {max_leverage}배{' · ' + ', '.join(lev_reasons) if lev_reasons else ''})\n"
                 f"📐 계좌 {RISK_PER_TRADE_PCT:g}% 위험 기준 포지션 <code>계좌의 {position_pct:.0f}%</code>"
