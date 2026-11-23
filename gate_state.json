@@ -11,15 +11,15 @@
       "tp1": 0.19851878513146212,
       "tp2": 0.19123757026292423,
       "tp3": 0.1815292837715404,
-      "stop_loss": 0.19837026979060737,
+      "stop_loss": 0.19808638137130125,
       "initial_stop": 0.21162497189483032,
       "tp1_lock_price": 0.20507187851314623,
       "tp2_lock_price": 0.19851878513146212,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 0.1952,
+      "max_fav": 0.1949,
       "max_adv": 0.2059,
-      "last_candle_ts": 1795400400,
+      "last_candle_ts": 1795400700,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 44.6904903018351,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.2737,
       "max_adv": 0.25216,
-      "last_candle_ts": 1795400400,
+      "last_candle_ts": 1795400700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 60.9424856277425,
@@ -171,7 +171,7 @@
       "tp2_reached": false,
       "max_fav": 1.01,
       "max_adv": 0.9728,
-      "last_candle_ts": 1795400400,
+      "last_candle_ts": 1795400700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 68.26550641162083,
@@ -248,7 +248,7 @@
       "tp2_reached": false,
       "max_fav": 0.751512,
       "max_adv": 0.710088,
-      "last_candle_ts": 1795400400,
+      "last_candle_ts": 1795400700,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 53.89410551480213,
@@ -300,6 +300,82 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "1시간봉 ADX가 18.5로 추세가 약하고 거래량이 부족해 추격 매수 시 손실 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "B_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.089,
+      "entry_time": "2026-11-23T02:30:37.431920+00:00",
+      "leverage": 10,
+      "risk": 0.0013938363184304854,
+      "atr": 0.0011615302653587378,
+      "tp1": 0.08725770460196189,
+      "tp2": 0.08551540920392378,
+      "tp3": 0.08319234867320631,
+      "stop_loss": 0.09039383631843048,
+      "initial_stop": 0.09039383631843048,
+      "tp1_lock_price": 0.08882577046019619,
+      "tp2_lock_price": 0.08725770460196189,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.089,
+      "max_adv": 0.089,
+      "last_candle_ts": 1795401000,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 42.63555727885126,
+      "rsi_15m": 39.909369922340886,
+      "adx_1h": 18.391611317871895,
+      "volume_surge": 0.7438399033878615,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H EMA20 기울기 -0.32% (+1)",
+        "15M 캔들 몸통 0.50 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 74,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 45,
+            "reason": "1H ADX가 18.4로 추세가 약하고 거래량도 증가하지 않아 숏 진입을 보류합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX 낮고 거래량 상승 없으며 신호가 약해 진입을 회피",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 18.4로 추세 강도가 매우 약하고 거래량 증가도 없어 단기 반등 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 18.4 약추세에 거래량 미확인, 24시간 하락 후 숏 추격은 리스크가 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간봉 ADX가 18.4로 추세 강도가 너무 약해 숏 포지션이 반등에 쉽게 무너질 수 있습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
