@@ -1,95 +1,15 @@
 {
-  "active_slots": {
-    "ETHFI_USDT": {
-      "strategy_version": 5,
-      "direction": "LONG",
-      "entry_price": 0.5051,
-      "entry_time": "2026-11-23T12:40:36.028437+00:00",
-      "leverage": 13,
-      "risk": 0.009615119136926354,
-      "atr": 0.008012599280771962,
-      "tp1": 0.5171188989211579,
-      "tp2": 0.5291377978423158,
-      "tp3": 0.5451629964038598,
-      "stop_loss": 0.5171188989211579,
-      "initial_stop": 0.49548488086307363,
-      "tp1_lock_price": 0.5063018898921158,
-      "tp2_lock_price": 0.5171188989211579,
-      "tp1_reached": true,
-      "tp2_reached": true,
-      "max_fav": 0.5444,
-      "max_adv": 0.5021,
-      "last_candle_ts": 1795448400,
-      "score": 5,
-      "required_score": 2,
-      "rsi_1h": 55.496182451845485,
-      "rsi_15m": 57.065918566701136,
-      "adx_1h": 36.69827319926863,
-      "volume_surge": 1.1030554966281096,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "1H ADX 36.7 강한 추세 (+2)",
-        "거래량 증가 1.10배 (+1)",
-        "1H EMA20 기울기 +0.21% (+1)",
-        "15M 캔들 몸통 0.62 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "APPROVE",
-        "enter": 3,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 74,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 75,
-            "reason": "강한 1H 추세와 정배열 조건이 충족되어 롱 진입 가치가 있습니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "ENTER",
-            "confidence": 70,
-            "reason": "강한 추세와 적절한 리스크-보상, 최근 승률 50%로 진입 가능",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "최근 롱 전략의 승률 50%와 PF 1.03은 수익성이 미미해 리스크 대비 기대수익이 낮음.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "최근 동일 방향 전략 승률 50%, PF 1.03으로 우위 미미하고 거래량 1.1배에 그쳐 진입 근거 약함.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "ENTER",
-            "confidence": 75,
-            "reason": "거래량 증가 폭이 다소 아쉽지만 1시간봉 추세와 ADX가 매우 탄탄합니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    }
-  },
+  "active_slots": {},
   "stats": {
-    "wins": 134,
+    "wins": 135,
     "draws": 0,
     "losses": 104,
-    "total": 238,
-    "r_count": 238,
-    "sum_r": 47.92199999999999,
-    "win_r": 157.33199999999994,
+    "total": 239,
+    "r_count": 239,
+    "sum_r": 49.11899999999999,
+    "win_r": 158.52899999999994,
     "loss_r": 109.41000000000004,
     "recent_r": [
-      2.613,
       -1.092,
       -1.098,
       1.183,
@@ -138,18 +58,19 @@
       -1.066,
       -1.125,
       -1.026,
-      0.845
+      0.845,
+      1.197
     ],
-    "positive_count": 134,
+    "positive_count": 135,
     "directional": {
       "LONG": {
-        "total": 35,
-        "wins": 18,
+        "total": 36,
+        "wins": 19,
         "draws": 0,
         "losses": 17,
-        "win_rate": 51.42857142857142,
-        "avg_r": 0.03822857142857143,
-        "pf": 1.0745320855614975
+        "win_rate": 52.77777777777778,
+        "avg_r": 0.07041666666666667,
+        "pf": 1.1412098930481283
       },
       "SHORT": {
         "total": 203,
@@ -176,10 +97,10 @@
       }
     },
     "strategy_version": 5,
-    "csv_rows": 385,
+    "csv_rows": 386,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-23T15:05:29.281064+00:00"
+    "last_closed_at": "2026-11-23T15:50:35.943946+00:00"
   },
   "closed_symbols": {
     "ANT_USDT": {
@@ -201,6 +122,11 @@
       "time": "2026-11-23T15:05:29.281064+00:00",
       "direction": "LONG",
       "reason": "TRAILING_STOP"
+    },
+    "ETHFI_USDT": {
+      "time": "2026-11-23T15:50:35.943946+00:00",
+      "direction": "LONG",
+      "reason": "TP2_PROTECT"
     }
   },
   "fail_count": 0,
