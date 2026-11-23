@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 80.0,
       "max_adv": 80.97,
-      "last_candle_ts": 1795463100,
+      "last_candle_ts": 1795463400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 34.04078082141406,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 85.23,
       "max_adv": 88.51,
-      "last_candle_ts": 1795463100,
+      "last_candle_ts": 1795463400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 45.609494785703006,
@@ -172,7 +172,7 @@
       "tp2_reached": false,
       "max_fav": 86.49,
       "max_adv": 87.24,
-      "last_candle_ts": 1795463100,
+      "last_candle_ts": 1795463400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.20952750818029,
@@ -244,9 +244,9 @@
       "tp2_lock_price": 303.60043169413694,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 310.06,
+      "max_fav": 309.6,
       "max_adv": 310.53,
-      "last_candle_ts": 1795463100,
+      "last_candle_ts": 1795463400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.815776108274804,
@@ -400,13 +400,7 @@
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
     "last_closed_at": "2026-11-23T15:50:35.943946+00:00"
   },
-  "closed_symbols": {
-    "ETHFI_USDT": {
-      "time": "2026-11-23T15:50:35.943946+00:00",
-      "direction": "LONG",
-      "reason": "TP2_PROTECT"
-    }
-  },
+  "closed_symbols": {},
   "fail_count": 0,
   "last_report_date": "2026-11-23",
   "csv_stats_offset": 20,
