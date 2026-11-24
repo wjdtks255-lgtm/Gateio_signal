@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 251.39,
       "max_adv": 254.4,
-      "last_candle_ts": 1795543500,
+      "last_candle_ts": 1795543800,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 43.3857530384805,
@@ -83,9 +83,9 @@
       "tp2_lock_price": 47.087861108163246,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 48.18,
+      "max_fav": 48.14,
       "max_adv": 48.34,
-      "last_candle_ts": 1795543500,
+      "last_candle_ts": 1795543800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 31.603420548785436,
@@ -137,6 +137,82 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "이미 7% 이상 하락하여 1시간 RSI가 31대에 진입해 과매도 구간 추격 매도가 우려됩니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "AMD_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 409.98,
+      "entry_time": "2026-11-24T18:15:33.898405+00:00",
+      "leverage": 8,
+      "risk": 12.07244960581192,
+      "atr": 10.060374671509933,
+      "tp1": 394.8894379927351,
+      "tp2": 379.7988759854702,
+      "tp3": 359.67812664245037,
+      "stop_loss": 422.05244960581194,
+      "initial_stop": 422.05244960581194,
+      "tp1_lock_price": 408.4709437992735,
+      "tp2_lock_price": 394.8894379927351,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 409.98,
+      "max_adv": 409.98,
+      "last_candle_ts": 1795544100,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 32.13319566695408,
+      "rsi_15m": 40.37193721521547,
+      "adx_1h": 29.58430007901048,
+      "volume_surge": 0.23545256263631875,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 29.6 강한 추세 (+2)",
+        "1H EMA20 기울기 -2.91% (+1)",
+        "15M 캔들 몸통 0.63 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 73,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "24시간 10% 급락으로 인한 추가 하락 추격 진입은 과매도 리스크가 있습니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과매도와 저조한 거래량, 24h 급락 후 추격 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 10% 급락 후 추격 숏은 리스크가 크고 거래량 증가가 미미해 진입 가치가 낮습니다.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 -10% 급락 후 추격 진입이고 RSI 32.1로 숏 과매도 우려, 거래량도 약함",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간봉 RSI가 32.1로 과매도 구간에 근접하여 추가 하락 여력이 제한적입니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
