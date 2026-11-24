@@ -11,7 +11,7 @@
       "tp1": 0.8449376957105267,
       "tp2": 0.8208753914210535,
       "tp3": 0.7887923190350891,
-      "stop_loss": 0.8286253406952866,
+      "stop_loss": 0.8282537857661377,
       "initial_stop": 0.8882498434315786,
       "tp1_lock_price": 0.8665937695710527,
       "tp2_lock_price": 0.8449376957105267,
@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 0.811,
       "max_adv": 0.882,
-      "last_candle_ts": 1795539900,
+      "last_candle_ts": 1795540200,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 39.243379800820286,
@@ -76,79 +76,6 @@
         }
       }
     },
-    "ETH_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 1695.1,
-      "entry_time": "2026-11-24T08:00:45.090428+00:00",
-      "leverage": 41,
-      "risk": 24.151276786330303,
-      "atr": 20.126063988608585,
-      "tp1": 1664.910904017087,
-      "tp2": 1634.721808034174,
-      "tp3": 1594.469680056957,
-      "stop_loss": 1683.0057585714787,
-      "initial_stop": 1719.2512767863302,
-      "tp1_lock_price": 1692.0810904017087,
-      "tp2_lock_price": 1664.910904017087,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 1663.4,
-      "max_adv": 1707.44,
-      "last_candle_ts": 1795539900,
-      "score": 2,
-      "required_score": 2,
-      "rsi_1h": 41.75267876770246,
-      "rsi_15m": 44.41645205129644,
-      "adx_1h": 19.226727041698837,
-      "volume_surge": 0.6396791319477058,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (SHORT)",
-        "1H EMA20 기울기 -0.54% (+1)",
-        "15M 캔들 몸통 0.56 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 1,
-        "valid": 4,
-        "total": 5,
-        "avg_confidence": 77,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 78,
-            "reason": "추세 정렬과 BTC 방향이 일치하며 승률과 손익비가 양호합니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "ADX가 낮고 거래량 상승이 없어 진입 위험이 큽니다.",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "ADX 19.2로 추세 강도가 매우 약하고 거래량 증가도 없어 신뢰도가 낮음.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "추세 강도(ADX 19.2)와 거래량 증가 부재로 신호 신뢰도가 부족합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "error": "503 서버 혼잡"
-          }
-        }
-      }
-    },
     "ANT_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -160,7 +87,7 @@
       "tp1": 80.68535273276031,
       "tp2": 78.21070546552063,
       "tp3": 74.91117577586772,
-      "stop_loss": 80.25142642138479,
+      "stop_loss": 80.09842381513619,
       "initial_stop": 85.13971781379175,
       "tp1_lock_price": 82.91253527327603,
       "tp2_lock_price": 80.68535273276031,
@@ -168,7 +95,7 @@
       "tp2_reached": true,
       "max_fav": 75.74,
       "max_adv": 84.57,
-      "last_candle_ts": 1795539900,
+      "last_candle_ts": 1795540200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.11108029476105,
@@ -221,76 +148,6 @@
         }
       }
     },
-    "SOL_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 70.11,
-      "entry_time": "2026-11-24T14:05:29.671450+00:00",
-      "leverage": 28,
-      "risk": 1.100723717082675,
-      "atr": 0.9172697642355624,
-      "tp1": 68.73409535364665,
-      "tp2": 67.35819070729332,
-      "tp3": 65.52365117882219,
-      "stop_loss": 69.61578625392741,
-      "initial_stop": 71.21072371708267,
-      "tp1_lock_price": 69.97240953536466,
-      "tp2_lock_price": 68.73409535364665,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 68.53,
-      "max_adv": 70.39,
-      "last_candle_ts": 1795539900,
-      "score": 2,
-      "required_score": 2,
-      "rsi_1h": 34.06463495037123,
-      "rsi_15m": 34.49839250155594,
-      "adx_1h": 18.939248259187618,
-      "volume_surge": 0.8913977133696157,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (SHORT)",
-        "1H EMA20 기울기 -0.84% (+1)",
-        "15M 캔들 몸통 0.60 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 0,
-        "valid": 3,
-        "total": 5,
-        "avg_confidence": 77,
-        "votes": {
-          "Gemini": {
-            "error": "503 서버 혼잡"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 65,
-            "reason": "RSI 과매도와 약한 추세·거래량 부족으로 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "ADX 18.9로 추세 강도가 약하고 거래량 증가가 없어 추격 매도 리스크가 큼.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 80,
-            "reason": "RSI 과매도·약한 추세·거래량 부족에 급락 후 추격 숀로 리스크가 우세합니다.",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "error": "503 서버 혼잡"
-          }
-        }
-      }
-    },
     "AMZN_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -309,8 +166,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 251.39,
-      "max_adv": 253.45,
-      "last_candle_ts": 1795539900,
+      "max_adv": 253.85,
+      "last_candle_ts": 1795540200,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 43.3857530384805,
@@ -359,17 +216,15 @@
     }
   },
   "stats": {
-    "wins": 143,
+    "wins": 145,
     "draws": 0,
     "losses": 109,
-    "total": 252,
-    "r_count": 252,
-    "sum_r": 51.88,
-    "win_r": 166.72799999999995,
+    "total": 254,
+    "r_count": 254,
+    "sum_r": 53.485,
+    "win_r": 168.33299999999994,
     "loss_r": 114.84800000000006,
     "recent_r": [
-      1.618,
-      1.691,
       1.368,
       1.612,
       1.594,
@@ -417,9 +272,11 @@
       1.307,
       -1.048,
       -1.089,
-      0.762
+      0.762,
+      0.815,
+      0.79
     ],
-    "positive_count": 143,
+    "positive_count": 145,
     "directional": {
       "LONG": {
         "total": 37,
@@ -431,13 +288,13 @@
         "pf": 1.0780362029046517
       },
       "SHORT": {
-        "total": 215,
-        "wins": 124,
+        "total": 217,
+        "wins": 126,
         "draws": 0,
         "losses": 91,
-        "win_rate": 57.674418604651166,
-        "avg_r": 0.23440465116279074,
-        "pf": 1.5258232127206706
+        "win_rate": 58.06451612903226,
+        "avg_r": 0.23964055299539175,
+        "pf": 1.5425691749092267
       }
     },
     "strong": {
@@ -455,10 +312,10 @@
       }
     },
     "strategy_version": 5,
-    "csv_rows": 399,
+    "csv_rows": 401,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-24T17:10:33.114945+00:00"
+    "last_closed_at": "2026-11-24T17:15:39.159839+00:00"
   },
   "closed_symbols": {
     "AVGO_USDT": {
@@ -483,6 +340,16 @@
     },
     "BTC_USDT": {
       "time": "2026-11-24T17:10:33.114945+00:00",
+      "direction": "SHORT",
+      "reason": "TRAILING_STOP"
+    },
+    "ETH_USDT": {
+      "time": "2026-11-24T17:15:39.159839+00:00",
+      "direction": "SHORT",
+      "reason": "TRAILING_STOP"
+    },
+    "SOL_USDT": {
+      "time": "2026-11-24T17:15:39.159839+00:00",
       "direction": "SHORT",
       "reason": "TRAILING_STOP"
     }
