@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 0.812,
       "max_adv": 0.882,
-      "last_candle_ts": 1795536900,
+      "last_candle_ts": 1795537200,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 39.243379800820286,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 1666.33,
       "max_adv": 1707.44,
-      "last_candle_ts": 1795536900,
+      "last_candle_ts": 1795537200,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 41.75267876770246,
@@ -168,7 +168,7 @@
       "tp2_reached": false,
       "max_fav": 59358.2,
       "max_adv": 60659.7,
-      "last_candle_ts": 1795536900,
+      "last_candle_ts": 1795537200,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 41.19904669342366,
@@ -244,7 +244,7 @@
       "tp2_reached": true,
       "max_fav": 76.04,
       "max_adv": 84.57,
-      "last_candle_ts": 1795536900,
+      "last_candle_ts": 1795537200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.11108029476105,
@@ -316,7 +316,7 @@
       "tp2_reached": false,
       "max_fav": 68.54,
       "max_adv": 70.39,
-      "last_candle_ts": 1795536900,
+      "last_candle_ts": 1795537200,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 34.06463495037123,
@@ -358,6 +358,72 @@
             "decision": "SKIP",
             "confidence": 80,
             "reason": "RSI 과매도·약한 추세·거래량 부족에 급락 후 추격 숀로 리스크가 우세합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "AMZN_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 252.82,
+      "entry_time": "2026-11-24T16:25:32.787838+00:00",
+      "leverage": 37,
+      "risk": 2.52390348774421,
+      "atr": 2.1032529064535086,
+      "tp1": 249.66512064031974,
+      "tp2": 246.51024128063946,
+      "tp3": 242.30373546773245,
+      "stop_loss": 255.3439034877442,
+      "initial_stop": 255.3439034877442,
+      "tp1_lock_price": 252.50451206403196,
+      "tp2_lock_price": 249.66512064031974,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 252.82,
+      "max_adv": 252.82,
+      "last_candle_ts": 1795537500,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 43.3857530384805,
+      "rsi_15m": 39.40542955467174,
+      "adx_1h": 17.624637616380863,
+      "volume_surge": 1.0332207946317464,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H EMA20 기울기 -0.49% (+1)",
+        "15M 캔들 몸통 0.85 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 2,
+        "total": 5,
+        "avg_confidence": 78,
+        "votes": {
+          "Gemini": {
+            "error": "503 서버 혼잡"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "RSI 저조, ADX 약함, 거래량 부진 등 위험 요인 다수",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "ADX 17.6로 추세 약하고 거래량 증가도 없어 진입 근거가 부족합니다.",
             "model": "nvidia/nemotron-3.5-super-vl:free",
             "label": "OpenRouter(nemotron-3.5-super-vl)"
           },
