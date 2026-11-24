@@ -1,75 +1,5 @@
 {
   "active_slots": {
-    "AVGO_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 310.53,
-      "entry_time": "2026-11-23T19:45:34.854880+00:00",
-      "leverage": 14,
-      "risk": 5.543654644690411,
-      "atr": 4.619712203908676,
-      "tp1": 303.60043169413694,
-      "tp2": 296.6708633882739,
-      "tp3": 287.4314389804566,
-      "stop_loss": 304.95805400676545,
-      "initial_stop": 316.0736546446904,
-      "tp1_lock_price": 309.8370431694137,
-      "tp2_lock_price": 303.60043169413694,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 299.23,
-      "max_adv": 315.94,
-      "last_candle_ts": 1795527600,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 35.815776108274804,
-      "rsi_15m": 43.53805755500739,
-      "adx_1h": 25.894549610597238,
-      "volume_surge": 0.07591532095642223,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "1H ADX 25.9 강한 추세 (+2)",
-        "1H EMA20 기울기 -1.11% (+1)",
-        "15M 캔들 몸통 0.74 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 0,
-        "valid": 3,
-        "total": 5,
-        "avg_confidence": 72,
-        "votes": {
-          "Gemini": {
-            "error": "503 서버 혼잡"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "RSI가 과매도 수준이며 거래량 상승이 없어 위험",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "거래량 증가 부재와 24시간 하락 추세의 추격성 진입 리스크가 높아 관망이 적절합니다.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 70,
-            "reason": "거래량 증가 미미하고 15M 재돌파 신호가 숏 방향과 모호하여 진입 보류",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "error": "503 서버 혼잡"
-          }
-        }
-      }
-    },
     "ZEC_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -89,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 715.59,
       "max_adv": 771.52,
-      "last_candle_ts": 1795527600,
+      "last_candle_ts": 1795527900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 39.288844223448535,
@@ -167,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.821,
       "max_adv": 0.882,
-      "last_candle_ts": 1795527600,
+      "last_candle_ts": 1795527900,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 39.243379800820286,
@@ -243,7 +173,7 @@
       "tp2_reached": false,
       "max_fav": 1671.56,
       "max_adv": 1707.44,
-      "last_candle_ts": 1795527600,
+      "last_candle_ts": 1795527900,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 41.75267876770246,
@@ -316,7 +246,7 @@
       "tp2_reached": false,
       "max_fav": 59358.2,
       "max_adv": 60625.4,
-      "last_candle_ts": 1795527600,
+      "last_candle_ts": 1795527900,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 41.19904669342366,
@@ -392,7 +322,7 @@
       "tp2_reached": false,
       "max_fav": 543.0,
       "max_adv": 552.05,
-      "last_candle_ts": 1795527600,
+      "last_candle_ts": 1795527900,
       "score": 2,
       "required_score": 2,
       "rsi_1h": 37.438399479440534,
@@ -465,7 +395,7 @@
       "tp2_reached": false,
       "max_fav": 81.88,
       "max_adv": 83.96,
-      "last_candle_ts": 1795527600,
+      "last_candle_ts": 1795527900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.11108029476105,
@@ -537,7 +467,7 @@
       "tp2_reached": false,
       "max_fav": 80.8,
       "max_adv": 81.55,
-      "last_candle_ts": 1795527600,
+      "last_candle_ts": 1795527900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 42.366604401669335,
@@ -597,16 +527,15 @@
     }
   },
   "stats": {
-    "wins": 140,
+    "wins": 141,
     "draws": 0,
     "losses": 107,
-    "total": 247,
-    "r_count": 247,
-    "sum_r": 50.542,
-    "win_r": 163.25299999999996,
+    "total": 248,
+    "r_count": 248,
+    "sum_r": 51.948,
+    "win_r": 164.65899999999996,
     "loss_r": 112.71100000000006,
     "recent_r": [
-      -1.038,
       1.886,
       0.851,
       0.815,
@@ -655,9 +584,10 @@
       0.697,
       -1.129,
       -1.12,
-      1.665
+      1.665,
+      1.406
     ],
-    "positive_count": 140,
+    "positive_count": 141,
     "directional": {
       "LONG": {
         "total": 37,
@@ -669,13 +599,13 @@
         "pf": 1.0780362029046517
       },
       "SHORT": {
-        "total": 210,
-        "wins": 121,
+        "total": 211,
+        "wins": 122,
         "draws": 0,
         "losses": 89,
-        "win_rate": 57.61904761904761,
-        "avg_r": 0.23361428571428577,
-        "pf": 1.5235361285709708
+        "win_rate": 57.81990521327014,
+        "avg_r": 0.23917061611374413,
+        "pf": 1.5385403438377063
       }
     },
     "strong": {
@@ -693,12 +623,18 @@
       }
     },
     "strategy_version": 5,
-    "csv_rows": 394,
+    "csv_rows": 395,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-24T09:40:33.434586+00:00"
+    "last_closed_at": "2026-11-24T13:50:36.024043+00:00"
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "AVGO_USDT": {
+      "time": "2026-11-24T13:50:36.024043+00:00",
+      "direction": "SHORT",
+      "reason": "ROTATE"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-24",
   "csv_stats_offset": 20,
