@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 309.52,
       "max_adv": 315.94,
-      "last_candle_ts": 1795495800,
+      "last_candle_ts": 1795496100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 35.815776108274804,
@@ -81,7 +81,7 @@
       "tp1": 0.00225492240341412,
       "tp2": 0.0020423448068282407,
       "tp3": 0.001758908011380401,
-      "stop_loss": 0.0022074166221555253,
+      "stop_loss": 0.002196303209288101,
       "initial_stop": 0.002637562077268704,
       "tp1_lock_price": 0.002446242240341412,
       "tp2_lock_price": 0.00225492240341412,
@@ -89,7 +89,7 @@
       "tp2_reached": true,
       "max_fav": 0.0020137,
       "max_adv": 0.002496,
-      "last_candle_ts": 1795495800,
+      "last_candle_ts": 1795496100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.44190328210291,
@@ -161,9 +161,9 @@
       "tp2_lock_price": 79.41270945458058,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 79.68,
+      "max_fav": 79.67,
       "max_adv": 80.59,
-      "last_candle_ts": 1795495800,
+      "last_candle_ts": 1795496100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 33.8786966170194,
@@ -239,7 +239,7 @@
       "tp2_reached": false,
       "max_fav": 742.15,
       "max_adv": 771.52,
-      "last_candle_ts": 1795495800,
+      "last_candle_ts": 1795496100,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 39.288844223448535,
@@ -293,6 +293,82 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "이미 하락이 상당히 진행되어 1H RSI가 39대로 진입 시 추격 매도 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "TRUMP_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.869,
+      "entry_time": "2026-11-24T05:00:53.220533+00:00",
+      "leverage": 18,
+      "risk": 0.01924984343157862,
+      "atr": 0.016041536192982184,
+      "tp1": 0.8449376957105267,
+      "tp2": 0.8208753914210535,
+      "tp3": 0.7887923190350891,
+      "stop_loss": 0.8882498434315786,
+      "initial_stop": 0.8882498434315786,
+      "tp1_lock_price": 0.8665937695710527,
+      "tp2_lock_price": 0.8449376957105267,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.869,
+      "max_adv": 0.869,
+      "last_candle_ts": 1795496400,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 39.243379800820286,
+      "rsi_15m": 42.81867641847667,
+      "adx_1h": 18.74682099761805,
+      "volume_surge": 0.44436866647940987,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H EMA20 기울기 -1.10% (+1)",
+        "15M 캔들 몸통 0.64 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 72,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "ADX가 18.7로 추세가 약하고 거래량 증가도 미흡하여 숏 진입 시점이 아님.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX 낮고 RSI 과매도로 매도 신호가 약함",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 18.7로 추세 강도가 매우 약하고 거래량 증가도 없어 신뢰도가 낮음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 82,
+            "reason": "ADX 18.7로 추세 약하고 거래량도 부족해 SHORT 진입 근거가 불충분합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX가 18.7로 추세 강도가 너무 약해 숏 포착 후 반등할 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
