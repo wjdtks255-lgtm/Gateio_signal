@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.6343,
       "max_adv": 0.6506,
-      "last_candle_ts": 1795596900,
+      "last_candle_ts": 1795597200,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 40.039395967172155,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 67.66,
       "max_adv": 68.98,
-      "last_candle_ts": 1795596900,
+      "last_candle_ts": 1795597200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.29770507246445,
@@ -169,7 +169,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 51.47,
-      "max_adv": 51.47,
+      "max_adv": 51.41,
       "last_candle_ts": 1795597200,
       "score": 5,
       "required_score": 2,
@@ -295,6 +295,80 @@
             "confidence": 85,
             "reason": "1H RSI가 32.8로 과매도 구간에 인접했으나 추세와 거래량이 확실해 진입합니다.",
             "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "SNXX_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 1.482,
+      "entry_time": "2026-11-25T09:05:30.909718+00:00",
+      "leverage": 5,
+      "risk": 0.09408222789325946,
+      "atr": 0.07840185657771621,
+      "tp1": 1.3643972151334256,
+      "tp2": 1.2467944302668514,
+      "tp3": 1.089990717111419,
+      "stop_loss": 1.5760822278932594,
+      "initial_stop": 1.5760822278932594,
+      "tp1_lock_price": 1.4702397215133425,
+      "tp2_lock_price": 1.3643972151334256,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 1.482,
+      "max_adv": 1.482,
+      "last_candle_ts": 1795597500,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 30.364425831202325,
+      "rsi_15m": 44.533659273761806,
+      "adx_1h": 42.36262242807011,
+      "volume_surge": 1.0045491908498159,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 42.4 강한 추세 (+2)",
+        "1H EMA20 기울기 -4.30% (+1)",
+        "15M 캔들 몸통 0.55 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 81,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 추세와 높은 승률로 숏 진입 조건이 충족되었습니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과매도와 거래량 부진으로 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 24% 급락 후 RSI 30 과매도 구간이라 반등 리스크가 큼",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 -24% 급락 후 RSI 30.4 과매도 구간에서 거래량 없이 숏 진입은 위험하다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "error": "503 서버 혼잡"
           }
         }
       }
