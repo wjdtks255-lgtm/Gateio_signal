@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.6343,
       "max_adv": 0.6506,
-      "last_candle_ts": 1795597500,
+      "last_candle_ts": 1795597800,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 40.039395967172155,
@@ -91,9 +91,9 @@
       "tp2_lock_price": 67.42041350738647,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 67.66,
+      "max_fav": 67.45,
       "max_adv": 68.98,
-      "last_candle_ts": 1795597500,
+      "last_candle_ts": 1795597800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 37.29770507246445,
@@ -168,9 +168,9 @@
       "tp2_lock_price": 52.91146564000233,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 51.63,
+      "max_fav": 51.9,
       "max_adv": 51.38,
-      "last_candle_ts": 1795597500,
+      "last_candle_ts": 1795597800,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 63.69121111190847,
@@ -242,9 +242,9 @@
       "tp2_lock_price": 4.284501182102424,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 4.47,
+      "max_fav": 4.44,
       "max_adv": 4.52,
-      "last_candle_ts": 1795597500,
+      "last_candle_ts": 1795597800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.838355560232614,
@@ -316,9 +316,9 @@
       "tp2_lock_price": 1.3643972151334256,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 1.476,
+      "max_fav": 1.45,
       "max_adv": 1.482,
-      "last_candle_ts": 1795597500,
+      "last_candle_ts": 1795597800,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.364425831202325,
@@ -369,6 +369,233 @@
           },
           "반론위원": {
             "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "CRCL_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 46.89,
+      "entry_time": "2026-11-25T09:15:37.318798+00:00",
+      "leverage": 16,
+      "risk": 0.8184113231836907,
+      "atr": 0.682009435986409,
+      "tp1": 45.866985846020384,
+      "tp2": 44.843971692040775,
+      "tp3": 43.47995282006796,
+      "stop_loss": 47.70841132318369,
+      "initial_stop": 47.70841132318369,
+      "tp1_lock_price": 46.78769858460204,
+      "tp2_lock_price": 45.866985846020384,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 46.89,
+      "max_adv": 46.89,
+      "last_candle_ts": 1795598100,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 36.495731843099826,
+      "rsi_15m": 41.73050949055032,
+      "adx_1h": 35.12692878279835,
+      "volume_surge": 1.811495309649337,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 35.1 강한 추세 (+2)",
+        "거래량 급증 1.81배 (+2)",
+        "1H EMA20 기울기 -1.14% (+1)",
+        "15M 캔들 몸통 0.89 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 82,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 90,
+            "reason": "강한 1H 추세와 거래량 동반, 숏 정렬 및 BTC 방향과 일치하여 진입 가치가 높음.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도에 가까워 숏 진입 위험성이 높음",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하락 추세와 거래량 급증, 양호한 손익비율로 숏 진입 타당",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "이미 24시간 -6.18% 하락해 추격 숏이며 RSI 36.5로 반등 리스크가 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "모든 지표가 완벽하게 정렬되어 있어 결정적 약점이 없다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ETH_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 1643.48,
+      "entry_time": "2026-11-25T09:15:37.318798+00:00",
+      "leverage": 45,
+      "risk": 20.885327825734088,
+      "atr": 17.404439854778406,
+      "tp1": 1617.3733402178325,
+      "tp2": 1591.2666804356647,
+      "tp3": 1556.457800726108,
+      "stop_loss": 1664.365327825734,
+      "initial_stop": 1664.365327825734,
+      "tp1_lock_price": 1640.8693340217833,
+      "tp2_lock_price": 1617.3733402178325,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 1643.48,
+      "max_adv": 1643.48,
+      "last_candle_ts": 1795598100,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 39.18792885358814,
+      "rsi_15m": 37.86467363965043,
+      "adx_1h": 27.10321892951244,
+      "volume_surge": 1.1797189125427825,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 27.1 강한 추세 (+2)",
+        "거래량 증가 1.18배 (+1)",
+        "1H EMA20 기울기 -0.62% (+1)",
+        "15M 캔들 몸통 0.83 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 3,
+        "total": 5,
+        "avg_confidence": 75,
+        "votes": {
+          "Gemini": {
+            "error": "503 서버 혼잡"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 65,
+            "reason": "RSI가 과매도 구간에 있어 반등 위험이 큽니다.",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "거래량 증가율이 1.18배에 불과해 하락 돌파 신뢰도가 낮고, 이미 24시간 하락 후 추격 진입 우려가 있다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "15분봉 RSI가 37.9로 이미 과매도권에 진입해 추격 매도 시 손실 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "ANT_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 78.56,
+      "entry_time": "2026-11-25T09:15:37.318798+00:00",
+      "leverage": 16,
+      "risk": 2.2292394808310223,
+      "atr": 1.8576995673591854,
+      "tp1": 75.77345064896123,
+      "tp2": 72.98690129792244,
+      "tp3": 69.27150216320408,
+      "stop_loss": 80.78923948083103,
+      "initial_stop": 80.78923948083103,
+      "tp1_lock_price": 78.28134506489613,
+      "tp2_lock_price": 75.77345064896123,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 78.56,
+      "max_adv": 78.56,
+      "last_candle_ts": 1795598100,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 40.18104156343312,
+      "rsi_15m": 39.80566351081878,
+      "adx_1h": 24.32350147830317,
+      "volume_surge": 3.1752025492941485,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (SHORT)",
+        "1H ADX 24.3 (+1)",
+        "거래량 급증 3.18배 (+2)",
+        "1H EMA20 기울기 -1.12% (+1)",
+        "15M 캔들 몸통 0.71 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 3,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 78,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "추세, 거래량, 비트코인 방향성이 모두 일치하고 손익비가 우수함",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "ENTER",
+            "confidence": 70,
+            "reason": "EMA 정렬·거래량 급증·ADX·BTC와 일치, 위험-보상 비율 양호",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "24시간 7% 급락 후 추격 숏 진입은 리스크가 크고 ADX 24.3은 추세 강도가 약해 신뢰도가 낮음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "24시간 -7% 급락 후 숏 추격 진입은 반등 리스크가 커 SKIP한다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "지표 정렬과 거래량 급증으로 하락 모멘텀이 충분합니다.",
+            "model": "gemini-flash-lite-latest"
           }
         }
       }
