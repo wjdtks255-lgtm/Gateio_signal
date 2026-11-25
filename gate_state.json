@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.627,
       "max_adv": 0.6506,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 40.039395967172155,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 53.18,
       "max_adv": 51.38,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 63.69121111190847,
@@ -167,7 +167,7 @@
       "tp2_reached": false,
       "max_fav": 4.34,
       "max_adv": 4.52,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 32.838355560232614,
@@ -241,7 +241,7 @@
       "tp2_reached": false,
       "max_fav": 1.401,
       "max_adv": 1.482,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 30.364425831202325,
@@ -315,7 +315,7 @@
       "tp2_reached": false,
       "max_fav": 46.25,
       "max_adv": 47.12,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 36.495731843099826,
@@ -392,7 +392,7 @@
       "tp2_reached": false,
       "max_fav": 1634.12,
       "max_adv": 1648.99,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 39.18792885358814,
@@ -464,7 +464,7 @@
       "tp2_reached": false,
       "max_fav": 76.78,
       "max_adv": 79.1,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 40.18104156343312,
@@ -540,9 +540,9 @@
       "tp2_lock_price": 0.1200574840875116,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.12185,
+      "max_fav": 0.12161,
       "max_adv": 0.12206,
-      "last_candle_ts": 1795609800,
+      "last_candle_ts": 1795610100,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 36.9463182092119,
@@ -698,26 +698,6 @@
     "last_closed_at": "2026-11-25T12:20:33.415431+00:00"
   },
   "closed_symbols": {
-    "AMZN_USDT": {
-      "time": "2026-11-25T08:35:30.014286+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
-    "AMD_USDT": {
-      "time": "2026-11-25T08:35:30.014286+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
-    "AVAX_USDT": {
-      "time": "2026-11-25T08:35:30.014286+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
-    "XAU_USDT": {
-      "time": "2026-11-25T08:35:30.014286+00:00",
-      "direction": "SHORT",
-      "reason": "TRAILING_STOP"
-    },
     "SOL_USDT": {
       "time": "2026-11-25T12:20:33.415431+00:00",
       "direction": "SHORT",
