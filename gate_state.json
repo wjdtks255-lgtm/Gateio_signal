@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.0016151,
       "max_adv": 0.0017276,
-      "last_candle_ts": 1795631700,
+      "last_candle_ts": 1795632000,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 30.15522910853366,
@@ -97,7 +97,7 @@
       "tp2_reached": false,
       "max_fav": 0.12262,
       "max_adv": 0.11664,
-      "last_candle_ts": 1795631700,
+      "last_candle_ts": 1795632000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 60.9773908498524,
@@ -263,11 +263,6 @@
       "time": "2026-11-25T16:30:46.090453+00:00",
       "direction": "SHORT",
       "reason": "SL"
-    },
-    "CRCL_USDT": {
-      "time": "2026-11-25T14:45:30.447089+00:00",
-      "direction": "SHORT",
-      "reason": "TP3"
     },
     "INTW_USDT": {
       "time": "2026-11-25T15:00:53.850593+00:00",
