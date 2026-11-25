@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.0016151,
       "max_adv": 0.0017276,
-      "last_candle_ts": 1795638000,
+      "last_candle_ts": 1795638300,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 30.15522910853366,
@@ -182,11 +182,6 @@
     "last_closed_at": "2026-11-25T20:10:31.829471+00:00"
   },
   "closed_symbols": {
-    "SUI_USDT": {
-      "time": "2026-11-25T16:30:46.090453+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
     "APT_USDT": {
       "time": "2026-11-25T17:00:47.802651+00:00",
       "direction": "SHORT",
