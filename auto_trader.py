@@ -478,6 +478,27 @@ def scan_and_enter(state: Dict[str, Any], now: datetime) -> None:
             notify(f"⚠️ {sig['symbol']} 진입 실패: {str(exc)[:200]}")
 
 
+def run_once() -> None:
+    """GitHub Actions 용: 포지션 관리 + 신규 시그널 탐색을 한 번 하고 종료 (약 5분마다 실행)."""
+    if not API_KEY or not API_SECRET:
+        raise SystemExit("GATE_API_KEY / GATE_API_SECRET 환경변수를 설정하세요.")
+    first_run = not STATE_FILE.exists()
+    state = load_state()
+    if first_run:
+        account = get_account()
+        if account.get("in_dual_mode"):
+            notify("⚠️ 양방향(dual) 포지션 모드입니다. 단방향(one-way) 모드로 바꿔야 자동매매가 동작합니다.")
+            raise SystemExit("dual mode")
+        notify(f"🤖 자동매매 시작 (약 5분마다 확인) | 잔고 {bot.safe_float(account.get('total')):.2f} USDT | "
+               f"최대 {MAX_POSITIONS}포지션 · 건당 위험 {RISK_PCT:g}% · AI 필터 {'ON' if ai_required() else 'OFF'}")
+    now = bot.utcnow()
+    try:
+        manage(state, now)
+        scan_and_enter(state, now)
+    finally:
+        save_state(state)
+
+
 def main() -> None:
     if not API_KEY or not API_SECRET:
         raise SystemExit("GATE_API_KEY / GATE_API_SECRET 환경변수를 설정하세요.")
@@ -504,4 +525,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    run_once() if os.getenv("RUN_ONCE") == "1" else main()

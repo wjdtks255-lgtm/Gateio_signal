@@ -1,3 +1,4 @@
 __pycache__/
 *.log
 auto_state.json
+account_state.json

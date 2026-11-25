@@ -13,9 +13,11 @@ Gate.io 선물 계좌 실시간 확인 텔레그램 봇
   GATE_LIVE=1              실계좌 (없으면 테스트넷)
 """
 
+import json
 import logging
 import os
 import time
+from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
@@ -48,9 +50,9 @@ def send(text: str) -> None:
         logging.exception("telegram send failed")
 
 
-def get_updates(offset: int) -> List[Dict[str, Any]]:
+def get_updates(offset: int, wait: int = 20) -> List[Dict[str, Any]]:
     try:
-        r = requests.get(f"{TG}/getUpdates", params={"offset": offset, "timeout": 20}, timeout=30)
+        r = requests.get(f"{TG}/getUpdates", params={"offset": offset, "timeout": wait}, timeout=wait + 10)
         return r.json().get("result", []) if r.ok else []
     except requests.RequestException:
         return []
@@ -168,100 +170,148 @@ def handle(text: str) -> None:
 
 
 # ───────────────────────────── 변화 감시 ─────────────────────────────
-class Watcher:
-    def __init__(self) -> None:
-        self.prev = positions()
-        self.equity_base = equity_of(account())
-        self.liq_warned: Dict[str, bool] = {}
-        self.last_check = datetime.now(timezone.utc)
-        self.summary_date = None
-
-    def check(self) -> None:
-        now = datetime.now(timezone.utc)
-        cur = positions()
-        acc = account()
-
-        for sym, p in cur.items():
-            size = f(p.get("size"))
-            old = self.prev.get(sym)
-            if old is None:
-                send(f"🆕 <b>포지션 진입</b> {sym} {side(size)}\n"
-                     f"{int(abs(size))}계약 · 진입가 <code>{gt.bot.fmt_price(f(p.get('entry_price')))}</code>"
-                     f" · {p.get('leverage') or '교차'}배")
-            else:
-                old_size = f(old.get("size"))
-                if abs(size) > abs(old_size):
-                    send(f"➕ <b>추가 진입</b> {sym} {int(abs(old_size))} → {int(abs(size))}계약")
-                elif abs(size) < abs(old_size):
-                    send(f"➖ <b>부분 청산</b> {sym} {int(abs(old_size))} → {int(abs(size))}계약\n"
-                         f"현재 손익 <code>{f(p.get('unrealised_pnl')):+,.2f} USDT</code>")
-            dist = liq_distance_pct(p)
-            if dist is not None and dist <= LIQ_WARN_PCT and not self.liq_warned.get(sym):
-                send(f"🚨 <b>청산 위험</b> {sym}\n청산가까지 {dist:.1f}% 남았습니다. "
-                     f"(현재 <code>{gt.bot.fmt_price(f(p.get('mark_price')))}</code> / "
-                     f"청산가 <code>{gt.bot.fmt_price(f(p.get('liq_price')))}</code>)")
-                self.liq_warned[sym] = True
-            elif dist is not None and dist > LIQ_WARN_PCT * 2:
-                self.liq_warned[sym] = False
-
-        closed = [sym for sym in self.prev if sym not in cur]
-        if closed:
-            s = pnl_since(self.last_check - timedelta(seconds=WATCH_SECONDS))
-            for sym in closed:
-                old = self.prev[sym]
-                send(f"✅ <b>포지션 종료</b> {sym} {side(f(old.get('size')))}\n"
-                     f"실현손익(최근 확인 이후 합계) <code>{s['pnl'] + s['fee']:+,.2f} USDT</code>\n"
-                     f"지갑잔고 <code>{f(acc.get('total')):,.2f} USDT</code>")
-                self.liq_warned.pop(sym, None)
-
-        equity = equity_of(acc)
-        if self.equity_base > 0:
-            move = (equity - self.equity_base) / self.equity_base * 100.0
-            if abs(move) >= EQUITY_ALERT_PCT:
-                icon = "📈" if move > 0 else "📉"
-                send(f"{icon} <b>평가금 변동 {move:+.1f}%</b>\n"
-                     f"<code>{self.equity_base:,.2f} → {equity:,.2f} USDT</code>")
-                self.equity_base = equity
-
-        now_kst = now.astimezone(KST)
-        if now_kst.hour == DAILY_SUMMARY_HOUR_KST and self.summary_date != now_kst.date():
-            self.summary_date = now_kst.date()
-            yesterday = (now_kst - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-            s = pnl_since(yesterday)
-            send(f"🌅 <b>아침 요약</b>\n{balance_text()}\n\n"
-                 f"어제 0시부터 순손익 <code>{s['pnl'] + s['fee'] + s['fund']:+,.2f} USDT</code>\n\n"
-                 f"{positions_text()}")
-
-        self.prev = cur
-        self.last_check = now
+STATE_FILE = Path(os.getenv("ACCOUNT_STATE_FILE", "account_state.json"))
 
 
-def main() -> None:
+def slim(pos: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    """상태 파일에 저장할 최소 정보만 남김."""
+    return {sym: {"size": f(p.get("size")), "entry_price": f(p.get("entry_price")),
+                  "leverage": p.get("leverage")} for sym, p in pos.items()}
+
+
+def load_watch_state() -> Optional[Dict[str, Any]]:
+    if STATE_FILE.exists():
+        try:
+            return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            logging.exception("account state load failed")
+    return None
+
+
+def save_watch_state(state: Dict[str, Any]) -> None:
+    STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def new_watch_state() -> Dict[str, Any]:
+    return {"prev": slim(positions()), "equity_base": equity_of(account()), "liq_warned": {},
+            "last_check": datetime.now(timezone.utc).isoformat(), "summary_date": "", "offset": 0}
+
+
+def check_changes(st: Dict[str, Any]) -> None:
+    now = datetime.now(timezone.utc)
+    prev: Dict[str, Dict[str, Any]] = st["prev"]
+    warned: Dict[str, bool] = st["liq_warned"]
+    cur = positions()
+    acc = account()
+
+    for sym, p in cur.items():
+        size = f(p.get("size"))
+        old = prev.get(sym)
+        if old is None:
+            send(f"🆕 <b>포지션 진입</b> {sym} {side(size)}\n"
+                 f"{int(abs(size))}계약 · 진입가 <code>{gt.bot.fmt_price(f(p.get('entry_price')))}</code>"
+                 f" · {p.get('leverage') or '교차'}배")
+        else:
+            old_size = f(old.get("size"))
+            if abs(size) > abs(old_size):
+                send(f"➕ <b>추가 진입</b> {sym} {int(abs(old_size))} → {int(abs(size))}계약")
+            elif abs(size) < abs(old_size):
+                send(f"➖ <b>부분 청산</b> {sym} {int(abs(old_size))} → {int(abs(size))}계약\n"
+                     f"현재 손익 <code>{f(p.get('unrealised_pnl')):+,.2f} USDT</code>")
+        dist = liq_distance_pct(p)
+        if dist is not None and dist <= LIQ_WARN_PCT and not warned.get(sym):
+            send(f"🚨 <b>청산 위험</b> {sym}\n청산가까지 {dist:.1f}% 남았습니다. "
+                 f"(현재 <code>{gt.bot.fmt_price(f(p.get('mark_price')))}</code> / "
+                 f"청산가 <code>{gt.bot.fmt_price(f(p.get('liq_price')))}</code>)")
+            warned[sym] = True
+        elif dist is not None and dist > LIQ_WARN_PCT * 2:
+            warned[sym] = False
+
+    closed = [sym for sym in prev if sym not in cur]
+    if closed:
+        since = gt.bot.parse_iso(st.get("last_check", ""), now - timedelta(minutes=10))
+        s = pnl_since(since - timedelta(seconds=60))
+        for sym in closed:
+            send(f"✅ <b>포지션 종료</b> {sym} {side(f(prev[sym].get('size')))}\n"
+                 f"실현손익(최근 확인 이후 합계) <code>{s['pnl'] + s['fee']:+,.2f} USDT</code>\n"
+                 f"지갑잔고 <code>{f(acc.get('total')):,.2f} USDT</code>")
+            warned.pop(sym, None)
+
+    equity = equity_of(acc)
+    base = f(st.get("equity_base"))
+    if base > 0:
+        move = (equity - base) / base * 100.0
+        if abs(move) >= EQUITY_ALERT_PCT:
+            icon = "📈" if move > 0 else "📉"
+            send(f"{icon} <b>평가금 변동 {move:+.1f}%</b>\n<code>{base:,.2f} → {equity:,.2f} USDT</code>")
+            st["equity_base"] = equity
+    else:
+        st["equity_base"] = equity
+
+    now_kst = now.astimezone(KST)
+    today = now_kst.date().isoformat()
+    if now_kst.hour >= DAILY_SUMMARY_HOUR_KST and st.get("summary_date") != today:
+        st["summary_date"] = today
+        yesterday = (now_kst - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        s = pnl_since(yesterday)
+        send(f"🌅 <b>아침 요약</b>\n{balance_text()}\n\n"
+             f"어제 0시부터 순손익 <code>{s['pnl'] + s['fee'] + s['fund']:+,.2f} USDT</code>\n\n"
+             f"{positions_text()}")
+
+    st["prev"] = slim(cur)
+    st["last_check"] = now.isoformat()
+
+
+def process_commands(st: Dict[str, Any], wait: int) -> None:
+    for upd in get_updates(int(st.get("offset", 0)), wait):
+        st["offset"] = upd["update_id"] + 1
+        msg = upd.get("message") or upd.get("channel_post") or {}  # 개인·그룹·채널 모두 지원
+        if str(msg.get("chat", {}).get("id")) != CHAT_ID:
+            continue  # 내 채팅이 아니면 무시
+        try:
+            handle(msg.get("text", ""))
+        except Exception:
+            logging.exception("command failed")
+            send("⚠️ 조회 중 오류가 났습니다. 잠시 후 다시 시도하세요.")
+
+
+def check_env() -> None:
     if not TOKEN or not CHAT_ID:
         raise SystemExit("ACCOUNT_TELEGRAM_TOKEN / ACCOUNT_TELEGRAM_CHAT_ID 환경변수를 설정하세요.")
     if not gt.API_KEY or not gt.API_SECRET:
         raise SystemExit("GATE_API_KEY / GATE_API_SECRET 환경변수를 설정하세요.")
-    watcher = Watcher()
+
+
+def run_once() -> None:
+    """GitHub Actions 용: 쌓인 명령에 답하고, 직전 실행 이후 변화를 한 번 확인한 뒤 종료."""
+    check_env()
+    st = load_watch_state()
+    if st is None:
+        st = new_watch_state()
+        send(f"🤖 계좌 확인 봇 시작 ({'실계좌' if gt.LIVE else '테스트넷'}, 약 5분마다 확인)\n\n{balance_text()}")
+    try:
+        process_commands(st, 0)
+        check_changes(st)
+    finally:
+        save_watch_state(st)
+
+
+def main() -> None:
+    """PC·서버용: 계속 켜 두고 실시간으로 응답."""
+    check_env()
+    st = load_watch_state() or new_watch_state()
     send(f"🤖 계좌 확인 봇 시작 ({'실계좌' if gt.LIVE else '테스트넷'})\n\n{balance_text()}")
-    offset, last_watch = 0, 0.0
+    last_watch = 0.0
     while True:
-        for upd in get_updates(offset):
-            offset = upd["update_id"] + 1
-            msg = upd.get("message") or upd.get("channel_post") or {}  # 개인·그룹·채널 모두 지원
-            if str(msg.get("chat", {}).get("id")) != CHAT_ID:
-                continue  # 내 채팅이 아니면 무시
-            try:
-                handle(msg.get("text", ""))
-            except Exception:
-                logging.exception("command failed")
-                send("⚠️ 조회 중 오류가 났습니다. 잠시 후 다시 시도하세요.")
+        process_commands(st, 20)
         if time.time() - last_watch >= WATCH_SECONDS:
             last_watch = time.time()
             try:
-                watcher.check()
+                check_changes(st)
             except Exception:
                 logging.exception("watch failed")
+            save_watch_state(st)
 
 
 if __name__ == "__main__":
-    main()
+    run_once() if os.getenv("RUN_ONCE") == "1" else main()
