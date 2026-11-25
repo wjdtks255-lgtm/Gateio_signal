@@ -154,6 +154,8 @@ def today_text() -> str:
 
 def handle(text: str) -> None:
     text = (text or "").strip()
+    if text.startswith("/"):
+        text = text.split()[0].split("@")[0]  # 그룹에서 오는 /balance@봇이름 형태 처리
     if text in ("/start", "/help"):
         send("🤖 계좌 확인 봇입니다.\n아래 버튼을 누르거나 /balance /positions /today 를 입력하세요.\n"
              "포지션 변화·청산 위험·큰 손익 변동은 자동으로 알려 드립니다.")
@@ -245,7 +247,7 @@ def main() -> None:
     while True:
         for upd in get_updates(offset):
             offset = upd["update_id"] + 1
-            msg = upd.get("message") or {}
+            msg = upd.get("message") or upd.get("channel_post") or {}  # 개인·그룹·채널 모두 지원
             if str(msg.get("chat", {}).get("id")) != CHAT_ID:
                 continue  # 내 채팅이 아니면 무시
             try:
