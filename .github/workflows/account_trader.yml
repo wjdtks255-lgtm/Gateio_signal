@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 8
     env:
       TRADE_KEY_SET: ${{ secrets.GATE_TRADE_API_KEY != '' }}
-      READ_KEY_SET: ${{ secrets.GATE_READ_API_KEY != '' || secrets.GATE_TRADE_API_KEY != '' }}
+      READ_KEY_SET: ${{ secrets.GATE_READ_API_KEY != '' }}
       PYTHONUNBUFFERED: '1'
 
     steps:
@@ -45,8 +45,8 @@ jobs:
           path: |
             account_state.json
             auto_state.json
-          key: bot-state-v2-${{ github.run_id }}
-          restore-keys: bot-state-v2-
+          key: bot-state-${{ github.run_id }}
+          restore-keys: bot-state-
 
       - name: Auto trader
         if: env.TRADE_KEY_SET == 'true'
@@ -71,10 +71,9 @@ jobs:
         continue-on-error: true
         env:
           RUN_ONCE: '1'
-          # 조회용 키가 없으면 매매용 키로 조회. 테스트넷/실계좌는 자동매매와 같은 쪽을 봄 (TRADER_LIVE)
-          GATE_API_KEY: ${{ secrets.GATE_READ_API_KEY || secrets.GATE_TRADE_API_KEY }}
-          GATE_API_SECRET: ${{ secrets.GATE_READ_API_KEY && secrets.GATE_READ_API_SECRET || secrets.GATE_TRADE_API_SECRET }}
-          GATE_LIVE: ${{ vars.TRADER_LIVE || '0' }}
+          GATE_API_KEY: ${{ secrets.GATE_READ_API_KEY }}
+          GATE_API_SECRET: ${{ secrets.GATE_READ_API_SECRET }}
+          GATE_LIVE: '1'
           ACCOUNT_TELEGRAM_TOKEN: ${{ secrets.ACCOUNT_TELEGRAM_TOKEN }}
           ACCOUNT_TELEGRAM_CHAT_ID: ${{ secrets.ACCOUNT_TELEGRAM_CHAT_ID }}
         run: python -u account_bot.py
@@ -86,4 +85,4 @@ jobs:
           path: |
             account_state.json
             auto_state.json
-          key: bot-state-v2-${{ github.run_id }}
+          key: bot-state-${{ github.run_id }}
