@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 5.974,
       "max_adv": 5.859,
-      "last_candle_ts": 1795652400,
+      "last_candle_ts": 1795652700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 61.4131709445661,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 107.444,
       "max_adv": 105.177,
-      "last_candle_ts": 1795652400,
+      "last_candle_ts": 1795652700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 59.75061247580833,
@@ -149,6 +149,84 @@
             "decision": "SKIP",
             "confidence": 75,
             "reason": "1시간봉 ADX가 18.7로 추세 강도가 너무 약해 횡보장에 갇힐 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "PIEVERSE_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 3.6085,
+      "entry_time": "2026-11-26T00:30:37.529701+00:00",
+      "leverage": 4,
+      "risk": 0.17192328382947536,
+      "atr": 0.14326940319122947,
+      "tp1": 3.823404104786844,
+      "tp2": 4.038308209573688,
+      "tp3": 4.324847015956147,
+      "stop_loss": 3.4365767161705243,
+      "initial_stop": 3.4365767161705243,
+      "tp1_lock_price": 3.629990410478684,
+      "tp2_lock_price": 3.823404104786844,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 3.6085,
+      "max_adv": 3.6085,
+      "last_candle_ts": 1795653000,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 64.03697020411099,
+      "rsi_15m": 58.362471253433434,
+      "adx_1h": 37.428385806803085,
+      "volume_surge": 1.504438092372499,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 37.4 강한 추세 (+2)",
+        "거래량 급증 1.50배 (+2)",
+        "1H EMA20 기울기 +5.47% (+1)",
+        "15M 캔들 몸통 0.75 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 70,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 45,
+            "reason": "24시간 18% 이상 급등하여 추격 매수 리스크가 높고 RSI가 과열권에 인접함.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "24시간 급등 후 추격 진입 위험, 신뢰도 낮음",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "24시간 18% 급등 후 추격 진입이며, 최근 롱 전략 성과가 부진해 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 18.38% 급등 후 롱 추격 진입은 추격 매수 리스크가 너무 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 75,
+            "reason": "완벽한 추세 정렬과 거래량 동반으로 결정적 약점이 없어 진입을 승인합니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
