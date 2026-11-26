@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 171.07,
       "max_adv": 169.09,
-      "last_candle_ts": 1795692900,
+      "last_candle_ts": 1795693200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.68328033869965,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 59.32,
       "max_adv": 61.17,
-      "last_candle_ts": 1795692900,
+      "last_candle_ts": 1795693200,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 39.498399262355804,
@@ -172,7 +172,7 @@
       "tp2_reached": false,
       "max_fav": 4.0431,
       "max_adv": 3.8877,
-      "last_candle_ts": 1795692900,
+      "last_candle_ts": 1795693200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.46542943875646,
@@ -249,7 +249,7 @@
       "tp2_reached": false,
       "max_fav": 43.59,
       "max_adv": 43.43,
-      "last_candle_ts": 1795692900,
+      "last_candle_ts": 1795693200,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 64.25457261123782,
@@ -300,6 +300,83 @@
             "decision": "ENTER",
             "confidence": 85,
             "reason": "1시간봉 ADX가 강하고 지표 조건이 완벽하여 약점이 크지 않습니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "VVV_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 27.832,
+      "entry_time": "2026-11-26T11:45:38.722226+00:00",
+      "leverage": 3,
+      "risk": 1.1395026296125599,
+      "atr": 0.9495855246771333,
+      "tp1": 29.2563782870157,
+      "tp2": 30.6807565740314,
+      "tp3": 32.579927623385665,
+      "stop_loss": 26.69249737038744,
+      "initial_stop": 26.69249737038744,
+      "tp1_lock_price": 27.97443782870157,
+      "tp2_lock_price": 29.2563782870157,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 27.832,
+      "max_adv": 27.832,
+      "last_candle_ts": 1795693500,
+      "score": 3,
+      "required_score": 2,
+      "rsi_1h": 53.67141470324403,
+      "rsi_15m": 54.862792866119065,
+      "adx_1h": 20.2027845224353,
+      "volume_surge": 0.823680965383599,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 20.2 (+1)",
+        "1H EMA20 기울기 +0.18% (+1)",
+        "15M 캔들 몸통 0.71 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 71,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 45,
+            "reason": "ADX가 약하고 거래량이 감소하여 추세 지속성이 의심됩니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 65,
+            "reason": "ADX가 낮고 거래량 상승이 없어 진입 위험이 큽니다.",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 11.66% 급등 후 ADX 20.2로 추세 강도가 약해 추격매매 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 11.66% 급등 후 거래량 없이 추격 진입은 리스크가 큽니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "거래량 급증이 부족하고 ADX가 낮아 추세 지속성이 의심됩니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
