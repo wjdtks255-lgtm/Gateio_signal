@@ -48,8 +48,10 @@ RISK_PCT = float(os.getenv("RISK_PCT", "5"))          # 손절 1회당 계좌 �
 STRICT_MIN_SCORE = int(os.getenv("STRICT_MIN_SCORE", "4"))        # 품질 점수 6점 만점 중
 STRICT_MIN_ADX = float(os.getenv("STRICT_MIN_ADX", "22"))         # 1H 추세 강도
 STRICT_MIN_VOLUME = float(os.getenv("STRICT_MIN_VOLUME", "1.2"))  # 15M 거래량 배수
-# AI 위원회 찬성(APPROVE)을 필수로 할지: auto = AI 키가 있으면 필수, 1 = 항상 필수, 0 = 사용 안 함
-REQUIRE_AI = os.getenv("REQUIRE_AI", "auto")
+# AI 위원회 찬성(APPROVE)을 필수로 할지: 0 = 사용 안 함(기본), 1 = 항상 필수, auto = AI 키가 있으면 필수
+# 기본값 0: 11/12~11/26 기록에서 AI 반대 거래(188건, +51.2R)가 찬성 거래(78건, +13.9R)보다 성과가 좋았음.
+# AI 판정 기록은 시그널 봇(ai_trades.csv)이 계속 남기므로 나중에 다시 비교 가능.
+REQUIRE_AI = os.getenv("REQUIRE_AI") or "0"
 
 LOOP_SECONDS = 60                 # 포지션 관리 주기
 SCAN_EVERY_SECONDS = 300          # 신규 시그널 탐색 주기
