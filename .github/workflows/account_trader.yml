@@ -1,0 +1,86 @@
+name: Account Bot & Auto Trader
+
+# 시그널 봇(Gateio Signal Bot)이 한 번 돌 때마다(약 5분 간격) 이어서 실행 → 별도 예약 설정 불필요
+on:
+  workflow_run:
+    workflows: ["Gateio Signal Bot"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: account-trader
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TRADE_KEY_SET: ${{ secrets.GATE_TRADE_API_KEY != '' }}
+      READ_KEY_SET: ${{ secrets.GATE_READ_API_KEY != '' }}
+      PYTHONUNBUFFERED: '1'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 계좌·포지션 상태는 저장소에 커밋하지 않고 Actions 캐시에만 보관 (잔고 노출 방지)
+      - name: Restore bot state
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            account_state.json
+            auto_state.json
+          key: bot-state-${{ github.run_id }}
+          restore-keys: bot-state-
+
+      - name: Auto trader
+        if: env.TRADE_KEY_SET == 'true'
+        continue-on-error: true
+        env:
+          RUN_ONCE: '1'
+          GATE_API_KEY: ${{ secrets.GATE_TRADE_API_KEY }}
+          GATE_API_SECRET: ${{ secrets.GATE_TRADE_API_SECRET }}
+          GATE_LIVE: ${{ vars.TRADER_LIVE || '0' }}
+          # 자동매매 알림도 개인 계좌방으로
+          GATE_TELEGRAM_TOKEN: ${{ secrets.ACCOUNT_TELEGRAM_TOKEN }}
+          GATE_TELEGRAM_CHAT_ID: ${{ secrets.ACCOUNT_TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python -u auto_trader.py
+
+      - name: Account bot
+        if: env.READ_KEY_SET == 'true'
+        continue-on-error: true
+        env:
+          RUN_ONCE: '1'
+          GATE_API_KEY: ${{ secrets.GATE_READ_API_KEY }}
+          GATE_API_SECRET: ${{ secrets.GATE_READ_API_SECRET }}
+          GATE_LIVE: '1'
+          ACCOUNT_TELEGRAM_TOKEN: ${{ secrets.ACCOUNT_TELEGRAM_TOKEN }}
+          ACCOUNT_TELEGRAM_CHAT_ID: ${{ secrets.ACCOUNT_TELEGRAM_CHAT_ID }}
+        run: python -u account_bot.py
+
+      - name: Save bot state
+        if: always() && hashFiles('account_state.json', 'auto_state.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            account_state.json
+            auto_state.json
+          key: bot-state-${{ github.run_id }}
