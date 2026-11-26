@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 171.07,
       "max_adv": 169.09,
-      "last_candle_ts": 1795683000,
+      "last_candle_ts": 1795683300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.68328033869965,
@@ -71,6 +71,83 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "1시간 RSI가 67.7로 과열권에 인접하여 추격 매수 시 손익비가 불리합니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "SOXS_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 59.71,
+      "entry_time": "2026-11-26T09:00:51.448892+00:00",
+      "leverage": 7,
+      "risk": 2.8950182436332184,
+      "atr": 2.412515203027682,
+      "tp1": 56.09122719545848,
+      "tp2": 52.47245439091695,
+      "tp3": 47.64742398486159,
+      "stop_loss": 62.60501824363322,
+      "initial_stop": 62.60501824363322,
+      "tp1_lock_price": 59.34812271954585,
+      "tp2_lock_price": 56.09122719545848,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 59.71,
+      "max_adv": 59.71,
+      "last_candle_ts": 1795683600,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 39.498399262355804,
+      "rsi_15m": 38.860876688755376,
+      "adx_1h": 28.686261264782896,
+      "volume_surge": 1.6496086260829452,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 28.7 강한 추세 (+2)",
+        "거래량 급증 1.65배 (+2)",
+        "1H EMA20 기울기 -2.36% (+1)",
+        "15M 캔들 몸통 0.88 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 80,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 하방 추세와 거래량 동반, 전략 승률과 손익비가 우수함.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI가 과매도 구간이라 숏 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 12% 급락 후 추격 숏은 리스크가 크고, 손절 대비 목표가 구조가 불리함.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "24시간 -12.14% 급락 뒤 추격 숏은 단기 반전 리스크가 커 보입니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "이미 24% 이상 폭락한 종목의 숏 진입은 과매도에 따른 급반등 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
