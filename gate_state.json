@@ -11,15 +11,15 @@
       "tp1": 5.96151210915867,
       "tp2": 6.064024218317339,
       "tp3": 6.200707030528899,
-      "stop_loss": 5.923812830832835,
+      "stop_loss": 5.930207386747906,
       "initial_stop": 5.776990312673064,
       "tp1_lock_price": 5.869251210915867,
       "tp2_lock_price": 5.96151210915867,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 5.992,
+      "max_fav": 5.996,
       "max_adv": 5.859,
-      "last_candle_ts": 1795664100,
+      "last_candle_ts": 1795664400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 61.4131709445661,
@@ -72,6 +72,82 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "ADX가 20.9로 추세 강도가 약해 횡보장 전환 시 손실 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "QCOM_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 170.36,
+      "entry_time": "2026-11-26T03:45:30.976249+00:00",
+      "leverage": 21,
+      "risk": 2.6866732826964337,
+      "atr": 2.2388944022470283,
+      "tp1": 173.71834160337056,
+      "tp2": 177.0766832067411,
+      "tp3": 181.55447201123516,
+      "stop_loss": 167.67332671730358,
+      "initial_stop": 167.67332671730358,
+      "tp1_lock_price": 170.69583416033706,
+      "tp2_lock_price": 173.71834160337056,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 170.36,
+      "max_adv": 170.36,
+      "last_candle_ts": 1795664700,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 67.68328033869965,
+      "rsi_15m": 62.52687249248769,
+      "adx_1h": 26.843452872440157,
+      "volume_surge": 0.9256268429471737,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "1H ADX 26.8 강한 추세 (+2)",
+        "1H EMA20 기울기 +1.44% (+1)",
+        "15M 캔들 몸통 0.76 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 71,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 75,
+            "reason": "1시간봉 추세 정렬 및 강한 ADX를 바탕으로 눌림목 매수 타점이 유효합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "거래량 상승이 없고 최근 승률이 낮아 진입을 회피",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "거래량 증가 부재와 RSI 과열 경계로 추격 매수 리스크가 높음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "거래량 증가 없고 RSI 67.7로 과열 근접, 최근 전략 PF도 1.16에 그쳐 진입 보류.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간 RSI가 67.7로 과열권에 인접하여 추격 매수 시 손익비가 불리합니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
