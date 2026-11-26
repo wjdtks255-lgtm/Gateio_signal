@@ -41,13 +41,26 @@ KEYBOARD = {"keyboard": [[{"text": "💰 잔고"}, {"text": "📊 포지션"}, {
 
 
 # ───────────────────────────── 텔레그램 ─────────────────────────────
-def send(text: str) -> None:
-    try:
-        requests.post(f"{TG}/sendMessage", json={
-            "chat_id": CHAT_ID, "text": text, "parse_mode": "HTML",
-            "disable_web_page_preview": True, "reply_markup": KEYBOARD}, timeout=15)
-    except requests.RequestException:
-        logging.exception("telegram send failed")
+def send(text: str) -> bool:
+    """메시지 전송. 실패하면 텔레그램이 알려 준 이유를 로그에 남기고 False."""
+    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML",
+               "disable_web_page_preview": True, "reply_markup": KEYBOARD}
+    for attempt in range(2):
+        try:
+            r = requests.post(f"{TG}/sendMessage", json=payload, timeout=15)
+            data = r.json() if r.content else {}
+        except (requests.RequestException, ValueError) as exc:
+            logging.error("telegram send failed: %s", type(exc).__name__)
+            return False
+        if data.get("ok"):
+            return True
+        logging.error("telegram send failed (%s): %s %s", r.status_code,
+                      data.get("description"), data.get("parameters") or "")
+        if attempt == 0 and "reply_markup" in payload:
+            payload.pop("reply_markup")  # 채널 등 버튼을 못 쓰는 방이면 버튼 없이 재시도
+            continue
+        return False
+    return False
 
 
 def get_updates(offset: int, wait: int = 20) -> List[Dict[str, Any]]:
@@ -285,10 +298,11 @@ def check_env() -> None:
 def run_once() -> None:
     """GitHub Actions 용: 쌓인 명령에 답하고, 직전 실행 이후 변화를 한 번 확인한 뒤 종료."""
     check_env()
-    st = load_watch_state()
-    if st is None:
-        st = new_watch_state()
-        send(f"🤖 계좌 확인 봇 시작 ({'실계좌' if gt.LIVE else '테스트넷'}, 약 5분마다 확인)\n\n{balance_text()}")
+    st = load_watch_state() or new_watch_state()
+    if not st.get("started"):  # 시작 메시지가 실제로 전달될 때까지 매번 다시 시도
+        st["started"] = send(f"🤖 계좌 확인 봇 시작 ({'실계좌' if gt.LIVE else '테스트넷'}, 약 5분마다 확인)\n\n{balance_text()}")
+        if not st["started"]:
+            logging.error("시작 메시지 전송 실패: ACCOUNT_TELEGRAM_CHAT_ID 와 봇 권한을 확인하세요.")
     try:
         process_commands(st, 0)
         check_changes(st)
