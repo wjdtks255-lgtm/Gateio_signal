@@ -4,7 +4,7 @@
 Gate.io USDT 선물 자동매매 봇
 - 진입 판단은 bot.py 의 시그널 로직(analyze_signal)을 그대로 사용하고, 그중 '확실한' 시그널만 실제 주문.
 - 최대 동시 포지션 3개. 조건을 만족하는 시그널이 없으면 진입하지 않음(빈 자리를 억지로 채우지 않음).
-- 거래 1건 손절 시 계좌의 RISK_PCT(기본 5%) 손실이 되도록 수량 계산.
+- 거래 1건 손절 시 계좌의 RISK_PCT(기본 3%) 손실이 되도록 수량 계산.
 - 손절·익절은 거래소 조건부 주문(price_orders)으로 걸어 두므로 봇이 잠시 꺼져도 손절은 거래소에서 실행됨.
 - 관리: TP1 50% 분할익절 → 스탑 본절+0.15ATR → 15M EMA21 트레일링, TP2 도달 시 스탑 +1.5ATR,
         TP3 전량 익절, 18시간 후 수익 중이면 회전 종료, 24시간 타임스탑.
@@ -42,7 +42,7 @@ PREFIX = "/api/v4"
 SETTLE = "usdt"
 
 MAX_POSITIONS = int(os.getenv("MAX_POSITIONS", "3"))
-RISK_PCT = float(os.getenv("RISK_PCT", "5"))          # 손절 1회당 계좌 손실 %
+RISK_PCT = float(os.getenv("RISK_PCT") or "3")        # 손절 1회당 계좌 손실 % (저장소 변수 RISK_PCT 로 조절)
 
 # '확실한 시그널' 기준 (bot.py 의 기본 진입 조건을 모두 통과한 뒤 추가로 적용)
 STRICT_MIN_SCORE = int(os.getenv("STRICT_MIN_SCORE", "4"))        # 품질 점수 6점 만점 중

@@ -61,6 +61,8 @@ jobs:
           GATE_TELEGRAM_CHAT_ID: ${{ secrets.ACCOUNT_TELEGRAM_CHAT_ID }}
           # AI 찬성 필터 끔 (다시 켜려면 저장소 변수 REQUIRE_AI 를 1 로)
           REQUIRE_AI: ${{ vars.REQUIRE_AI || '0' }}
+          # 건당 위험 % (손절 1회당 계좌 손실). 바꾸려면 저장소 변수 RISK_PCT 설정
+          RISK_PCT: ${{ vars.RISK_PCT || '3' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
