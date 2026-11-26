@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 171.07,
       "max_adv": 169.09,
-      "last_candle_ts": 1795691400,
+      "last_candle_ts": 1795691700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.68328033869965,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 59.32,
       "max_adv": 61.17,
-      "last_candle_ts": 1795691400,
+      "last_candle_ts": 1795691700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 39.498399262355804,
@@ -171,8 +171,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 4.0431,
-      "max_adv": 3.9034,
-      "last_candle_ts": 1795691400,
+      "max_adv": 3.8902,
+      "last_candle_ts": 1795691700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.46542943875646,
@@ -225,6 +225,81 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "이미 37% 이상 급등하여 추격 매수 위험이 크고 손절폭이 너무 넓다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "LTC_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 43.56,
+      "entry_time": "2026-11-26T11:20:33.966110+00:00",
+      "leverage": 30,
+      "risk": 0.5652156622271342,
+      "atr": 0.47101305185594516,
+      "tp1": 44.26651957778392,
+      "tp2": 44.97303915556784,
+      "tp3": 45.91506525927973,
+      "stop_loss": 42.99478433777287,
+      "initial_stop": 42.99478433777287,
+      "tp1_lock_price": 43.6306519577784,
+      "tp2_lock_price": 44.26651957778392,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 43.56,
+      "max_adv": 43.56,
+      "last_candle_ts": 1795692000,
+      "score": 5,
+      "required_score": 2,
+      "rsi_1h": 64.25457261123782,
+      "rsi_15m": 51.05808900022112,
+      "adx_1h": 35.38474394644988,
+      "volume_surge": 1.360409899141876,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 35.4 강한 추세 (+2)",
+        "거래량 증가 1.36배 (+1)",
+        "1H EMA20 기울기 +1.04% (+1)",
+        "15M 캔들 몸통 0.79 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 4,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 76,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 추세와 거래량, 양호한 손익비로 진입 조건이 충족되었습니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "ENTER",
+            "confidence": 70,
+            "reason": "강한 추세와 적절한 리스크-보상, 조건 충족",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "ENTER",
+            "confidence": 65,
+            "reason": "24시간 8% 상승 추격 우려가 있으나 필수 조건 충족과 강한 추세, 거래량 증가로 진입 가능하다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "1시간봉 ADX가 강하고 지표 조건이 완벽하여 약점이 크지 않습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
