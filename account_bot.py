@@ -31,9 +31,10 @@ CHAT_ID = os.getenv("ACCOUNT_TELEGRAM_CHAT_ID", "").strip()
 TG = f"https://api.telegram.org/bot{TOKEN}"
 
 WATCH_SECONDS = 30                                          # 계좌 변화 확인 주기
-EQUITY_ALERT_PCT = float(os.getenv("EQUITY_ALERT_PCT", "3"))  # 평가금이 이만큼(%) 움직이면 알림
+EQUITY_ALERT_PCT = float(os.getenv("EQUITY_ALERT_PCT", "5"))  # 평가금이 이만큼(%) 움직이면 알림
 LIQ_WARN_PCT = float(os.getenv("LIQ_WARN_PCT", "3"))          # 청산가까지 남은 거리(%)가 이 이하이면 경고
 DAILY_SUMMARY_HOUR_KST = 9
+EVENING_SUMMARY_HOUR_KST = 21
 KST = timezone(timedelta(hours=9))
 
 KEYBOARD = {"keyboard": [[{"text": "💰 잔고"}, {"text": "📊 포지션"}, {"text": "📅 오늘 손익"}]],
@@ -263,13 +264,20 @@ def check_changes(st: Dict[str, Any]) -> None:
 
     now_kst = now.astimezone(KST)
     today = now_kst.date().isoformat()
-    if now_kst.hour >= DAILY_SUMMARY_HOUR_KST and st.get("summary_date") != today:
+    # 아침 요약: 오전 9시~오후 9시 사이 첫 확인 때 (어제 하루 결과)
+    if (DAILY_SUMMARY_HOUR_KST <= now_kst.hour < EVENING_SUMMARY_HOUR_KST
+            and st.get("summary_date") != today):
         st["summary_date"] = today
         yesterday = (now_kst - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
         s = pnl_since(yesterday)
         send(f"🌅 <b>아침 요약</b>\n{balance_text()}\n\n"
              f"어제 0시부터 순손익 <code>{s['pnl'] + s['fee'] + s['fund']:+,.2f} USDT</code>\n\n"
              f"{positions_text()}")
+
+    # 저녁 요약: 오후 9시 이후 첫 확인 때 (오늘 하루 결과)
+    if now_kst.hour >= EVENING_SUMMARY_HOUR_KST and st.get("evening_date") != today:
+        st["evening_date"] = today
+        send(f"🌙 <b>저녁 요약</b>\n{today_text()}\n\n{balance_text()}\n\n{positions_text()}")
 
     st["prev"] = slim(cur)
     st["last_check"] = now.isoformat()
