@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 171.25,
       "max_adv": 169.09,
-      "last_candle_ts": 1795734600,
+      "last_candle_ts": 1795734900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.68328033869965,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 57.35,
       "max_adv": 61.17,
-      "last_candle_ts": 1795734600,
+      "last_candle_ts": 1795734900,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 39.498399262355804,
@@ -171,8 +171,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 4.1186,
-      "max_adv": 3.791,
-      "last_candle_ts": 1795734600,
+      "max_adv": 3.788,
+      "last_candle_ts": 1795734900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.46542943875646,
@@ -249,7 +249,7 @@
       "tp2_reached": false,
       "max_fav": 91.91,
       "max_adv": 90.96,
-      "last_candle_ts": 1795734600,
+      "last_candle_ts": 1795734900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 60.67420342036802,
@@ -326,7 +326,7 @@
       "tp2_reached": false,
       "max_fav": 85.32,
       "max_adv": 84.43,
-      "last_candle_ts": 1795734600,
+      "last_candle_ts": 1795734900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 61.810388302723,
@@ -399,7 +399,7 @@
       "tp2_reached": false,
       "max_fav": 0.9996,
       "max_adv": 0.940086,
-      "last_candle_ts": 1795734600,
+      "last_candle_ts": 1795734900,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 55.4483449812144,
@@ -475,7 +475,7 @@
       "tp2_reached": false,
       "max_fav": 723.32,
       "max_adv": 720.44,
-      "last_candle_ts": 1795734600,
+      "last_candle_ts": 1795734900,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 61.137352842228744,
@@ -526,6 +526,79 @@
           },
           "반론위원": {
             "error": "503 서버 혼잡"
+          }
+        }
+      }
+    },
+    "BEAT_USDT": {
+      "strategy_version": 5,
+      "direction": "SHORT",
+      "entry_price": 0.0611,
+      "entry_time": "2026-11-26T23:20:29.475674+00:00",
+      "leverage": 6,
+      "risk": 0.001267554282817109,
+      "atr": 0.0010562952356809243,
+      "tp1": 0.05951555714647862,
+      "tp2": 0.05793111429295723,
+      "tp3": 0.055818523821595384,
+      "stop_loss": 0.06236755428281711,
+      "initial_stop": 0.06236755428281711,
+      "tp1_lock_price": 0.06094155571464786,
+      "tp2_lock_price": 0.05951555714647862,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 0.0611,
+      "max_adv": 0.0611,
+      "last_candle_ts": 1795735200,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 38.841515066018175,
+      "rsi_15m": 37.50447851973756,
+      "adx_1h": 19.78925934252413,
+      "volume_surge": 0.6347843988028314,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H EMA20 기울기 -0.78% (+1)",
+        "15M 캔들 몸통 0.60 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 68,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 35,
+            "reason": "ADX가 19.8로 추세가 약하고 1H RSI가 이미 38.8로 과매도 근접하여 숏 진입에 부적합합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과매도와 약한 추세, 거래량 부진으로 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "error": "429 한도 초과"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 80,
+            "reason": "ADX 약세와 거래량 부족, 24h 하락 후 추격 진입은 리스크가 과다합니다",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "1시간봉 RSI가 이미 38.8로 낮아 과매도 구간에 진입하여 추가 하락 여력이 부족합니다.",
+            "model": "gemini-flash-lite-latest"
           }
         }
       }
