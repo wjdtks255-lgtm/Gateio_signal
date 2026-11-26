@@ -476,6 +476,10 @@ def scan_and_enter(state: Dict[str, Any], now: datetime) -> None:
         try:
             open_position(state, sig, now)
         except Exception as exc:
+            if "CONTRACT_NOT_FOUND" in str(exc) or " 404:" in str(exc):
+                # 테스트넷에는 실거래소의 일부 종목(주식·원자재 등)이 없음 → 알림 없이 건너뜀
+                logging.info("contract not available on this exchange: %s", sig["symbol"])
+                continue
             logging.exception("entry failed for %s", sig["symbol"])
             notify(f"⚠️ {sig['symbol']} 진입 실패: {str(exc)[:200]}")
 
