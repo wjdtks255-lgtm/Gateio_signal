@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 171.07,
       "max_adv": 170.15,
-      "last_candle_ts": 1795670100,
+      "last_candle_ts": 1795670400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.68328033869965,
@@ -95,7 +95,7 @@
       "tp2_reached": false,
       "max_fav": 3.8794,
       "max_adv": 3.7529,
-      "last_candle_ts": 1795670100,
+      "last_candle_ts": 1795670400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 68.40345107537087,
@@ -257,11 +257,6 @@
     "last_closed_at": "2026-11-26T04:55:27.423819+00:00"
   },
   "closed_symbols": {
-    "UNITREE_USDT": {
-      "time": "2026-11-26T01:20:34.069180+00:00",
-      "direction": "LONG",
-      "reason": "TRAILING_STOP"
-    },
     "PIEVERSE_USDT": {
       "time": "2026-11-26T03:05:27.480306+00:00",
       "direction": "LONG",
