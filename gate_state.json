@@ -11,7 +11,7 @@
       "tp1": 56.09122719545848,
       "tp2": 52.47245439091695,
       "tp3": 47.64742398486159,
-      "stop_loss": 58.80437544741865,
+      "stop_loss": 58.574886157009786,
       "initial_stop": 62.60501824363322,
       "tp1_lock_price": 59.34812271954585,
       "tp2_lock_price": 56.09122719545848,
@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 55.84,
       "max_adv": 61.17,
-      "last_candle_ts": 1795745100,
+      "last_candle_ts": 1795745400,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 39.498399262355804,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 4.1186,
       "max_adv": 3.7611,
-      "last_candle_ts": 1795745100,
+      "last_candle_ts": 1795745400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.46542943875646,
@@ -165,7 +165,7 @@
       "tp1": 92.13676592873529,
       "tp2": 93.02353185747057,
       "tp3": 94.20588642911761,
-      "stop_loss": 91.8869044265365,
+      "stop_loss": 91.93093627725314,
       "initial_stop": 90.54058725701178,
       "tp1_lock_price": 91.33867659287353,
       "tp2_lock_price": 92.13676592873529,
@@ -173,7 +173,7 @@
       "tp2_reached": false,
       "max_fav": 92.6,
       "max_adv": 90.96,
-      "last_candle_ts": 1795745100,
+      "last_candle_ts": 1795745400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 60.67420342036802,
@@ -242,7 +242,7 @@
       "tp1": 85.7184028086906,
       "tp2": 86.60680561738118,
       "tp3": 87.79134269563531,
-      "stop_loss": 85.18188584753076,
+      "stop_loss": 85.2340489114398,
       "initial_stop": 84.11927775304753,
       "tp1_lock_price": 84.91884028086906,
       "tp2_lock_price": 85.7184028086906,
@@ -250,7 +250,7 @@
       "tp2_reached": false,
       "max_fav": 85.9,
       "max_adv": 84.43,
-      "last_candle_ts": 1795745100,
+      "last_candle_ts": 1795745400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 61.810388302723,
@@ -323,7 +323,7 @@
       "tp2_reached": false,
       "max_fav": 1.0,
       "max_adv": 0.940086,
-      "last_candle_ts": 1795745100,
+      "last_candle_ts": 1795745400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 55.4483449812144,
@@ -391,15 +391,15 @@
       "tp1": 726.357555641839,
       "tp2": 730.155111283678,
       "tp3": 735.2185188061301,
-      "stop_loss": 723.1877216597904,
+      "stop_loss": 723.5202057728645,
       "initial_stop": 719.5219554865287,
       "tp1_lock_price": 722.9397555641839,
       "tp2_lock_price": 726.357555641839,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 727.14,
+      "max_fav": 727.24,
       "max_adv": 720.44,
-      "last_candle_ts": 1795745100,
+      "last_candle_ts": 1795745400,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 61.137352842228744,
@@ -453,96 +453,18 @@
           }
         }
       }
-    },
-    "KAITO_USDT": {
-      "strategy_version": 5,
-      "direction": "SHORT",
-      "entry_price": 0.1558,
-      "entry_time": "2026-11-27T01:55:25.509071+00:00",
-      "leverage": 22,
-      "risk": 0.0016375933504956107,
-      "atr": 0.001364661125413009,
-      "tp1": 0.1537530083118805,
-      "tp2": 0.15170601662376096,
-      "tp3": 0.14897669437293495,
-      "stop_loss": 0.1574375933504956,
-      "initial_stop": 0.1574375933504956,
-      "tp1_lock_price": 0.15559530083118805,
-      "tp2_lock_price": 0.1537530083118805,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 0.1558,
-      "max_adv": 0.1574,
-      "last_candle_ts": 1795745100,
-      "score": 3,
-      "required_score": 2,
-      "rsi_1h": 44.258999142181715,
-      "rsi_15m": 45.35669007648463,
-      "adx_1h": 19.92318848685164,
-      "volume_surge": 1.3980674136368896,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "거래량 증가 1.40배 (+1)",
-        "1H EMA20 기울기 -0.36% (+1)",
-        "15M 캔들 몸통 1.00 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 2,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 61,
-        "votes": {
-          "Gemini": {
-            "decision": "SKIP",
-            "confidence": 45,
-            "reason": "1시간봉 ADX가 19.9로 추세가 약하고 이격도 애매함",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 45,
-            "reason": "ADX가 낮아 추세가 약하고 RSI가 과열되지 않아 신뢰도가 낮다.",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "ADX 19.9로 추세 강도가 매우 약해 단기 반등 리스크가 큼.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "ENTER",
-            "confidence": 64,
-            "reason": "ADX 19.9로 추세 약하나 전략 승률·PF 양호하고 손익비 충분해 진입 허용",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "ENTER",
-            "confidence": 75,
-            "reason": "1시간 ADX가 19.9로 추세 강도가 다소 약하나 필수 조건과 과거 승률이 받쳐줍니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
     }
   },
   "stats": {
     "wins": 173,
     "draws": 0,
-    "losses": 121,
-    "total": 294,
-    "r_count": 294,
-    "sum_r": 69.635,
+    "losses": 122,
+    "total": 295,
+    "r_count": 295,
+    "sum_r": 68.54,
     "win_r": 197.02599999999993,
-    "loss_r": 127.39100000000006,
+    "loss_r": 128.48600000000008,
     "recent_r": [
-      -1.129,
       -1.12,
       1.665,
       1.406,
@@ -591,7 +513,8 @@
       -1.032,
       0.767,
       0.42,
-      -1.048
+      -1.048,
+      -1.095
     ],
     "positive_count": 173,
     "directional": {
@@ -605,13 +528,13 @@
         "pf": 1.1937700619377005
       },
       "SHORT": {
-        "total": 247,
+        "total": 248,
         "wins": 147,
         "draws": 0,
-        "losses": 100,
-        "win_rate": 59.51417004048582,
-        "avg_r": 0.2645708502024291,
-        "pf": 1.6207633558781054
+        "losses": 101,
+        "win_rate": 59.2741935483871,
+        "avg_r": 0.2590887096774193,
+        "pf": 1.6040783325655505
       }
     },
     "strong": {
@@ -629,10 +552,10 @@
       }
     },
     "strategy_version": 5,
-    "csv_rows": 441,
+    "csv_rows": 442,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-27T02:10:35.642239+00:00"
+    "last_closed_at": "2026-11-27T02:15:32.707954+00:00"
   },
   "closed_symbols": {
     "LTC_USDT": {
@@ -647,6 +570,11 @@
     },
     "BEAT_USDT": {
       "time": "2026-11-27T02:10:35.642239+00:00",
+      "direction": "SHORT",
+      "reason": "SL"
+    },
+    "KAITO_USDT": {
+      "time": "2026-11-27T02:15:32.707954+00:00",
       "direction": "SHORT",
       "reason": "SL"
     }
