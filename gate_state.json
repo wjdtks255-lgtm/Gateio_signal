@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.01474,
       "max_adv": 0.015778,
-      "last_candle_ts": 1795796400,
+      "last_candle_ts": 1795796700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.89288714284454,
@@ -72,6 +72,83 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "이미 24시간 동안 6% 이상 하락하여 추가 숏 진입 시 과매도 구간 추격 매도가 될 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "MINIMAX_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 14.11,
+      "entry_time": "2026-11-27T16:30:41.473157+00:00",
+      "leverage": 9,
+      "risk": 0.35393246365357495,
+      "atr": 0.29494371971131245,
+      "tp1": 14.552415579566969,
+      "tp2": 14.994831159133938,
+      "tp3": 15.584718598556561,
+      "stop_loss": 13.756067536346425,
+      "initial_stop": 13.756067536346425,
+      "tp1_lock_price": 14.154241557956697,
+      "tp2_lock_price": 14.552415579566969,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 14.11,
+      "max_adv": 14.11,
+      "last_candle_ts": 1795797000,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 66.84988249754315,
+      "rsi_15m": 57.45482076172537,
+      "adx_1h": 38.42024816302548,
+      "volume_surge": 0.2259513003623928,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 38.4 강한 추세 (+2)",
+        "1H EMA20 기울기 +2.18% (+1)",
+        "15M 캔들 몸통 0.56 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 81,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "최근 동일 방향 전략의 승률과 수익비가 부진하여 진입 실익이 낮음",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "24시간 급등 후 거래량 부진, 전략 승률 저조로 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 90,
+            "reason": "24시간 14% 급등 후 추격 진입이며, 동일 방향 전략의 평균 수익률과 수익률 배율이 마이너스라 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24시간 14% 급등 추격 진입에 거래량 미미, 동일 방향 전략 PF 0.85로 성과 부진합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "최근 동일 방향 전략 승률이 46.9%로 낮고 PF가 0.85로 부진하여 손실 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
