@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 406.53,
       "max_adv": 461.98,
-      "last_candle_ts": 1795793100,
+      "last_candle_ts": 1795793400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 45.00696867180224,
@@ -94,9 +94,9 @@
       "tp2_lock_price": 0.013867257038822092,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 0.014787,
+      "max_fav": 0.01474,
       "max_adv": 0.015121,
-      "last_candle_ts": 1795793100,
+      "last_candle_ts": 1795793400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.89288714284454,
@@ -258,11 +258,6 @@
     "last_closed_at": "2026-11-27T14:35:26.335067+00:00"
   },
   "closed_symbols": {
-    "TSLA_USDT": {
-      "time": "2026-11-27T11:30:41.996032+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "DELL_USDT": {
       "time": "2026-11-27T11:45:34.551556+00:00",
       "direction": "LONG",
