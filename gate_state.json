@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 14.33,
       "max_adv": 14.03,
-      "last_candle_ts": 1795803900,
+      "last_candle_ts": 1795804200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.84988249754315,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 1.184397,
       "max_adv": 1.072706,
-      "last_candle_ts": 1795803900,
+      "last_candle_ts": 1795804200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 67.94225990768805,
@@ -173,7 +173,7 @@
       "tp2_reached": false,
       "max_fav": 318.08,
       "max_adv": 312.59,
-      "last_candle_ts": 1795803900,
+      "last_candle_ts": 1795804200,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 59.98357490165263,
@@ -250,7 +250,7 @@
       "tp2_reached": false,
       "max_fav": 36.88,
       "max_adv": 35.14,
-      "last_candle_ts": 1795803900,
+      "last_candle_ts": 1795804200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 56.84813803459522,
@@ -327,7 +327,7 @@
       "tp2_reached": false,
       "max_fav": 57.34,
       "max_adv": 56.91,
-      "last_candle_ts": 1795803900,
+      "last_candle_ts": 1795804200,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 60.90067792546362,
@@ -402,8 +402,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 44.77,
-      "max_adv": 44.16,
-      "last_candle_ts": 1795803900,
+      "max_adv": 44.1,
+      "last_candle_ts": 1795804200,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 65.72539415695874,
@@ -478,7 +478,7 @@
       "tp2_lock_price": 3.4536556583905575,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 3.496,
+      "max_fav": 3.493,
       "max_adv": 3.496,
       "last_candle_ts": 1795804200,
       "score": 3,
@@ -640,31 +640,6 @@
     "last_closed_at": "2026-11-27T17:15:32.117656+00:00"
   },
   "closed_symbols": {
-    "SOXS_USDT": {
-      "time": "2026-11-27T14:30:43.658477+00:00",
-      "direction": "SHORT",
-      "reason": "SL"
-    },
-    "ADA_USDT": {
-      "time": "2026-11-27T14:30:43.658477+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
-    "PEPE_USDT": {
-      "time": "2026-11-27T14:30:43.658477+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
-    "AAOI_USDT": {
-      "time": "2026-11-27T14:30:43.658477+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
-    "EWY_USDT": {
-      "time": "2026-11-27T14:30:43.658477+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "LTC_USDT": {
       "time": "2026-11-27T14:35:26.335067+00:00",
       "direction": "LONG",
