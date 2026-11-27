@@ -11,7 +11,7 @@
       "tp1": 85.7184028086906,
       "tp2": 86.60680561738118,
       "tp3": 87.79134269563531,
-      "stop_loss": 85.9274537786302,
+      "stop_loss": 85.93799997264217,
       "initial_stop": 84.11927775304753,
       "tp1_lock_price": 84.91884028086906,
       "tp2_lock_price": 85.7184028086906,
@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 86.69,
       "max_adv": 84.43,
-      "last_candle_ts": 1795762200,
+      "last_candle_ts": 1795762500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 61.810388302723,
@@ -84,7 +84,7 @@
       "tp1": 726.357555641839,
       "tp2": 730.155111283678,
       "tp3": 735.2185188061301,
-      "stop_loss": 729.3914648820144,
+      "stop_loss": 729.5313481534088,
       "initial_stop": 719.5219554865287,
       "tp1_lock_price": 722.9397555641839,
       "tp2_lock_price": 726.357555641839,
@@ -92,7 +92,7 @@
       "tp2_reached": true,
       "max_fav": 732.06,
       "max_adv": 720.44,
-      "last_candle_ts": 1795762200,
+      "last_candle_ts": 1795762500,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 61.137352842228744,
@@ -165,8 +165,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 0.00569,
-      "max_adv": 0.00549,
-      "last_candle_ts": 1795762200,
+      "max_adv": 0.00547,
+      "last_candle_ts": 1795762500,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 53.4508470745272,
@@ -223,97 +223,18 @@
           }
         }
       }
-    },
-    "BCH_USDT": {
-      "strategy_version": 5,
-      "direction": "LONG",
-      "entry_price": 215.93,
-      "entry_time": "2026-11-27T05:35:27.585368+00:00",
-      "leverage": 28,
-      "risk": 2.729489144909714,
-      "atr": 2.2745742874247616,
-      "tp1": 219.34186143113715,
-      "tp2": 222.7537228622743,
-      "tp3": 227.30287143712383,
-      "stop_loss": 213.2005108550903,
-      "initial_stop": 213.2005108550903,
-      "tp1_lock_price": 216.2711861431137,
-      "tp2_lock_price": 219.34186143113715,
-      "tp1_reached": false,
-      "tp2_reached": false,
-      "max_fav": 215.93,
-      "max_adv": 213.44,
-      "last_candle_ts": 1795762200,
-      "score": 6,
-      "required_score": 2,
-      "rsi_1h": 66.37435914355832,
-      "rsi_15m": 59.66197815517604,
-      "adx_1h": 32.76911518380054,
-      "volume_surge": 2.3630412781091135,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "1H ADX 32.8 강한 추세 (+2)",
-        "거래량 급증 2.36배 (+2)",
-        "1H EMA20 기울기 +1.20% (+1)",
-        "15M 캔들 몸통 0.89 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "APPROVE",
-        "enter": 4,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 78,
-        "votes": {
-          "Gemini": {
-            "decision": "ENTER",
-            "confidence": 82,
-            "reason": "강한 추세와 거래량 동반 눌림목 재돌파로 손익비가 우수함",
-            "model": "gemini-flash-latest"
-          },
-          "GPT-OSS": {
-            "decision": "ENTER",
-            "confidence": 70,
-            "reason": "EMA 정렬·강한 ADX·거래량 급증으로 진입 가치가 높다.",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 75,
-            "reason": "손절 대비 목표 수익비가 낮아 리스크 대비 보상 구조가 불리함.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "ENTER",
-            "confidence": 78,
-            "reason": "필수 규칙 모두 통과, 거래량 급증·강한 추세, RSI 과열 없음",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "ENTER",
-            "confidence": 85,
-            "reason": "1시간 RSI가 과열권에 근접했으나, 강한 추세와 거래량 동반으로 진입을 막을 정도는 아님.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
     }
   },
   "stats": {
     "wins": 177,
     "draws": 0,
-    "losses": 124,
-    "total": 301,
-    "r_count": 301,
-    "sum_r": 70.39500000000001,
+    "losses": 125,
+    "total": 302,
+    "r_count": 302,
+    "sum_r": 69.31600000000002,
     "win_r": 201.03799999999993,
-    "loss_r": 130.6430000000001,
+    "loss_r": 131.7220000000001,
     "recent_r": [
-      0.762,
       0.815,
       0.79,
       1.638,
@@ -362,18 +283,19 @@
       1.049,
       0.085,
       -1.133,
-      1.35
+      1.35,
+      -1.079
     ],
     "positive_count": 177,
     "directional": {
       "LONG": {
-        "total": 51,
+        "total": 52,
         "wins": 29,
         "draws": 0,
-        "losses": 22,
-        "win_rate": 56.86274509803921,
-        "avg_r": 0.11266666666666668,
-        "pf": 1.2482824180097654
+        "losses": 23,
+        "win_rate": 55.769230769230774,
+        "avg_r": 0.08975000000000001,
+        "pf": 1.1926760795970603
       },
       "SHORT": {
         "total": 250,
@@ -387,23 +309,23 @@
     },
     "strong": {
       "all": {
-        "total": 62,
-        "win_rate": 61.29032258064516,
-        "avg_r": 0.35814516129032237,
-        "sum_r": 22.204999999999988
+        "total": 63,
+        "win_rate": 60.317460317460316,
+        "avg_r": 0.33533333333333315,
+        "sum_r": 21.125999999999987
       },
       "since": {
-        "total": 21,
-        "win_rate": 42.857142857142854,
-        "avg_r": -0.11452380952380954,
-        "sum_r": -2.4050000000000002
+        "total": 22,
+        "win_rate": 40.909090909090914,
+        "avg_r": -0.15836363636363637,
+        "sum_r": -3.484
       }
     },
     "strategy_version": 5,
-    "csv_rows": 448,
+    "csv_rows": 449,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-27T06:40:33.328411+00:00"
+    "last_closed_at": "2026-11-27T07:00:45.242914+00:00"
   },
   "closed_symbols": {
     "SOXS_USDT": {
@@ -435,6 +357,11 @@
       "time": "2026-11-27T06:40:33.328411+00:00",
       "direction": "LONG",
       "reason": "TP2_PROTECT"
+    },
+    "BCH_USDT": {
+      "time": "2026-11-27T07:00:45.242914+00:00",
+      "direction": "LONG",
+      "reason": "SL"
     }
   },
   "fail_count": 0,
