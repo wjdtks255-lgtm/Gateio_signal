@@ -17,9 +17,9 @@
       "tp2_lock_price": 92.13676592873529,
       "tp1_reached": true,
       "tp2_reached": true,
-      "max_fav": 93.13,
+      "max_fav": 93.25,
       "max_adv": 90.96,
-      "last_candle_ts": 1795757100,
+      "last_candle_ts": 1795757400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 60.67420342036802,
@@ -93,10 +93,10 @@
       "tp1_lock_price": 84.91884028086906,
       "tp2_lock_price": 85.7184028086906,
       "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 86.6,
+      "tp2_reached": true,
+      "max_fav": 86.69,
       "max_adv": 84.43,
-      "last_candle_ts": 1795757100,
+      "last_candle_ts": 1795757400,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 61.810388302723,
@@ -169,7 +169,7 @@
       "tp2_reached": true,
       "max_fav": 731.86,
       "max_adv": 720.44,
-      "last_candle_ts": 1795757100,
+      "last_candle_ts": 1795757400,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 61.137352842228744,
@@ -243,7 +243,7 @@
       "tp2_reached": false,
       "max_fav": 0.00569,
       "max_adv": 0.00552,
-      "last_candle_ts": 1795757100,
+      "last_candle_ts": 1795757400,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 53.4508470745272,
@@ -296,6 +296,84 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "거래량이 0.88로 부족하고 1H ADX가 약해 추세 지속성이 의심됩니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "BCH_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 215.93,
+      "entry_time": "2026-11-27T05:35:27.585368+00:00",
+      "leverage": 28,
+      "risk": 2.729489144909714,
+      "atr": 2.2745742874247616,
+      "tp1": 219.34186143113715,
+      "tp2": 222.7537228622743,
+      "tp3": 227.30287143712383,
+      "stop_loss": 213.2005108550903,
+      "initial_stop": 213.2005108550903,
+      "tp1_lock_price": 216.2711861431137,
+      "tp2_lock_price": 219.34186143113715,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 215.93,
+      "max_adv": 215.93,
+      "last_candle_ts": 1795757700,
+      "score": 6,
+      "required_score": 2,
+      "rsi_1h": 66.37435914355832,
+      "rsi_15m": 59.66197815517604,
+      "adx_1h": 32.76911518380054,
+      "volume_surge": 2.3630412781091135,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 32.8 강한 추세 (+2)",
+        "거래량 급증 2.36배 (+2)",
+        "1H EMA20 기울기 +1.20% (+1)",
+        "15M 캔들 몸통 0.89 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 4,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 78,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 82,
+            "reason": "강한 추세와 거래량 동반 눌림목 재돌파로 손익비가 우수함",
+            "model": "gemini-flash-latest"
+          },
+          "GPT-OSS": {
+            "decision": "ENTER",
+            "confidence": 70,
+            "reason": "EMA 정렬·강한 ADX·거래량 급증으로 진입 가치가 높다.",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "손절 대비 목표 수익비가 낮아 리스크 대비 보상 구조가 불리함.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "ENTER",
+            "confidence": 78,
+            "reason": "필수 규칙 모두 통과, 거래량 급증·강한 추세, RSI 과열 없음",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "1시간 RSI가 과열권에 근접했으나, 강한 추세와 거래량 동반으로 진입을 막을 정도는 아님.",
             "model": "gemini-flash-lite-latest"
           }
         }
@@ -405,11 +483,6 @@
     "last_closed_at": "2026-11-27T05:10:30.838006+00:00"
   },
   "closed_symbols": {
-    "QCOM_USDT": {
-      "time": "2026-11-27T01:30:43.792736+00:00",
-      "direction": "LONG",
-      "reason": "ROTATE"
-    },
     "BEAT_USDT": {
       "time": "2026-11-27T02:10:35.642239+00:00",
       "direction": "SHORT",
