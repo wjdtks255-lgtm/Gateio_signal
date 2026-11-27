@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 44.81,
       "max_adv": 44.31,
-      "last_candle_ts": 1795782000,
+      "last_candle_ts": 1795782300,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 63.631916358443384,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 51.59,
       "max_adv": 55.79,
-      "last_candle_ts": 1795782000,
+      "last_candle_ts": 1795782300,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 41.14631334329204,
@@ -162,7 +162,7 @@
       "tp1": 444.2575092779723,
       "tp2": 426.5350185559446,
       "tp3": 402.90503092657434,
-      "stop_loss": 451.7592714713202,
+      "stop_loss": 451.0090794098577,
       "initial_stop": 476.15799257762217,
       "tp1_lock_price": 460.20775092779724,
       "tp2_lock_price": 444.2575092779723,
@@ -170,7 +170,7 @@
       "tp2_reached": false,
       "max_fav": 438.43,
       "max_adv": 461.98,
-      "last_candle_ts": 1795782000,
+      "last_candle_ts": 1795782300,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 45.00696867180224,
@@ -247,7 +247,7 @@
       "tp2_reached": false,
       "max_fav": 3.1432,
       "max_adv": 3.0883,
-      "last_candle_ts": 1795782000,
+      "last_candle_ts": 1795782300,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 58.043794996507664,
@@ -324,7 +324,7 @@
       "tp2_reached": false,
       "max_fav": 0.1535,
       "max_adv": 0.1526,
-      "last_candle_ts": 1795782000,
+      "last_candle_ts": 1795782300,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 68.58285419617977,
@@ -377,6 +377,82 @@
             "decision": "ENTER",
             "confidence": 75,
             "reason": "1시간 RSI가 68.6으로 과열권에 근접하나, 추세 정렬과 뚜렷한 눌림 후 재돌파로 진입 유효함.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "PEPE_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 3.641e-06,
+      "entry_time": "2026-11-27T12:30:38.390915+00:00",
+      "leverage": 33,
+      "risk": 5.7184725500410125e-08,
+      "atr": 4.765393791700844e-08,
+      "tp1": 3.7124809068755127e-06,
+      "tp2": 3.783961813751025e-06,
+      "tp3": 3.879269689585042e-06,
+      "stop_loss": 3.58381527449959e-06,
+      "initial_stop": 3.58381527449959e-06,
+      "tp1_lock_price": 3.648148090687551e-06,
+      "tp2_lock_price": 3.7124809068755127e-06,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 3.641e-06,
+      "max_adv": 3.641e-06,
+      "last_candle_ts": 1795782600,
+      "score": 2,
+      "required_score": 2,
+      "rsi_1h": 66.1587678581548,
+      "rsi_15m": 61.44388333638866,
+      "adx_1h": 18.535298435525256,
+      "volume_surge": 1.1707159054097829,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "거래량 증가 1.17배 (+1)",
+        "1H EMA20 기울기 +0.98% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 68,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 40,
+            "reason": "ADX가 18.5로 추세가 약하고, 밈코인 특성상 승률과 수익비가 기대치에 못 미칩니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX가 낮아 추세가 약하고, 전략 승률이 낮아 진입을 회피한다.",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "ADX 18.5로 추세 강도가 매우 약하고, 최근 롱 전략의 수익률(PF 1.03)이 미미하여 리스크 대비 기대수익이 낮음.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "ADX 18.5로 추세 약하고 거래량 증가 미미, 전략 기대값도 낮아 진입 보류합니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "1시간봉 ADX가 18.5로 추세 강도가 너무 약해 횡보장에 갇힐 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
