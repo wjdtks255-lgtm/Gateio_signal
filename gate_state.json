@@ -11,7 +11,7 @@
       "tp1": 444.2575092779723,
       "tp2": 426.5350185559446,
       "tp3": 402.90503092657434,
-      "stop_loss": 435.3296816761941,
+      "stop_loss": 433.4920312716967,
       "initial_stop": 476.15799257762217,
       "tp1_lock_price": 460.20775092779724,
       "tp2_lock_price": 444.2575092779723,
@@ -19,7 +19,7 @@
       "tp2_reached": true,
       "max_fav": 406.53,
       "max_adv": 461.98,
-      "last_candle_ts": 1795793700,
+      "last_candle_ts": 1795794000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 45.00696867180224,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 0.01474,
       "max_adv": 0.015121,
-      "last_candle_ts": 1795793700,
+      "last_candle_ts": 1795794000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.89288714284454,
@@ -258,11 +258,6 @@
     "last_closed_at": "2026-11-27T14:35:26.335067+00:00"
   },
   "closed_symbols": {
-    "DELL_USDT": {
-      "time": "2026-11-27T11:45:34.551556+00:00",
-      "direction": "LONG",
-      "reason": "SL"
-    },
     "QQQ_USDT": {
       "time": "2026-11-27T11:50:35.654697+00:00",
       "direction": "LONG",
