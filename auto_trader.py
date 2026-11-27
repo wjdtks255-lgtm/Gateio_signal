@@ -41,7 +41,10 @@ HOST = "https://api.gateio.ws" if LIVE else "https://fx-api-testnet.gateio.ws"
 PREFIX = "/api/v4"
 SETTLE = "usdt"
 
-MAX_POSITIONS = int(os.getenv("MAX_POSITIONS", "3"))
+MAX_POSITIONS = int(os.getenv("MAX_POSITIONS", "3"))   # 절대 상한
+# 잔고(USDT)에 따라 동시 포지션 수를 자동 조절. "기준:개수" 를 쉼표로 구분, 첫 기준 미만은 1개.
+# 기본: 100 미만 1개 / 100~250 미만 2개 / 250 이상 3개 (MAX_POSITIONS 를 넘지 않음)
+POSITION_TIERS = os.getenv("POSITION_TIERS") or "100:2,250:3"
 RISK_PCT = float(os.getenv("RISK_PCT") or "3")        # 손절 1회당 계좌 손실 % (저장소 변수 RISK_PCT 로 조절)
 
 # '확실한 시그널' 기준 (bot.py 의 기본 진입 조건을 모두 통과한 뒤 추가로 적용)
@@ -206,6 +209,36 @@ def ai_required() -> bool:
     return bool(os.getenv("GEMINI_API_KEY") or os.getenv("GROQ_API_KEY") or os.getenv("OPENROUTER_API_KEY"))
 
 
+def parse_tiers(text: str) -> List[Tuple[float, int]]:
+    tiers = []
+    for part in text.split(","):
+        try:
+            threshold, count = part.split(":")
+            tiers.append((float(threshold), int(count)))
+        except ValueError:
+            logging.warning("POSITION_TIERS 항목을 무시합니다: %r", part)
+    return sorted(tiers)
+
+
+def max_positions_for(equity: float) -> int:
+    """잔고 구간에 맞는 최대 동시 포지션 수."""
+    count = 1
+    for threshold, tier_count in parse_tiers(POSITION_TIERS):
+        if equity >= threshold:
+            count = tier_count
+    return max(1, min(count, MAX_POSITIONS))
+
+
+def tiers_text() -> str:
+    parts, low = [], 0.0
+    tiers = parse_tiers(POSITION_TIERS)
+    for threshold, count in tiers:
+        parts.append(f"{low:g}~{threshold:g}$ {max_positions_for(low)}개")
+        low = threshold
+    parts.append(f"{low:g}$ 이상 {max_positions_for(low)}개")
+    return " / ".join(parts)
+
+
 def is_strong(analysis: Dict[str, Any]) -> bool:
     return (analysis["score"] >= STRICT_MIN_SCORE
             and analysis["adx"] >= STRICT_MIN_ADX
@@ -302,7 +335,7 @@ def ai_approves(sig: Dict[str, Any]) -> Tuple[bool, str]:
 
 
 # ───────────────────────────── 진입 ─────────────────────────────
-def open_position(state: Dict[str, Any], sig: Dict[str, Any], now: datetime) -> None:
+def open_position(state: Dict[str, Any], sig: Dict[str, Any], now: datetime, limit: int = MAX_POSITIONS) -> None:
     symbol, direction, a = sig["symbol"], sig["direction"], sig["analysis"]
     sign = 1 if direction == "LONG" else -1
     contract = get_contract(symbol)
@@ -324,7 +357,7 @@ def open_position(state: Dict[str, Any], sig: Dict[str, Any], now: datetime) -> 
     leverage, _, _ = bot.calculate_reference_leverage(symbol, sl_pct, sig["volume"], sig["change"],
                                                       a.get("atr_ratio", 1.0))
     # 남은 자리 수만큼 가용 증거금을 나눠서, 이 포지션 증거금이 그 몫을 넘지 않게 제한
-    free_slots = max(1, MAX_POSITIONS - len(state["positions"]))
+    free_slots = max(1, limit - len(state["positions"]))
     max_margin = available * 0.95 / free_slots
     if notional / leverage > max_margin:
         notional = max_margin * leverage
@@ -457,14 +490,20 @@ def manage(state: Dict[str, Any], now: datetime) -> None:
 
 
 def scan_and_enter(state: Dict[str, Any], now: datetime) -> None:
-    if len(state["positions"]) >= MAX_POSITIONS:
+    equity = bot.safe_float(get_account().get("total"))
+    limit = max_positions_for(equity)
+    if state.get("limit") != limit:
+        if "limit" in state:
+            notify(f"⚖️ 잔고 {equity:,.2f} USDT → 최대 동시 포지션 {state['limit']}개 → <b>{limit}개</b>")
+        state["limit"] = limit
+    if len(state["positions"]) >= limit:
         return
     signals = find_strong_signals(state, now)
     if signals:
         logging.info("strong signals: %s", [(s["symbol"], s["direction"], s["analysis"]["score"]) for s in signals])
     use_ai = ai_required()
     for sig in signals:
-        if len(state["positions"]) >= MAX_POSITIONS:
+        if len(state["positions"]) >= limit:
             break
         if theme_blocked(state, sig["symbol"], sig["direction"]):
             continue
@@ -474,7 +513,7 @@ def scan_and_enter(state: Dict[str, Any], now: datetime) -> None:
                 logging.info("AI not approved: %s %s", sig["symbol"], sig["direction"])
                 continue
         try:
-            open_position(state, sig, now)
+            open_position(state, sig, now, limit)
         except Exception as exc:
             logging.exception("entry failed for %s", sig["symbol"])
             notify(f"⚠️ {sig['symbol']} 진입 실패: {str(exc)[:200]}")
@@ -492,7 +531,7 @@ def run_once() -> None:
             notify("⚠️ 양방향(dual) 포지션 모드입니다. 단방향(one-way) 모드로 바꿔야 자동매매가 동작합니다.")
             raise SystemExit("dual mode")
         notify(f"🤖 자동매매 시작 (약 5분마다 확인) | 잔고 {bot.safe_float(account.get('total')):.2f} USDT | "
-               f"최대 {MAX_POSITIONS}포지션 · 건당 위험 {RISK_PCT:g}% · AI 필터 {'ON' if ai_required() else 'OFF'}")
+               f"최대 {max_positions_for(bot.safe_float(account.get('total')))}포지션 ({tiers_text()}) · 건당 위험 {RISK_PCT:g}% · AI 필터 {'ON' if ai_required() else 'OFF'}")
     now = bot.utcnow()
     try:
         manage(state, now)
@@ -510,7 +549,7 @@ def main() -> None:
     mode = "실거래" if LIVE else "테스트넷"
     logging.info("auto trader start: %s, equity %s USDT, dry_run=%s", mode, account.get("total"), DRY_RUN)
     notify(f"🤖 자동매매 시작 | 잔고 {bot.safe_float(account.get('total')):.2f} USDT | "
-           f"최대 {MAX_POSITIONS}포지션 · 건당 위험 {RISK_PCT:g}% · AI 필터 {'ON' if ai_required() else 'OFF'}")
+           f"최대 {max_positions_for(bot.safe_float(account.get('total')))}포지션 ({tiers_text()}) · 건당 위험 {RISK_PCT:g}% · AI 필터 {'ON' if ai_required() else 'OFF'}")
 
     state = load_state()
     last_scan = 0.0
