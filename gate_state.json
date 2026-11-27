@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 44.67,
       "max_adv": 44.41,
-      "last_candle_ts": 1795769400,
+      "last_candle_ts": 1795769700,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 63.631916358443384,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 52.54,
       "max_adv": 53.96,
-      "last_candle_ts": 1795769400,
+      "last_candle_ts": 1795769700,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 41.14631334329204,
@@ -170,7 +170,7 @@
       "tp2_reached": false,
       "max_fav": 653.55,
       "max_adv": 651.35,
-      "last_candle_ts": 1795769400,
+      "last_candle_ts": 1795769700,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 66.01663174434958,
@@ -245,9 +245,9 @@
       "tp2_lock_price": 392.49388887297357,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 391.54,
+      "max_fav": 391.64,
       "max_adv": 389.78,
-      "last_candle_ts": 1795769400,
+      "last_candle_ts": 1795769700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 64.68228551573773,
@@ -323,7 +323,7 @@
       "tp2_reached": false,
       "max_fav": 455.51,
       "max_adv": 461.98,
-      "last_candle_ts": 1795769400,
+      "last_candle_ts": 1795769700,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 45.00696867180224,
@@ -377,6 +377,80 @@
             "confidence": 75,
             "reason": "1시간 ADX가 약해 추세 지속성에 의문이 있으나 통계적 우위가 충분하다.",
             "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "LINK_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 9.629,
+      "entry_time": "2026-11-27T09:00:53.866353+00:00",
+      "leverage": 30,
+      "risk": 0.11589679501449411,
+      "atr": 0.09658066251207843,
+      "tp1": 9.773870993768117,
+      "tp2": 9.918741987536235,
+      "tp3": 10.111903312560392,
+      "stop_loss": 9.513103204985505,
+      "initial_stop": 9.513103204985505,
+      "tp1_lock_price": 9.643487099376811,
+      "tp2_lock_price": 9.773870993768117,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 9.629,
+      "max_adv": 9.629,
+      "last_candle_ts": 1795770000,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 69.10786590813105,
+      "rsi_15m": 62.92426034135146,
+      "adx_1h": 32.348827143943616,
+      "volume_surge": 0.49134305096260483,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 32.3 강한 추세 (+2)",
+        "1H EMA20 기울기 +1.39% (+1)",
+        "15M 캔들 몸통 0.68 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 1,
+        "valid": 4,
+        "total": 5,
+        "avg_confidence": 77,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 1H 추세와 정렬된 이평선, 양호한 리스크 보상비로 진입 가치가 높음.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과열 및 거래량 부진으로 진입 위험",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "RSI 과열과 거래량 부재로 추격매매 리스크가 높아 진입을 보류합니다.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 78,
+            "reason": "거래량 증가 없이 RSI 69 근접 과열로 진입 리스크가 높습니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "error": "503 서버 혼잡"
           }
         }
       }
