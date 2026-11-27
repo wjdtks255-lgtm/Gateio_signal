@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 44.81,
       "max_adv": 44.31,
-      "last_candle_ts": 1795779300,
+      "last_candle_ts": 1795779600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 63.631916358443384,
@@ -92,8 +92,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 51.59,
-      "max_adv": 54.44,
-      "last_candle_ts": 1795779300,
+      "max_adv": 55.06,
+      "last_candle_ts": 1795779600,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 41.14631334329204,
@@ -169,8 +169,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 653.73,
-      "max_adv": 649.7,
-      "last_candle_ts": 1795779300,
+      "max_adv": 648.76,
+      "last_candle_ts": 1795779600,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 66.01663174434958,
@@ -239,7 +239,7 @@
       "tp1": 444.2575092779723,
       "tp2": 426.5350185559446,
       "tp3": 402.90503092657434,
-      "stop_loss": 454.8210403791651,
+      "stop_loss": 453.9114931668769,
       "initial_stop": 476.15799257762217,
       "tp1_lock_price": 460.20775092779724,
       "tp2_lock_price": 444.2575092779723,
@@ -247,7 +247,7 @@
       "tp2_reached": false,
       "max_fav": 441.7,
       "max_adv": 461.98,
-      "last_candle_ts": 1795779300,
+      "last_candle_ts": 1795779600,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 45.00696867180224,
@@ -324,7 +324,7 @@
       "tp2_reached": false,
       "max_fav": 9.637,
       "max_adv": 9.528,
-      "last_candle_ts": 1795779300,
+      "last_candle_ts": 1795779600,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 69.10786590813105,
@@ -397,8 +397,8 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 3.1432,
-      "max_adv": 3.1021,
-      "last_candle_ts": 1795779300,
+      "max_adv": 3.1,
+      "last_candle_ts": 1795779600,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 58.043794996507664,
@@ -456,79 +456,78 @@
         }
       }
     },
-    "DELL_USDT": {
+    "ADA_USDT": {
       "strategy_version": 5,
       "direction": "LONG",
-      "entry_price": 315.77,
-      "entry_time": "2026-11-27T11:00:49.813445+00:00",
-      "leverage": 19,
-      "risk": 4.314907999650137,
-      "atr": 3.5957566663751144,
-      "tp1": 321.16363499956265,
-      "tp2": 326.5572699991253,
-      "tp3": 333.74878333187553,
-      "stop_loss": 311.45509200034985,
-      "initial_stop": 311.45509200034985,
-      "tp1_lock_price": 316.30936349995625,
-      "tp2_lock_price": 321.16363499956265,
+      "entry_price": 0.153,
+      "entry_time": "2026-11-27T11:45:34.551556+00:00",
+      "leverage": 46,
+      "risk": 0.0015084839556957674,
+      "atr": 0.0012570699630798062,
+      "tp1": 0.1548856049446197,
+      "tp2": 0.15677120988923943,
+      "tp3": 0.15928534981539902,
+      "stop_loss": 0.15149151604430422,
+      "initial_stop": 0.15149151604430422,
+      "tp1_lock_price": 0.15318856049446197,
+      "tp2_lock_price": 0.1548856049446197,
       "tp1_reached": false,
       "tp2_reached": false,
-      "max_fav": 315.93,
-      "max_adv": 312.02,
-      "last_candle_ts": 1795779300,
-      "score": 6,
+      "max_fav": 0.153,
+      "max_adv": 0.153,
+      "last_candle_ts": 1795779900,
+      "score": 3,
       "required_score": 2,
-      "rsi_1h": 66.08273275132845,
-      "rsi_15m": 58.05882413560961,
-      "adx_1h": 26.67166124138468,
-      "volume_surge": 3.858142379865647,
+      "rsi_1h": 68.58285419617977,
+      "rsi_15m": 58.52241038083145,
+      "adx_1h": 24.276608767364767,
+      "volume_surge": 0.5508937485388458,
       "reasons": [
         "[필수] 1H EMA20/50/200 추세 정렬",
         "[필수] 15M EMA21 눌림 후 재돌파",
         "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "1H ADX 26.7 강한 추세 (+2)",
-        "거래량 급증 3.86배 (+2)",
-        "1H EMA20 기울기 +1.01% (+1)",
-        "15M 캔들 몸통 0.63 (+1)"
+        "1H ADX 24.3 (+1)",
+        "1H EMA20 기울기 +0.82% (+1)",
+        "15M 캔들 몸통 0.60 (+1)"
       ],
       "missing_ticker_count": 0,
       "missing_ticker_alerted": false,
       "ai": {
-        "verdict": "APPROVE",
-        "enter": 5,
+        "verdict": "REJECT",
+        "enter": 2,
         "valid": 5,
         "total": 5,
-        "avg_confidence": 81,
+        "avg_confidence": 74,
         "votes": {
           "Gemini": {
             "decision": "ENTER",
-            "confidence": 85,
-            "reason": "완벽한 이평선 정렬과 거래량 급증, 우수한 손익비로 진입 가치 충분함.",
+            "confidence": 75,
+            "reason": "정배열 상태에서 눌림목을 형성했고 손익비와 승률 조건이 양호합니다.",
             "model": "gemini-flash-lite-latest"
           },
           "GPT-OSS": {
-            "decision": "ENTER",
-            "confidence": 75,
-            "reason": "강한 추세와 거래량 급증, 리스크-리워드 비율이 양호해 진입 가치가 있다.",
+            "decision": "SKIP",
+            "confidence": 70,
+            "reason": "RSI 과열과 거래량 부진으로 진입 위험",
             "model": "openai/gpt-oss-120b"
           },
           "Qwen": {
-            "decision": "ENTER",
-            "confidence": 78,
-            "reason": "강한 추세 정렬과 거래량 급증, 양호한 손익비 구조가 확인되어 진입 가치가 있음",
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "ADX 24.3으로 추세 강도가 약하고 거래량 증가가 없어 추격 매수 리스크가 큼.",
             "model": "qwen/qwen3.8-27b"
           },
           "OpenRouter": {
-            "decision": "ENTER",
-            "confidence": 82,
-            "reason": "필수 조건 모두 통과, 거래량 급증과 추세 정렬로 손익비 양호하여 진입 적합.",
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "거래량 증가 없고 1H RSI 68.6로 과열 근접해 롱 진입 리스크가 큽니다.",
             "model": "nvidia/nemotron-3.5-super-vl:free",
             "label": "OpenRouter(nemotron-3.5-super-vl)"
           },
           "반론위원": {
             "decision": "ENTER",
-            "confidence": 85,
-            "reason": "1시간봉 RSI가 66으로 약간 높으나 추세와 거래량이 강력해 진입을 막을 정도는 아니다.",
+            "confidence": 75,
+            "reason": "1시간 RSI가 68.6으로 과열권에 근접하나, 추세 정렬과 뚜렷한 눌림 후 재돌파로 진입 유효함.",
             "model": "gemini-flash-lite-latest"
           }
         }
@@ -538,14 +537,13 @@
   "stats": {
     "wins": 179,
     "draws": 0,
-    "losses": 128,
-    "total": 307,
-    "r_count": 307,
-    "sum_r": 68.874,
+    "losses": 129,
+    "total": 308,
+    "r_count": 308,
+    "sum_r": 67.801,
     "win_r": 203.96199999999993,
-    "loss_r": 135.08800000000008,
+    "loss_r": 136.1610000000001,
     "recent_r": [
-      0.929,
       1.12,
       1.016,
       1.142,
@@ -594,18 +592,19 @@
       1.553,
       1.371,
       -1.164,
-      -1.18
+      -1.18,
+      -1.073
     ],
     "positive_count": 179,
     "directional": {
       "LONG": {
-        "total": 57,
+        "total": 58,
         "wins": 31,
         "draws": 0,
-        "losses": 26,
-        "win_rate": 54.385964912280706,
-        "avg_r": 0.07412280701754388,
-        "pf": 1.153146295490793
+        "losses": 27,
+        "win_rate": 53.44827586206896,
+        "avg_r": 0.05434482758620692,
+        "pf": 1.1099752276612818
       },
       "SHORT": {
         "total": 250,
@@ -619,30 +618,25 @@
     },
     "strong": {
       "all": {
-        "total": 64,
-        "win_rate": 60.9375,
-        "avg_r": 0.3543593749999998,
-        "sum_r": 22.678999999999988
+        "total": 65,
+        "win_rate": 60.0,
+        "avg_r": 0.3323999999999998,
+        "sum_r": 21.605999999999987
       },
       "since": {
-        "total": 23,
-        "win_rate": 43.47826086956522,
-        "avg_r": -0.08395652173913044,
-        "sum_r": -1.931
+        "total": 24,
+        "win_rate": 41.66666666666667,
+        "avg_r": -0.12516666666666668,
+        "sum_r": -3.004
       }
     },
     "strategy_version": 5,
-    "csv_rows": 454,
+    "csv_rows": 455,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-27T11:30:41.996032+00:00"
+    "last_closed_at": "2026-11-27T11:45:34.551556+00:00"
   },
   "closed_symbols": {
-    "SPY_USDT": {
-      "time": "2026-11-27T07:45:30.117557+00:00",
-      "direction": "LONG",
-      "reason": "TP2_PROTECT"
-    },
     "CL_USDT": {
       "time": "2026-11-27T08:05:26.394879+00:00",
       "direction": "LONG",
@@ -655,6 +649,11 @@
     },
     "TSLA_USDT": {
       "time": "2026-11-27T11:30:41.996032+00:00",
+      "direction": "LONG",
+      "reason": "SL"
+    },
+    "DELL_USDT": {
+      "time": "2026-11-27T11:45:34.551556+00:00",
       "direction": "LONG",
       "reason": "SL"
     }
