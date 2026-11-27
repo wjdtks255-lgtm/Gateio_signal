@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 0.01474,
       "max_adv": 0.015865,
-      "last_candle_ts": 1795797600,
+      "last_candle_ts": 1795797900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 36.89288714284454,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 14.17,
       "max_adv": 14.1,
-      "last_candle_ts": 1795797600,
+      "last_candle_ts": 1795797900,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.84988249754315,
@@ -172,7 +172,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 1.09958,
-      "max_adv": 1.09958,
+      "max_adv": 1.094,
       "last_candle_ts": 1795797900,
       "score": 4,
       "required_score": 2,
@@ -249,7 +249,7 @@
       "tp1_reached": false,
       "tp2_reached": false,
       "max_fav": 317.0,
-      "max_adv": 317.0,
+      "max_adv": 316.78,
       "last_candle_ts": 1795797900,
       "score": 3,
       "required_score": 2,
@@ -303,6 +303,83 @@
             "decision": "SKIP",
             "confidence": 85,
             "reason": "최근 동일 방향 전략의 승률과 수익성이 저조하여 손실 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "AXTI_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 35.57,
+      "entry_time": "2026-11-27T16:50:29.382756+00:00",
+      "leverage": 7,
+      "risk": 1.0526861541518828,
+      "atr": 0.8772384617932357,
+      "tp1": 36.885857692689854,
+      "tp2": 38.20171538537971,
+      "tp3": 39.95619230896618,
+      "stop_loss": 34.517313845848115,
+      "initial_stop": 34.517313845848115,
+      "tp1_lock_price": 35.70158576926899,
+      "tp2_lock_price": 36.885857692689854,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 35.57,
+      "max_adv": 35.57,
+      "last_candle_ts": 1795798200,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 56.84813803459522,
+      "rsi_15m": 61.24005805402245,
+      "adx_1h": 32.96267515234899,
+      "volume_surge": 0.5856186028681384,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 33.0 강한 추세 (+2)",
+        "1H EMA20 기울기 +0.51% (+1)",
+        "15M 캔들 몸통 0.91 (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "REJECT",
+        "enter": 0,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 78,
+        "votes": {
+          "Gemini": {
+            "decision": "SKIP",
+            "confidence": 75,
+            "reason": "동일 방향 최근 전략의 승률과 수익팩터(PF)가 저조하여 진입을 보류합니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "SKIP",
+            "confidence": 55,
+            "reason": "거래량 부진과 최근 전략 승률 저조로 신뢰 부족",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "24h 9.4% 급등 후 추격 진입이며, 동일 방향 전략의 수익률과 승률이 부진해 리스크가 큼.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "SKIP",
+            "confidence": 88,
+            "reason": "24시간 9% 급등에 거래량 미확인이고 동일 방향 전략 기대수익이 음수입니다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "SKIP",
+            "confidence": 85,
+            "reason": "과거 동일 방향 전략의 승률이 47% 미만이고 수익팩터가 저조하여 손실 위험이 큽니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
