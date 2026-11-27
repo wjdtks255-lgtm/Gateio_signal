@@ -19,7 +19,7 @@
       "tp2_reached": false,
       "max_fav": 44.67,
       "max_adv": 44.41,
-      "last_candle_ts": 1795771200,
+      "last_candle_ts": 1795771500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 63.631916358443384,
@@ -93,7 +93,7 @@
       "tp2_reached": false,
       "max_fav": 51.59,
       "max_adv": 53.96,
-      "last_candle_ts": 1795771200,
+      "last_candle_ts": 1795771500,
       "score": 6,
       "required_score": 2,
       "rsi_1h": 41.14631334329204,
@@ -170,7 +170,7 @@
       "tp2_reached": false,
       "max_fav": 653.73,
       "max_adv": 651.35,
-      "last_candle_ts": 1795771200,
+      "last_candle_ts": 1795771500,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 66.01663174434958,
@@ -247,7 +247,7 @@
       "tp2_reached": false,
       "max_fav": 391.86,
       "max_adv": 389.78,
-      "last_candle_ts": 1795771200,
+      "last_candle_ts": 1795771500,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 64.68228551573773,
@@ -323,7 +323,7 @@
       "tp2_reached": false,
       "max_fav": 455.51,
       "max_adv": 461.98,
-      "last_candle_ts": 1795771200,
+      "last_candle_ts": 1795771500,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 45.00696867180224,
@@ -400,7 +400,7 @@
       "tp2_reached": false,
       "max_fav": 9.629,
       "max_adv": 9.565,
-      "last_candle_ts": 1795771200,
+      "last_candle_ts": 1795771500,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 69.10786590813105,
@@ -474,7 +474,7 @@
       "tp2_reached": false,
       "max_fav": 3.1231,
       "max_adv": 3.1021,
-      "last_candle_ts": 1795771200,
+      "last_candle_ts": 1795771500,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 58.043794996507664,
@@ -527,6 +527,83 @@
             "decision": "SKIP",
             "confidence": 75,
             "reason": "1시간봉 ADX가 20.8로 추세 강도가 너무 약해 횡보장에 갇힐 위험이 큽니다.",
+            "model": "gemini-flash-lite-latest"
+          }
+        }
+      }
+    },
+    "BZ_USDT": {
+      "strategy_version": 5,
+      "direction": "LONG",
+      "entry_price": 92.53,
+      "entry_time": "2026-11-27T09:30:42.384304+00:00",
+      "leverage": 37,
+      "risk": 0.5640563408124564,
+      "atr": 0.470046950677047,
+      "tp1": 93.23507042601557,
+      "tp2": 93.94014085203113,
+      "tp3": 94.88023475338524,
+      "stop_loss": 91.96594365918754,
+      "initial_stop": 91.96594365918754,
+      "tp1_lock_price": 92.60050704260156,
+      "tp2_lock_price": 93.23507042601557,
+      "tp1_reached": false,
+      "tp2_reached": false,
+      "max_fav": 92.53,
+      "max_adv": 92.53,
+      "last_candle_ts": 1795771800,
+      "score": 4,
+      "required_score": 2,
+      "rsi_1h": 62.27471394918648,
+      "rsi_15m": 51.65884910289985,
+      "adx_1h": 46.518565190083855,
+      "volume_surge": 1.4357874284951884,
+      "reasons": [
+        "[필수] 1H EMA20/50/200 추세 정렬",
+        "[필수] 15M EMA21 눌림 후 재돌파",
+        "[필수] BTC 방향 충돌 없음 (FLAT)",
+        "1H ADX 46.5 강한 추세 (+2)",
+        "거래량 증가 1.44배 (+1)",
+        "1H EMA20 기울기 +0.44% (+1)"
+      ],
+      "missing_ticker_count": 0,
+      "missing_ticker_alerted": false,
+      "ai": {
+        "verdict": "APPROVE",
+        "enter": 5,
+        "valid": 5,
+        "total": 5,
+        "avg_confidence": 79,
+        "votes": {
+          "Gemini": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "강한 추세와 거래량 동반, 손익비가 우수하여 진입 가치가 있습니다.",
+            "model": "gemini-flash-lite-latest"
+          },
+          "GPT-OSS": {
+            "decision": "ENTER",
+            "confidence": 70,
+            "reason": "강한 추세와 충분한 목표 대비 손절폭이 적절해 진입 가치가 있다.",
+            "model": "openai/gpt-oss-120b"
+          },
+          "Qwen": {
+            "decision": "ENTER",
+            "confidence": 78,
+            "reason": "강한 추세와 거래량 동반, RSI 과열 없음, 손익비 양호하여 진입 적정.",
+            "model": "qwen/qwen3.8-27b"
+          },
+          "OpenRouter": {
+            "decision": "ENTER",
+            "confidence": 75,
+            "reason": "필수 조건 모두 통과, ADX 강한 추세, 거래량 증가, RSI 양호하여 진입 가능하다.",
+            "model": "nvidia/nemotron-3.5-super-vl:free",
+            "label": "OpenRouter(nemotron-3.5-super-vl)"
+          },
+          "반론위원": {
+            "decision": "ENTER",
+            "confidence": 85,
+            "reason": "지표와 거래량이 완벽히 정렬되어 결정적 약점이 없습니다.",
             "model": "gemini-flash-lite-latest"
           }
         }
