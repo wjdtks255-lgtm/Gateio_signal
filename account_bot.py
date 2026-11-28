@@ -32,6 +32,7 @@ TG = f"https://api.telegram.org/bot{TOKEN}"
 
 WATCH_SECONDS = 30                                          # 계좌 변화 확인 주기
 EQUITY_ALERT_PCT = float(os.getenv("EQUITY_ALERT_PCT", "5"))  # 평가금이 이만큼(%) 움직이면 알림
+MIN_EQUITY_FOR_ALERT = 1.0  # 기준 평가금이 이보다 작으면(USDT) 변동 알림 없이 기준만 갱신
 LIQ_WARN_PCT = float(os.getenv("LIQ_WARN_PCT", "3"))          # 청산가까지 남은 거리(%)가 이 이하이면 경고
 DAILY_SUMMARY_HOUR_KST = 9
 EVENING_SUMMARY_HOUR_KST = 21
@@ -253,13 +254,14 @@ def check_changes(st: Dict[str, Any]) -> None:
 
     equity = equity_of(acc)
     base = f(st.get("equity_base"))
-    if base > 0:
+    if base >= MIN_EQUITY_FOR_ALERT:
         move = (equity - base) / base * 100.0
         if abs(move) >= EQUITY_ALERT_PCT:
             icon = "📈" if move > 0 else "📉"
             send(f"{icon} <b>평가금 변동 {move:+.1f}%</b>\n<code>{base:,.2f} → {equity:,.2f} USDT</code>")
             st["equity_base"] = equity
     else:
+        # 잔고가 거의 0이던 상태(첫 입금 전 등)에서는 % 계산이 무의미하므로 기준만 다시 잡음
         st["equity_base"] = equity
 
     now_kst = now.astimezone(KST)
