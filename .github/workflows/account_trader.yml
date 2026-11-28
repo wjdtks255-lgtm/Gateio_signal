@@ -63,6 +63,8 @@ jobs:
           REQUIRE_AI: ${{ vars.REQUIRE_AI || '0' }}
           # 건당 위험 % (손절 1회당 계좌 손실). 바꾸려면 저장소 변수 RISK_PCT 설정
           RISK_PCT: ${{ vars.RISK_PCT || '3' }}
+          # 잔고별 최대 동시 포지션 (기준:개수). 기본 100 미만 1개 / 100~250 2개 / 250 이상 3개
+          POSITION_TIERS: ${{ vars.POSITION_TIERS || '100:2,250:3' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
