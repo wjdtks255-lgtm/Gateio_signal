@@ -51,6 +51,13 @@ RISK_PCT = float(os.getenv("RISK_PCT") or "3")        # 손절 1회당 계좌 �
 STRICT_MIN_SCORE = int(os.getenv("STRICT_MIN_SCORE", "4"))        # 품질 점수 6점 만점 중
 STRICT_MIN_ADX = float(os.getenv("STRICT_MIN_ADX", "22"))         # 1H 추세 강도
 STRICT_MIN_VOLUME = float(os.getenv("STRICT_MIN_VOLUME", "1.2"))  # 15M 거래량 배수
+# 추격 진입 제외: 이미 과열된 롱 / 이미 과매도된 숏은 진입하지 않음
+# (11/12~11/27 기록: 추격 진입 승률 약 48%, 그 외 약 60%. 11/27 급락 때 손실 대부분이 추격 진입)
+CHASE_LONG_RSI15 = float(os.getenv("CHASE_LONG_RSI15", "62"))     # 롱: 15M RSI 이 값 초과면 제외
+CHASE_LONG_RSI1H = float(os.getenv("CHASE_LONG_RSI1H", "64"))     # 롱: 1H RSI 이 값 초과면 제외
+CHASE_SHORT_RSI15 = float(os.getenv("CHASE_SHORT_RSI15", "38"))   # 숏: 15M RSI 이 값 미만이면 제외
+# 같은 방향(롱/숏) 동시 보유 상한: 시장 전체가 한쪽으로 움직일 때 한꺼번에 손절되는 것 방지
+MAX_SAME_DIRECTION = int(os.getenv("MAX_SAME_DIRECTION") or "2")
 # AI 위원회 찬성(APPROVE)을 필수로 할지: 0 = 사용 안 함(기본), 1 = 항상 필수, auto = AI 키가 있으면 필수
 # 기본값 0: 11/12~11/26 기록에서 AI 반대 거래(188건, +51.2R)가 찬성 거래(78건, +13.9R)보다 성과가 좋았음.
 # AI 판정 기록은 시그널 봇(ai_trades.csv)이 계속 남기므로 나중에 다시 비교 가능.
@@ -239,6 +246,17 @@ def tiers_text() -> str:
     return " / ".join(parts)
 
 
+def is_chasing(direction: str, analysis: Dict[str, Any]) -> bool:
+    """이미 많이 움직인 뒤 따라 들어가는 진입인지."""
+    if direction == "LONG":
+        return analysis["rsi15"] > CHASE_LONG_RSI15 or analysis["rsi1h"] > CHASE_LONG_RSI1H
+    return analysis["rsi15"] < CHASE_SHORT_RSI15
+
+
+def same_direction_count(state: Dict[str, Any], direction: str) -> int:
+    return sum(1 for info in state["positions"].values() if info.get("direction") == direction)
+
+
 def is_strong(analysis: Dict[str, Any]) -> bool:
     return (analysis["score"] >= STRICT_MIN_SCORE
             and analysis["adx"] >= STRICT_MIN_ADX
@@ -295,6 +313,10 @@ def find_strong_signals(state: Dict[str, Any], now: datetime) -> List[Dict[str, 
         try:
             analysis = bot.analyze_signal(symbol, direction, now_ts, price, btc_bias)
             if not analysis or not is_strong(analysis):
+                continue
+            if is_chasing(direction, analysis):
+                logging.info("chasing entry skipped: %s %s rsi15=%.1f rsi1h=%.1f",
+                             symbol, direction, analysis["rsi15"], analysis["rsi1h"])
                 continue
             sl_pct = analysis["atr"] * bot.ATR_SL / price * 100.0
             if sl_pct > bot.MAX_SL_PCT:
@@ -507,6 +529,9 @@ def scan_and_enter(state: Dict[str, Any], now: datetime) -> None:
             break
         if theme_blocked(state, sig["symbol"], sig["direction"]):
             continue
+        if same_direction_count(state, sig["direction"]) >= MAX_SAME_DIRECTION:
+            logging.info("same-direction cap: %s %s skipped", sig["symbol"], sig["direction"])
+            continue
         if use_ai:
             ok, _ = ai_approves(sig)
             if not ok:
@@ -531,7 +556,7 @@ def run_once() -> None:
             notify("⚠️ 양방향(dual) 포지션 모드입니다. 단방향(one-way) 모드로 바꿔야 자동매매가 동작합니다.")
             raise SystemExit("dual mode")
         notify(f"🤖 자동매매 시작 (약 5분마다 확인) | 잔고 {bot.safe_float(account.get('total')):.2f} USDT | "
-               f"최대 {max_positions_for(bot.safe_float(account.get('total')))}포지션 ({tiers_text()}) · 건당 위험 {RISK_PCT:g}% · AI 필터 {'ON' if ai_required() else 'OFF'}")
+               f"최대 {max_positions_for(bot.safe_float(account.get('total')))}포지션 ({tiers_text()}) · 건당 위험 {RISK_PCT:g}% · 같은 방향 최대 {MAX_SAME_DIRECTION}개 · 추격 진입 제외 · AI 필터 {'ON' if ai_required() else 'OFF'}")
     now = bot.utcnow()
     try:
         manage(state, now)
@@ -549,7 +574,7 @@ def main() -> None:
     mode = "실거래" if LIVE else "테스트넷"
     logging.info("auto trader start: %s, equity %s USDT, dry_run=%s", mode, account.get("total"), DRY_RUN)
     notify(f"🤖 자동매매 시작 | 잔고 {bot.safe_float(account.get('total')):.2f} USDT | "
-           f"최대 {max_positions_for(bot.safe_float(account.get('total')))}포지션 ({tiers_text()}) · 건당 위험 {RISK_PCT:g}% · AI 필터 {'ON' if ai_required() else 'OFF'}")
+           f"최대 {max_positions_for(bot.safe_float(account.get('total')))}포지션 ({tiers_text()}) · 건당 위험 {RISK_PCT:g}% · 같은 방향 최대 {MAX_SAME_DIRECTION}개 · 추격 진입 제외 · AI 필터 {'ON' if ai_required() else 'OFF'}")
 
     state = load_state()
     last_scan = 0.0
