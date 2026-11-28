@@ -17,9 +17,9 @@
       "tp2_lock_price": 14.552415579566969,
       "tp1_reached": true,
       "tp2_reached": false,
-      "max_fav": 14.69,
+      "max_fav": 14.7,
       "max_adv": 14.03,
-      "last_candle_ts": 1795859700,
+      "last_candle_ts": 1795860000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 66.84988249754315,
@@ -96,7 +96,7 @@
       "tp2_reached": false,
       "max_fav": 36.88,
       "max_adv": 35.14,
-      "last_candle_ts": 1795859700,
+      "last_candle_ts": 1795860000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 56.84813803459522,
@@ -173,7 +173,7 @@
       "tp2_reached": false,
       "max_fav": 57.34,
       "max_adv": 56.61,
-      "last_candle_ts": 1795859700,
+      "last_candle_ts": 1795860000,
       "score": 5,
       "required_score": 2,
       "rsi_1h": 60.90067792546362,
@@ -230,83 +230,6 @@
         }
       }
     },
-    "ZHIPU_USDT": {
-      "strategy_version": 5,
-      "direction": "LONG",
-      "entry_price": 44.33,
-      "entry_time": "2026-11-27T18:00:49.398884+00:00",
-      "leverage": 8,
-      "risk": 1.2781559611300868,
-      "atr": 1.0651299676084056,
-      "tp1": 45.927694951412604,
-      "tp2": 47.52538990282522,
-      "tp3": 49.655649838042024,
-      "stop_loss": 45.84501772746533,
-      "initial_stop": 43.05184403886991,
-      "tp1_lock_price": 44.48976949514126,
-      "tp2_lock_price": 45.927694951412604,
-      "tp1_reached": true,
-      "tp2_reached": false,
-      "max_fav": 46.49,
-      "max_adv": 43.94,
-      "last_candle_ts": 1795859700,
-      "score": 4,
-      "required_score": 2,
-      "rsi_1h": 65.72539415695874,
-      "rsi_15m": 60.6588829457292,
-      "adx_1h": 38.525831030789625,
-      "volume_surge": 0.6394000189019408,
-      "reasons": [
-        "[필수] 1H EMA20/50/200 추세 정렬",
-        "[필수] 15M EMA21 눌림 후 재돌파",
-        "[필수] BTC 방향 충돌 없음 (FLAT)",
-        "1H ADX 38.5 강한 추세 (+2)",
-        "1H EMA20 기울기 +1.99% (+1)",
-        "15M 캔들 몸통 0.87 (+1)"
-      ],
-      "missing_ticker_count": 0,
-      "missing_ticker_alerted": false,
-      "ai": {
-        "verdict": "REJECT",
-        "enter": 0,
-        "valid": 5,
-        "total": 5,
-        "avg_confidence": 76,
-        "votes": {
-          "Gemini": {
-            "decision": "SKIP",
-            "confidence": 40,
-            "reason": "최근 동일 방향 전략의 승률과 수익비가 부진하여 진입을 보류합니다.",
-            "model": "gemini-flash-lite-latest"
-          },
-          "GPT-OSS": {
-            "decision": "SKIP",
-            "confidence": 80,
-            "reason": "24시간 급등 후 거래량 부진과 전략 승률 저조로 진입 회피",
-            "model": "openai/gpt-oss-120b"
-          },
-          "Qwen": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "24h 15% 급등 후 추격 진입이며, 동일 방향 전략 성과가 부진합니다.",
-            "model": "qwen/qwen3.8-27b"
-          },
-          "OpenRouter": {
-            "decision": "SKIP",
-            "confidence": 88,
-            "reason": "24시간 15.5% 급등 추격 진입에 거래량 부족, 전략 기대수익률도 음수다",
-            "model": "nvidia/nemotron-3.5-super-vl:free",
-            "label": "OpenRouter(nemotron-3.5-super-vl)"
-          },
-          "반론위원": {
-            "decision": "SKIP",
-            "confidence": 85,
-            "reason": "최근 승률이 47% 미만이고 수익팩터가 저조하여 손실 위험이 큽니다.",
-            "model": "gemini-flash-lite-latest"
-          }
-        }
-      }
-    },
     "NG_USDT": {
       "strategy_version": 5,
       "direction": "SHORT",
@@ -326,7 +249,7 @@
       "tp2_reached": false,
       "max_fav": 3.481,
       "max_adv": 3.513,
-      "last_candle_ts": 1795859700,
+      "last_candle_ts": 1795860000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 32.12098266355423,
@@ -401,7 +324,7 @@
       "tp2_reached": false,
       "max_fav": 141.21,
       "max_adv": 138.56,
-      "last_candle_ts": 1795859700,
+      "last_candle_ts": 1795860000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 58.84214451949052,
@@ -478,7 +401,7 @@
       "tp2_reached": false,
       "max_fav": 0.5096,
       "max_adv": 0.5347,
-      "last_candle_ts": 1795859700,
+      "last_candle_ts": 1795860000,
       "score": 4,
       "required_score": 2,
       "rsi_1h": 43.85917468301576,
@@ -556,7 +479,7 @@
       "tp2_reached": false,
       "max_fav": 3675.21,
       "max_adv": 3660.45,
-      "last_candle_ts": 1795859700,
+      "last_candle_ts": 1795860000,
       "score": 3,
       "required_score": 2,
       "rsi_1h": 61.66459758231456,
@@ -615,16 +538,15 @@
     }
   },
   "stats": {
-    "wins": 181,
+    "wins": 182,
     "draws": 0,
     "losses": 140,
-    "total": 321,
-    "r_count": 321,
-    "sum_r": 59.90700000000001,
-    "win_r": 207.91699999999992,
+    "total": 322,
+    "r_count": 322,
+    "sum_r": 61.09000000000001,
+    "win_r": 209.0999999999999,
     "loss_r": 148.01000000000005,
     "recent_r": [
-      0.641,
       1.226,
       0.996,
       -1.062,
@@ -673,18 +595,19 @@
       2.676,
       -1.015,
       -1.056,
-      1.279
+      1.279,
+      1.183
     ],
-    "positive_count": 181,
+    "positive_count": 182,
     "directional": {
       "LONG": {
-        "total": 68,
-        "wins": 32,
+        "total": 69,
+        "wins": 33,
         "draws": 0,
         "losses": 36,
-        "win_rate": 47.05882352941176,
-        "avg_r": -0.07914705882352939,
-        "pf": 0.8601133232832564
+        "win_rate": 47.82608695652174,
+        "avg_r": -0.0608550724637681,
+        "pf": 0.8908613609190624
       },
       "SHORT": {
         "total": 253,
@@ -711,12 +634,18 @@
       }
     },
     "strategy_version": 5,
-    "csv_rows": 468,
+    "csv_rows": 469,
     "excluded_other_versions": 147,
     "first_closed_at": "2026-11-12T13:10:32.016909+00:00",
-    "last_closed_at": "2026-11-28T02:00:45.207405+00:00"
+    "last_closed_at": "2026-11-28T10:05:23.691935+00:00"
   },
-  "closed_symbols": {},
+  "closed_symbols": {
+    "ZHIPU_USDT": {
+      "time": "2026-11-28T10:05:23.691935+00:00",
+      "direction": "LONG",
+      "reason": "TRAILING_STOP"
+    }
+  },
   "fail_count": 0,
   "last_report_date": "2026-11-28",
   "csv_stats_offset": 20,
